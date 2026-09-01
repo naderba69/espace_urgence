@@ -84,7 +84,7 @@ export default function PerfusionsPage() {
             <span>{lang === "ar" ? `الجرعة (${p.unit}) ← التدفق (مل/س)` : `Dose (${p.unit}) → débit (mL/h)`}</span>
             <span className="text-xs font-normal opacity-60">{lang === "ar" ? p.prep.ar : p.prep.fr}</span>
           </p>
-          <div className="max-h-64 overflow-y-auto rounded-xl border border-line">
+          <div className="max-h-64 overflow-auto rounded-xl border border-line">
             <table className="w-full border-collapse text-center text-sm">
               <thead>
                 <tr className="bg-surface2">

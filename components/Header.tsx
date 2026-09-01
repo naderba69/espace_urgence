@@ -66,12 +66,14 @@ export default function Header() {
         </div>
       </div>
 
+      {/* Recherche mobile permanente — toujours visible sans ouvrir le menu */}
+      <div className="border-t border-line bg-surface/95 px-3 py-2 md:hidden">
+        <SearchBar />
+      </div>
+
       {menuOpen && (
         <div className="border-t border-line bg-surface lg:hidden">
           <Nav onNavigate={() => setMenuOpen(false)} />
-          <div className="p-3 md:hidden">
-            <SearchBar />
-          </div>
         </div>
       )}
     </header>

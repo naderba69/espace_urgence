@@ -34,14 +34,19 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Recherche */}
-      <section className="flex flex-col items-center gap-4 pt-2 sm:pt-6">
-        <h1 className="text-center text-2xl font-extrabold tracking-tight sm:text-3xl">
-          {t("app.name")}
+      <section className="relative flex flex-col items-center gap-4 overflow-hidden rounded-3xl border border-teal-600/20 bg-gradient-to-b from-teal-600/10 via-surface to-surface px-4 py-8 sm:py-12">
+        {/* هالة مائية */}
+        <div aria-hidden className="pointer-events-none absolute -top-24 h-64 w-64 rounded-full bg-teal-600/20 blur-3xl" />
+        <h1 className="relative text-center text-3xl font-black tracking-tight sm:text-4xl">
+          <span className="bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">{t("app.name")}</span>
         </h1>
-        <SearchBar big />
+        <p className="relative max-w-md text-center text-sm opacity-70 sm:text-base">{t("home.tag")}</p>
+        <div className="relative w-full max-w-xl">
+          <SearchBar big />
+        </div>
         <button
           onClick={() => setEmergencyOpen(true)}
-          className="touch mt-1 gap-3 rounded-2xl bg-red-600 px-8 py-4 text-lg font-black text-white shadow-lg hover:bg-red-500 active:scale-95"
+          className="touch relative mt-1 gap-3 rounded-2xl bg-red-600 px-8 py-4 text-lg font-black text-white shadow-lg shadow-red-600/30 transition hover:bg-red-500 hover:shadow-red-500/40 active:scale-95"
         >
           <Siren className="h-7 w-7" aria-hidden />
           {t("emergency.open")}
@@ -50,12 +55,15 @@ export default function HomePage() {
 
       {/* Actions rapides */}
       <section aria-labelledby="qa">
-        <h2 id="qa" className="mb-3 text-lg font-bold">{t("home.quickActions")}</h2>
+        <h2 id="qa" className="mb-3 flex items-center gap-2 text-lg font-bold">
+          <span className="h-5 w-1 rounded-full bg-teal-500" aria-hidden />
+          {t("home.quickActions")}
+        </h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {QUICK.map(({ href, Icon, fr, ar, cls }) => (
-            <Link key={href} href={href} className={`${cls} flex flex-col items-center justify-center gap-2 rounded-2xl p-4 min-h-[100px] font-bold text-center hover:opacity-90 active:scale-[0.98]`}>
+            <Link key={href} href={href} className={`${cls} flex flex-col items-center justify-center gap-2 rounded-2xl p-4 min-h-[100px] font-bold text-center shadow-md transition hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]`}>
               <Icon className="h-8 w-8" aria-hidden />
-              <span className="text-sm sm:text-base">{lang === "ar" ? ar : fr}</span>
+              <span className="text-sm sm:text-base leading-tight">{lang === "ar" ? ar : fr}</span>
             </Link>
           ))}
         </div>

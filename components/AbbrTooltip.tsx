@@ -37,7 +37,7 @@ export function Abbr({ k, children }: { k: string; children?: ReactNode }) {
         <span
           role="dialog"
           aria-label={entry.abbr}
-          className="absolute bottom-full z-50 mb-2 block w-64 rounded-xl border border-line bg-surface p-3 text-start text-sm shadow-xl start-1/2 -translate-x-1/2 rtl:translate-x-1/2 ltr:left-1/2 ltr:-translate-x-1/2 max-w-[80vw]"
+          className="absolute bottom-full left-0 right-auto z-50 mb-2 block w-[min(260px,80vw)] rounded-xl border border-line bg-surface p-3 text-start text-sm shadow-xl rtl:left-auto rtl:right-0"
         >
           <span className="mb-1 flex items-center justify-between gap-2">
             <span className="text-base font-extrabold text-teal-600 dark:text-teal-400">{entry.abbr}</span>

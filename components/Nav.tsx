@@ -2,11 +2,12 @@
 // Navigation principale (barre latérale desktop / tiroir mobile).
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ScrollText, Pill, Calculator, Settings, HeartPulse, ClipboardList, Baby, HandHelping, Brain, Bone, Bot, GitBranch, Zap } from "lucide-react";
+import { Home, ScrollText, Pill, Calculator, Settings, HeartPulse, ClipboardList, Baby, HandHelping, Brain, Bone, Bot, GitBranch, Zap, Search } from "lucide-react";
 import { useApp } from "./Providers";
 
 export const NAV_ITEMS = [
   { href: "/", key: "nav.home", Icon: Home },
+  { href: "/recherche", key: "nav.search", Icon: Search },
   { href: "/protocoles", key: "nav.protocols", Icon: ScrollText },
   { href: "/medicaments", key: "nav.medications", Icon: Pill },
   { href: "/calculateurs", key: "nav.calculators", Icon: Calculator },

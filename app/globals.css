@@ -151,3 +151,86 @@ button[aria-expanded] { text-decoration-thickness: 1.5px; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: rgba(100,116,139,.4); border-radius: 8px; }
 .dark ::-webkit-scrollbar-thumb { background: rgba(148,163,184,.25); }
+
+/* ============ RESPONSIVE PRO — أمان من التجاوز على كل الشاشات ============ */
+
+/* 1) قاعدة: لا شيء يتجاوز عرض الشاشة */
+html, body { overflow-x: clip; }
+* { min-width: 0; }
+main, section, article, .card { max-width: 100%; }
+#contenu { width: 100%; }
+
+/* 2) الكلمات الطويلة والأرقام والروابط تنكسر */
+p, li, td, span, button, summary { overflow-wrap: anywhere; }
+h1, h2, h3 { overflow-wrap: break-word; hyphens: auto; }
+
+/* 3) الجداول: تمرير أفقي انسيابي داخل إطار بدل كسر الصفحة */
+table { border-collapse: collapse; width: 100%; }
+div:has(> table), .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+@media (max-width: 640px) {
+  .overflow-x-auto table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+
+/* 4) الأرقام الضخمة (مؤقتات، جرعات) تتقلص بدل الخروج */
+.font-black.tabular-nums, [class*="text-3xl"], [class*="text-4xl"], [class*="text-5xl"] {
+  font-size: clamp(1.5rem, 6vw + 0.75rem, 3.75rem) !important;
+  line-height: 1.15 !important;
+}
+
+/* 5) الصور والفيديو لا تتجاوز */
+img, svg, video, canvas { max-width: 100%; height: auto; }
+
+
+/* 8) النوافذ المنبثقة للاختصارات لا تخرج */
+[role="dialog"] { max-inline-size: min(280px, calc(100vw - 2rem)); inline-size: max-content; }
+
+/* 9) الحقول والنصوص المنسدلة تملأ بلا فيض */
+input, select, textarea { max-width: 100%; box-sizing: border-box; }
+
+/* 10) الهيدر والبطاقات: padding متجاوب */
+@media (max-width: 640px) {
+  .card { border-radius: 1rem !important; }
+  header.sticky .max-w-6xl { padding-inline: 0.5rem; }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  #contenu { padding-inline: 1.5rem; }
+}
+@media (min-width: 1280px) {
+  #contenu { max-width: 72rem; }
+}
+
+/* 11) تمنع التمرير الأفقي الناتج عن الشبكات المتعددة الأعمدة */
+.min-w-0 { min-width: 0 !important; }
+.w-full { max-width: 100%; }
+
+/* 12) خط متجاوب أساسي */
+@media (max-width: 380px) { html { font-size: 14px; } }
+@media (min-width: 381px) and (max-width: 640px) { html { font-size: 15px; } }
+
+/* ============ طلاء احترافي نهائي ============ */
+
+/* تحسين عناوين الأقسام */
+#contenu h2 { display: flex; align-items: center; gap: 0.5rem; }
+
+/* تأثير خفيف للبطاقات الرئيسية */
+.card { position: relative; }
+.card::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  opacity: 0; pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: opacity .2s;
+}
+a.card:hover::after { opacity: 1; }
+
+/* الخلفية الرئيسية بدرجة دقيقة */
+body { background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(13,148,136,.07), transparent); }
+.dark body { background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(13,148,136,.12), transparent); }
+
+/* أزرار بالألوان الدرجة */
+button[class*="bg-"], a[class*="bg-"] { box-shadow: 0 2px 10px -3px rgba(0,0,0,.25); }
+
+/* شارة نبض ناعمة للطوارئ */
+@keyframes sos-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.45);} 50% { box-shadow: 0 0 0 10px rgba(220,38,38,0);} }
+
+/* لمس نحيف لقوائم السجل */
+ol li, ul li { scroll-margin-top: 5rem; }
