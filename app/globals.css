@@ -161,7 +161,8 @@ main, section, article, .card { max-width: 100%; }
 #contenu { width: 100%; }
 
 /* 2) الكلمات الطويلة والأرقام والروابط تنكسر */
-p, li, td, span, button, summary { overflow-wrap: anywhere; }
+p, li, td, summary { overflow-wrap: anywhere; }
+span, button, a, label { overflow-wrap: break-word; }
 h1, h2, h3 { overflow-wrap: break-word; hyphens: auto; }
 
 /* 3) الجداول: تمرير أفقي انسيابي داخل إطار بدل كسر الصفحة */
@@ -181,8 +182,8 @@ div:has(> table), .overflow-x-auto { -webkit-overflow-scrolling: touch; }
 img, svg, video, canvas { max-width: 100%; height: auto; }
 
 
-/* 8) النوافذ المنبثقة للاختصارات لا تخرج */
-[role="dialog"] { max-inline-size: min(280px, calc(100vw - 2rem)); inline-size: max-content; }
+/* 8) النوافذ المنبثقة للاختصارات لا تخرج — قاعدة مخصصة للتلميح فقط (لا تمس نافذة وضع الاستعجال بملء الشاشة) */
+.abbr-tip { max-inline-size: min(280px, calc(100vw - 2rem)); }
 
 /* 9) الحقول والنصوص المنسدلة تملأ بلا فيض */
 input, select, textarea { max-width: 100%; box-sizing: border-box; }

@@ -22,7 +22,7 @@ export default function EmergencyMode() {
       role="dialog"
       aria-modal="true"
       aria-label={t("emergency.title")}
-      className="fixed inset-0 z-50 bg-[#0b1220] p-4 sm:p-8 overflow-y-auto"
+      className="fixed inset-0 z-50 w-full max-w-none bg-[#0b1220] p-4 sm:p-8 overflow-y-auto"
     >
       <div className="mx-auto max-w-3xl flex flex-col gap-6 min-h-full">
         <div className="flex items-center justify-between gap-4">

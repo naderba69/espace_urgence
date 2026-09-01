@@ -2,6 +2,7 @@ import type { Medication } from "./types";
 import { medicationsPhase2 } from "./medications-p2";
 import { medicationsPhase3 } from "./medications-p3";
 import { medicationsPhase4 } from "./medications-p4";
+import { medicationsPhase5 } from "./medications-p5";
 
 // ⚕️ Contenu rédigé d'après ERC 2021 / AHA ACLS 2025 / RCUK anaphylaxie 2021 / SFAR.
 // ⚠️ À faire valider par un médecin tunisien et à adapter aux spécialités locales avant usage.
@@ -300,12 +301,13 @@ const medicationsCore: Medication[] = [
   },
 ];
 
-// Registre complet : noyau + phase 2
+// Registre complet : noyau + phases 2–5
 export const medications: Medication[] = [
   ...medicationsCore,
   ...medicationsPhase2,
   ...medicationsPhase3,
   ...medicationsPhase4,
+  ...medicationsPhase5,
 ];
 
 export function getMedication(id: string): Medication | undefined {
