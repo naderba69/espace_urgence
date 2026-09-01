@@ -3,6 +3,7 @@ import { medicationsPhase2 } from "./medications-p2";
 import { medicationsPhase3 } from "./medications-p3";
 import { medicationsPhase4 } from "./medications-p4";
 import { medicationsPhase5 } from "./medications-p5";
+import { medicationsPhase6 } from "./medications-p6";
 
 // ⚕️ Contenu rédigé d'après ERC 2021 / AHA ACLS 2025 / RCUK anaphylaxie 2021 / SFAR.
 // ⚠️ À faire valider par un médecin tunisien et à adapter aux spécialités locales avant usage.
@@ -308,6 +309,7 @@ export const medications: Medication[] = [
   ...medicationsPhase3,
   ...medicationsPhase4,
   ...medicationsPhase5,
+  ...medicationsPhase6,
 ];
 
 export function getMedication(id: string): Medication | undefined {

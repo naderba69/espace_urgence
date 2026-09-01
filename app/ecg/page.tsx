@@ -7,7 +7,7 @@ import T from "@/components/T";
 import { useApp } from "@/components/Providers";
 import { PrintButton } from "@/components/Chrome";
 import { useRegisterRecent } from "@/components/SearchBar";
-import { Camera, Stethoscope, ClipboardCheck } from "lucide-react";
+import { Camera, Stethoscope, ClipboardCheck, HeartPulse } from "lucide-react";
 import Link from "next/link";
 
 export default function EcgPage() {
@@ -56,6 +56,21 @@ export default function EcgPage() {
           </div>
         </div>
         <p className="mt-3 text-xs opacity-60">{rhythm.meta.sources.join(" · ")} · {rhythm.meta.lastReviewed}</p>
+      </section>
+
+      {/* Lien localisation ST+ */}
+      <section className="card flex items-start gap-4 rounded-2xl border border-red-600/50 bg-red-600/5 p-4">
+        <HeartPulse className="h-8 w-8 shrink-0 text-red-500" aria-hidden />
+        <div className="flex-1">
+          <p className="font-bold"><T fr="Localisation du ST+ — quel territoire ? quelle artère ?" ar="تحديد موضع ST+ — أي منطقة؟ أي شريان؟" /></p>
+          <p className="mt-1 text-sm opacity-70">
+            <T fr="Cochez les dérivations avec sus-décalage → territoire et artère coupable proposés instantanément (inférieur RCA/LCx, antérieur IVA, postérieur, aVR = tronc commun)."
+               ar="اختر الاستمبارات المرتفعة ← يُقترح الموضع والشريان فوراً (سفلي يمين/محيطي، أمامي IVA، خلفي، aVR = جذع مشترك)." />
+          </p>
+        </div>
+        <Link href="/calculateurs/stemi" className="touch self-center rounded-xl bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-500">
+          <T fr="Classifier" ar="صنّف" />
+        </Link>
       </section>
 
       {/* Lien analyseur IA */}

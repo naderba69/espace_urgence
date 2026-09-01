@@ -9,7 +9,7 @@ import { generateText, AiError } from "@/lib/ai";
 import { aiReady } from "@/lib/ai-config";
 import { trackEvent } from "@/lib/analytics";
 import { useRegisterRecent } from "@/components/SearchBar";
-import { ScrollText, Pill, Calculator, ClipboardList, Activity, GitBranch, Search, Sparkles, HeartPulse, Loader2 } from "lucide-react";
+import { ScrollText, Pill, Calculator, ClipboardList, Activity, GitBranch, Search, Sparkles, HeartPulse, Loader2, Wrench } from "lucide-react";
 
 const TYPE_META: Record<RefType, { fr: string; ar: string; Icon: typeof ScrollText }> = {
   protocole: { fr: "Protocoles", ar: "بروتوكولات", Icon: ScrollText },
@@ -18,6 +18,7 @@ const TYPE_META: Record<RefType, { fr: string; ar: string; Icon: typeof ScrollTe
   procedure: { fr: "Procédures", ar: "إجراءات", Icon: ClipboardList },
   ecg: { fr: "ECG", ar: "تخطيط", Icon: HeartPulse },
   arbre: { fr: "Arbres décisionnels", ar: "أشجار قرار", Icon: GitBranch },
+  outil: { fr: "Outils", ar: "أدوات", Icon: Wrench },
 };
 
 export default function RecherchePage() {

@@ -153,3 +153,64 @@ describe("panneau doses par poids", () => {
     expect(get("fluid").dose).toBe("400 mL");
   });
 });
+
+// Vérifications des abaques RE.NAU 2018 (PSE professionnel)
+import { PERFUSIONS, perfusionFlow } from "../data/perfusions";
+
+const preset = (drugId: string, unit: string) => PERFUSIONS.find((x) => x.drugId === drugId && x.unit === unit)!;
+
+describe("abaques RE.NAU", () => {
+  it("dobutamine 5 µg/kg/min à 70 kg (250 mg/50 mL) → 4,2 mL/h", () => {
+    expect(perfusionFlow(preset("dobutamine", "µg/kg/min"), 5, 70)).toBeCloseTo(4.2, 1);
+  });
+  it("dobutamine 5 µg/kg/min à 100 kg → 6 mL/h (abaque RE.NAU)", () => {
+    expect(perfusionFlow(preset("dobutamine", "µg/kg/min"), 5, 100)).toBeCloseTo(6, 1);
+  });
+  it("noradrénaline RE.NAU 1 mg/h (8 mg/40 mL) → 5 mL/h", () => {
+    expect(perfusionFlow(preset("noradrenaline", "mg/h"), 1, 1)).toBeCloseTo(5, 1);
+  });
+  it("adrénaline anaphylaxie 0,1 mg/h = vitesse 2 (50 µg/mL)", () => {
+    expect(perfusionFlow(preset("adrenaline", "mg/h"), 0.1, 1)).toBeCloseTo(2, 1);
+  });
+  it("héparine SCA 12 UI/kg/h à 70 kg (500 UI/mL) → 1,7 mL/h (abaque)", () => {
+    expect(perfusionFlow(preset("heparine", "UI/kg/h"), 12, 70)).toBeCloseTo(1.68, 2);
+  });
+  it("héparine EP 18 UI/kg/h à 70 kg → 2,5 mL/h (abaque)", () => {
+    const p = PERFUSIONS.filter((x) => x.drugId === "heparine")[1];
+    expect(perfusionFlow(p, 18, 70)).toBeCloseTo(2.52, 2);
+  });
+  it("amiodarone charge 5 mg/kg/h à 70 kg → ~31 mL/h", () => {
+    expect(perfusionFlow(preset("amiodarone", "mg/kg/h"), 5, 70)).toBeCloseTo(31.1, 0);
+  });
+  it("nicardipine 1 mg/h (0,2 mg/mL) → 5 mL/h (RE.NAU vit. 5)", () => {
+    expect(perfusionFlow(preset("nicardipine", "mg/h"), 1, 1)).toBeCloseTo(5, 2);
+  });
+  it("kétamine 1 mg/kg/h à 70 kg (5 mg/mL) → 14 mL/h", () => {
+    expect(perfusionFlow(preset("ketamine", "mg/kg/h"), 1, 70)).toBeCloseTo(14, 1);
+  });
+  it("octreotide 25 µg/h (6,25 µg/mL) → 4 mL/h", () => {
+    expect(perfusionFlow(preset("octreotide", "µg/h"), 25, 1)).toBeCloseTo(4, 2);
+  });
+  it("isoprénaline départ 1,7 µg/min (20 µg/mL) → ~5 mL/h", () => {
+    expect(perfusionFlow(preset("isoprenaline", "µg/min"), 1.7, 1)).toBeCloseTo(5.1, 1);
+  });
+  it("sufentanil 0,15 µg/kg/h à 70 kg (5 µg/mL) → 2,1 mL/h", () => {
+    expect(perfusionFlow(preset("sufentanil", "µg/kg/h"), 0.15, 70)).toBeCloseTo(2.1, 2);
+  });
+  it("ocytocine HPP 5 UI/h (0,01 UI/mL) → 500 mL/h", () => {
+    expect(perfusionFlow(preset("oxytocine", "UI/h"), 5, 1)).toBeCloseTo(500, 1);
+  });
+  it("exacyl entretien 125 mg/h (25 mg/mL) → 5 mL/h", () => {
+    expect(perfusionFlow(preset("acide-tranexamique", "mg/h"), 125, 1)).toBeCloseTo(5, 2);
+  });
+  it("labétalol 0,1 mg/kg/h à 70 kg (2 mg/mL) → 3,5 mL/h (abaque)", () => {
+    expect(perfusionFlow(preset("labetalol", "mg/kg/h"), 0.1, 70)).toBeCloseTo(3.5, 2);
+  });
+  it("toutes les préparations ont une concentration > 0 et une fourchette cohérente", () => {
+    for (const p of PERFUSIONS) {
+      expect(p.concUgPerMl).toBeGreaterThan(0);
+      expect(p.doseMax).toBeGreaterThanOrEqual(p.doseMin);
+      expect(perfusionFlow(p, p.doseStart ?? p.doseMin, 70)).toBeGreaterThan(0);
+    }
+  });
+});

@@ -10,7 +10,7 @@ import { getMedication } from "@/data/medications";
 import { trackEvent } from "@/lib/analytics";
 import { readJSON, writeJSON } from "@/lib/storage";
 import Link from "next/link";
-import { ArrowRight, Info } from "lucide-react";
+import { ArrowRight, Info, Syringe, AlertTriangle, Stethoscope } from "lucide-react";
 
 const STORE = "eutn:calc:perfusions";
 
@@ -132,6 +132,57 @@ export default function PerfusionsPage() {
           </div>
         </div>
 
+        {/* Équivalent total administré (professionnel) */}
+        <p className="rounded-xl bg-surface2 px-3 py-2 text-center text-sm tabular-nums">
+          {lang === "ar" ? "المكافئ الإجمالي : " : "Équivalent total : "}
+          <b>{(() => {
+            const d = doseClamped;
+            const wkg = p.weightBased ? w : 1;
+            let perH: number;
+            let unit: string;
+            if (p.unit.includes("µg")) { perH = p.unit.includes("min") ? d * wkg * 60 / 1000 : d * wkg / 1000; unit = "mg/h"; }
+            else if (p.unit.includes("mg")) { perH = p.unit.includes("min") ? d * wkg * 60 : d * wkg; unit = "mg/h"; }
+            else if (p.unit.includes("UI")) { perH = d * wkg; unit = "UI/h"; }
+            else if (p.unit.includes("g/h")) { perH = d; unit = "g/h"; }
+            else { perH = 0; unit = ""; }
+            return `${perH >= 100 ? Math.round(perH) : Math.round(perH * 100) / 100} ${unit}`;
+          })()}</b>
+          <span className="opacity-60"> · {lang === "ar" ? "تحقّق بصرياً" : "double contrôle"}</span>
+        </p>
+
+        {/* Bolus / dose de charge */}
+        {p.bolus && (
+          <div className="rounded-xl border-2 border-sky-500/60 bg-sky-500/10 p-3 text-sm">
+            <p className="mb-1 flex items-center gap-2 font-bold text-sky-600 dark:text-sky-400">
+              <Syringe className="h-4 w-4" aria-hidden />
+              {lang === "ar" ? "دفعة / جرعة تحميل قبل المضخة" : "Bolus / dose de charge avant la seringue"}
+            </p>
+            <p className="leading-relaxed">{lang === "ar" ? p.bolus.ar : p.bolus.fr}</p>
+          </div>
+        )}
+
+        {/* Alertes sécurité (visuellement fortes) */}
+        {p.warnings && (
+          <div className="rounded-xl border-2 border-red-600/70 bg-red-600/10 p-3 text-sm">
+            <p className="mb-1 flex items-center gap-2 font-black uppercase tracking-wide text-red-600 dark:text-red-400">
+              <AlertTriangle className="h-5 w-5" aria-hidden />
+              {lang === "ar" ? "تنبيه سلامة" : "Alerte sécurité"}
+            </p>
+            <p className="font-semibold leading-relaxed text-red-700 dark:text-red-300">{lang === "ar" ? p.warnings.ar : p.warnings.fr}</p>
+          </div>
+        )}
+
+        {/* Pratiques professionnelles */}
+        {p.tips && (
+          <div className="rounded-xl border border-line bg-surface2 p-3 text-sm">
+            <p className="mb-1 flex items-center gap-2 font-bold text-teal-600 dark:text-teal-400">
+              <Stethoscope className="h-4 w-4" aria-hidden />
+              {lang === "ar" ? "ممارسة مهنية" : "Pratique professionnelle"}
+            </p>
+            <p className="leading-relaxed">{lang === "ar" ? p.tips.ar : p.tips.fr}</p>
+          </div>
+        )}
+
         {p.note && (
           <p className="flex items-start gap-2 rounded-xl bg-amber-500/10 p-3 text-sm text-amber-600 dark:text-amber-400">
             <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
@@ -145,6 +196,7 @@ export default function PerfusionsPage() {
             <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
           </Link>
         )}
+        {p.source && <p className="text-end text-[11px] opacity-50">{lang === "ar" ? "المصدر: " : "Source : "}{p.source}</p>}
       </div>
       <p className="text-xs opacity-60">{lang === "ar" ? "تحقق دائماً من التخفيف والمعايرة بالمنشأة." : "Vérifiez toujours la dilution et la titration localement."}</p>
     </div>

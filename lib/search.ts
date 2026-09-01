@@ -8,7 +8,7 @@ import type { Localized } from "@/data/types";
 
 import { decisionTrees } from "@/data/trees";
 
-export type RefType = "protocole" | "medicament" | "calculateur" | "procedure" | "ecg" | "arbre";
+export type RefType = "protocole" | "medicament" | "calculateur" | "procedure" | "ecg" | "arbre" | "outil";
 
 export interface SearchItem {
   key: string;          // "type:id" — utilisé pour favoris/récents
@@ -94,6 +94,21 @@ export const searchIndex: SearchItem[] = [
     title: t.title,
     hay: normalize(`${t.title.fr} ${t.title.ar} ${t.description.fr} ${t.description.ar} ${t.id} arbre decisionnel algorithme شجرة`),
   })),
+  // Outils transverses (pages hors données agrégées)
+  {
+    key: "outil:triage",
+    type: "outil" as const,
+    href: "/triage",
+    title: { fr: "Triage — situation par situation", ar: "الفرز — حالة بحالة" },
+    hay: normalize("triage tri trisage فرز priorités rouge orange vert p1 p2 p3 investissement vital classement أولوية اصفرار اولويات مستوى"),
+  },
+  {
+    key: "outil:triage-ia",
+    type: "outil" as const,
+    href: "/triage-ia",
+    title: { fr: "Aide au triage IA", ar: "مساعد الفرز الذكي" },
+    hay: normalize("triage ia aide assistant فرت ذكي"),
+  },
 ];
 
 export function searchItems(query: string, limit = 8): SearchItem[] {

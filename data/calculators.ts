@@ -128,6 +128,13 @@ export const calculators: CalculatorMeta[] = [
     href: "/calculateurs/perfusions",
     icon: "Droplets",
   },
+  {
+    id: "stemi",
+    title: { fr: "Localisation du ST+ (STEMI)", ar: "تحديد موضع ST+ (الاحتشاد)" },
+    description: { fr: "Dérivations élevées → territoire, artère coupable, conduite (18 dérivations, reperfusion).", ar: "الاستمبارات المرتفعة ← الموضع، الشريان، المسلك (18 استمباراً، إعادة تروية)." },
+    href: "/calculateurs/stemi",
+    icon: "HeartPulse",
+  },
 ];
 
 // Registre GCS (adulte + pédiatrique pré-verbal) pour la page calculateur
