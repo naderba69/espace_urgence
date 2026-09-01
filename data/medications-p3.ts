@@ -5,7 +5,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "ketamine",
     name: { fr: "Kétamine", ar: "كيتامين" },
-    brands: "Kétamine 50 mg/mL flacon 10 mL",
+    brands: "Kétalar® 500 mg/10 mL ; Kétamine Panpharma® 50 mg/mL",
     synonyms: ["ketamine", "ketalar", "كيتامين", "كيتالار"],
     klass: { fr: "Anesthésique dissociatif — antagoniste NMDA", ar: "مخدّر انفصالي — مضاد NMDA" },
     highRisk: true,
@@ -36,7 +36,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "paracetamol",
     name: { fr: "Paracétamol IV", ar: "باراسيتامول وريدي" },
-    brands: "Perfalgan® 1 g/100 mL",
+    brands: "Perfalgan® 1 g/100 mL (IV) ; Doliprane® 1 g cp ; Dafalgan®",
     synonyms: ["paracetamol", "perfalgan", "acetaminophene", "doliprane", "باراسيتامول", "بيرفالغان"],
     klass: { fr: "Antalgique/antipyrétique non opioïde", ar: "مسكن/خافض حرارة غير أفيوني" },
     highRisk: false,
@@ -58,7 +58,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "acetylcysteine",
     name: { fr: "N-acétylcystéine (NAC)", ar: "أسيتيل سيستئين (NAC)" },
-    brands: "Fluimucil® 200 mg/mL amp. 5 mL",
+    brands: "Fluimucil® 200 mg granulé ; Acétylcystéine Aguettant® 2 g/10 mL (IV antidote)",
     synonyms: ["acetylcysteine", "nac", "n-acetylcysteine", "fluimucil", "أسيتيل-سيستئين", "نك"],
     klass: { fr: "Antidote du paracétamol", ar: "ترياق الباراسيتامول" },
     highRisk: false,
@@ -85,7 +85,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "acide-tranexamique",
     name: { fr: "Acide tranexamique", ar: "حمض الترانيكساميك" },
-    brands: "Exacyl® 500 mg/5 mL",
+    brands: "Exacyl® 500 mg/5 mL (IV) ; 250 mg cp",
     synonyms: ["tranexamic", "exacyl", "txa", "ترانيكساميك", "اكزاسيل"],
     klass: { fr: "Antifibrinolytique", ar: "مضاد حلّ الفيبرين" },
     highRisk: false,
@@ -113,7 +113,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "trinitrine",
     name: { fr: "Trinitrine (glycéryl trinitrate)", ar: "ثلاثي نترات الغليسيريل" },
-    brands: "Natispray® 0,15 mg/bouffée ; ampoules 15 mg pour PSE",
+    brands: "Natispray® 0,15 mg/dose (pulvérisation sublinguale) ; Trinitrine simple 15 mg/50 mL (IV)",
     synonyms: ["trinitrine", "nitroglycerine", "nitroglycerin", "gtn", "ntg", "نيتروغليسرين", "ناتيسبراي"],
     klass: { fr: "Vasodilatateur nitré (veineux > artériel)", ar: "موسّع وعائي نتراتي (وريدي > شرياني)" },
     highRisk: true,
@@ -146,7 +146,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "aspirine",
     name: { fr: "Aspirine (acide acétylsalicylique)", ar: "أسبرين (حمض أسيتيل الساليسيليك)" },
-    brands: "Kardégic® 160 mg/75 mg ; Aspégic® 1 g IV",
+    brands: "Aspégic® 500 mg/1 g (poudre IV, lysine) ; Kardégic® 75 mg",
     synonyms: ["aspirine", "aspirin", "aas", "asa", "kardegic", "aspegic", "أسبرين", "كارديجيك", "أسبيجيك"],
     klass: { fr: "Antiagrégant plaquettaire (COX-1)", ar: "مضاد تجمع صفيحي (COX-1)" },
     highRisk: false,
@@ -173,7 +173,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "enoxaparine",
     name: { fr: "Énoxaparine (HBPM)", ar: "إينوكسابارين" },
-    brands: "Lovenox® seringues 20/40/60/80/100 mg",
+    brands: "Lovenox® 4000 UI/0,4 mL ; 6000 UI/0,6 mL (SC)",
     synonyms: ["enoxaparine", "lovenox", "hbpm", "lmwh", "إينوكسابارين", "لوفينوكس"],
     klass: { fr: "Anticoagulant anti-Xa (HBPM)", ar: "مضاد تخثر مضاد Xa" },
     highRisk: true,
@@ -227,7 +227,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "lidocaine",
     name: { fr: "Lidocaïne (antiaarythmique)", ar: "ليدوكائين (مضاد نظم)" },
-    brands: "Xylocaïne® 2 % cardiaque (20 mg/mL) amp. 5 mL (sans adrénaline)",
+    brands: "Xylocaïne® 2 % ampoule ; Xylocaïne® adrénalinée",
     synonyms: ["lidocaine", "xylocaine", "ليدوكائين", "كزيلوكائين"],
     klass: { fr: "Antiarythmique classe Ib", ar: "مضاد نظم صنف Ib" },
     highRisk: true,
@@ -254,7 +254,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "rocuronium",
     name: { fr: "Rocuronium", ar: "روكورونيوم" },
-    brands: "Esmeron® 50 mg/5 mL",
+    brands: "Esmeron® 50 mg/5 mL ; Rocuronium Kabi®",
     synonyms: ["rocuronium", "esmeron", "curare", "روكورونيوم", "ازميرون"],
     klass: { fr: "Curare aminostéroïdique (NDMR) — induction rapide", ar: "مُرخٍ عضلي غير مزيل استقطاب — تحريض سريع" },
     highRisk: true,

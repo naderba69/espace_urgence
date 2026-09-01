@@ -121,6 +121,13 @@ export const calculators: CalculatorMeta[] = [
     href: "/calculateurs/insuline",
     icon: "Syringe",
   },
+  {
+    id: "perfusions",
+    title: { fr: "Vitesses PSE — paliers de débit", ar: "سرعات المضخة — تدفقات جاهزة" },
+    description: { fr: "Tableau dose→mL/h pour les préparations standard (NA, adrénaline, héparine, insuline, trinitrine…).", ar: "جدول جرعة←مل/س للتحضيرات القياسية (نورأدرينالين، أدرينالين، هيبارين، إنسولين...) ." },
+    href: "/calculateurs/perfusions",
+    icon: "Droplets",
+  },
 ];
 
 // Registre GCS (adulte + pédiatrique pré-verbal) pour la page calculateur

@@ -7,6 +7,7 @@ export const protocolsP3: Protocol[] = [
     title: { fr: "Hémorragie du post-partum (HPP)", ar: "نزف ما بعد الولادة" },
     category: "obstetrique",
     severity: "critical",
+    summary: { fr: "Saignement génital après accouchement : massage utérin, ocytocine, TXA < 3 h, chirurgie si échec.", ar: "نزيف تناسلي بعد الولادة: تدليك رحمي، أوكسيتوسين، TXA <3 س." },
     steps: [
       { title: { fr: "Reconnaître AVANT 500 mL (ou toute perte avec signes) : saignement + atonie = urgence vitale", ar: "تعرّف قبل 500 مل (أو أي نزف بعلامات): نزف + انوثرة = خطر حيوي" } },
       { title: { fr: "Appel d'aide obstétricale/réanimation ; 2 VVP gros calibre ; bilan (NFS, hémostase, groupe)", ar: "نداء عاجل للتوليد/الإنعاش؛ خطّان غليظان؛ فحوص (صورة دم، تخثر، زمرة)" } },
@@ -30,6 +31,7 @@ export const protocolsP3: Protocol[] = [
     title: { fr: "Agitation aiguë / hyperactivité psychomotrice", ar: "الهياج الحاد / فرط الحركة النفسي الحركي" },
     category: "psychiatrie",
     severity: "urgent",
+    summary: { fr: "Agitation dangereuse : sécurité du personnel, contention douce pharmacologique ensuite.", ar: "هياج خطير: أمان الطاقم أولاً، تهدئة دوائية لاحقاً." },
     steps: [
       { title: { fr: "SÉCURITÉ d'abord : distance, issue libre, loin des objets dangereux, équipe renforcée ; ne jamais rester seul", ar: "السلامة أولاً: مسافة، مخرج حر، إبعاد الخطر، فريق إضافي؛ لا تبقَ وحيداً" } },
       { title: { fr: "Dé-escalade verbale : voix calme, phrases courtes, proposer (jamais ordonner), écouter", ar: "تهدئة كلامية: صوت هادئ، جمل قصيرة، اقتراح لا أمر، إصغاء" } },
@@ -51,6 +53,7 @@ export const protocolsP3: Protocol[] = [
     title: { fr: "Intoxication au paracétamol", ar: "تسمم بالباراسيتامول" },
     category: "toxicologie",
     severity: "urgent",
+    summary: { fr: "Surdose de paracétamol : dose estimée, NAC précoce si seuil atteint, surveillance hépatique.", ar: "جرعة باراسيتامول زائدة: تقدير، NAC مبكر عند بلوغ العتبة." },
     steps: [
       { title: { fr: "Évaluer : produit, dose (mg/kg), heure de l'INGESTION (± décalée), co-ingestions, contexte", ar: "قيّم: المنتج، الجرعة (ملغ/كغ)، ساعة الابتلاع (± متدرجة)، مشاركات، سياق" } },
       { title: { fr: "Ingestion unique >150 mg/kg (ou >200 quel que soit contexte de risque) : NAC sans attendre le taux", ar: "ابتلاع وحيد >150 ملغ/كغ: ابدأ الـNAC دون انتظار التحليل" } },
@@ -74,6 +77,7 @@ export const protocolsP3: Protocol[] = [
     title: { fr: "Intoxication organophosphorée (pesticides)", ar: "تسمم بالمركبات الفوسفورية العضوية" },
     category: "toxicologie",
     severity: "critical",
+    summary: { fr: "OP : décontamination, atropine à l'atropinisation, pralidoxime si précoce.", ar: "الفوسفور العضوي: إزالة تلوث، أتروبين حتى الأتروبنية، براليدوكسيم مبكر." },
     steps: [
       { title: { fr: "PROTECTION SOIGNANTS : gants/EPI, décontamination (hors exut et cheveux), retirer les vêtements souillés", ar: "حمي الطاقم: قفازات/وقاية، تطهير بالماء، انزع الثياب الملوثة" } },
       { title: { fr: "Reconnaître le syndrome cholinergique : myosis, hypersécrétions, sueurs, bradycardie, bronchospasme, fasciculations puis faiblesse", ar: "متلازمة كولينية: حدقة دبوسية، إفرازات، تعرق، بطء قلب، تشنج قصبي، رعاش ثم وهن" } },
@@ -95,6 +99,7 @@ export const protocolsP3: Protocol[] = [
     title: { fr: "Traumatisme crânien grave", ar: "رضّ الرأس الشديد" },
     category: "traumatologie",
     severity: "critical",
+    summary: { fr: "Trauma crânien : GCS, pupilles, signes d'engagement → scanner et transport.", ar: "رض الرأس: غلاسكو، حدقات، علامات انحشار ← تصوير ونقل." },
     steps: [
       { title: { fr: "XABCDE + rachis cervical protégé ; GCS (noter E, V, M séparément) ; pupilles", ar: "XABCDE مع حماية الرقبة؛ غلاسكو مفصلاً؛ حدقتان" } },
       { title: { fr: "GCS ≤8 ou risque ventilatoire : IOT précoce (RSI) — NE PAS hyperventiler de routine", ar: "غلاسكو ≤8 أو خطر تنفسي: تنبيب مبكر (RSI) — بلا تهوية مفرطة روتينية" } },
@@ -117,6 +122,7 @@ export const protocolsP3: Protocol[] = [
     title: { fr: "Brûlure grave", ar: "الحرق الشديد" },
     category: "traumatologie",
     severity: "urgent",
+    summary: { fr: "Brûlure étendue : refroidissement initial, estimation SBR/âge, remplissage Parkland, couverture stérile.", ar: "حريق ممتد: تبريد أولي، تقدير المساحة، تعويض باركلاند، تغطية معقمة." },
     steps: [
       { title: { fr: "Stopper le processus : éteindre, retirer vêtements brûlants/bijoux montre ; refroidir à l'eau du robinet 15–20 min (PAS de glace)", ar: "أوقف الحرق: أطفئ، انزع الثياب/المجوهرات، برّد بماء الصنبور 15–20 د (لا ثلج)" } },
       { title: { fr: "XABCDE ; voie aérienne : brûlures face/cou, suie, voix rauque → INtubation précoce (risque d'œdème)", ar: "XABCDE؛ مجرى هوائي: حروق وجه/رقبة، سخام، بحة ← تنبيب مبكر (خطر وذمة)" } },
@@ -140,6 +146,7 @@ export const protocolsP3: Protocol[] = [
     title: { fr: "Déshydratation aiguë de l'enfant (entérite)", ar: "تجفاف الطفل الحاد (التهاب معوي)" },
     category: "pediatrie",
     severity: "urgent",
+    summary: { fr: "Déshydratation aiguë de l'enfant : plan OMS A/B/C selon les signes cliniques.", ar: "تجفاف الطفل الحاد: خطة OMS أ/ب/ج حسب العلامات." },
     steps: [
       { title: { fr: "Pesée (déshydratation %) ; signes cliniques OMS : pli, yeux, soif, état général", ar: "وزن؛ علامات OMS: طية جلد، عيون غائرة، عطش، حالة عامة" } },
       { title: { fr: "Plan A (pas de déshydratation) : SRO après chaque selle + poursuite alimentation", ar: "خطة A (لا تجفاف): محلول تعويض بعدد كل خروج + استمرار التغذية" } },

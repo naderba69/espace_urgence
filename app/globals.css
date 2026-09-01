@@ -80,3 +80,74 @@ html[lang="ar"] body {
 @keyframes ecg-draw {
   to { stroke-dashoffset: 0; }
 }
+
+/* ============ Améliorations UI/UX — professionnalisation ============ */
+:root {
+  /* typographie de base */
+  line-height: 1.6;
+}
+html { scroll-behavior: smooth; }
+::selection { background: rgba(13, 148, 136, 0.35); }
+
+/* Espacement contenu — meilleure densité mobile / respiration desktop */
+#contenu { padding: 1rem 1rem 3.5rem; }
+@media (min-width: 640px) { #contenu { padding: 1.75rem 1.75rem 4rem; } }
+
+/* En-têtes : hiérarchie nette */
+#contenu h1 { line-height: 1.2; letter-spacing: -0.01em; }
+#contenu h2 { line-height: 1.3; }
+
+/* Cartes unifiées : ombre douce + bord lisible + hover subtil */
+.card {
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.06), 0 4px 14px -6px rgba(2, 6, 23, 0.10);
+}
+.dark .card { box-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px -12px rgba(0,0,0,0.55); }
+a.card { transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+a.card:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(2,6,23,.08), 0 12px 28px -10px rgba(13,148,136,.25); }
+
+/* Boutons : retour tactile net */
+button, a { -webkit-tap-highlight-color: transparent; }
+button:active { transform: scale(0.98); }
+.touch { transition: background-color .15s ease, color .15s ease, transform .1s ease; }
+
+/* Inputs : rendu clinique (gros, lisible, centré) */
+input, textarea, select {
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+input:focus, textarea:focus { border-color: #0d9488 !important; box-shadow: 0 0 0 3px rgba(13,148,136,.25); outline: none; }
+
+/* Chiffres/tabular-nums cohérents dans les doses */
+.tabular-nums { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* Nav : item actif mis en valeur par un liseré */
+nav a[aria-current="page"] { position: relative; }
+nav a[aria-current="page"]::before {
+  content: ""; position: absolute; inset-inline-start: -0.75rem; top: 15%; bottom: 15%;
+  width: 4px; border-radius: 4px; background: #0d9488;
+}
+
+/* Header flottant plus net */
+header.sticky { backdrop-filter: saturate(1.2) blur(10px); box-shadow: 0 1px 8px rgba(2,6,23,.06); }
+
+/* Listes numérotées des protocoles : espacement aéré */
+#contenu ol li, #contenu ul li { margin-top: 0.1rem; }
+
+/* Bulles abbr : soulignement pointillé pro */
+button[aria-expanded] { text-decoration-thickness: 1.5px; }
+
+/* Petits écrans : tout bouton d'action primaire passe en pleine largeur par défaut */
+@media (max-width: 480px) {
+  #contenu { font-size: 0.98rem; }
+}
+
+/* Accessibilité : réduire les animations si demandé */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .animate-pulse, .cpr-beat { animation: none !important; }
+}
+
+/* Barre de défilement discrète */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(100,116,139,.4); border-radius: 8px; }
+.dark ::-webkit-scrollbar-thumb { background: rgba(148,163,184,.25); }

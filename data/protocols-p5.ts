@@ -7,6 +7,7 @@ export const protocolsP5: Protocol[] = [
     title: { fr: "Envenimation scorpionique", ar: "لدغة العقرب" },
     category: "toxicologie",
     severity: "urgent",
+    summary: { fr: "Envenimation scorpionique : gradation I–III, analgésie, surveillance 6 h si local, réa si grade III.", ar: "لدغة عقرب: درجات I–III، تسكين، مراقبة 6 س، عناية إن درجة III." },
     steps: [
       { title: { fr: "Identifier : heure, aspect du scorpion, retirer l'aiguillon s'il est visible (NE PAS sucer)", ar: "حدّد: الساعة، شكل العقرب، أزل الشوكة إن ظهرت (لا تمتصّ)" } },
       { title: { fr: "Laver avec eau et savon ; refroidir la zone (10–15 min) ; NE PAS garrot ni incision", ar: "اغسل بماء وصابون؛ برّد المنطقة؛ لا عاصبة ولا شق" } },
@@ -49,6 +50,7 @@ export const protocolsP5: Protocol[] = [
     title: { fr: "Intoxication oxycarbonée (CO)", ar: "تسمم أول أكسيد الكربون" },
     category: "toxicologie",
     severity: "critical",
+    summary: { fr: "Exposition CO : O₂ 100 % immédiat, COHB et ECG, discuter l'oxygénothérapie hyperbare.", ar: "تعرض لأول أكسيد الكربون: أكسجين 100% فوراً، COHb وECG، ناقش الضغط العالي." },
     steps: [
       { title: { fr: "Suspicion : céphalée + nausées + confusion brusque en hiver/gaz → CO", ar: "اشتباه: صداع + غثيان + تشوش مفاجئ في الشتاء/الغاز" } },
       { title: { fr: "Retirer immédiatement l'exposition (ne pas pénétrer le local si toxique) — sécurité d'abord", ar: "أزل التعرض فوراً (لا تدخل المكان إذا سامّاً) — السلامة أولاً" } },
@@ -90,6 +92,7 @@ export const protocolsP5: Protocol[] = [
     title: { fr: "Urgence hypertensive (avec atteinte d'organe)", ar: "ارتفاع ضغط إلحاحي مع قصور عضوي" },
     category: "medecine",
     severity: "critical",
+    summary: { fr: "Urgence hypertensive = TA élevée + atteinte d'organe : baisser lentement (trinitrine/nicardipine).", ar: "ارتفاع ضغط إلحاحي + قصور عضوي: أنزل بطيئاً (نترات/nicardipine)." },
     steps: [
       { title: { fr: "Justifier : TA ≥ 180/120 ET atteinte d'organe cible (neuro, rétine, rein, cœur)", ar: "برّر: ضغط ≥ 180/120 وقصور عضوي (عصبي، شبكي، كلوي، قلبي)" } },
       { title: { fr: "Bilan complet : ECG, créat, iono, urines, scanner si neuro", ar: "فحص كامل: ECG، كرياتينين، شوارد، بول، سكانر إن عصبي" } },
@@ -126,6 +129,7 @@ export const protocolsP5: Protocol[] = [
     title: { fr: "Rhabdomyolyse (syndrome d'écrasement / effort)", ar: "تحلل العضلات (متلازمة السحق/الجهد)" },
     category: "traumatologie",
     severity: "urgent",
+    summary: { fr: "Destruction musculaire : remplissage avant dégagement, protéger le rein, guetter l'hyperK.", ar: "تحلل عضلي: تعويض قبل التحرير، احمِ الكلية، راقب K." },
     steps: [
       { title: { fr: "Suspicion : douleur musculaire intense + faiblesse + urine foncée après effort/écrasement/coma prolongé", ar: "اشتباه: ألم عضلي شديد + ضعف + بول قاتم بعد جهد/سحق/غيبوبة طويلة" } },
       { title: { fr: "Libération de l'écrasement : remplissage PRÉCOCE avant d'enlever le poids (risque de choc de libération)", ar: "قبل رفع الثقل: تعويض حجمي مبكر (خطر صدمة التحرير)" } },
@@ -163,6 +167,7 @@ export const protocolsP5: Protocol[] = [
     title: { fr: "Noyade (submersion)", ar: "الغرق" },
     category: "traumatologie",
     severity: "critical",
+    summary: { fr: "Submersion : ventilation efficace et O₂ HDF ; ne jamais vider l'estomac.", ar: "الغمر: تهوية فعالة وأكسجين عالي؛ لا تفرّغ المعدة أبداً." },
     steps: [
       { title: { fr: "Sortir l'eau en préservant colonne cervicale (si trauma/suspension)", ar: "أخرج من الماء مع حماية الرقبة (إذا رض/سقطة)" } },
       { title: { fr: "ABCDE ; si respiration absente ou inefficace : 5 insufflations initiales puis massage", ar: "ABCDE؛ إذا تنفس غائب: 5 نفخات أولى ثم ضغطات" } },
@@ -200,6 +205,7 @@ export const protocolsP5: Protocol[] = [
     title: { fr: "Hypothermie accidentelle", ar: "نقص حرارة عرضي" },
     category: "traumatologie",
     severity: "urgent",
+    summary: { fr: "Refroidissement accidentel : isolation, réchauffement progressif, monitoring du cœur.", ar: "برودة عرضية: عزل، تسخين متدرج، مراقبة قلبية." },
     steps: [
       { title: { fr: "Température rectale de grade I (35–32), II (32–28), III (< 28)", ar: "حرارة شرجية: خفيف 35–32، متوسط 32–28، شديد < 28" } },
       { title: { fr: "Retirer vêtements mouillés, isoler du sol, emmailloter (couverture de survie)", ar: "اخلع المبلل، اعزل من الأرض، لفّ (بطانية نجاة)" } },
@@ -235,6 +241,7 @@ export const protocolsP5: Protocol[] = [
     title: { fr: "Intoxication médicamenteuse aiguë (paracétamol, BZD, opioïdes, cardiotoxiques)", ar: "تسمم دوائي حاد" },
     category: "toxicologie",
     severity: "urgent",
+    summary: { fr: "Surdose médicamenteuse : identifier la molécule, appeler le centre antipoison, antidote selon toxidrome.", ar: "جرعة دوائية زائدة: حدّد الجزيء، اتصل بمركز السموم، الترياق حسب الصورة." },
     steps: [
       { title: { fr: "Identifier : molécule, dose, heure — emballage ou ordonnance si possible", ar: "حدّد: الجزيء، الجرعة، الساعة — علبة الدواء إن أمكن" } },
       { title: { fr: "Appeler CENTRE ANTIPOISON 71 335 500 avant tout traitement spécifique", ar: "اتصل بمركز السموم 71 335 500 قبل أي علاج نوعي" } },

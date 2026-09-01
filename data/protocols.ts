@@ -28,6 +28,7 @@ const protocolsCore: Protocol[] = [
     title: { fr: "Arrêt cardiaque de l'adulte (ACR)", ar: "توقف القلب لدى الكبير" },
     category: "reanimation",
     severity: "critical",
+    summary: { fr: "Chaîne de survie complète d'un arrêt cardiaque de l'adulte : RCP de haute qualité, défibrillation et médicaments selon le rythme.", ar: "سلسلة النجاة الكاملة لتوقف القلب: إنعاش عالي الجودة، صعق وأدوية حسب الإيقاع." },
     steps: [
       { title: { fr: "Constater : absence de réponse, respiration absente ou gasps, pas de pouls carotidien <10 s", ar: "التأكد: لا استجابة، تنفس غائب أو لهاث، لا نبض سباتي خلال <10 ث" }, detail: { fr: "Alerter/Composer SAMU 190 — activer la chaîne de survie.", ar: "نادِ/اتصل بالإسعاف 190 — فعّل سلسلة الإنقاذ." } },
       { title: { fr: "RCP haute qualité : 100–120/min, profondeur 5–6 cm, relâchement complet, interruptions <10 s", ar: "إنعاش جيد: 100–120/د، عمق 5–6 سم، ارتداد كامل، توقفات <10 ث" } },
@@ -75,6 +76,7 @@ const protocolsCore: Protocol[] = [
     title: { fr: "Anaphylaxie", ar: "الصدمة الأرجية (الحساسية المفرطة)" },
     category: "medecine",
     severity: "critical",
+    summary: { fr: "Réaction allergique grave menaçante : adrénaline IM immédiate, puis mesures de choc.", ar: "تفاعل أرجي خطير: أدرينالين عضلي فوري ثم تدابير الصدمة." },
     steps: [
       { title: { fr: "Reconnaître : début brutal + atteinte cutanée/muqueuse ET (respiratoire OU circulatoire OU digestive sévère)", ar: "التعرّف: بداية فجائية + أعراض جلدية/مخاطية و(تنفسية أو وعائية أو هضمية شديدة)" } },
       { title: { fr: "Retirer l'allergène si possible — NE PAS mobiliser/debout le patient", ar: "أزل المؤرث إن أمكن — لا تقيّم المريض واقفاً" } },
@@ -122,6 +124,7 @@ const protocolsCore: Protocol[] = [
     title: { fr: "AVC phase aiguë", ar: "الجلطة الدماغية الحادة" },
     category: "medecine",
     severity: "urgent",
+    summary: { fr: "Conduite d'un AVC en phase aiguë : dépistage FAST, imagerie, reperfusion si délai le permet.", ar: "تدبير الجلطة الحادة: كشف FAST، تصوير، إعادة إرواء ضمن المهلة." },
     steps: [
       { title: { fr: "Reconnaître avec FAST : Face asymétrique, Arm qui faiblit, Speech (parole), Time (heure de début)", ar: "التعرّف بـFAST: وجه مائل، ذراع ضعيفة، كلام مشوش — وسجّل ساعة البداية" } },
       { title: { fr: "Glycémie capillaire — corriger l'hypoglycémie (simulateur d'AVC)", ar: "سكر شعري — صحّح نقص السكر (يقلّد الجلطة)" } },
@@ -168,6 +171,7 @@ const protocolsCore: Protocol[] = [
     title: { fr: "Polytraumatisme — XABCDE", ar: "متعدد الإصابات — XABCDE" },
     category: "traumatologie",
     severity: "critical",
+    summary: { fr: "Victime de trauma multiple : ABCDE séquencé, contrôle des hémorragies, orientation rapide.", ar: "المصاب بإصابات متعددة: ABCDE متسلسل، إيقاف النزيف، توجيه سريع." },
     steps: [
       { title: { fr: "X (Catastrophic bleeding) : comprimer/tourniquet toute hémorragie externe massive d'abord", ar: "X (نزف كارثي): اكبس/ضع عاصبة لأي نزف خارجي هائل أولاً" } },
       { title: { fr: "A (Airway) : libérer + stabilisation manuelle du rachis cervical", ar: "A: حرّر المجرى + تثبيت يدوي للرقبة" } },
@@ -190,6 +194,7 @@ const protocolsCore: Protocol[] = [
     title: { fr: "ACR de l'enfant (PALS)", ar: "توقف القلب لدى الطفل (PALS)" },
     category: "pediatrie",
     severity: "critical",
+    summary: { fr: "Prise en charge de l'arrêt cardiaque de l'enfant : ventilation précoce et doses pondérales.", ar: "عناية توقف قلب الطفل: تهوية مبكرة وجرعات حسب الوزن." },
     steps: [
       { title: { fr: "Constater + alerter ; enfant : 5 insufflations initiales si asphyxie suspectée (cause #1 pédiatrique)", ar: "التأكد + النداء؛ عند الطفل: 5 نفخات ابتدائية إذا اشتُبه اختناق (السبب الأول)" } },
       { title: { fr: "Compressions : 100–120/min ; nourrisson = 2 pouces/2 doigts, enfant = 1–2 mains ; 1/3 du diamètre antéro-postérieur", ar: "ضغطات 100–120/د؛ رضيع: إبهامان/إصبعان، طفل: يد أو يدان؛ ثلث العمق الصدري" } },

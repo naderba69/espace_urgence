@@ -6,7 +6,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "adenosine",
     name: { fr: "Adénosine", ar: "أدينوزين" },
-    brands: "Striadyne® 6 mg/2 mL",
+    brands: "Adénocor® 6 mg/2 mL",
     synonyms: ["adenosine", "striadyne", "أدينوزين", "ادينوزين"],
     klass: { fr: "Antiarythmique — bloc nodal transitoire", ar: "مضاد نظم — حصار عقدي عابر" },
     highRisk: true,
@@ -46,7 +46,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "sulfate-magnesium",
     name: { fr: "Sulfate de magnésium (MgSO4)", ar: "كبريتات المغنيزيوم" },
-    brands: "MgSO4 15 % amp. 10 mL (1,5 g)",
+    brands: "Sulfate de magnésium 15 % Aguettant® 10 mL (1,5 g)",
     synonyms: ["magnesium", "mgso4", "sulfate de magnésium", "مغنيزيوم", "كبريتات"],
     klass: { fr: "Anticonvulsivant de l'éclampsie ; antiarythmique (torsades)", ar: "مضاد اختلاج الارتعاج؛ مضاد نظم (التورساد)" },
     highRisk: true,
@@ -79,7 +79,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "bicarbonate",
     name: { fr: "Bicarbonate de sodium 8,4 %", ar: "بيكربونات الصوديوم 8.4%" },
-    brands: "NaHCO3 8,4 % amp. 20 mL (1 mmol/mL)",
+    brands: "Bicarbonate de sodium 8,4 % Aguettant® 250 mL ; 4,2 %",
     synonyms: ["bicarbonate", "nahco3", "بيكربونات"],
     klass: { fr: "Alcalinisant / tampon", ar: "قلوِّن / منظّم حموضة" },
     highRisk: true,
@@ -109,7 +109,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "gluconate-calcium",
     name: { fr: "Gluconate de calcium 10 %", ar: "غلوكونات الكالسيوم 10%" },
-    brands: "Calcium gluconate 10 % amp. 10 mL (1 g)",
+    brands: "Gluconate de calcium 10 % Aguettant® 10 mL",
     synonyms: ["calcium", "gluconate", "كالسيوم", "غلوكونات"],
     klass: { fr: "Cardioprotecteur dans l'hyperK ; antidote", ar: "حامٍ قلبي في فرط K؛ ترياق" },
     highRisk: true,
@@ -140,7 +140,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "insuline-rapide",
     name: { fr: "Insuline rapide (Actrapid)", ar: "أنسولين سريع (أكترابيد)" },
-    brands: "Actrapid® 100 UI/mL flacon 10 mL",
+    brands: "Actrapid® HM 100 UI/mL flacon",
     synonyms: ["insuline", "actrapid", "insulin", "أنسولين", "انسولين", "اكترابيد"],
     klass: { fr: "Insuline humaine rapide", ar: "أنسولين بشري سريع" },
     highRisk: true,
@@ -173,7 +173,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "salbutamol",
     name: { fr: "Salbutamol", ar: "سالبوتامول" },
-    brands: "Ventoline® 100 µg/bouffée ; sol. nébulisation 5 mg/mL",
+    brands: "Ventoline® nébules 2,5 mg/2,5 mL et 5 mg/2,5 mL ; aérosol 100 µg/dose",
     synonyms: ["salbutamol", "ventoline", "albuterol", "فنتولين", "سالبوتامول"],
     klass: { fr: "β2-mimétique bronchodilatateur", ar: "موسّع قصبي بيتا-2" },
     highRisk: false,
@@ -203,7 +203,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "hydrocortisone",
     name: { fr: "Hydrocortisone (HSHC)", ar: "هيدروكورتيزون" },
-    brands: "Hydrocortisone 100 mg (Roussel® / Solu-Cortef®)",
+    brands: "Hydrocortisone Roussel® 100 mg flacon (HSH)",
     synonyms: ["hydrocortisone", "solucortef", "كورتيزون", "هيدروكورتيزون"],
     klass: { fr: "Corticoïde rapide", ar: "كورتيكويد سريع" },
     highRisk: false,
@@ -227,7 +227,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "diazepam",
     name: { fr: "Diazépam", ar: "ديازيبام" },
-    brands: "Valium® 10 mg/2 mL ; solution rectale 10 mg",
+    brands: "Valium® 10 mg/2 mL (IV) ; Valium® 10 mg cp",
     synonyms: ["diazepam", "valium", "ديازيبام", "فاليوم"],
     klass: { fr: "Benzodiazépine longue — anticonvulsivante", ar: "بنزوديازيبين طويل — مضاد اختلاج" },
     highRisk: true,
@@ -291,7 +291,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "fentanyl",
     name: { fr: "Fentanyl", ar: "فنتانيل" },
-    brands: "Fentanyl 100 µg/2 mL",
+    brands: "Fentanyl Panpharma® 100 µg/2 mL ; Fentanyl Renaudin®",
     synonyms: ["fentanyl", "فنتانيل"],
     klass: { fr: "Opioïde majeur (×100 morphine), courte action", ar: "أفيوني قوي (×100 مورفين)، قصير المفعول" },
     highRisk: true,

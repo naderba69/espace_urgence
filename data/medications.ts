@@ -9,7 +9,7 @@ const medicationsCore: Medication[] = [
   {
     id: "adrenaline",
     name: { fr: "Adrénaline (Épinéphrine)", ar: "أدرنالين (إبينفرين)" },
-    brands: "Adrénaline Aguettant® 1 mg/1 mL ; 0,5 mg/0,5 mL",
+    brands: "Adrénaline Aguettant® 1 mg/1 mL ; Adrénaline Medis® 1 mg/1 mL",
     synonyms: ["adrenaline", "epinephrine", "épinéphrine", "adrénaline", "adrenalina", "أدرنالين"],
     klass: { fr: "Catécholamine — α et β-adrénomimétique", ar: "كاتيكولامين — منبّه ألفا وبيتا أدرينالي" },
     highRisk: true,
@@ -56,7 +56,7 @@ const medicationsCore: Medication[] = [
   {
     id: "amiodarone",
     name: { fr: "Amiodarone", ar: "أميودارون" },
-    brands: "Cordarone® 150 mg/3 mL",
+    brands: "Cordarone® 150 mg/3 mL (IV) ; 200 mg cp",
     synonyms: ["amiodarone", "cordarone", "أميودارون", "كوردارون"],
     klass: { fr: "Antiarythmique classe III", ar: "مضاد اضطراب نظم من الصنف الثالث" },
     highRisk: true,
@@ -99,7 +99,7 @@ const medicationsCore: Medication[] = [
   {
     id: "atropine",
     name: { fr: "Atropine", ar: "أتروبين" },
-    brands: "Atropine 1 mg/1 mL ; 0,5 mg/1 mL",
+    brands: "Atropine Aguettant® 1 mg/1 mL ; 0,5 mg/1 mL",
     synonyms: ["atropine", "أتروبين", "اتروبين"],
     klass: { fr: "Anticholinergique (antimuscarinique)", ar: "مضاد كوليني (مضاد موسكاريني)" },
     highRisk: false,
@@ -133,7 +133,7 @@ const medicationsCore: Medication[] = [
   {
     id: "noradrenaline",
     name: { fr: "Noradrénaline", ar: "نورأدرنالين" },
-    brands: "Noradrénaline Aguettant® 8 mg/4 mL (2 mg/mL)",
+    brands: "Noradrénaline (tartrate) Aguettant® 8 mg/4 mL (à diluer)",
     synonyms: ["noradrenaline", "norepinephrine", "norépinéphrine", "levantérénol", "نورأدرنالين"],
     klass: { fr: "Catécholamine — vasopresseur α prédominant", ar: "كاتيكولامين — قابض وعائي ألفا غالب" },
     highRisk: true,
@@ -175,7 +175,7 @@ const medicationsCore: Medication[] = [
   {
     id: "midazolam",
     name: { fr: "Midazolam", ar: "ميدازولام" },
-    brands: "Hypnovel® 5 mg/5 mL ; 15 mg/3 mL",
+    brands: "Hypnovel® 5 mg/5 mL ; Midazolam Mylan® 5 mg/5 mL",
     synonyms: ["midazolam", "hypnovel", "ميدازولام", "هيبنوفيل"],
     klass: { fr: "Benzodiazépine — anticonvulsivant/sédatif", ar: "بنزوديازيبين — مضاد اختلاج/مهدئ" },
     highRisk: true,
@@ -209,7 +209,7 @@ const medicationsCore: Medication[] = [
   {
     id: "naloxone",
     name: { fr: "Naloxone", ar: "نالوكسون" },
-    brands: "Narcant® 0,4 mg/1 mL",
+    brands: "Naloxone Aguettant® 0,4 mg/1 mL",
     synonyms: ["naloxone", "narcan", "نالوكسون", "ناركان"],
     klass: { fr: "Antagoniste des opioïdes", ar: "مضاد للأفيونات" },
     highRisk: false,
@@ -240,7 +240,7 @@ const medicationsCore: Medication[] = [
   {
     id: "glucose30",
     name: { fr: "Glucose 30 % (G30)", ar: "غلوكوز 30% (G30)" },
-    brands: "Glucose Aguettant® 30 % amp. 20 mL",
+    brands: "Glucose 30 % Aguettant® (ampoules) ; G30®",
     synonyms: ["glucose", "g30", "dextrose", "sucre", "غلوكوز", "سكر"],
     klass: { fr: "Glucide hypertonique — antidote hypoglycémie", ar: "سكر مفرط التوتر — ترياق نقص السكر" },
     highRisk: false,
@@ -270,7 +270,7 @@ const medicationsCore: Medication[] = [
   {
     id: "furosemide",
     name: { fr: "Furosémide", ar: "فوروسيميد" },
-    brands: "Lasilix® 20 mg/2 mL",
+    brands: "Lasilix® 20 mg/2 mL (IV) ; 40 mg cp",
     synonyms: ["furosemide", "lasilix", "diurétique", "فوروسيميد", "لازيليكس"],
     klass: { fr: "Diurétique de l'anse", ar: "مدرّ عروي" },
     highRisk: false,

@@ -6,7 +6,7 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "heparine",
     name: { fr: "Héparine sodique (HNF)", ar: "هيبارين صوديوم (غير مجزأ)" },
-    brands: "Héparine choay® 5000 UI/5 mL ; Calciparine® 25 000 UI/5 mL (SC)",
+    brands: "Héparine Choay® 5000 UI/1 mL ; Calciparine® 2500 et 5000 UI (SC)",
     synonyms: ["heparine", "hnf", "heparin", "هيبارين"],
     klass: { fr: "Anticoagulant (héparine non fractionnée)", ar: "مضاد تخثر (هيبارين غير مجزأ)" },
     highRisk: true,
@@ -24,7 +24,7 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "alteplase",
     name: { fr: "Altéplase (rt-PA)", ar: "ألتيبلاز" },
-    brands: "Actilyse® 50 mg, 20 mg",
+    brands: "Actilyse® 50 mg (poudre + solvant)",
     synonyms: ["alteplase", "rt pa", "actilyse", "ألتيبلاز"],
     klass: { fr: "Thrombolytique (activateur tissulaire du plasminogène)", ar: "حالّ للخثرة" },
     highRisk: true,
@@ -61,7 +61,7 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "cefotaxime",
     name: { fr: "Céfotaxime (C3G)", ar: "سيفوتاكسيم" },
-    brands: "Céfotaxime Panpharma® 1 g, 2 g",
+    brands: "Claforan® 1 g ; Céfotaxime Panpharma® 1 g",
     synonyms: ["cefotaxime", "c3g", "cephalosporine", "سيفوتاكسيم", "كلافوران", "claforan"],
     klass: { fr: "Antibiotique β-lactamine (céphalosporine 3ᵉ gén.)", ar: "مضاد حيوي بيتا-لاكتام (سيفالوسبورين ج3)" },
     highRisk: false,
@@ -79,7 +79,7 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "amikacine",
     name: { fr: "Amikacine", ar: "أميكاسين" },
-    brands: "Amikin® 500 mg/2 mL, 1 g/4 mL ; Amikacine Mylan®",
+    brands: "Amiklin® 500 mg/2 mL ; Amikacine Kabi®",
     synonyms: ["amikacine", "amikacin", "أميكاسين"],
     klass: { fr: "Antibiotique aminoside", ar: "مضاد حيوي أمينوزيد" },
     highRisk: true,
@@ -98,7 +98,7 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "levetiracetam",
     name: { fr: "Lévétiracétam", ar: "ليفيتيراسيتام" },
-    brands: "Keppra® 500 mg/5 mL solution IV ; génériques",
+    brands: "Keppra® 500 mg/5 mL (IV) ; 500 et 1000 mg cp",
     synonyms: ["levetiracetam", "keppra", "ليفيتيراسيتام", "كيبرا"],
     klass: { fr: "Antiépileptique", ar: "مضاد صرع" },
     highRisk: false,

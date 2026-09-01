@@ -3,7 +3,7 @@ import {
   clampDose, dripRate, parkland, parklandRates, concUgPerMl, amineFlow,
   pediatricWeight, pediatricTubeSize, pediatricDefibJ, ibwKg, tidalVolumeRange,
   curb65Outcome, wellsEpLikely, hasBledHighRisk, nihssBand,
-  adrogueMadias, totalBodyWater, maxCorrectionRate, heparin, insulinDka, dkaPotassiumAction,
+  adrogueMadias, totalBodyWater, maxCorrectionRate, heparin, insulinDka, dkaPotassiumAction, weightResusPanel,
 } from "../lib/calc";
 
 describe("doses", () => {
@@ -134,5 +134,22 @@ describe("insuline ACD", () => {
     expect(dkaPotassiumAction(3.0)).toBe("hold-insulin");
     expect(dkaPotassiumAction(4.5)).toBe("add-k");
     expect(dkaPotassiumAction(5.5)).toBe("standard");
+  });
+});
+
+describe("panneau doses par poids", () => {
+  it("70 kg : adrénaline adulte fixe, rocuronium 84 mg, LEV 4200 mg, NaCl3% 210 mL", () => {
+    const p = weightResusPanel(70);
+    const get = (k: string) => p.find((i) => i.key === k)!;
+    expect(get("defib-adult-note").dose).toBe("120–200 J");
+    expect(get("roc").dose).toBe("84 mg");
+    expect(get("lev").dose).toBe("4200 mg");
+  });
+  it("20 kg : défib 80 J, adrénaline 0,2 mg, remplissage 400 mL", () => {
+    const p = weightResusPanel(20);
+    const get = (k: string) => p.find((i) => i.key === k)!;
+    expect(get("deferill").dose).toBe("80 J");
+    expect(get("adr-acr").dose).toBe("0.2 mg");
+    expect(get("fluid").dose).toBe("400 mL");
   });
 });

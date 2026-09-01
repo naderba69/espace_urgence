@@ -141,3 +141,33 @@ export function dkaPotassiumAction(k: number): "hold-insulin" | "add-k" | "stand
   if (k < 5.2) return "add-k";          // ajouter 20-30 mmol K/L de soluté
   return "standard";
 }
+
+/** Panneau d'anticipation complet : l'ensemble des doses d'urgence dérivées du poids, en une fois. */
+export interface WeightResusItem {
+  key: string;
+  labelFr: string;
+  labelAr: string;
+  dose: string;         // affichage final (déjà arrondi)
+  unit?: string;
+}
+export function weightResusPanel(w: number): WeightResusItem[] {
+  const r1 = (x: number) => (Math.round(x * 10) / 10).toString();
+  const r0 = (x: number) => Math.round(x).toString();
+  const rows: WeightResusItem[] = [
+    { key: "deferill", labelFr: "⚡ Défibrillation (péd.)", labelAr: "صعق (طفل)", dose: `${r0(Math.min(w * 4, 200))} J`, unit: "4 J/kg (max 200 biphasique)" },
+    { key: "adr-acr", labelFr: "Adrénaline ACR péd. 1 mg/10 mL", labelAr: "أدرينالين توقف الأطفال", dose: `${r1(Math.min(w * 0.01, 1))} mg`, unit: "0,01 mg/kg = 0,1 mL/kg" },
+    { key: "amio-acr", labelFr: "Amiodarone ACR péd.", labelAr: "أميودارون توقف الأطفال", dose: `${r0(Math.min(w * 5, 300))} mg`, unit: "5 mg/kg (max 300)" },
+    { key: "fluid", labelFr: "Bolus de remplissage", labelAr: "دفعة سوائل", dose: `${r0(w * 20)} mL`, unit: "20 mL/kg (choc)" },
+    { key: "defib-adult-note", labelFr: "⚡ Défibrillation adulte", labelAr: "صعق الكهل", dose: "120–200 J", unit: "fixe, exponentiel" },
+    { key: "epi-adult", labelFr: "Adrénaline ACR adulte", labelAr: "أدرينالين الكهل", dose: "1 mg", unit: "IV/IO toutes les 3–5 min" },
+    { key: "su", labelFr: "Succinylcholine (IOT)", labelAr: "سكسينيل كولين", dose: `${r1(w * 1.5)} mg`, unit: "1,5 mg/kg IV" },
+    { key: "roc", labelFr: "Rocuronium (IOT)", labelAr: "روكورونيوم", dose: `${r1(w * 1.2)} mg`, unit: "1,2 mg/kg IV (RSI)" },
+    { key: "keta", labelFr: "Kétamine (sédation)", labelAr: "كيتامين", dose: `${r1(w * 1)} – ${r1(w * 2)} mg`, unit: "1–2 mg/kg IV" },
+    { key: "fenta", labelFr: "Fentanyl (bolus)", labelAr: "فنتانيل", dose: `${r0(w)} µg`, unit: "1 µg/kg IV titré" },
+    { key: "mid", labelFr: "Midazolam IM (convulsion)", labelAr: "ميدازولام", dose: `${r1(Math.min(w * 0.2, 10))} mg`, unit: "0,2 mg/kg (max 10)" },
+    { key: "diazir", labelFr: "Diazépam IR (convulsion)", labelAr: "ديازيبام شرجي", dose: `${r1(Math.min(w * 0.5, 10))} mg`, unit: "0,5 mg/kg (max 10)" },
+    { key: "lev", labelFr: "Lévétiracétam", labelAr: "ليفيتيراسيتام", dose: `${r0(w * 60)} mg`, unit: "60 mg/kg (max 4,5 g)" },
+    { key: "nai-bolus", labelFr: "NaCl 0,9 % hypertonique? NON — NaCl 3 % hyper-T", labelAr: "NaCl 3% مفرط التوتر", dose: `${r0(w * 3)} mL`, unit: "3 mL/kg sur 20 min (HTIC)" },
+  ];
+  return rows;
+}

@@ -8,6 +8,7 @@ export const protocolsP4: Protocol[] = [
     title: { fr: "Bradycardie symptomatique", ar: "بطء القلب العرضي" },
     category: "reanimation",
     severity: "critical",
+    summary: { fr: "Bradycardie avec hypotension ou mauvaise tolérance : atropine, puis adrénaline ou pacing transcutané.", ar: "بطء قلب مع سوء تحمّل: أتروبين ثم أدرينالين أو تسريع خارجي." },
     steps: [
       { title: { fr: "Confirmer : FC < 50 + signes (hypotension, altération conscience, douleur thoracique, OAP)", ar: "أكّد: نبض < 50 + علامات (هبوط ضغط، تغير وعي، ألم صدري، وذمة)" } },
       { title: { fr: "Scope 12 dérivations + voie veineuse + O2 si SpO2 < 94 %", ar: "ECG 12 + مصل وريدي + أكسجين إذا التشبع < 94%" } },
@@ -50,6 +51,7 @@ export const protocolsP4: Protocol[] = [
     title: { fr: "Tachycardie à QRS fins ou larges instable", ar: "تسرع قلبي غير مستقر" },
     category: "reanimation",
     severity: "critical",
+    summary: { fr: "Tachycardie mal tolérée : cardioversion synchronisée ; QRS fins stables → adénosine.", ar: "تسرع سيئ التحمل: كارديوفيرزيون متزامنة؛ QRS ضيق مستقر ← أدينوزين." },
     steps: [
       { title: { fr: "Gravité : hypotension, douleur, altération conscience, signes hypoperfusion ?", ar: "الشدة: هبوط ضغط، ألم، تغير وعي، نقص تروية؟" } },
       { title: { fr: "Scope + 12 dérivations + VVP ; si STABLE → manœuvres vagales avant médicament", ar: "ECG + مصل؛ إذا مستقر ← مناورات مهبلية أولاً" } },
@@ -93,6 +95,7 @@ export const protocolsP4: Protocol[] = [
     title: { fr: "Embolie pulmonaire (suspicion / haute probabilité)", ar: "الصمة الرئوية" },
     category: "medecine",
     severity: "urgent",
+    summary: { fr: "Suspicion d'EP : évaluer la gravité hémodynamique, anticoaguler sans délai, thrombolyse si choc.", ar: "اشتباه صمة رئوية: قيّم الخطورة، ضد التخثر فوراً، حل خثرة إذا صدمة." },
     steps: [
       { title: { fr: "Évaluer probabilité (Wells/Geneva) ; hémodynamique : choc → EP grave", ar: "قيّم الاحتمال (ويلز/جنيف)؛ هل صدمة = صمة وخيمة" } },
       { title: { fr: "ECG (S1Q3T3, BBD), D-dimères (souvent inutile si forte clinique), échographie des MV", ar: "ECG، D-دايمر، دوبلر الأوردة" } },
@@ -128,6 +131,7 @@ export const protocolsP4: Protocol[] = [
     title: { fr: "Hypoglycémie sévère (< 0,5 g/L avec signes)", ar: "نقص سكر الدم الشديد" },
     category: "medecine",
     severity: "urgent",
+    summary: { fr: "Hypoglycémie avec signes : sucre per os si conscient, sinon G30 IV ou glucagon IM.", ar: "نقص سكر مع أعراض: سكر فموي إن واعٍ، وإلا G30 وريدي أو غلوكاغون." },
     steps: [
       { title: { fr: "Glycémie capillaire immédiate (si non possible → traiter sur clinique : sueurs, tremblements, agitation puis confusion, coma)", ar: "قياس سكر شعري فوري (وإلا عالج على الأعراض)" } },
       { title: { fr: "Si conscience conservée : sucre rapide per os 15 g (3 sucres, jus). Réévaluer 15 min.", ar: "إذا واعٍ: سكر سريع فموياً 15 غ. أعد التقييم بعد 15 د." } },
@@ -164,6 +168,7 @@ export const protocolsP4: Protocol[] = [
     title: { fr: "Syncope / lipothymie", ar: "إغماء / خفة" },
     category: "medecine",
     severity: "standard",
+    summary: { fr: "Perte de connaissance brève : chercher la cause cardiaque, traiter le contexte, surveiller.", ar: "فقدان وعي قصير: ابحث عن سبب قلبي، عالج السياق، راقب." },
     steps: [
       { title: { fr: "Contexte (position, effort, douleur, toux, miction) + témoins. Perte de tonus vs convulsive.", ar: "السياق + الشهود. فقدان توتر مقابل تشنج" } },
       { title: { fr: "Repos allongé, jambes surélevées ; pas de position assise prolongée", ar: "استلقاء مع رفع الساقين؛ بلا جلوس طويل" } },
@@ -200,6 +205,7 @@ export const protocolsP4: Protocol[] = [
     title: { fr: "Coup de chaleur (hyperthermie grave)", ar: "ضربة شمس / ارتفاع حرارة شديد" },
     category: "traumatologie",
     severity: "critical",
+    summary: { fr: "Hyperthermie avec signes neurologiques : refroidissement immédiat avant tout bilan.", ar: "حمّى مع علامات عصبية: تبريد فوري قبل أي فحص." },
     steps: [
       { title: { fr: "Confirmer : T°core ≥ 40 °C + troubles neuro (confusion, agitation, coma) dans contexte chaud/effort", ar: "أكّد: حرارة مركزية ≥ 40° + علامات عصبية في سياق حر" } },
       { title: { fr: "Refroidissement externe IMMÉDIAT : déshabiller, essuyage + brumisation d'eau tiède, ventilation, glace aines/aisselles/cou", ar: "تبريد خارجي فوري: تعرية، رذاذ ماء فاتر، هواء، ثلج مغبن/إبط/عنق" } },
@@ -237,6 +243,7 @@ export const protocolsP4: Protocol[] = [
     title: { fr: "Pneumothorax suffocant (tension)", ar: "استرواح صدر ضاغط" },
     category: "traumatologie",
     severity: "critical",
+    summary: { fr: "Détresse + asymétrie après trauma : décompression à l'aiguille sans attendre la radio.", ar: "ضائقة + تناظر بعد رض: بزل إبرة فوري دون انتظار التصوير." },
     steps: [
       { title: { fr: "Traumatisme thoracique + dyspnée brutale + MV abolies + hyperclarté ± hypotonie/détresse", ar: "رض صدري + ضيق تنفس حاد + كتم تهوية + نفخ مفرط" } },
       { title: { fr: "Pas de radio AVANT traitement — diagnostic clinique", ar: "لا تصوير قبل العلاج — التشخيص سريري" } },

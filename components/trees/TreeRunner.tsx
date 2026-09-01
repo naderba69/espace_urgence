@@ -6,6 +6,7 @@ import { PrintButton } from "@/components/Chrome";
 import T from "@/components/T";
 import { beep } from "@/lib/audio";
 import type { DecisionTree, TreeNode } from "@/data/trees";
+import { AbbrText } from "@/components/AbbrTooltip";
 import { CheckCircle2, AlertTriangle, Info, RotateCcw, Timer, ChevronRight } from "lucide-react";
 
 interface LogEntry {
@@ -141,7 +142,7 @@ export default function TreeRunner({ tree }: { tree: DecisionTree }) {
               {node.steps.map((s, i) => (
                 <li key={i} className="flex gap-2 text-lg leading-relaxed">
                   <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-teal-500 rtl:rotate-180" aria-hidden />
-                  <span>{q(s)}</span>
+                  <span><AbbrText>{q(s)}</AbbrText></span>
                 </li>
               ))}
             </ul>
@@ -183,7 +184,7 @@ export default function TreeRunner({ tree }: { tree: DecisionTree }) {
                 {node.steps.map((s, i) => (
                   <li key={i} className="flex gap-2 text-lg leading-relaxed">
                     <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-teal-500 rtl:rotate-180" aria-hidden />
-                    <span>{q(s)}</span>
+                    <span><AbbrText>{q(s)}</AbbrText></span>
                   </li>
                 ))}
               </ul>

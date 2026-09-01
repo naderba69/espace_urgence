@@ -7,6 +7,7 @@ export const protocolsP2: Protocol[] = [
     title: { fr: "Douleur thoracique / SCA (STEMI & NSTEMI)", ar: "ألم صدري / متلازمة تاجية حادة" },
     category: "medecine",
     severity: "critical",
+    summary: { fr: "Douleur thoracique coronarienne : ECG < 10 min, aspirine, reperfusion PCI dans les délais.", ar: "ألم صدري تاجي: ECG خلال 10 دقائق، أسبرين، وقسطرة ضمن المهلة." },
     steps: [
       { title: { fr: "ECG 12 dérivations immédiat (<10 min) ; ± dérivations droites/postérieures si doute", ar: "تخطيط 12 اشتقاق فوراً (<10 د)؛ ± اشتقاقات يمنى/خلفية عند الشك" }, detail: { fr: "Sus-décalage ST ≥1 mm dans 2 dérivations contiguës = critère STEMI (adapter seuils âge/sexe).", ar: "ارتفاع ST ≥1 مم في اشتقاقين متجاورين = معيار الاحتشاء (عدّل حسب العمر/الجنس)." } },
       { title: { fr: "MOrPHINE? D'abord : ABCDE, TA aux 2 bras, SpO2, VVP, scope", ar: "أولاً: ABCDE، ضغط بالذراعين، تشبع، خط وريدي، مراقبة" } },
@@ -30,6 +31,7 @@ export const protocolsP2: Protocol[] = [
     title: { fr: "Œdème aigu du poumon (OAP)", ar: "وذمة الرئة الحادة" },
     category: "medecine",
     severity: "critical",
+    summary: { fr: "Insuffisance cardiaque gauche aiguë : position, O₂, diurétiques et vasodilatateurs selon la TA.", ar: "قصور القلب الأيسر الحاد: جلوس، أكسجين، مدرات وموسعات حسب الضغط." },
     steps: [
       { title: { fr: "Position assise/jambes pendantes ; retirer ce qui comprime", ar: "اجلس المريض ورجلاه متدليتان" } },
       { title: { fr: "O2 haute concentration ; SPACER si BPCO ; objectif SpO2 94–98 %", ar: "أكسجين عالي التركيز؛ الهدف 94–98% (88–92% إن كان مريض انسداد مزمن)" } },
@@ -53,6 +55,7 @@ export const protocolsP2: Protocol[] = [
     title: { fr: "État de mal convulsif (tonico-clonique)", ar: "حالة الصرع المستمرة" },
     category: "medecine",
     severity: "critical",
+    summary: { fr: "Convulsions prolongées : sécuriser, benzodiazépine précoce, antiépileptique de fond à 20–40 min.", ar: "تشنجات ممددة: أمّن، بنزوديازيبين مبكر، مضاد صرعي أساسي عند 20–40 د." },
     steps: [
       { title: { fr: "Protéger (décubitus latéral, dégagement), CHRONOMÉTRER la crise (>5 min = état de mal)", ar: "احمِ (استلقاء جانبي، إبعاد الأخطار) ووقّت النوبة (>5 د = حالة صرعية)" } },
       { title: { fr: "ABCDE + O2 ; glycémie capillaire (corriger hypoglycémie)", ar: "ABCDE + أكسجين + سكر شعري (صحّح النقص)" } },
@@ -74,6 +77,7 @@ export const protocolsP2: Protocol[] = [
     title: { fr: "Crise d'asthme aigu grave", ar: "نوبة ربو حادة شديدة" },
     category: "medecine",
     severity: "urgent",
+    summary: { fr: "Crise d'asthme menaçante : bronchodilatateurs répétés, corticoïdes précoces, signes d'épuisement.", ar: "نوبة ربو خطيرة: موسعات متكررة، كورتيكويد مبكر، علامات الإنهاك." },
     steps: [
       { title: { fr: "Évaluer la gravité : parole, FR, FC, SpO2, conscience, silencieux clinique ?", ar: "قيّم الشدة: الكلام، التنفس، النبض، التشبع، الوعي، صدر صامت؟" } },
       { title: { fr: "O2 pour SpO2 93–95 % ; postures (assis)", ar: "أكسجين لتشبع 93–95%؛ إجلاس" } },
@@ -95,6 +99,7 @@ export const protocolsP2: Protocol[] = [
     title: { fr: "Sepsis sévère / Choc septique", ar: "إنتان شديد / صدمة إنتانية" },
     category: "reanimation",
     severity: "critical",
+    summary: { fr: "Sepsis avec défaillance d'organe : cultures, antibiotiques < 1 h, remplissage et noradrénaline.", ar: "إنتان مع قصور عضوي: مزارع، مضادات <ساعة، تعويض ونورأدرينالين." },
     steps: [
       { title: { fr: "Dépistage : infection suspectée + hypotension/tachycardie/hypoperfusion (marbrures, confusion, oligurie)", ar: "اشتباه عدوى + انخفاض ضغط/تسرع/نقص تروية (تبرقش، تشوش، قلة بول)" } },
       { title: { fr: "Lactate artériel/veineux capillaire + cultures AVANT antibiotiques (ne retardent pas)", ar: "لاكتات + مزارع قبل المضادات (دون تأخير)" } },
@@ -117,6 +122,7 @@ export const protocolsP2: Protocol[] = [
     title: { fr: "Acidocétose diabétique (ACD)", ar: "الحماض الكيتوني السكري" },
     category: "medecine",
     severity: "urgent",
+    summary: { fr: "ACD : remplissage massif, insuline IV progressive, potassium surveillé heure par heure.", ar: "الحماض الكيتوني: توسيع حجمي، إنسولين وريدي متدرج، بوتاسيوم مراقب." },
     steps: [
       { title: { fr: "Diagnostic : glycémie >2,5 g/L (ou diabétique connu) + pH <7,3 + cétones", ar: "تشخيص: سكر >2.5 غ/ل + pH<7.3 + كيتونات" } },
       { title: { fr: "Remplissage NaCl 0,9 % : 1 L 1ère heure (adapter âge/cardiaque)", ar: "توسيع بمصل ملحي: 1 لتر في الساعة الأولى (كيّف حسب العمر/القلب)" } },
@@ -139,6 +145,7 @@ export const protocolsP2: Protocol[] = [
     title: { fr: "Hyperkaliémie sévère", ar: "فرط بوتاسيوم الدم الشديد" },
     category: "medecine",
     severity: "critical",
+    summary: { fr: "K+ élevé menaçant : calcium cardioprotecteur d'abord, puis déplacement et élimination.", ar: "بوتاسيوم خطير: كالسيوم واقٍ أولاً، ثم إدخال خلوي وإخراج." },
     steps: [
       { title: { fr: "ECG en urgence (signes : T pointues, QRS élargi, ondes P effacées, ralentissement…)", ar: "تخطيط مستعجل (T مبرقعة، QRS متسع، P محوّلة، تباطؤ)" } },
       { title: { fr: "CARDIOPROTECTION immédiate : gluconate de calcium 10 % 10–30 mL IV lent sur 2–5 min (scope ; répéter si persistance ECG)", ar: "حماية قلبية فورية: غلوكونات كالسيوم 10% 10–30 مل على 2–5 د مع مراقبة" } },
@@ -160,6 +167,7 @@ export const protocolsP2: Protocol[] = [
     title: { fr: "Éclampsie / Pré-éclampsie sévère", ar: "الارتعاج / ما قبل الارتعاج الشديد" },
     category: "obstetrique",
     severity: "critical",
+    summary: { fr: "HTA gravidique sévère ± convulsions : magnésium sulfate, antihypertenseur, extraction non retardée.", ar: "ارتفاع ضغط حملي ± تشنجات: كبريتات مغنيزيوم، خافض ضغط، ولادة غير مؤجلة." },
     steps: [
       { title: { fr: "Sécuriser : décubitus latéral GAUCHE, rails, appel SAMU/maternité ; ABCDE + O2", ar: "أمّن: استلقاء جانبي أيسر، وسادات، نداء؛ ABCDE + أكسجين" } },
       { title: { fr: "SULFATE DE MAGNÉSIUM : 4 g IV sur 5–15 min puis 1 g/h PSE — 1ère ligne", ar: "كبريتات المغنيزيوم: 4 غ وريد على 5–15 د ثم 1 غ/س — الخط الأول" } },

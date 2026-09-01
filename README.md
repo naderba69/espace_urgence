@@ -50,6 +50,10 @@ docs/PROMPT-V2.md  cahier des charges complet (phases 2 et 3 : contenu complet +
 
 - **Reste possible** — molécules complémentaires selon disponibilité locale, arbres additionnels.
 
+## Abréviations interactives (nouveau)
+
+Toute abréviation connue (TA, PAM, GCS, MgSO₄…) est soulignée en pointillés dans les protocoles, fiches médicaments et arbres → **tap → fiche explicative FR/AR** (voir `data/abbr.ts`, `components/AbbrTooltip.tsx`).
+
 ## Déploiement
 
 Voir **[docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md)** — guide pas à pas (Vercel en ~10 min, alternatives Netlify/Pages/Cloudflare).

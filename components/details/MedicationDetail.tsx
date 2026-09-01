@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Medication } from "@/data/types";
 import { getMedication } from "@/data/medications";
+import { PERFUSIONS } from "@/data/perfusions";
 import { useApp } from "@/components/Providers";
 import T from "@/components/T";
 import { PrintButton, FavoriteButton } from "@/components/Chrome";
 import { useRegisterRecent } from "@/components/SearchBar";
+import { AbbrText } from "@/components/AbbrTooltip";
 import { trackEvent } from "@/lib/analytics";
 import { clampDose } from "@/lib/calc";
 import { ShieldAlert, Syringe, BookOpen, Info, AlertOctagon, Warehouse } from "lucide-react";
@@ -56,15 +58,15 @@ export default function MedicationDetail({ medication: m }: { medication: Medica
       </header>
 
       <Section title={lang === "ar" ? "الاستطبابات" : "Indications"}>
-        <T fr={m.indications.fr} ar={m.indications.ar} />
+        <AbbrText>{lang === "ar" ? m.indications.ar : m.indications.fr}</AbbrText>
       </Section>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Section title={`${t("common.adult")} — ${lang === "ar" ? "الجرعة" : "dose"}`}>
-          <T fr={m.doseAdult.fr} ar={m.doseAdult.ar} />
+          <AbbrText>{lang === "ar" ? m.doseAdult.ar : m.doseAdult.fr}</AbbrText>
         </Section>
         <Section title={`${t("common.pediatric")} — ${lang === "ar" ? "الجرعة" : "dose"}`}>
-          <T fr={m.dosePediatric.fr} ar={m.dosePediatric.ar} />
+          <AbbrText>{lang === "ar" ? m.dosePediatric.ar : m.dosePediatric.fr}</AbbrText>
         </Section>
       </div>
 
@@ -98,20 +100,30 @@ export default function MedicationDetail({ medication: m }: { medication: Medica
       )}
 
       <Section title={lang === "ar" ? "التمديد" : "Dilution / administration"}>
-        <T fr={m.dilution.fr} ar={m.dilution.ar} />
+        <AbbrText>{lang === "ar" ? m.dilution.ar : m.dilution.fr}</AbbrText>
+        {PERFUSIONS.some((p) => p.drugId === m.id) && (
+          <Link href="/calculateurs/perfusions" className="mt-3 flex items-center gap-2 rounded-xl border border-teal-600/40 bg-teal-600/10 p-3 text-sm font-bold text-teal-600 dark:text-teal-400">
+            <Syringe className="h-4 w-4 shrink-0" aria-hidden />
+            <span>
+              {lang === "ar"
+                ? "سرعات PSE جاهزة للتحضيرات القياسية: " + PERFUSIONS.filter((x) => x.drugId === m.id).map((x) => x.prep.ar).join(" ؛ ")
+                : "Vitesses PSE prêtes pour : " + PERFUSIONS.filter((x) => x.drugId === m.id).map((x) => x.prep.fr).join(" · ")}
+            </span>
+          </Link>
+        )}
       </Section>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Section title={lang === "ar" ? "موانع الاستعمال" : "Contre-indications"}>
-          <T fr={m.contraindications.fr} ar={m.contraindications.ar} />
+          <AbbrText>{lang === "ar" ? m.contraindications.ar : m.contraindications.fr}</AbbrText>
         </Section>
         <Section title={lang === "ar" ? "التأثيرات الجانبية" : "Effets indésirables"}>
-          <T fr={m.sideEffects.fr} ar={m.sideEffects.ar} />
+          <AbbrText>{lang === "ar" ? m.sideEffects.ar : m.sideEffects.fr}</AbbrText>
         </Section>
       </div>
 
       <Section title={lang === "ar" ? "ملاحظات تمريضية" : "Surveillance / soins infirmiers"}>
-        <T fr={m.nursing.fr} ar={m.nursing.ar} />
+        <AbbrText>{lang === "ar" ? m.nursing.ar : m.nursing.fr}</AbbrText>
       </Section>
 
       {m.interactions && m.interactions.length > 0 && (
@@ -126,7 +138,7 @@ export default function MedicationDetail({ medication: m }: { medication: Medica
                 <span className={`me-2 inline-block rounded px-2 py-0.5 text-xs font-black ${ix.severity === "high" ? "bg-red-600 text-white" : "bg-amber-500 text-black"}`}>
                   {ix.drug}
                 </span>
-                <T fr={ix.description.fr} ar={ix.description.ar} />
+                <AbbrText>{lang === "ar" ? ix.description.ar : ix.description.fr}</AbbrText>
               </li>
             ))}
           </ul>
@@ -135,7 +147,7 @@ export default function MedicationDetail({ medication: m }: { medication: Medica
 
       <div className="grid gap-4 md:grid-cols-2">
         <Section title={<span className="inline-flex items-center gap-2"><Warehouse className="h-4 w-4" />{lang === "ar" ? "التخزين" : "Conservation"}</span>}>
-          <T fr={m.storage.fr} ar={m.storage.ar} />
+          <AbbrText>{lang === "ar" ? m.storage.ar : m.storage.fr}</AbbrText>
         </Section>
         {alternatives.length > 0 && (
           <section className="card rounded-2xl border border-line bg-surface p-4">

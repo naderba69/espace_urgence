@@ -53,6 +53,7 @@ export interface Protocol {
   title: Localized;
   category: string;           // id de catégorie (voir data/protocols.ts)
   severity: "critical" | "urgent" | "standard";
+  summary?: Localized;        // phrase d'introduction affichée en haut de la fiche
   steps: ProtocolStep[];
   keyPoints: Localized[];
   trajectory?: ProtocolTrajectory[];   // branches d'évolution / complications

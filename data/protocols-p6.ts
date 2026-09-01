@@ -7,6 +7,7 @@ export const protocolsP6: Protocol[] = [
     title: { fr: "Hémorragie digestive haute", ar: "نزف هضمي علوي" },
     category: "medecine",
     severity: "critical",
+    summary: { fr: "Hématémèse/méléna : remplissage, IPP, endoscopie rapide, Blakemore si varices inefficaces.", ar: "قيء دموي/براز أسود: تعويض، IPP، تنظير سريع، بليكيمور إن دوالٍ." },
     steps: [
       { title: { fr: "Reconnaître : hématémèse, méléna, collapsus ; rechercher antécédents (cirrhose, AINS, AVK)", ar: "تعرّف: قيء دموي، براز أسود، انهيار؛ اسأل عن تليف، AINS، مضادات تخثر" } },
       { title: { fr: "Position latérale sécurité si vomissements abondants ; NPO strict", ar: "الوضعية الجانبية إذا قيء غزير؛ صيام مطلق" } },
@@ -51,6 +52,7 @@ export const protocolsP6: Protocol[] = [
     title: { fr: "Exacerbation de BPCO", ar: "تفاقم الانسداد الرئوي المزمن" },
     category: "medecine",
     severity: "urgent",
+    summary: { fr: "Exacerbation BPCO : O₂ contrôlé 88–92 %, bronchodilatateurs + corticoïdes, VNI si hypercapnie.", ar: "تفاقم انسداد مزمن: أكسجين مضبوط 88–92%، موسعات + كورتيكويد، VNI عند فرط CO₂." },
     steps: [
       { title: { fr: "Mise en suspicion : dyspnée + augmentation expectoration/expectoration chez BPCO connu (ou fumeur chronique)", ar: "اشتباه: ضيق تنفس + زيادة بلغم عند مريض BPCO أو مدخن مزمن" } },
       { title: { fr: "O2 CONTRÔLÉ : cible SpO2 88–92 % (réservé CANULE — masque haute concentration si besoin impérieux)", ar: "أكسجين مضبوط: هدف تشبع 88–92% (قنية أولاً)" } },
@@ -93,6 +95,7 @@ export const protocolsP6: Protocol[] = [
     title: { fr: "Convulsion fébrile (enfant)", ar: "تشنج حمّي (طفل)" },
     category: "pediatrie",
     severity: "urgent",
+    summary: { fr: "Crise convulsive chez l'enfant fébrile : rassurer, position latérale, BZD si > 5 min.", ar: "تشنج مع حمى عند الطفل: طمئن، وضعية جانبية، بنزوديازيبين إذا > 5 د." },
     steps: [
       { title: { fr: "Simple : < 15 min, généralisée, 6 mois–5 ans, récupération complète et rapide en 1 h — vs complexe", ar: "بسيط: < 15 د، معمم، 6 أشهر–5 سنوات، شفاء كامل خلال ساعة — مقابل مركّب" } },
       { title: { fr: "Voix rassurante aux parents ; ne rien mettre en bouche ; position latérale de sécurité", ar: "طمئن الوالدين؛ لا شيء بالفم؛ وضعية جانبية آمنة" } },
@@ -129,6 +132,7 @@ export const protocolsP6: Protocol[] = [
     title: { fr: "Électrisation / électrocution", ar: "صعقة كهربائية" },
     category: "traumatologie",
     severity: "critical",
+    summary: { fr: "Contact avec l'électricité : sécurité des sauveteurs, ECG incomplet — arythmie retardée possible.", ar: "تعرض كهربائي: سلامة المنقذ، ECG، اضطراب نظم متأخر محتمل." },
     steps: [
       { title: { fr: "SÉCURITÉ AVANT TOUT : couper le courant avant de toucher la victime (disjoncteur, perche sèche)", ar: "السلامة أولاً: اقطع التيار قبل لمس الضحية (قاطع، عصا جافة)" } },
       { title: { fr: "Evaluation ABCDE ; les brûlures cutanées sont trompeuses — l'atteinte interne est profonde", ar: "تقييم ABCDE؛ الحروق الجلدية خادعة — الإصابة الداخلية عميقة" } },
@@ -166,6 +170,7 @@ export const protocolsP6: Protocol[] = [
     title: { fr: "Pré-éclampsie sévère / éclampsie", ar: "ما قبل الارتعاج الشديد / ارتعاج" },
     category: "obstetrique",
     severity: "critical",
+    summary: { fr: "Pré-éclampsie sévère : MgSO₄ anticonvulsivant + antihypertenseur, sans retarder l'extraction.", ar: "ما قبل الارتعاج: MgSO4 مضاد تشنج + خافض ضغط، بلا تأخير الولادة." },
     steps: [
       { title: { fr: "Suspicion : TA ≥ 160/110 chez femme enceinte ≥ 20 SA + céphalées/troubles visuels", ar: "اشتباه: ضغط ≥ 160/110 عند حامل ≥ 20 أسبوع + صداع/اضطراب بصري" } },
       { title: { fr: "Si convulsions : SURVEILLER NE PAS SE BATTRE — position latérale gauche, sécuriser la langue", ar: "إذا تشنجات: راقب لا تُقاتل — وضعية جانبية يسرى، أمّن اللسان" } },

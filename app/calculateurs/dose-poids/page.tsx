@@ -7,7 +7,7 @@ import { PrintButton } from "@/components/Chrome";
 import { useRegisterRecent } from "@/components/SearchBar";
 import { trackEvent } from "@/lib/analytics";
 import { readJSON, writeJSON } from "@/lib/storage";
-import { clampDose } from "@/lib/calc";
+import { clampDose, weightResusPanel } from "@/lib/calc";
 import T from "@/components/T";
 
 const STORE = "eutn:calc:dose-poids";
@@ -88,6 +88,26 @@ export default function DosePoidsPage() {
           </p>
         )}
       </div>
+
+      {/* Panneau d'anticipation complet : toutes les doses clés d'un coup */}
+      {w > 0 && (
+        <section className="card rounded-2xl border border-amber-500/50 bg-amber-500/5 p-4">
+          <h2 className="mb-1 font-extrabold text-amber-500">
+            <T fr="Anticipation rapide — tout pour ce poids" ar="استباق سريع — كل جرعات هذا الوزن" />
+          </h2>
+          <p className="mb-3 text-xs opacity-70"><T fr="Mémorisez/imprimez avant l'arrivée du patient." ar="احفظ/اطبع قبل وصول المريض." /></p>
+          <ul className="divide-y divide-line">
+            {weightResusPanel(w).map((row) => (
+              <li key={row.key} className="flex items-start justify-between gap-3 py-2 text-sm">
+                <span className="font-semibold">{lang === "ar" ? row.labelAr : row.labelFr}
+                  <span className="block text-xs font-normal opacity-60">{row.unit}</span>
+                </span>
+                <span className="shrink-0 rounded-lg bg-surface2 px-2.5 py-1 font-mono font-black tabular-nums text-teal-500">{row.dose}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <p className="text-xs opacity-60">{t("common.disclaimer")}</p>
     </div>
