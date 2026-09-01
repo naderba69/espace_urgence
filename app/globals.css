@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* Mode sombre piloté par la classe .dark sur <html> (pas prefers-color-scheme) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Variables de thème — clair / sombre (sombre par défaut, exigé cahier des charges) */
+:root {
+  --bg: #f8fafc;
+  --fg: #0f172a;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --line: #e2e8f0;
+  --font-inter: ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: ui-sans-serif, system-ui, sans-serif;
+}
+.dark {
+  --bg: #0f172a;         /* navy profond (charte) */
+  --fg: #f1f5f9;
+  --surface: #1e293b;
+  --surface-2: #0b1220;
+  --line: #334155;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface-2);
+  --color-line: var(--line);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Police arabe quand la langue active = ar */
+html[lang="ar"] body {
+  font-family: var(--font-arabic), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Accessibilité : focus visible partout */
+:focus-visible {
+  outline: 3px solid #0d9488;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Cibles tactiles >= 44px (mobile-first, usage ambulancier) */
+.touch {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Impression : uniquement le contenu, pas de nav/boutons ---- */
+@media print {
+  html { font-size: 12pt !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .no-print { display: none !important; }
+  a { color: #000 !important; text-decoration: none !important; }
+  .card, section { break-inside: avoid; }
+  .break-before-page { break-before: page; }
+  .dark { --bg: #fff; --fg: #000; --surface: #fff; --surface-2: #fff; --line: #999; }
+  [class*="bg-"], [class*="text-"], [class*="border-"] { print-color-adjust: economy; }
+}
+
+/* Animation du témoin de métronome RCP */
+@keyframes cpr-beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.25); }
+}
+.cpr-beat { animation: cpr-beat 0.545s infinite; }
+
+/* Tracé ECG : dessin progressif de l'onde */
+.ecg-draw { animation: ecg-draw 3.2s linear forwards; }
+@keyframes ecg-draw {
+  to { stroke-dashoffset: 0; }
+}
