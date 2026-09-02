@@ -68,4 +68,5 @@ export interface CalculatorMeta {
   description: Localized;
   href: string;
   icon: string;               // nom d'icône lucide-react
+  meta?: ReviewMeta;          // sources + revue éditoriale
 }

@@ -156,6 +156,14 @@ button[aria-expanded] { text-decoration-thickness: 1.5px; }
 
 /* 1) قاعدة: لا شيء يتجاوز عرض الشاشة */
 html, body { overflow-x: clip; }
+/* Zones « en sûreté » du téléphone (encoche / barre gestuelle) — clé pour un rendu natif edge-to-edge */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+footer, .bottom-safe { padding-bottom: env(safe-area-inset-bottom); }
+main { scroll-behavior: smooth; }
 * { min-width: 0; }
 main, section, article, .card { max-width: 100%; }
 #contenu { width: 100%; }

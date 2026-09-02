@@ -77,7 +77,8 @@ export default function SearchBar({ big = false }: { big?: boolean }) {
   };
 
   const showHistory = open && !q && history.length > 0;
-  const voiceSupported = typeof window !== "undefined" && getSpeechRecognition() !== null;
+  const [voiceSupported, setVoiceSupported] = useState(false); // SSR-safe : détecté après montage (sinon hydration #418)
+  useEffect(() => { setVoiceSupported(getSpeechRecognition() !== null); }, []);
 
   return (
     <div ref={boxRef} className={`relative w-full ${big ? "max-w-2xl" : "max-w-md"}`}>

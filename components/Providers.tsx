@@ -66,6 +66,16 @@ export default function Providers({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   // Chargement initial depuis localStorage
+  // Chrome système uniquement dans l'APK natif : barre d'état assortie au thème, splash masqué sitôt React prêt.")
+  useEffect(() => {
+    const cap = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor;
+    if (!cap?.isNativePlatform?.()) return;
+    import("@capacitor/status-bar").then((m) => {
+      m.StatusBar.setBackgroundColor({ color: "#0b1220" }).catch(() => undefined);
+      m.StatusBar.setStyle({ style: m.Style.Dark }).catch(() => undefined);
+    }).catch(() => undefined);
+    import("@capacitor/splash-screen").then((m) => m.SplashScreen.hide().catch(() => undefined)).catch(() => undefined);
+  }, []);
   useEffect(() => {
     const p = { ...DEFAULT_PREFS, ...readJSON<Partial<Prefs>>(KEYS.prefs, {}) };
     setPrefs(p);
@@ -74,9 +84,10 @@ export default function Providers({ children }: { children: ReactNode }) {
     setRecent(readJSON<RecentItem[]>(KEYS.recent, []).map((r) => r.key));
     setHydrated(true);
 
-    // Service worker (production uniquement)
+    // Service worker (production uniquement) — chemin préfixé par le basePath de déploiement
     if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {});
+      const base = document.querySelector('meta[name="deploy-base"]')?.getAttribute("content") ?? "";
+      navigator.serviceWorker.register(`${base}/sw.js`).catch(() => {});
     }
     initAnalytics();
   }, []);

@@ -100,12 +100,12 @@ export default function TreeRunner({ tree }: { tree: DecisionTree }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="flex items-start justify-between gap-2 print:hidden">
+      <header className="flex flex-wrap items-start justify-between gap-2 print:hidden">
         <div>
           <h1 className="text-2xl font-extrabold">{q(tree.title)}</h1>
           <p className="mt-1 text-sm opacity-70">{q(tree.description)}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <button onClick={reset} aria-label="reset" title={lang === "ar" ? "إعادة البدء" : "Recommencer"}
             className="rounded-xl border border-line p-3 hover:bg-surface2">
             <RotateCcw className="h-5 w-5" />

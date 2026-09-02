@@ -10,8 +10,11 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
     "lucide-react": "^1.38.0",
     "next": "16.3.4",
+    "playwright": "^1.62.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },

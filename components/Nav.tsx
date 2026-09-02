@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, ScrollText, Pill, Calculator, Settings, HeartPulse, ClipboardList, Baby, HandHelping, Brain, Bone, Bot, GitBranch, Zap, Search } from "lucide-react";
 import { useApp } from "./Providers";
+import InstallPwa from "./InstallPwa";
 
 export const NAV_ITEMS = [
   { href: "/", key: "nav.home", Icon: Home },
@@ -29,6 +30,7 @@ export default function Nav({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <nav aria-label={t("nav.navigation")} className="flex flex-col gap-1 p-3">
+      <InstallPwa variant="drawer" />
       {NAV_ITEMS.map(({ href, key, Icon }) => {
         const activeItem = href === "/" ? pathname === "/" : pathname.startsWith(href);
         return (

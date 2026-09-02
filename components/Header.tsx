@@ -6,6 +6,7 @@ import { Activity, Menu, Moon, Sun, Volume2, VolumeX, Siren, X } from "lucide-re
 import { useApp } from "./Providers";
 import SearchBar from "./SearchBar";
 import Nav from "./Nav";
+import InstallPwa from "./InstallPwa";
 
 export default function Header() {
   const { t, prefs, setPref, setEmergencyOpen } = useApp();
@@ -55,6 +56,7 @@ export default function Header() {
           >
             {prefs.muted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
           </button>
+          <InstallPwa variant="icon" />
           <button
             onClick={() => setEmergencyOpen(true)}
             className="touch gap-1 rounded-xl bg-red-600 px-3 py-2 font-bold text-white hover:bg-red-500"

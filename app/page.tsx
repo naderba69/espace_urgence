@@ -1,10 +1,11 @@
 "use client";
 // Accueil : recherche, actions rapides, favoris (glisser-déposer), récents, rappels vitaux.
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Siren, Timer, Syringe, Brain, AlertTriangle, Phone, GripVertical, Star } from "lucide-react";
 import { useApp } from "@/components/Providers";
 import SearchBar from "@/components/SearchBar";
+import InstallPwa from "@/components/InstallPwa";
 import { resolveRef } from "@/lib/search";
 import { vitalSigns, emergencyNumbers } from "@/data/quickref";
 
@@ -18,6 +19,14 @@ const QUICK = [
 export default function HomePage() {
   const { t, lang, favorites, recent, reorderFavs, setEmergencyOpen } = useApp();
   const [dragIdx, setDragIdx] = useState<number | null>(null);
+
+  // Raccourci PWA "?urgence=1" (icône d'écran d'accueil "Mode urgence")
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("urgence") === "1") {
+      setEmergencyOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const favItems = favorites.map(resolveRef).filter(Boolean);
   const recentItems = recent.map(resolveRef).filter(Boolean).slice(0, 6);
@@ -52,6 +61,9 @@ export default function HomePage() {
           {t("emergency.open")}
         </button>
       </section>
+
+      {/* Installation PWA */}
+      <InstallPwa variant="banner" />
 
       {/* Actions rapides */}
       <section aria-labelledby="qa">

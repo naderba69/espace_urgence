@@ -8,6 +8,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Calcule les doses mg/kg et volumes à injecter (pédiatrie & adulte).", ar: "يحسب جرعات ملغ/كغ والأحجام المحقونة (أطفال وكبار)." },
     href: "/calculateurs/dose-poids",
     icon: "Syringe",
+    meta: { sources: ["AHA PALS 2020","RE.NAU Livret du médicament 2018"], lastReviewed: "2026-09" },
   },
   {
     id: "gcs",
@@ -15,6 +16,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Échelle de coma interactive adulte + pédiatrique.", ar: "سلّم الغيبوبة التفاعلي للكبار والأطفال." },
     href: "/calculateurs/gcs",
     icon: "Brain",
+    meta: { sources: ["Teasdale & Jennett 1974 (GCS)","ATLS 10e éd."], lastReviewed: "2026-09" },
   },
   {
     id: "debit-perfusion",
@@ -22,6 +24,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "gouttes/min et mL/h à partir du volume et de la durée.", ar: "قطرات/د و مل/س من الحجم والمدة." },
     href: "/calculateurs/debit-perfusion",
     icon: "Droplets",
+    meta: { sources: ["RE.NAU Livret du médicament 2018"], lastReviewed: "2026-09" },
   },
   {
     id: "chrono-rcp",
@@ -29,6 +32,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Cycles de 2 min, métronome 110/min, rappel adrénaline, alarme sonore.", ar: "دورات دقيقتين، ميترونوم 110/د، تذكير أدرنالين، منبه صوتي." },
     href: "/calculateurs/chrono-rcp",
     icon: "Timer",
+    meta: { sources: ["AHA ACLS 2025","ERC 2021"], lastReviewed: "2026-09" },
   },
   {
     id: "brulures",
@@ -36,6 +40,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Surface brûlée SVG cliquable, volume de remplissage Parkland adulte/enfant.", ar: "مساحة الحرق برسم تفاعلي، حجم تعويض باركلاند للكبار والأطفال." },
     href: "/calculateurs/brulures",
     icon: "Flame",
+    meta: { sources: ["Wallace (règle des 9) / Lund-Browder","EBA Practice Guidelines 2019"], lastReviewed: "2026-09" },
   },
   {
     id: "amines",
@@ -43,6 +48,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Débit de seringue électrique (mL/h) selon poids, concentration, dose cible.", ar: "تدفق المضخة (مل/س) حسب الوزن والتركيز والجرعة المستهدفة." },
     href: "/calculateurs/amines",
     icon: "Gauge",
+    meta: { sources: ["RE.NAU Livret du médicament 2018"], lastReviewed: "2026-09" },
   },
   {
     id: "dose-anaphylaxie",
@@ -50,6 +56,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Dose IM par tranche d'âge (RCUK/ERC) — adulte et enfant.", ar: "الجرعة العضلية حسب العمر (RCUK/ERC) — كبار وأطفال." },
     href: "/calculateurs/dose-anaphylaxie",
     icon: "AlertTriangle",
+    meta: { sources: ["RCUK Anaphylaxis 2021","AHA PALS 2020"], lastReviewed: "2026-09" },
   },
   {
     id: "poids-pediatrique",
@@ -57,6 +64,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Estimation selon l'âge (formule (âge×2)+8) + constantes associées.", ar: "تقدير حسب العمر (عمر×2 + 8) مع الثوابت المرتبطة." },
     href: "/calculateurs/poids-pediatrique",
     icon: "Baby",
+    meta: { sources: ["Luscombe & Owens 2007 (formule APLS)","AHA PALS 2020"], lastReviewed: "2026-09" },
   },
   {
     id: "convertisseur",
@@ -64,6 +72,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "mg ↔ µg, kg ↔ lb, °C ↔ °F, mmHg ↔ kPa.", ar: "ملغ↔مكغ، كغ↔رطل، مئوية↔فهرنهايت، ملم زئبق↔كيلوباسكال." },
     href: "/calculateurs/convertisseur",
     icon: "Scale",
+    meta: { sources: ["Système international d’unités"], lastReviewed: "2026-09" },
   },
   {
     id: "ventilateur",
@@ -71,6 +80,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Volume courant 6–8 mL/kg (poids idéal) et fréquence indicative selon âge.", ar: "حجم تيار 6–8 مل/كغ (الوزن المثالي) وتواتر إرشادي حسب العمر." },
     href: "/calculateurs/ventilateur",
     icon: "Wind",
+    meta: { sources: ["ARDSnet (Vt 6–8 mL/kg PIT)","SRLF 2021"], lastReviewed: "2026-09" },
   },
   {
     id: "curb65",
@@ -78,6 +88,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Score de gravité de pneumonie communautaire : confusion, urée, FR, TA, âge.", ar: "سكور شدة الالتهاب الرئوي الجماعي." },
     href: "/calculateurs/curb65",
     icon: "Stethoscope",
+    meta: { sources: ["Lim et al. 2003 (CURB-65)","BTS Community Pneumonia"], lastReviewed: "2026-09" },
   },
   {
     id: "wells-ep",
@@ -85,6 +96,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Probabilité clinique d'EP : 7 critères, score à 2 niveaux.", ar: "احتمال سريري للصمة الرئوية: 7 معايير بمستويين." },
     href: "/calculateurs/wells-ep",
     icon: "Activity",
+    meta: { sources: ["Wells et al. 2000","ESC EP 2019"], lastReviewed: "2026-09" },
   },
   {
     id: "nihss",
@@ -92,6 +104,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Échelle neurologique complète de l'AVC : 15 items, 0–42.", ar: "المقياس العصبي الكامل للجلطة: 15 بنداً، 0–42." },
     href: "/calculateurs/nihss",
     icon: "ClipboardList",
+    meta: { sources: ["NINDS (NIHSS)","ESO/AHA AVC ischémique 2021"], lastReviewed: "2026-09" },
   },
   {
     id: "has-bled",
@@ -99,6 +112,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Risque hémorragique sous anticoagulation (FA) — 9 critères.", ar: "خطر النزف تحت مضادات التخثر — 9 معايير." },
     href: "/calculateurs/has-bled",
     icon: "Gauge",
+    meta: { sources: ["Pisters et al. 2010 (HAS-BLED)","ESC FA 2020"], lastReviewed: "2026-09" },
   },
   {
     id: "heparine",
@@ -106,6 +120,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Bolus U/kg + débit initial en mL/h selon la concentration.", ar: "دفعة وحدة/كغ + تدفق ابتدائي مل/س حسب التركيز." },
     href: "/calculateurs/heparine",
     icon: "Droplets",
+    meta: { sources: ["RE.NAU Livret du médicament 2018","CHEST Antithrombotic 2012"], lastReviewed: "2026-09" },
   },
   {
     id: "sodium",
@@ -113,6 +128,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Adrogué-Madias : ΔNa du litre infusé + débit max sûr (ODS).", ar: "أدروغيه-مادياس: ΔNa للتر + أقصى تدفق آمن." },
     href: "/calculateurs/sodium",
     icon: "Droplets",
+    meta: { sources: ["Adrogué-Madias (correction Na)","ERA/EAHyponatremia 2014"], lastReviewed: "2026-09" },
   },
   {
     id: "insuline",
@@ -120,6 +136,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "0,1 U/kg/h avec conduite guidée par le potassium (blocage si K < 3,3).", ar: "0.1 وحدة/كغ/س مع توجيه بحسب البوتاسيوم (توقّف إذا K < 3.3)." },
     href: "/calculateurs/insuline",
     icon: "Syringe",
+    meta: { sources: ["ADA Standards of Care 2025","RE.NAU Livret du médicament 2018"], lastReviewed: "2026-09" },
   },
   {
     id: "perfusions",
@@ -127,6 +144,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Tableau dose→mL/h pour les préparations standard (NA, adrénaline, héparine, insuline, trinitrine…).", ar: "جدول جرعة←مل/س للتحضيرات القياسية (نورأدرينالين، أدرينالين، هيبارين، إنسولين...) ." },
     href: "/calculateurs/perfusions",
     icon: "Droplets",
+    meta: { sources: ["RE.NAU Livret du médicament 2018"], lastReviewed: "2026-09" },
   },
   {
     id: "stemi",
@@ -134,6 +152,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Dérivations élevées → territoire, artère coupable, conduite (18 dérivations, reperfusion).", ar: "الاستمبارات المرتفعة ← الموضع، الشريان، المسلك (18 استمباراً، إعادة تروية)." },
     href: "/calculateurs/stemi",
     icon: "HeartPulse",
+    meta: { sources: ["ESC STEMI 2023","AHA/ACC NSTE-ACS 2025"], lastReviewed: "2026-09" },
   },
 ];
 

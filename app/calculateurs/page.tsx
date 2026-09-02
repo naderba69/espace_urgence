@@ -7,7 +7,7 @@ export default function CalculatorsPage() {
     <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {calculators.map((c) => (
         <li key={c.id}>
-          <CalculatorCard id={c.id} href={c.href} title={c.title} description={c.description} icon={c.icon as LucideName} />
+          <CalculatorCard id={c.id} href={c.href} title={c.title} description={c.description} icon={c.icon as LucideName} meta={c.meta} />
         </li>
       ))}
     </ul>
