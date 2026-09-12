@@ -185,6 +185,20 @@ const protocolsCore: Protocol[] = [
       { fr: "Contrôler l'hémorragie externe AVANT la voie aérienne (XABCDE ≠ ABCDE).", ar: "أوقف النزف الخارجي قبل المجرى الهوائي." },
       { fr: "Hémopéritoine instable : cible = bloc opératoire, pas réanimation prolongée sur place.", ar: "بطن دموية غير مستقرة: الهدف غرفة العمليات لا إطالة الإنعاش ميدانياً." },
     ],
+    trajectory: [
+      { when: { fr: "Détresse respiratoire après stabilisation", ar: "ضيق تنفس بعد التثبيت" }, do: [
+        { fr: "Penser pneumothorax (exsufflation/drainage) et hémothorax ; réévaluer ABCDE complet + FAST.", ar: "فكّر في استرواح (شفط/تصريف) وتبثم؛ أعد تقييم ABCDE كاملاً + FAST." },
+      ]},
+      { when: { fr: "Choc persistant malgré 1 L de cristalloïdes", ar: "صدمة مستمرة رغم لتر من المحلول" }, do: [
+        { fr: "Hémorragie occulte (thorax/abdomen/bassin/rétro-péritoine) : FAST, ceinture pelvienne ; transfusion massive (CGR:PFC ≈ 1:1) ; acide tranexamique < 3 h.", ar: "نزف خفي (صدر/بطن/حوض): FAST، حزام حوضي؛ نقل دم واسع (كريات:بلازما ≈ 1:1)؛ حمض ترانيكساميك < 3 س." },
+      ]},
+      { when: { fr: "Triade létale : hypothermie + acidose + coagulopathie", ar: "الثلاثية القاتلة: هبوط حرارة + حماض + اضطراب تخثر" }, do: [
+        { fr: "Réchauffement actif ; calcium ; limiter les cristalloïdes ; produits sanguins réchauffés.", ar: "تدفئة نشطة؛ كالسيوم؛ قلّل المحاليل؛ منتجات دم دافئة." },
+      ]},
+      { when: { fr: "Indication chirurgicale urgente", ar: "دليل جراحة عاجلة" }, do: [
+        { fr: "Coordination bloc + régulation SAMU ; NE PAS retarder le transport pour des actes non vitaux (damage control).", ar: "تنسيق مع غرفة العمليات + تنظيم SAMU؛ لا تؤخر النقل لأعمال غير حيوية (جراحة تحكّم الأضرار)." },
+      ]},
+    ],
     medications: [],
     calculators: ["gcs"],
     meta: { sources: ["ATLS 10e édition (ACS)", "ERC Trauma 2021"], lastReviewed: "2026-08" },
@@ -207,6 +221,20 @@ const protocolsCore: Protocol[] = [
     keyPoints: [
       { fr: "Cause pédiatrique la plus fréquente : hypoxie (respiratoire) — la ventilation compte autant que les compressions.", ar: "السبب الأشيع لدى الطفل: نقص الأكسجين — التهوية بقدر أهمية الضغطات." },
       { fr: "Poids estimé : (âge en ans × 2) + 8 kg.", ar: "الوزن التقديري: (العمر × 2) + 8 كغ." },
+    ],
+    trajectory: [
+      { when: { fr: "Rythme choquable (FV / TV sans pouls)", ar: "إيقاع جائز للصعق (رجفان / تسرع بطيني بلا نبض)" }, do: [
+        { fr: "Chocs 4 J/kg (max 10 J/kg ou dose adulte) ; adrénaline 10 µg/kg IV/IO après le 2ᵉ choc puis toutes les 3–5 min ; RCP 2 min entre chaque étape.", ar: "صعقات 4 جول/كغ (الحد 10 جول/كغ أو جرعة الكهل)؛ أدرينالين 10 ميكروغ/كغ بعد الصعقة الثانية ثم كل 3–5 د؛ إنعاش دقيقتين بين كل مرحلة." },
+      ]},
+      { when: { fr: "Rythme NON choquable (asystolie / PEA)", ar: "إيقاع غير جائز للصعق (توقف / PEA)" }, do: [
+        { fr: "Adrénaline 10 µg/kg IV/IO IMMÉDIATE puis toutes les 3–5 min ; RCP ininterrompue ; rechercher la cause 4H/4T.", ar: "أدرينالين 10 ميكروغ/كغ فوراً ثم كل 3–5 د؛ إنعاش دون انقطاع؛ ابحث عن السبب 4هـ/4ت." },
+      ]},
+      { when: { fr: "Causes fréquentes chez l'enfant", ar: "الأسباب الشائعة عند الطفل" }, do: [
+        { fr: "Hypoxie, hypovolémie, hypoglycémie, hypothermie : O₂ + remplissage 20 mL/kg + glucose 0,5 g/kg + réchauffement selon le contexte.", ar: "نقص أكسجة، نقص حجم، نقص سكر، هبوط حرارة: أكسجين + تعويض 20 مل/كغ + غلوكوز 0.5 غ/كغ + تدفئة حسب السياق." },
+      ]},
+      { when: { fr: "Retour d'une activité circulatoire (post-ROSC)", ar: "عودة الدوران (بعد ROSC)" }, do: [
+        { fr: "SpO₂ 94–98 %, PA adaptée à l'âge, glycémie 4–10 mmol/L, T° normale ; transfert pédiatrique spécialisé.", ar: "تشبع 94–98%، ضغط مناسب للعمر، سكر 4–10، حرارة طبيعية؛ نقل إلى مختص أطفال." },
+      ]},
     ],
     medications: ["adrenaline", "amiodarone"],
     calculators: ["dose-poids", "chrono-rcp"],

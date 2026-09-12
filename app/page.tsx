@@ -2,18 +2,24 @@
 // Accueil : recherche, actions rapides, favoris (glisser-déposer), récents, rappels vitaux.
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Siren, Timer, Syringe, Brain, AlertTriangle, Phone, GripVertical, Star } from "lucide-react";
+import { Siren, Timer, Syringe, Brain, AlertTriangle, Phone, GripVertical, Star, ListChecks, FileText } from "lucide-react";
 import { useApp } from "@/components/Providers";
 import SearchBar from "@/components/SearchBar";
 import InstallPwa from "@/components/InstallPwa";
 import { resolveRef } from "@/lib/search";
 import { vitalSigns, emergencyNumbers } from "@/data/quickref";
+import { protocols } from "@/data/protocols";
+import { medications } from "@/data/medications";
+import { decisionTrees } from "@/data/trees";
+import { calculators } from "@/data/calculators";
 
 const QUICK = [
-  { href: "/calculateurs/chrono-rcp", Icon: Timer, fr: "Chronomètre RCP", ar: "مؤقّت الإنعاش", cls: "bg-red-600 text-white" },
-  { href: "/calculateurs/dose-poids", Icon: Syringe, fr: "Dose selon poids", ar: "جرعة حسب الوزن", cls: "bg-teal-600 text-white" },
-  { href: "/calculateurs/gcs", Icon: Brain, fr: "Glasgow", ar: "غلاسكو", cls: "bg-sky-700 text-white" },
-  { href: "/protocoles/anaphylaxie", Icon: AlertTriangle, fr: "Anaphylaxie", ar: "الحساسية المفرطة", cls: "bg-orange-600 text-white" },
+  { href: "/calculateurs/chrono-rcp", Icon: Timer, fr: "Chronomètre RCP", ar: "مؤقّت الإنعاش", cls: "bg-gradient-to-br from-rose-600 to-red-600 text-white" },
+  { href: "/calculateurs/dose-poids", Icon: Syringe, fr: "Dose selon poids", ar: "جرعة حسب الوزن", cls: "bg-gradient-to-br from-teal-600 to-emerald-600 text-white" },
+  { href: "/calculateurs/gcs", Icon: Brain, fr: "Glasgow", ar: "غلاسكو", cls: "bg-gradient-to-br from-sky-600 to-indigo-600 text-white" },
+  { href: "/protocoles/anaphylaxie", Icon: AlertTriangle, fr: "Anaphylaxie", ar: "الحساسية المفرطة", cls: "bg-gradient-to-br from-orange-600 to-amber-600 text-white" },
+  { href: "/checklists", Icon: ListChecks, fr: "Check-lists", ar: "قوائم التدقيق", cls: "bg-gradient-to-br from-violet-600 to-purple-600 text-white", badge: true },
+  { href: "/fiche-samu", Icon: FileText, fr: "Fiche SAMU", ar: "فيشة تدخّل", cls: "bg-gradient-to-br from-cyan-600 to-teal-600 text-white", badge: true },
 ];
 
 export default function HomePage() {
@@ -43,9 +49,12 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Recherche */}
-      <section className="relative flex flex-col items-center gap-4 overflow-hidden rounded-3xl border border-teal-600/20 bg-gradient-to-b from-teal-600/10 via-surface to-surface px-4 py-8 sm:py-12">
+      <section className="hero-mesh relative flex flex-col items-center gap-4 overflow-hidden rounded-3xl border border-teal-600/20 bg-surface px-4 py-8 sm:py-12">
         {/* هالة مائية */}
         <div aria-hidden className="pointer-events-none absolute -top-24 h-64 w-64 rounded-full bg-teal-600/20 blur-3xl" />
+        <span className="stat-chip relative rounded-full px-3 py-1 text-[11px] font-black tracking-wide text-teal-600 dark:text-teal-400">
+          v1.4 · {lang === "ar" ? "يعمل دون إنترنت" : "100 % hors-ligne"}
+        </span>
         <h1 className="relative text-center text-3xl font-black tracking-tight sm:text-4xl">
           <span className="bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">{t("app.name")}</span>
         </h1>
@@ -55,7 +64,7 @@ export default function HomePage() {
         </div>
         <button
           onClick={() => setEmergencyOpen(true)}
-          className="touch relative mt-1 gap-3 rounded-2xl bg-red-600 px-8 py-4 text-lg font-black text-white shadow-lg shadow-red-600/30 transition hover:bg-red-500 hover:shadow-red-500/40 active:scale-95"
+          className="sos-pulse touch relative mt-1 gap-3 rounded-2xl bg-red-600 px-8 py-4 text-lg font-black text-white shadow-lg shadow-red-600/30 transition hover:bg-red-500 hover:shadow-red-500/40 active:scale-95"
         >
           <Siren className="h-7 w-7" aria-hidden />
           {t("emergency.open")}
@@ -65,15 +74,35 @@ export default function HomePage() {
       {/* Installation PWA */}
       <InstallPwa variant="banner" />
 
+      {/* Statistiques live */}
+      <section aria-label={lang === "ar" ? "محتويات التطبيق" : "Contenu de l'application"} className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+        {[
+          { n: protocols.length, fr: "Protocoles", ar: "بروتوكولاً" },
+          { n: medications.length, fr: "Médicaments", ar: "دواءً" },
+          { n: decisionTrees.length, fr: "Arbres décisionnels", ar: "شجرة قرار" },
+          { n: calculators.length, fr: "Calculateurs", ar: "حاسبة" },
+        ].map(({ n, fr, ar }) => (
+          <div key={fr} className="stat-chip flex items-center gap-3 rounded-2xl px-4 py-3">
+            <span className="text-2xl font-black tabular-nums text-teal-600 dark:text-teal-400">{n}</span>
+            <span className="text-xs font-bold leading-tight opacity-75">{lang === "ar" ? ar : fr}</span>
+          </div>
+        ))}
+      </section>
+
       {/* Actions rapides */}
       <section aria-labelledby="qa">
         <h2 id="qa" className="mb-3 flex items-center gap-2 text-lg font-bold">
           <span className="h-5 w-1 rounded-full bg-teal-500" aria-hidden />
           {t("home.quickActions")}
         </h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {QUICK.map(({ href, Icon, fr, ar, cls }) => (
-            <Link key={href} href={href} className={`${cls} flex flex-col items-center justify-center gap-2 rounded-2xl p-4 min-h-[100px] font-bold text-center shadow-md transition hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]`}>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {QUICK.map(({ href, Icon, fr, ar, cls, badge }) => (
+            <Link key={href} href={href} className={`${cls} quick-tile relative flex flex-col items-center justify-center gap-2 rounded-2xl p-4 min-h-[100px] font-bold text-center shadow-md hover:shadow-lg`}>
+              {badge && (
+                <span className="absolute end-2 top-2 rounded-full bg-white/95 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-teal-700 shadow">
+                  new
+                </span>
+              )}
               <Icon className="h-8 w-8" aria-hidden />
               <span className="text-sm sm:text-base leading-tight">{lang === "ar" ? ar : fr}</span>
             </Link>

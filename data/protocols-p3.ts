@@ -22,6 +22,20 @@ export const protocolsP3: Protocol[] = [
       { fr: "Chaque minute de saignement majeur non traité augmente la mortalité maternelle.", ar: "كل دقيقة تأخير ترفع وفيات الأمهات." },
       { fr: "L'atonie utérine = 70 % des cas — le massage + ocytocine sauvent des vies immédiatement.", ar: "الانوثرة = 70% من الحالات — الدلكة والأوكسيتوسين فوران." },
     ],
+    trajectory: [
+      { when: { fr: "Saignement persistant malgré ocytocine", ar: "استمرار النزف رغم الأوكسيتوسين" }, do: [
+        { fr: "Massage utérin ; sulprostone 500 µg IVSE/1 h (sauf contre-indication) ; sonde vésicale ; ballon de tamponnement si dispo ; bloc obstétrical.", ar: "مساج رحمي؛ سالبروستون 500 ميكروغ وريدي/س (ما لم يوجد مانع)؛ قسطرة بولية؛ بالون ضغط إن توفر؛ غرفة العمليات." },
+      ]},
+      { when: { fr: "Choc hémorragique", ar: "صدمة نزفية" }, do: [
+        { fr: "2 VVP + NaCl ; acide tranexamique 1 g IV (< 3 h) ; transfusion CGR (4) + PFC ; noradrénaline si remplissage insuffisant.", ar: "خطان + ملح؛ حمض ترانيكساميك 1 غ وريدياً (< 3 س)؛ نقل كريات (4) + بلازما؛ نورأدرينالين إن كان التعويض غير كافٍ." },
+      ]},
+      { when: { fr: "Coagulopathie (fibrinogène < 2 g/L)", ar: "اضطراب تخثر (فيبرينوجين < 2 غ/ل)" }, do: [
+        { fr: "Fibrinogène 4 g ou PFC ; réchauffement ; bilans itératifs (TP, fibrinogène, plaquettes).", ar: "فيبرينوجين 4 غ أو بلازما؛ تدفئة؛ تحاليل متكررة (TP، فيبرينوجين، صفيحات)." },
+      ]},
+      { when: { fr: "Arrêt du saignement", ar: "توقف النزف" }, do: [
+        { fr: "Surveillance 2 h minimum (utérus contracté, saignement, diurèse) ; bilan à H24 ; anémie → fer ± transfusion.", ar: "مراقبة ساعتين على الأقل (رحم منقبض، نزف، تحبور)؛ تحاليل عند 24 س؛ فقر دم ← حديد ± نقل." },
+      ]},
+    ],
     medications: ["oxytocine", "acide-tranexamique"],
     calculators: [],
     meta: { sources: ["OMS HPP 2023", "WOMAN trial", "FIGO"], lastReviewed: "2026-08" },
@@ -43,6 +57,20 @@ export const protocolsP3: Protocol[] = [
     keyPoints: [
       { fr: "La parole et la négociation sont le traitement initial ; la contention provisoire = dernier recours, jamais punition.", ar: "الكلام هو العلاج الأول؛ التثبيت المؤقت ملاذ أخير لا عقوبة." },
       { fr: "Surveiller la sédation : les décès surviennent après la « victoire » (dépression respiratoire).", ar: "راقب التهدئة: الوفيات تحدث بعد نجاحها (تثبيط تنفسي)." },
+    ],
+    trajectory: [
+      { when: { fr: "Pas d'apaisement après la 1ʳᵉ injection (15–20 min)", ar: "لا تهدئة بعد الحقنة الأولى (15–20 د)" }, do: [
+        { fr: "2ᵉ injection (neuroleptique différent ou midazolam 5–10 mg IM) ; contention réglementaire si nécessaire (équipe, surveillance continue).", ar: "حقنة ثانية (مضاد ذهان مختلف أو ميدازولام 5–10 ملغ عضلياً)؛ تقييد قانوني عند الحاجة (فريق، مراقبة مستمرة)." },
+      ]},
+      { when: { fr: "Après sédation : FR < 10, SpO₂ < 94 %, hypotension", ar: "بعد التهدئة: تنفس < 10، تشبع < 94%، هبوط ضغط" }, do: [
+        { fr: "Scope + O₂ ; naloxone/flumazénil si suspicion d'opiacés/benzodiazépines ; surveillance jusqu'à réveil complet.", ar: "مراقبة + أكسجين؛ نالوكسون/فلومازينيل إذا اشتباه أفيونيات/بنزوديازيبينات؛ مراقبة حتى اليقظة التامة." },
+      ]},
+      { when: { fr: "Complication : T° ≥ 40 °, rigidité, CPK ↑", ar: "مضاعفة: حرارة ≥ 40، تصلب، ارتفاع CPK" }, do: [
+        { fr: "Suspicion syndrome malin/rhabdomyolyse : refroidissement + NaCl 1–1,5 L/h + arrêt du neuroleptique ; transfert.", ar: "اشتباه متلازمة خبيثة/تحلل عضلي: تبريد + ملح 1–1.5 ل/س + إيقاف مضاد الذهان؛ تحويل." },
+      ]},
+      { when: { fr: "Apaisement obtenu", ar: "تحققت التهدئة" }, do: [
+        { fr: "Recherche étiologique (éthylémie, toxiques, hypoglycémie, neuro) ; entretien apaisé ; orientation psychiatrique si crise.", ar: "ابحث عن السبب (كحول، سموم، نقص سكر، عصبي)؛ حوار مهدّئ؛ توجيه نفسي إذا أزمة." },
+      ]},
     ],
     medications: ["midazolam"],
     calculators: ["dose-poids"],
@@ -68,6 +96,20 @@ export const protocolsP3: Protocol[] = [
       { fr: "Les signes cliniques = tardifs : le nomogramme et l'heure d'ingestion guident — ne pas attendre.", ar: "الأعراض متأخرة: اعتمد على النوموغرام والساعة — لا تنتظر." },
       { fr: "NAC = efficace surtout <8 h ; bénéfice possible au-delà. Ne jamais stopper pour une réaction anaphylactoïde légère.", ar: "NAC أمثل <8س وفعّال بعدها أيضاً. لا توقفه لتفاعل خفيف." },
     ],
+    trajectory: [
+      { when: { fr: "Réaction à la NAC (éruption, bronchospasme)", ar: "تفاعل مع أسيتيل سيستئين (طفح، تشنج قصبي)" }, do: [
+        { fr: "Suspendre 30 min ; antihistaminique ± bronchodilatateur ; reprendre à débit réduit (NE PAS arrêter définitivement).", ar: "أوقف 30 د؛ مضاد هيستامين ± موسع قصبي؛ استأنف بجريان أقل (لا توقف نهائياً)." },
+      ]},
+      { when: { fr: "Vomissements persistants", ar: "قيء مستمر" }, do: [
+        { fr: "Privilégier la voie IV ; métoclopramide 10 mg IV ; poursuivre l'antidote malgré les vomissements.", ar: "فضّل الطريق الوريدي؛ ميتوكلوبراميد 10 ملغ وريدياً؛ واصل الترياق رغم القيء." },
+      ]},
+      { when: { fr: "24–72 h : cytolyse (ASAT ↑), TP < 50 %, encéphalopathie", ar: "24–72 س: تحلل كبدي (ارتفاع ASAT)، TP < 50%، اعتلال دماغي" }, do: [
+        { fr: "Hépatite fulminante : NAC prolongée + transfert hépatologie/réanimation (lactates, TP, pH de suivi).", ar: "التهاب كبدي خاطف: أسيتيل سيستئين ممتد + تحويل كبد/إنعاش (لاكتات، TP، pH للمراقبة)." },
+      ]},
+      { when: { fr: "Paracétamolémie sous le seuil de toxicité", ar: "تركيز الباراسيتامول تحت العتبة السامة" }, do: [
+        { fr: "Sortie possible + entretien (psychiatrique si tentative de suicide) ; consignes : pas de paracétamol sans avis.", ar: "الخروج ممكن + حوار (نفسي إذا محاولة انتحار)؛ تعليمات: لا باراسيتامول دون استشارة." },
+      ]},
+    ],
     medications: ["acetylcysteine"],
     calculators: [],
     meta: { sources: ["CAP paracétamol", "Prescrire antidotes"], lastReviewed: "2026-08" },
@@ -89,6 +131,20 @@ export const protocolsP3: Protocol[] = [
     keyPoints: [
       { fr: "Atropine jusqu'au secrétaire sec, pas à une dose fixe ; c'est un titrage clinique.", ar: "أتروبين حتى الجفاف لا حتى جرعة ثابتة — معايرة سريرية." },
       { fr: "La protection du soignant n'est pas négociable (contamination secondaire décrite).", ar: "حماية الطاقم غير قابلة للمساومة (تلوث ثانوي موثق)." },
+    ],
+    trajectory: [
+      { when: { fr: "Bronchorrhée / sécrétions persistantes", ar: "استمرار الإفرازات القصبية" }, do: [
+        { fr: "Doubler l'atropine jusqu'au DESSÈCHEMENT complet (parfois plusieurs mg/h en PSE) ; surveiller la tachycardie.", ar: "ضاعف الأتروبين حتى الجفاف الكامل للأغشية (أحياناً عدة ملغ/س بمضخة)؛ راقب تسارع القلب." },
+      ]},
+      { when: { fr: "Défaillance respiratoire / convulsions", ar: "قصور تنفسي / تشنجات" }, do: [
+        { fr: "Intubation-ventilation ; diazépam ; pralidoxime 30 mg/kg (entretien 24–48 h si dispo).", ar: "تنبيب وتهوية؛ ديازيبام؛ براليدوكسيم 30 ملغ/كغ (متابعة 24–48 س إن توفر)." },
+      ]},
+      { when: { fr: "Syndrome intermédiaire (24–96 h) : faiblesse cervicale, détresse", ar: "المتلازمة الوسيطة (24–96 س): ضعف عنقي، ضيق تنفس" }, do: [
+        { fr: "Surveillance continue ; ventilation si faiblesse diaphragmatique ; ne pas sous-estimer (risque de décompensation).", ar: "مراقبة مستمرة؛ تهوية إذا ضعف الحجاب الحاجز؛ لا تستهن (خطر التدهور)." },
+      ]},
+      { when: { fr: "Amélioration", ar: "تحسّن" }, do: [
+        { fr: "Surveillance ≥ 72 h (risque de rebond) ; décontamination complète (peau, vêtements) ; consignes d'éviction.", ar: "مراقبة ≥ 72 س (خطر الارتداد)؛ تنقية كاملة (جلد، ملابس)؛ تعليمات الإبعاد عن المصدر." },
+      ]},
     ],
     medications: ["atropine", "diazepam"],
     calculators: [],
@@ -112,6 +168,20 @@ export const protocolsP3: Protocol[] = [
     keyPoints: [
       { fr: "Un seul épisode d'hypotension ou d'hypoxie double la mortalité — ce sont les cibles n°1.", ar: "نوبة انخفاض ضغط أو نقص أكسجين واحدة تضاعف الوفيات — هما الهدف الأول." },
       { fr: "Hyperventilation seulement en dernier recours de décompensation (ischémie aggravée).", ar: "التهوية المفرطة ملاذ أخير عند الانحشار (تفاقم إقفاري)." },
+    ],
+    trajectory: [
+      { when: { fr: "Aggravation neurologique (GCS −2, mydriase unilatérale)", ar: "تدهور عصبي (غلاسكو −2، توسع حدقة أحادي)" }, do: [
+        { fr: "Intubation (cible PaCO₂ ~35 mmHg) ; osmothérapie (mannitol 0,5 g/kg ou NaCl 3 %) ; TDM urgente + neurochirurgien.", ar: "تنبيب (هدف CO₂ ~35)؛ علاج أسموزي (مانيتول 0.5 غ/كغ أو ملح 3%)؛ صورة عاجلة + جراح أعصاب." },
+      ]},
+      { when: { fr: "Crise convulsive", ar: "نوبة تشنجية" }, do: [
+        { fr: "Benzodiazépine IV ; prévention par phénytoïne/lévétiracétam si traumatisme sévère ; contrôle glycémie.", ar: "بنزوديازيبين وريدياً؛ وقاية بالفينيتوين/ليفيتيراسيتام إذا رضح شديد؛ رقابة السكر." },
+      ]},
+      { when: { fr: "Chez le stable : céphalées croissantes, vomissements répétés", ar: "في الحالة المستقرة: صداع متزايد، قيء متكرر" }, do: [
+        { fr: "TDM cérébrale ; surveillance horaire 24 h (hématome tardif surtout sous anticoagulant).", ar: "صورة دماغ؛ مراقبة كل ساعة 24 س (ورم دموي متأخر خاصة تحت مضادات التخثر)." },
+      ]},
+      { when: { fr: "Critères de sortie", ar: "معايير الخروج" }, do: [
+        { fr: "GCS 15 + TDM normale (ou pas d'indication TDM selon règles validées) ; consignes écrites de re-consultation (somnolence, vomissements, trouble visuel).", ar: "غلاسكو 15 + صورة سليمة (أو لا داعي للصورة حسب القواعد المعتمدة)؛ تعليمات مكتوبة للرجوع (نعاس، قيء، اضطراب بصري)." },
+      ]},
     ],
     medications: ["midazolam"],
     calculators: ["gcs"],
@@ -137,6 +207,20 @@ export const protocolsP3: Protocol[] = [
       { fr: "Refroidir l'eau 20 min = moins de profondeur ; la glace aggrave.", ar: "20 د ماء جارٍ تقلّص العمق؛ الثلج يُفاقم." },
       { fr: "Parkland démarre au moment de la brûlure, pas de l'admission.", ar: "باركلاند يبدأ من ساعة الحرق لا من وصول المستشفى." },
     ],
+    trajectory: [
+      { when: { fr: "Brûlure visage / enclos fermé, voix rauque, suie", ar: "حروق وجه / مكان مغلق، صوت مبحوح، سخام" }, do: [
+        { fr: "Intubation PROPHYLACTIQUE précoce (dans la 1ʳᵉ heure) avant l'œdème ; O₂ 100 % si suspicion d'inhalation.", ar: "تنبيه وقائي مبكر (خلال الساعة الأولى) قبل الوذمة؛ أكسجين 100% إذا اشتباه استنشاق." },
+      ]},
+      { when: { fr: "Oligurie malgré le remplissage (< 0,5 mL/kg/h)", ar: "قلة بول رغم التعويض (< 0.5 مل/كغ/س)" }, do: [
+        { fr: "Augmenter le NaCl de 10–20 % ; vérifier la sonde ; escarrotomie si brûlure circulaire ; réévaluer la surface.", ar: "زد الملح 10–20%؛ تحقق من القسطرة؛ شق جلد إذا حرق دائري؛ أعد تقدير المساحة." },
+      ]},
+      { when: { fr: "Hypothermie < 35 °C", ar: "هبوط حرارة < 35" }, do: [
+        { fr: "Réchauffement actif + liquides réchauffés ; limiter les surfaces exposées ; revoir la formule de remplissage (T° basse = pas de bolus massif froid).", ar: "تدفئة نشطة + سوائل دافئة؛ قلّل الأسطح المكشوفة؛ أعد حساب التعويض (لا دفعات باردة واسعة)." },
+      ]},
+      { when: { fr: "Douleur intense", ar: "ألم شديد" }, do: [
+        { fr: "Titrage morphinique IV systématique ± MEOPA pour les transports ; soigner l'attitude (couverture, silence).", ar: "معايرة مورفينية وريدية منتظمة ± غاز الضحك للنقل؛ اعتنِ بالإحساس (تغطية، هدوء)." },
+      ]},
+    ],
     medications: ["morphine", "ketamine"],
     calculators: ["brulures"],
     meta: { sources: ["ABA / PHTLS brûlure", "ERC traumatologie"], lastReviewed: "2026-08" },
@@ -158,6 +242,20 @@ export const protocolsP3: Protocol[] = [
     keyPoints: [
       { fr: "Le SRO oral est le traitement de 1ère ligne même chez le déshydraté modéré.", ar: "محلول الإمهاء الفموي هو الخط الأول حتى مع الجفاف المتوسط." },
       { fr: "Lenteur du pli cutané + yeux enfoncés + pouls filant = choc → plan C immédiat.", ar: "بطء الطية + عيون غائرة + نبض خيطي = صدمة ← خطة C فوراً." },
+    ],
+    trajectory: [
+      { when: { fr: "Amélioration à 2 h de réhydratation orale", ar: "تحسّن بعد ساعتين من المعالجة الفموية" }, do: [
+        { fr: "Poursuivre les SRO sur 4 h ; réalimentation précoce ; pesée de contrôle ; éducation des parents.", ar: "واصل المحلول الفموي 4 س؛ إطعام مبكر؛ وزن مراقب؛ تثقيف الوالدين." },
+      ]},
+      { when: { fr: "Vomissements persistants sous SRO", ar: "قيء مستمر تحت المعالجة الفموية" }, do: [
+        { fr: "Ondansétron (usage hors AMM à discuter) ou SRO en continu par sonde gastrique ; réévaluer à 1 h.", ar: "أوندانسيترون (خارج الترخيص يُناقش) أو محلول متواصل عبر أنبوب معدي؛ إعادة تقييم بعد ساعة." },
+      ]},
+      { when: { fr: "Aggravation / signes de choc", ar: "تدهور / علامات صدمة" }, do: [
+        { fr: "NaCl 0,9 % 20 mL/kg IV (répéter ×2–3) ; rechercher une infection urinaire/une infection grave (ECBU, antibiothérapie si sepsis).", ar: "ملح 0.9% بجرعة 20 مل/كغ وريدياً (كرر ×2–3)؛ ابحث عن عدوى بولية/عدوى شديدة (مزرعة بول، مضاد حيوي إذا إنتان)." },
+      ]},
+      { when: { fr: "Convulsion sur hyponatrémie", ar: "تشنج على نقص صوديوم" }, do: [
+        { fr: "NaCl hypertonique 3 % : 3 mL/kg IV ; hospitalisation ; contrôle natrémie (ne pas corriger > 8–10 mmol/L/24 h).", ar: "ملح مفرط التوتر 3%: 3 مل/كغ وريدياً؛ تنويم؛ رقابة الصوديوم (لا تصحيح > 8–10 ميلي مكافئ/24 س)." },
+      ]},
     ],
     medications: [],
     calculators: ["debit-perfusion", "poids-pediatrique"],

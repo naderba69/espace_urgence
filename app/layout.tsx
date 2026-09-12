@@ -5,6 +5,7 @@ import Providers from "@/components/Providers";
 import { BASEPATH } from "@/lib/base";
 import Header from "@/components/Header";
 import Nav from "@/components/Nav";
+import BottomTabs from "@/components/BottomTabs";
 import Footer from "@/components/Footer";
 import EmergencyMode from "@/components/EmergencyMode";
 import DisclaimerGate from "@/components/DisclaimerGate";
@@ -45,7 +46,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <meta name="apple-mobile-web-app-title" content="Urgence TN" />
         <link rel="apple-touch-icon" href={`${BASEPATH}/icons/apple-touch-icon.png`} />
       </head>
-      <body className="min-h-screen bg-bg text-fg antialiased">
+      <body className="flex h-dvh flex-col overflow-hidden bg-bg text-fg antialiased">
         <a
           href="#contenu"
           className="sr-only focus:not-sr-only focus:fixed focus:start-2 focus:top-2 focus:z-[70] focus:rounded-lg focus:bg-teal-600 focus:px-4 focus:py-2 focus:text-white"
@@ -54,15 +55,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <Providers>
           <Header />
-          <div className="mx-auto flex max-w-6xl">
-            <aside className="no-print sticky top-[57px] hidden h-[calc(100vh-57px)] w-60 shrink-0 overflow-y-auto border-e border-line lg:block">
+          <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1">
+            <aside className="no-print hidden w-60 shrink-0 overflow-y-auto overscroll-contain border-e border-line lg:block">
               <Nav />
             </aside>
-            <main id="contenu" className="min-w-0 flex-1 px-4 py-6">
+            <main
+              id="contenu"
+              className="no-appbounch min-w-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6"
+            >
               {children}
+              <Footer />
             </main>
           </div>
-          <Footer />
+          <BottomTabs />
           <EmergencyMode />
           <DisclaimerGate />
 

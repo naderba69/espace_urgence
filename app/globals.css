@@ -155,13 +155,17 @@ button[aria-expanded] { text-decoration-thickness: 1.5px; }
 /* ============ RESPONSIVE PRO — أمان من التجاوز على كل الشاشات ============ */
 
 /* 1) قاعدة: لا شيء يتجاوز عرض الشاشة */
+html { height: 100%; overflow: hidden; }
 html, body { overflow-x: clip; }
 /* Zones « en sûreté » du téléphone (encoche / barre gestuelle) — clé pour un rendu natif edge-to-edge */
 body {
-  padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
+/* sensation d'app native : pas de rebond/étirement WebView, pas de flash gris au toucher */
+html, body, main, aside { overscroll-behavior: none; }
+main, aside { overscroll-behavior: contain; }
+* { -webkit-tap-highlight-color: transparent; }
 footer, .bottom-safe { padding-bottom: env(safe-area-inset-bottom); }
 main { scroll-behavior: smooth; }
 * { min-width: 0; }
@@ -243,3 +247,107 @@ button[class*="bg-"], a[class*="bg-"] { box-shadow: 0 2px 10px -3px rgba(0,0,0,.
 
 /* لمس نحيف لقوائم السجل */
 ol li, ul li { scroll-margin-top: 5rem; }
+
+
+/* ── Tiroir ☰ natif (slide-in RTL/LTR) + backdrop estompé ────────────── */
+@keyframes eutn-drawer-in-ltr { from { transform: translateX(-100%); opacity: .4 } to { transform: translateX(0); opacity: 1 } }
+@keyframes eutn-drawer-in-rtl { from { transform: translateX(100%);  opacity: .4 } to { transform: translateX(0); opacity: 1 } }
+@keyframes eutn-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@media (prefers-reduced-motion: no-preference) {
+  .eutn-drawer { animation: eutn-drawer-in-ltr .18s ease-out; }
+  html[dir="rtl"] .eutn-drawer { animation: eutn-drawer-in-rtl .18s ease-out; }
+  .eutn-backdrop { animation: eutn-fade-in .15s ease-out; }
+}
+@media (prefers-reduced-motion: reduce) { .eutn-drawer, .eutn-backdrop { animation: none !important; } }
+/* Impression : flux multi-pages normal */
+@media print {
+  html, body { height: auto !important; overflow: visible !important; }
+  main { overflow: visible !important; height: auto !important; }
+  header { position: static !important; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   v1.4 — DESIGN SYSTEM 2026 : glass, gradients, bottom-tabs, motion
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --grad-brand: linear-gradient(135deg, #14b8a6 0%, #10b981 100%);
+  --grad-brand-soft: linear-gradient(135deg, rgba(20,184,166,.14), rgba(16,185,129,.05));
+}
+
+/* ── Header verre dépoli + séparation lumineuse ── */
+.eutn-header {
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 8px 24px -18px rgba(2,6,23,.5);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .eutn-header { background: color-mix(in srgb, var(--surface) 72%, transparent); }
+}
+
+/* ── Tiroir : ressort natif (courbe iOS-like) ── */
+@keyframes eutn-drawer-in-ltr { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes eutn-drawer-in-rtl { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes eutn-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@media (prefers-reduced-motion: no-preference) {
+  .eutn-drawer { animation: eutn-drawer-in-ltr .26s cubic-bezier(.32,.72,.24,1); }
+  html[dir="rtl"] .eutn-drawer { animation: eutn-drawer-in-rtl .26s cubic-bezier(.32,.72,.24,1); }
+  .eutn-backdrop { animation: eutn-fade-in .2s ease-out; }
+}
+
+/* ── Bottom tabs (mobile) ── */
+@keyframes eutn-tabs-up { from { transform: translateY(110%); } to { transform: translateY(0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .eutn-tabs { animation: eutn-tabs-up .28s cubic-bezier(.32,.72,.24,1); }
+}
+#contenu { padding-bottom: calc(4.9rem + env(safe-area-inset-bottom)); }
+@media (min-width: 1024px) { #contenu { padding-bottom: 1.5rem; } }
+@media print { #contenu { padding-bottom: 0 !important; } }
+.eutn-tab { position: relative; }
+nav .eutn-tab::before {
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 22px; height: 3px; border-radius: 0 0 4px 4px; background: transparent; transition: background .2s;
+}
+nav .eutn-tab[aria-current="page"]::before { background: #14b8a6; }
+.eutn-tab:active .tab-ico { transform: scale(.92); }
+.eutn-tab .tab-ico { will-change: transform; }
+
+/* ── Bouton urgence : pouls vie ── */
+@keyframes sos-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.42), 0 8px 20px -6px rgba(220,38,38,.4);} 50% { box-shadow: 0 0 0 9px rgba(220,38,38,0), 0 8px 20px -6px rgba(220,38,38,.4);} }
+.sos-pulse { animation: sos-pulse 2.4s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) { .sos-pulse { animation: none; } }
+
+/* ── Hero mesh (accueil) ── */
+.hero-mesh {
+  background:
+    radial-gradient(1100px 420px at 50% -100px, rgba(20,184,166,.20), transparent 62%),
+    radial-gradient(560px 300px at 88% -40px, rgba(16,185,129,.12), transparent 60%),
+    radial-gradient(480px 280px at 8% 0%, rgba(45,212,191,.10), transparent 55%);
+}
+.dark .hero-mesh {
+  background:
+    radial-gradient(1100px 420px at 50% -100px, rgba(20,184,166,.26), transparent 62%),
+    radial-gradient(560px 300px at 88% -40px, rgba(16,185,129,.16), transparent 60%),
+    radial-gradient(480px 280px at 8% 0%, rgba(45,212,191,.12), transparent 55%);
+}
+
+/* ── Tuiles d'action rapide : lift + glow au toucher ── */
+.quick-tile { transition: transform .18s cubic-bezier(.32,.72,.24,1), box-shadow .18s ease, opacity .18s ease; }
+.quick-tile:hover { transform: translateY(-2px); }
+.quick-tile:active { transform: scale(.97); }
+
+/* ── Chips statistiques ── */
+.stat-chip {
+  background: var(--grad-brand-soft);
+  border: 1px solid rgba(20,184,166,.25);
+  backdrop-filter: blur(6px);
+}
+
+/* ── Impression : la barre d'onglets disparaît ── */
+@media print { .eutn-tabs { display: none !important; } }
+
+/* ── Correctifs visuels v1.4.1 ── */
+/* Le nom de marque ne se coupure jamais avec un trait d'union */
+.hero-mesh h1, header .bg-clip-text { hyphens: none !important; -webkit-hyphens: none !important; }
+/* Onglets bas : libellés compacts qui ne débordent jamais */
+.eutn-tab span { white-space: nowrap; }
+.eutn-tab { padding-inline: 2px !important; }
+.eutn-tab .tab-ico { padding-inline: 0.65rem !important; }

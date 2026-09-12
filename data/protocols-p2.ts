@@ -22,6 +22,22 @@ export const protocolsP2: Protocol[] = [
       { fr: "Chaque minute de coronare fermée = myocarde perdu. « Door-to-balloon » <90 min idéal.", ar: "كل دقيقة إغلاق للتاجية = عضلة مفقودة." },
       { fr: "Jamais de trinitrine si PAS <90 mmHg ou suspicion d'IDM inférieur/droit.", ar: "لا نترات إذا انقباضي <90 أو اشتباه احتشاء سفلي/أيمن." },
     ],
+    trajectory: [
+      { when: { fr: "Complication : arrêt cardiaque (FV / TV sans pouls)", ar: "مضاعفة: توقف قلبي (رجفان بطيني / تسرع بطيني بلا نبض)" }, do: [
+        { fr: "RCP + DSA immédiat ; adrénaline 1 mg IV toutes les 3–5 min après le 2ᵉ choc.", ar: "إنعاش + صعق فوري؛ أدرينالين 1 ملغ وريدياً كل 3–5 د بعد الصعقة الثانية." },
+        { fr: "Corridor PCI maintenu : coronarographie dès la reprise d'une activité circulatoire (post-ROSC).", ar: "استمر في مسار القسطرة: تاجية مباشرة بعد عودة الدوران (ما بعد ROSC)." },
+      ]},
+      { when: { fr: "Évolution : choc cardiogénique (PAS < 90, marbrures)", ar: "تطوّر: صدمة قلبية (انقباضي < 90، بقع زرقاء)" }, do: [
+        { fr: "Remplissage prudent 100–150 mL uniquement si pas de congestion ; noradrénaline en PSE.", ar: "تعويض حذر 100–150 مل فقط إن لم يوجد احتقان؛ نورأدرينالين بمضخة." },
+        { fr: "Reperfusion urgente ; transfert vers un centre avec assistance (ECMO/ballon) si disponible.", ar: "إعادة تروية عاجلة؛ تحويل لمركز بدعم ميكانيكي (ECMO/بالون) إن توفر." },
+      ]},
+      { when: { fr: "Complication : OAP associé (orthopnée, crépitants, SpO₂ ↓)", ar: "مضاعفة: وذمة رئة مصاحبة (زلة في الاستلقاء، خراخر، هبوط التشبع)" }, do: [
+        { fr: "Position assise, O₂, trinitrine SL si PAS > 110, furosémide 40 mg IV ; PAS de remplissage massif.", ar: "جلوس، أكسجين، نترات تحت اللسان إذا انقباضي > 110، فوروسيميد 40 ملغ وريدياً؛ لا تعويض واسع." },
+      ]},
+      { when: { fr: "Si pas d'amélioration à 30 min (douleur / récidive ECG)", ar: "إن لم يحدث تحسّن خلال 30 د (ألم / رجوع شذوذ التخطيط)" }, do: [
+        { fr: "Refaire un ECG complet (± postérieures/droites) ; escalade vers coronarographie < 2 h.", ar: "أعد تخطيطاً كاملاً (± خلفية/يمنى)؛ تصعيد نحو قسطرة < 2 س." },
+      ]},
+    ],
     medications: ["aspirine", "enoxaparine", "trinitrine", "morphine"],
     calculators: [],
     meta: { sources: ["ESC NSTE-ACS 2023", "ACC/AHA STEMI 2023+"], lastReviewed: "2026-08" },
@@ -46,6 +62,20 @@ export const protocolsP2: Protocol[] = [
       { fr: "Nitrates = 1ère ligne si TA élevée ; diurétiques si surcharge ; CPAP sauve des intubations.", ar: "النترات أولاً إذا الضغط مرتفع؛ المدرّ عند فرط الحجم؛ CPAP يجنّب التنبيب." },
       { fr: "Chez le BPCO chronique : objectif SpO2 88–92 %.", ar: "عند مريض الانسداد المزمن: الهدف 88–92%." },
     ],
+    trajectory: [
+      { when: { fr: "Réponse favorable à 30 min (SpO₂ ≥ 94 %, dyspnée ↓)", ar: "استجابة جيدة خلال 30 د (تشبع ≥ 94%، تحسّن الزلة)" }, do: [
+        { fr: "Poursuivre le traitement ; diurèse horaire ; PAS de sortie avant réévaluation complète (± radiographie).", ar: "واصل العلاج؛ تحبور كل ساعة؛ لا خروج قبل إعادة تقييم كاملة (± صورة صدر)." },
+      ]},
+      { when: { fr: "Échec de la VNI à 15–30 min (épuisement, GCS ↓, SpO₂ < 90 %)", ar: "فشل VNI خلال 15–30 د (إنهاك، هبوط غلاسكو، تشبع < 90%)" }, do: [
+        { fr: "Intubation + ventilation mécanique (séquence rapide, préoxygénation soignée).", ar: "تنبيب + تهوية ميكانيكية (تخدير سريع، أكسجة أولية جيدة)." },
+      ]},
+      { when: { fr: "Complication : hypotension / choc (PAS < 90)", ar: "مضاعفة: هبوط ضغط / صدمة (انقباضي < 90)" }, do: [
+        { fr: "Arrêter les dérivés nitrés ; rechercher un SCA associé ; noradrénaline PSE ; cardiologue urgent.", ar: "أوقف النترات؛ ابحث عن متلازمة تاجية مصاحبة؛ نورأدرينالين بمضخة؛ استشارة قلبية عاجلة." },
+      ]},
+      { when: { fr: "Complication : bradycardie / troubles du rythme sous traitement", ar: "مضاعفة: بطء قلب / اضطراب نظم تحت العلاج" }, do: [
+        { fr: "Vérifier K⁺ et Mg²⁺ (hypokaliémie → torsades) ; corriger ; atropine si bradycardie symptomatique.", ar: "تحقق من البوتاسيوم والمغنيزيوم (نقص ← تسارع مدفوع)؛ صحّح؛ أتروبين إذا بطء عرَضي." },
+      ]},
+    ],
     medications: ["trinitrine", "furosemide", "morphine"],
     calculators: [],
     meta: { sources: ["ESC insuffisance cardiaque aiguë 2021", "SFMU OAP"], lastReviewed: "2026-08" },
@@ -68,6 +98,20 @@ export const protocolsP2: Protocol[] = [
       { fr: "Chaque minute compte : le but est d'arrêter la crise (excitotoxicité/neurones).", ar: "كل دقيقة مهمة: الهدف إيقاف النوبة (سمية تنبيهية للعصبونات)." },
       { fr: "Ne pas forcer l'introduction d'objet dans la bouche ; risque traumatique.", ar: "لا تُدخل أدوات في الفم — خطر رضّي." },
     ],
+    trajectory: [
+      { when: { fr: "Pas d'arrêt après 2 doses de benzodiazépine (< 15 min)", ar: "لا توقف النوبة بعد جرعتين من البنزوديازيبين (< 15 د)" }, do: [
+        { fr: "2ᵉ ligne : fosphénytoïne 20 mg PE/kg (ou valproate 40 mg/kg ou lévétiracétam 60 mg/kg) IV lente + scope.", ar: "سطر ثانٍ: فوسفينيتوين 20 ملغ/كغ (أو فالبروات 40 ملغ/كغ أو ليفيتيراسيتام 60 ملغ/كغ) وريدياً ببطء + مراقبة." },
+      ]},
+      { when: { fr: "État de mal réfractaire (> 30 min)", ar: "حالة صرعية مقاومة (> 30 د)" }, do: [
+        { fr: "Intubation + sédation profonde (thiopental/midazolam PSE) ; transfert réanimation ; EEG si possible.", ar: "تنبيب + تهدئة عميقة (ثيوبنتال/ميدازولام بمضخة)؛ تحويل للإنعاش؛ تخطيط دماغ إن أمكن." },
+      ]},
+      { when: { fr: "Complication : dépression respiratoire après benzos", ar: "مضاعفة: كبت تنفسي بعد البنزوديازيبينات" }, do: [
+        { fr: "Ventilation au masque + O₂ ; préparer l'intubation ; antidotes NON systématiques (contexte uniquement).", ar: "تهوية بالقناع + أكسجين؛ جهّز التنبيب؛ الترياقات ليست تلقائية (فقط حسب السياق)." },
+      ]},
+      { when: { fr: "Complications : hyperthermie, rhabdomyolyse", ar: "مضاعفات: حرارة، تحلل عضلي" }, do: [
+        { fr: "Refroidissement actif + NaCl 0,9 % 1–1,5 L/h (diurèse) ; contrôler CPK, créat, glycémie.", ar: "تبريد نشط + ملح 0.9% بمعدل 1–1.5 ل/س (تحبور)؛ راقب CPK والكرياتينين والسكر." },
+      ]},
+    ],
     medications: ["midazolam", "diazepam", "glucose30"],
     calculators: ["dose-poids"],
     meta: { sources: ["ILAE état de mal 2020", "SRLF convulsions aiguës"], lastReviewed: "2026-08" },
@@ -89,6 +133,20 @@ export const protocolsP2: Protocol[] = [
     keyPoints: [
       { fr: "Ne PAS retarder la corticothérapie ; l'ipratropium se cumule au début.", ar: "لا تؤخر الكورتيكويد؛ إبراتروبيوم يُضاف باكراً." },
       { fr: "Silence auscultatoire = très mauvais signe (pas d'air ne passe).", ar: "الصمت الإصغائي علامة سيئة جداً (لا هواء يمرّ)." },
+    ],
+    trajectory: [
+      { when: { fr: "Aggravation : épuisement, silence auscultatoire, SpO₂ < 90 %, bradycardie, GCS ↓", ar: "تدهور: إنهاك، صمت سمعي، تشبع < 90%، بطء قلب، هبوط غلاسكو" }, do: [
+        { fr: "Intubation-ventilation en urgence (préoxygénation, kétamine) ; attention à l'expiration longue (barotraumatisme).", ar: "تنبيب وتهوية عاجلة (أكسجة أولية، كيتامين)؛ حذار الزفير الطويل (رضح ضغطي)." },
+      ]},
+      { when: { fr: "Réponse partielle à 20–30 min", ar: "استجابة جزئية خلال 20–30 د" }, do: [
+        { fr: "Répéter salbutamol continu ± ipratropium ; MgSO₄ 2 g IV / 20 min si forme grave ; corticoïdes IV/PO.", ar: "كرر سالبوتامول متواصلاً ± إيبراتروبيوم؛ مغنيزيوم 2 غ وريدياً / 20 د في الشكل الشديد؛ كورتيكويدات وريدياً/فموية." },
+      ]},
+      { when: { fr: "Amélioration franche", ar: "تحسّن واضح" }, do: [
+        { fr: "Poursuivre β2 horaire puis espacer ; corticoïdes oraux ; NE PAS sortir avant 1 h après la dernière dose.", ar: "واصل β2 كل ساعة ثم تباعد؛ كورتيكويدات فموية؛ لا خروج قبل ساعة من آخر جرعة." },
+      ]},
+      { when: { fr: "Complication : pneumothorax (déviation, douleur brutale, SpO₂ ↓)", ar: "مضاعفة: استرواح (انحراف، ألم مفاجئ، هبوط تشبع)" }, do: [
+        { fr: "Exsufflation/drainage en urgence si suffocant ; réduire le débit de ventilation si ventilé.", ar: "شفط/تصريف عاجل إذا خانق؛ قلّل حجم التهوية إن كان على منفسة." },
+      ]},
     ],
     medications: ["salbutamol", "hydrocortisone", "sulfate-magnesium"],
     calculators: [],
@@ -113,6 +171,20 @@ export const protocolsP2: Protocol[] = [
       { fr: "Lactate ≥2 mmol/L + hypotension = alerte rouge (mortalité élevée).", ar: "لاكتات ≥2 + انخفاض ضغط = إنذار أحمر." },
       { fr: "La 1ère heure (« golden hour ») = antibiotiques + remplissage + source control.", ar: "الساعة الذهبية = مضاد حيوي + توسيع + ضبط مصدر." },
     ],
+    trajectory: [
+      { when: { fr: "PAS < 65 malgré noradrénaline ≥ 0,5–1 µg/kg/min", ar: "انقباضي < 65 رغم نورأدرينالين ≥ 0.5–1 ميكروغ/كغ/د" }, do: [
+        { fr: "Réévaluer le remplissage (échographie) ; hydrocortisone 200 mg/24 h ; ajouter adrénaline/vasopressine ; réanimation.", ar: "أعد تقييم التعويض (تخطيط صدري)؛ هيدروكورتيزون 200 ملغ/24 س؛ أضف أدرينالين/فازوبريسين؛ إنعاش." },
+      ]},
+      { when: { fr: "Lactates non clairants / oligurie à H2–H4", ar: "لاكتات غير مرتدة / قلة بول بين الساعتين والرابعة" }, do: [
+        { fr: "Optimiser (vol, débit, O₂) ; imagerie du foyer + drainage/chirurgie si collection ; contrôle lactates itératif.", ar: "حسّن (حجم، تدفق، أكسجين)؛ صور البؤرة + تصريف/جراحة إن وُجد تجمع؛ مراقبة اللاكتات المتكررة." },
+      ]},
+      { when: { fr: "Complication : OAP / SDRA après remplissage", ar: "مضاعفة: وذمة رئة / SDRA بعد التعويض" }, do: [
+        { fr: "Arrêter les bolus ; VNI ou ventilation mécanique ; diurétique si rein fonctionnel ; positionnement.", ar: "أوقف الدفعات؛ VNI أو تهوية ميكانيكية؛ مدرّ إن الكلى عاملة؛ ضبط الوضعية." },
+      ]},
+      { when: { fr: "Drainage du foyer impossible sur place", ar: "تعذّر تصريف البؤرة في المكان" }, do: [
+        { fr: "Transmission au régulateur : orienter vers un centre avec chirurgie/radiologie interventionnelle ; documenter l'antibiothérapie H0.", ar: "أبلغ المنظّم: وجّه نحو مركز فيه جراحة/رسم تداخلي؛ وثّق المضاد الحيوي عند الساعة صفر." },
+      ]},
+    ],
     medications: ["noradrenaline", "hydrocortisone"],
     calculators: [],
     meta: { sources: ["Surviving Sepsis Campaign 2021", "ERC 2021"], lastReviewed: "2026-08" },
@@ -136,6 +208,20 @@ export const protocolsP2: Protocol[] = [
       { fr: "L'insuline sans potassium peut précipiter un trouble du rythme — K d'abord.", ar: "أنسولين دون بوتاسيوم قد يسبب اضطراب نظم — البوتاسيوم أولاً." },
       { fr: "Éviter la baisse glycémique trop rapide chez l'enfant (risque d'œdème cérébral).", ar: "تجنّب هبوط السكر السريع عند الطفل (خطر وذمة دماغية)." },
     ],
+    trajectory: [
+      { when: { fr: "K⁺ < 3,3 mmol/L (à l'entrée ou sous insuline)", ar: "بوتاسيوم < 3.3 (عند الدخول أو تحت الأنسولين)" }, do: [
+        { fr: "SUSPENDRE l'insuline ; KCl 20–40 mmol/h sous scope ECG ; reprendre l'insuline dès K⁺ ≥ 3,3.", ar: "أوقف الأنسولين؛ كلوريد البوتاسيوم 20–40 ميلي مكافئ/س تحت مراقبة؛ استأنف الأنسولين فور ≥ 3.3." },
+      ]},
+      { when: { fr: "Glycémie < 2,5 g/L (14 mmol/L) sous insuline", ar: "سكر < 2.5 غ/ل تحت الأنسولين" }, do: [
+        { fr: "Basculer sur G5 % + POURSUIVRE l'insuline (les cétones comptent, pas la glycémie) ; reserrer la surveillance.", ar: "بدّل إلى غلوكوز 5% + واصل الأنسولين (الكيتونات هي المعيار لا السكر)؛ زد المراقبة." },
+      ]},
+      { when: { fr: "Aggravation neurologique (céphalées intenses, GCS ↓)", ar: "تدهور عصبي (صداع شديد، هبوط غلاسكو)" }, do: [
+        { fr: "Suspecter un œdème cérébral : mannitol 0,5–1 g/kg ou NaCl hypertonique ; TDM urgente.", ar: "اشتبه بوذمة دماغ: مانيتول 0.5–1 غ/كغ أو ملح مفرط التوتر؛ صورة عاجلة." },
+      ]},
+      { when: { fr: "Résolution (pH > 7,3, HCO₃⁻ > 15, cétose −)", ar: "الشفاء (pH > 7.3، بيكاربونات > 15، لا كيتونات)" }, do: [
+        { fr: "Relais sous-cutané AVANT l'arrêt de l'IV (chevauchement 1–2 h) ; realimentation ; recherche du facteur déclenchant.", ar: "التبديل تحت الجلد قبل إيقاف الوريد (تداخل 1–2 س)؛ إطعام؛ ابحث عن العامل المحرّض." },
+      ]},
+    ],
     medications: ["insuline-rapide"],
     calculators: [],
     meta: { sources: ["ADA/EASD consensus DKA 2024", "BSPED pédia"], lastReviewed: "2026-08" },
@@ -157,6 +243,20 @@ export const protocolsP2: Protocol[] = [
     keyPoints: [
       { fr: "Le calcium stabilise le cœur en minutes mais ne baisse PAS le potassium — toujours associer les mesures de déplacement intracellulaire.", ar: "الكالسيوم يثبّت القلب خلال دقائق لكنه لا يخفض البوتاسيوم — اجمعه دائماً بإجراءات الإدخال الخلوي." },
       { fr: "Insuline sans glucose = hypoglycémie sévère : toujours la mesurer.", ar: "أنسولين بلا غلوكوز = نقص سكر شديد: قِسه دائماً." },
+    ],
+    trajectory: [
+      { when: { fr: "Anomalies ECG persistantes 15–30 min après le calcium", ar: "بقاء شذوذ التخطيط 15–30 د بعد الكالسيوم" }, do: [
+        { fr: "Redoser/renforcer : 2ᵉ injection de calcium, insuline-glucose à débit majoré, bicarbonate si acidose.", ar: "أعد التقييم/عزّز: صعقة كالسيوم ثانية، أنسولين-غلوكوز بجريان أعلى، بيكاربونات إذا حماض." },
+      ]},
+      { when: { fr: "Bradycardie extrême / QRS massivement élargi", ar: "بطء قلب شديد / اتساع هائل لمركّب QRS" }, do: [
+        { fr: "Préparer le DSA ; atropine ; entraînement électrosystolique transcutané si disponible.", ar: "جهّز مزيل الرجفان؛ أتروبين؛ تنظيم كهربائي عبر الجلد إن توفر." },
+      ]},
+      { when: { fr: "K⁺ > 6,5 avec insuffisance rénale / anurie", ar: "بوتاسيوم > 6.5 مع قصور كلوي / انقطاع بول" }, do: [
+        { fr: "Dialyse en URGENCE : organiser le transfert (régulation 190) ; poursuivre les traitements de pontage en attendant.", ar: "غسيل عاجل: نظّم النقل (تنظيم 190)؛ واصل العلاجات الجسرية في الانتظار." },
+      ]},
+      { when: { fr: "Diurèse efficace", ar: "تحبور فعّال" }, do: [
+        { fr: "Poursuivre diurétique + résines ; contrôle K⁺ à H2 puis H6 ; traiter la cause (AINS, IEC, acidose…).", ar: "واصل المدرّ + الراتنجات؛ رقابة البوتاسيوم عند الساعتين ثم السادسة؛ عالج السبب." },
+      ]},
     ],
     medications: ["gluconate-calcium", "insuline-rapide", "salbutamol", "bicarbonate", "furosemide"],
     calculators: [],
@@ -180,6 +280,20 @@ export const protocolsP2: Protocol[] = [
     keyPoints: [
       { fr: "Le diazépam/midazolam calme la crise mais MgSO4 prévient et traite la récidive (evidence).", ar: "البنزوديازيبين يهدّئ النوبة لكن MgSO4 يمنع التكرار (دليل قوي)." },
       { fr: "Jamais de bolus Mg rapide — arrêt respiratoire. PSE précise impérative.", ar: "لا دفعة مغنيزيوم سريعة — خطر توقف تنفسي. مضخة دقيقة إلزاماً." },
+    ],
+    trajectory: [
+      { when: { fr: "Récidive de convulsions malgré MgSO₄", ar: "رجوع التشنجات رغم المغنيزيوم" }, do: [
+        { fr: "2ᵉ bolus de 2 g (max 4 g en plus) ou diazépam ; intubation si coma persistant ; réévaluer la voie d'abord.", ar: "دفعة ثانية 2 غ (الحد 4 غ إضافية) أو ديازيبام؛ تنبيب إذا غيبوبة مستمرة." },
+      ]},
+      { when: { fr: "PAS ≥ 160 malgré MgSO₄", ar: "انقباضي ≥ 160 رغم المغنيزيوم" }, do: [
+        { fr: "Nicardipine PSE 5–15 mg/h (ou labétalol) ; NE JAMAIS faire chuter brutalement la PA (placenta).", ar: "نيكارديبين بمضخة 5–15 ملغ/س (أو لابيتالول)؛ لا تُهبط الضغط فجأة أبداً (المشيمة)." },
+      ]},
+      { when: { fr: "HELLP / hématome rétro-placentaire / bradycardie fœtale", ar: "HELLP / انفصال مشيمة / بطء قلب الجنين" }, do: [
+        { fr: "Extraction en urgence (équipe obstétricale) ; bilan coagulation + groupe ; 2 VVP ; équipe pédiatrique prête.", ar: "استخراج عاجل (فريق توليد)؛ تحاليل تخثر + زمرة؛ خطان وريديان؛ فريق أطفال جاهز." },
+      ]},
+      { when: { fr: "Surveillance post-partum (< 48 h)", ar: "مراقبة ما بعد الولادة (< 48 س)" }, do: [
+        { fr: "Poursuivre MgSO₄ 24 h : diurèse, réflexes rotuliens, FR ≥ 12/min ; gluconate de calcium prêt en antidote.", ar: "واصل المغنيزيوم 24 س: تحبور، منعكس الرضفة، تنفس ≥ 12/د؛ غلوكونات الكالسيوم جاهزة كترياق." },
+      ]},
     ],
     medications: ["sulfate-magnesium", "gluconate-calcium"],
     calculators: [],

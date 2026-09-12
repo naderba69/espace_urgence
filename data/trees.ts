@@ -865,7 +865,117 @@ const polytraumatisme: DecisionTree = {
   },
 };
 
-export const decisionTrees: DecisionTree[] = [acr, anaphylaxie, etatMal, sepsis, douleurThorax, hpp, hyperkaliemie, polytraumatisme];
+
+// ────────────────────────────────────────────────────────────────────────────
+// Triage préhospitalier / d'accueil — arbre minute (P1/P2/P3)
+// ────────────────────────────────────────────────────────────────────────────
+const triage: DecisionTree = {
+  id: "triage-prehospitalier",
+  title: L("Triage préhospitalier / d'accueil", "الفرز قبل الاستشفائي / عند الاستقبال"),
+  description: L(
+    "Arbre de triage minute : sécurité de la scène, conscience, respiration, détresse vitale → P1/P2/P3 avec gestes et délais cibles.",
+    "شجرة فرز سريعة: أمان العرين، الوعي، التنفس، الخطر الحيوي ← P1/P2/P3 مع الإجراءات والمهل المستهدفة."
+  ),
+  icon: "ListFilter",
+  severity: "vital",
+  start: "start",
+  lastReviewed: "2026-09-11",
+  sources: [
+    { label: "SFMU/SFU — Triage en structure des urgences (RFE 2013)", url: "https://www.sfmu.org/upload/referentielsSFMU/rfe_triage2013.pdf" },
+    { label: "ERC Guidelines 2021 — reconnaissance de l'arrêt cardiaque", url: "https://www.erc.edu" },
+  ],
+  nodes: {
+    start: {
+      kind: "decision", id: "start",
+      question: L("La scène est-elle sûre (pour vous, le patient, les tiers) ?", "هل العرين آمن (لأجلك، للمريض، للآخرين)؟"),
+      note: L("Règle d'or : ne jamais intervenir sans protection (gants, masque, environnement contrôlé).", "القاعدة الذهبية: لا تتدخّل أبداً دون حماية (قفازات، قناع، بيئة مسيطر عليها)."),
+      yes: "conscience", no: "scene-unsafe",
+    },
+    "scene-unsafe": {
+      kind: "end", id: "scene-unsafe",
+      title: L("Scène NON sécurisée — ne pas approcher", "العرين غير آمن — لا تقترب"),
+      tone: "warn",
+      steps: [
+        L("Rester à distance, alerter les secours spécialisés (Protection Civile 198) et sécuriser la zone.", "ابقَ بعيداً، نادِ النجدة المتخصصة (الحماية المدنية 198) وأمّن المكان."),
+      ],
+    },
+    conscience: {
+      kind: "decision", id: "conscience",
+      question: L("Le patient répond-il normalement (conscient) ?", "هل يستجيب المريض بشكل طبيعي (واعٍ)؟"),
+      note: L("Parle, yeux ouverts, réagit à la voix / au contact.", "يتكلم، عيناه مفتوحتان، يستجيب للصوت / اللمس."),
+      yes: "alerte", no: "resp",
+    },
+    resp: {
+      kind: "decision", id: "resp",
+      question: L("Respiration efficace présente (à vérifier en ≤ 10 s : voit / entend / sent) ?", "هل التنفس فعّال (تحقّق خلال ≤ 10 ث: شاهد / أنصت / احسّ)؟"),
+      note: L("Gaspements / respirations agoniques = PAS une respiration normale.", "شهقات الرغامى / التنفس الاحتضاري ليس تنفساً طبيعياً."),
+      yes: "pls-action", no: "acr-end",
+    },
+    "acr-end": {
+      kind: "end", id: "acr-end",
+      title: L("ARRÊT CARDIAQUE — RCP + DSA immédiats", "توقف قلبي — إنعاش وصعق فوريان"),
+      tone: "warn",
+      steps: [
+        L("Alerte 190 (SAMU) + demander le DSA le plus proche.", "نداء 190 (SAMU) + اطلب مزيل الرجفان الأقرب."),
+        L("RCP 30:2 à 100–120/min, DSA dès disponible ; suivre l'arbre « Arrêt cardiaque ».", "إنعاش 30:2 بسرعة 100–120/د، صعق فور توفره؛ اتبع شجرة «توقف القلب»."),
+      ],
+    },
+    "pls-action": {
+      kind: "action", id: "pls-action",
+      title: L("Inconscient qui respire — sécuriser puis réévaluer", "فاقد وعي يتنفس — أمّن ثم أعد التقييم"),
+      steps: [
+        L("PLS + liberté des voies aériennes ; O₂ si disponible.", "وضعية آمنة جانبية + تحرير المسلك الهوائي؛ أكسجين إن توفر."),
+        L("Alerte 190 : priorité de transport médicalisé ; surveiller la respiration chaque minute.", "نداء 190: أولوية نقل طبي؛ راقب التنفس كل دقيقة."),
+      ],
+      timerSec: 180,
+      timerLabel: L("Réévaluation respiratoire toutes les 3 min", "إعادة تقييم التنفس كل 3 د"),
+      next: "p1",
+    },
+    alerte: {
+      kind: "decision", id: "alerte",
+      question: L("Signe(s) d'alerte présent(s) ?", "هل توجد علامة / علامات إنذار؟"),
+      note: L("Douleur thoracique, déficit brutal, céphalée brutale, hémorragie active, dyspnée au repos, fièvre + frissons, douleur ≥ 8/10, intoxication, grossesse + saignement/douleur.", "ألم صدري، عجز مفاجئ، صداع مفاجئ، نزف نشط، ضيق تنفس في الراحة، حمى + قشعريرة، ألم ≥ 8/10، تسمّم، حمل + نزف/ألم."),
+      yes: "p2-action", no: "p3",
+    },
+    "p2-action": {
+      kind: "action", id: "p2-action",
+      title: L("P2 en route — premiers gestes", "اتجاه P2 — الإجراءات الأولى"),
+      steps: [
+        L("VVP + prélèvements ; ECG < 10 min si douleur thoracique / syncope ; antalgie si douleur ≥ 8/10.", "خط وريدي + سحب؛ تخطيط < 10 د إذا ألم صدري / إغماء؛ تسكين إذا ألم ≥ 8/10."),
+        L("Surveillance continue (FC, TA, SpO₂, GCS) toutes les 15 min ; ouvrir le protocole correspondant.", "مراقبة مستمرة (نبض، ضغط، تشبع، غلاسكو) كل 15 د؛ افتح البروتوكول الموافق."),
+      ],
+      next: "p2",
+    },
+    p2: {
+      kind: "end", id: "p2",
+      title: L("P2 — PRISE EN CHARGE RAPIDE (≤ 30 min)", "P2 — عناية سريعة (≤ 30 د)"),
+      tone: "warn",
+      steps: [
+        L("Consultation médicale rapide ; réévaluer le triage à chaque étape (toute détresse → P1).", "استشارة طبية سريعة؛ أعد الفرز في كل مرحلة (أي تدهور ← P1)."),
+      ],
+    },
+    p1: {
+      kind: "end", id: "p1",
+      title: L("P1 — URGENCE VITALE : évacuation médicale prioritaire", "P1 — طارئ حيوي: إخلاء طبي بأولوية"),
+      tone: "warn",
+      steps: [
+        L("Prévenir la régulation (190) : bilan, gestes, destination (SAUV).", "أبلغ التنظيم (190): الفحص، الإجراءات، الوجهة (قاعة الإنعاش)."),
+        L("Réévaluation continue toutes les 5 min jusqu'à la transmission.", "إعادة تقييم مستمرة كل 5 د حتى التبليغ."),
+      ],
+    },
+    p3: {
+      kind: "end", id: "p3",
+      title: L("P3 — Consultation standard, surveillance", "P3 — استشارة عادية، مراقبة"),
+      tone: "ok",
+      steps: [
+        L("Examen complet + conseils écrits ; réévaluation infirmière avant la sortie.", "فحص كامل + نصائح مكتوبة؛ إعادة تقييم تمريضية قبل الخروج."),
+        L("Enfant : ne jamais le laisser seul ; consignes de retour si aggravation.", "الطفل: لا يُترك أبداً وحده؛ تعليمات الرجوع عند أي تدهور."),
+      ],
+    },
+  },
+};
+
+export const decisionTrees: DecisionTree[] = [triage, acr, anaphylaxie, etatMal, sepsis, douleurThorax, hpp, hyperkaliemie, polytraumatisme];
 
 export function getTree(id: string): DecisionTree | undefined {
   return decisionTrees.find((t) => t.id === id);

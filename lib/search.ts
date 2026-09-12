@@ -109,6 +109,27 @@ export const searchIndex: SearchItem[] = [
     title: { fr: "Aide au triage IA", ar: "مساعد الفرز الذكي" },
     hay: normalize("triage ia aide assistant فرت ذكي"),
   },
+  {
+    key: "outil:triage-arbre",
+    type: "outil" as const,
+    href: "/arbres/triage-prehospitalier",
+    title: { fr: "Arbre de triage préhospitalier (P1/P2/P3)", ar: "شجرة الفرز قبل الاستشفائي (P1/P2/P3)" },
+    hay: normalize("triage arbre decisionnel p1 p2 p3 priorité minute scène conscience respiration فرز شجرة اولوية وعي تنفس"),
+  },
+  {
+    key: "outil:checklists",
+    type: "outil" as const,
+    href: "/checklists",
+    title: { fr: "Check-lists (transport, matériel, SAUV)", ar: "قوائم التدقيق (نقل، تجهيز، إنعاش)" },
+    hay: normalize("checklist liste verification malle sac urgence transport interhospitalier sauv materiel equipment قائمة تدقيق تجهيز نقل صندوق حافظة"),
+  },
+  {
+    key: "outil:fiche-samu",
+    type: "outil" as const,
+    href: "/fiche-samu",
+    title: { fr: "Fiche d'intervention SAMU / SMUR", ar: "فيشة تدخّل SAMU / SMUR" },
+    hay: normalize("fiche intervention samu smur rapport transmission bilan documentation horaires فيشة فش تدخل توثيق تقرير تبليغ"),
+  },
 ];
 
 export function searchItems(query: string, limit = 8): SearchItem[] {
