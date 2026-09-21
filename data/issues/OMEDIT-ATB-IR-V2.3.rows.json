@@ -1,0 +1,2640 @@
+[
+ {
+  "page": 1,
+  "label": "Amoxicilline PO",
+  "y": 272.0,
+  "lines": [
+   {
+    "y": 272.0,
+    "values": {
+     "normorenal": "1 g/8h",
+     "legere": "1 g/8h",
+     "moderee": "1 g/8h",
+     "severe": "DC de 1 g puis 500 mg/8h",
+     "terminale": "DC de 1 g puis 750 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 301.1,
+    "values": {
+     "normorenal": "1 g/12h",
+     "legere": "1 g/12h",
+     "moderee": "1 g/12h",
+     "severe": "DC de 1 g puis 500 mg/12h",
+     "terminale": "DC de 1 g puis 500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 1,
+  "label": "Amoxicilline IV",
+  "y": 330.1,
+  "lines": [
+   {
+    "y": 330.1,
+    "values": {
+     "normorenal": "100 mg/kg/24h en 4 injections",
+     "legere": "100 mg/kg/24h en 4 injections",
+     "moderee": "100 mg/kg/24h en 4 injections",
+     "severe": "50 mg/kg/24h",
+     "terminale": "25 mg/kg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 359.2,
+    "values": {
+     "normorenal": "200 mg/kg/24h en 6 injections",
+     "legere": "200 mg/kg/24h en 6 injections",
+     "moderee": "200 mg/kg/24h en 6 injections",
+     "severe": "100 mg/kg/24h",
+     "terminale": "50 mg/kg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 1,
+  "label": "Amoxicilline + acide clavulanique PO",
+  "y": 388.2,
+  "lines": [
+   {
+    "y": 388.2,
+    "values": {
+     "normorenal": "1 g/8h",
+     "legere": "1 g/8h",
+     "moderee": "1 g/8h",
+     "severe": "DC de 1 g puis 500 mg/8h",
+     "terminale": "DC de 1 g puis 750 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en g d’amoxicilline"
+  ],
+  "review": false
+ },
+ {
+  "page": 1,
+  "label": "Amoxicilline + acide clavulanique IV",
+  "y": 431.8,
+  "lines": [
+   {
+    "y": 431.8,
+    "values": {
+     "normorenal": "1 g/8h",
+     "legere": "1 g/8h",
+     "moderee": "1 g/8h",
+     "severe": "DC de 1 g puis 500 mg/8h",
+     "terminale": "DC de 1 g puis 750 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 460.8,
+    "values": {
+     "normorenal": "2 g/8h",
+     "legere": "2 g/8h",
+     "moderee": "2 g/8h",
+     "severe": "3 g/24h",
+     "terminale": "1,5 g/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en g d’amoxicilline ; /!\\ acide clavulanique : dose max 200 mg/injection et 1200 mg/24h"
+  ],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Ampicilline + Sulbactam IV",
+  "y": 98.4,
+  "lines": [
+   {
+    "y": 98.4,
+    "values": {
+     "normorenal": "Posologie usuelle : 1 à 2 g /6 à 12h",
+     "legere": "Posologie usuelle : 1 à 2 g /6 à 12h",
+     "moderee": "Posologie usuelle : 1 à 2 g /6 à 12h",
+     "severe": "DC de 1 g puis 500 mg/12h",
+     "terminale": "DC de 1 g puis 250 mg/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 126.0,
+    "values": {
+     "normorenal": "Infection à Acinetobacter spp : 3 g /6 à 8h",
+     "legere": "Infection à Acinetobacter spp : 3 g /6 à 8h",
+     "moderee": "Infection à Acinetobacter spp : 3 g /6 à 8h",
+     "severe": "3 g/12h",
+     "terminale": "3 g/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en g d’ampicilline"
+  ],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Ampicilline + Sulbactam IM",
+  "y": 168.1,
+  "lines": [
+   {
+    "y": 168.1,
+    "values": {
+     "normorenal": "1 g/12h",
+     "legere": "1 g/12h",
+     "moderee": "1 g/12h",
+     "severe": "500 mg/12h",
+     "terminale": "250 mg/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en g d’ampicilline"
+  ],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Benzathine benzylpenicilline IM",
+  "y": 211.7,
+  "lines": [
+   {
+    "y": 211.7,
+    "values": {
+     "normorenal": "2,4 MUI tous les 8 jours",
+     "legere": "2,4 MUI tous les 8 jours",
+     "moderee": "1,8 MUI tous les 8 jours",
+     "severe": "1,8 MUI tous les 8 jours",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 239.3,
+    "values": {
+     "normorenal": "1,2 MUI toutes les 3 à 4 semaines",
+     "legere": "1,2 MUI toutes les 3 à 4 semaines",
+     "moderee": "0,9 MUI toutes les 3 à 4 semaines",
+     "severe": "0,9 MUI toutes les 3 à 4 semaines",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Benzylpenicilline sodique IM ou IV",
+  "y": 268.3,
+  "lines": [
+   {
+    "y": 268.3,
+    "values": {
+     "normorenal": "12 à 24 MUI/j en 6 injections ou en perfusion continue",
+     "legere": "3 MUI /4h",
+     "moderee": "2 MUI/4h",
+     "severe": "1 MUI/4h",
+     "terminale": "0,5 MUI/6h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Cloxacilline PO",
+  "y": 326.4,
+  "lines": [
+   {
+    "y": 326.4,
+    "values": {
+     "normorenal": "50 mg/kg/24h en 3 prises (sans dépasser 4 g/24h)",
+     "legere": "50 mg/kg/24h en 3 prises (sans dépasser 4 g/24h)",
+     "moderee": "50 mg/kg/24h en 3 prises (sans dépasser 4 g/24h)",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Cloxacilline IV",
+  "y": 356.7,
+  "lines": [
+   {
+    "y": 356.7,
+    "values": {
+     "normorenal": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue",
+     "legere": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue",
+     "moderee": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Oxacilline IV",
+  "y": 400.2,
+  "lines": [
+   {
+    "y": 400.2,
+    "values": {
+     "normorenal": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue",
+     "legere": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue",
+     "moderee": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue",
+     "severe": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue",
+     "terminale": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Phénoxyméthyl- -pénicilline PO",
+  "y": 443.8,
+  "lines": [
+   {
+    "y": 443.8,
+    "values": {
+     "normorenal": "1 MUI/6 à 8h",
+     "legere": "1 MUI/6 à 8h",
+     "moderee": "1 MUI/6 à 8h",
+     "severe": "1 MUI/6 à 8h",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 2,
+  "label": "Pipéracilline IV",
+  "y": 488.1,
+  "lines": [
+   {
+    "y": 488.1,
+    "values": {
+     "normorenal": "4 g/6 à 8h",
+     "legere": "4 g/6 à 8h",
+     "moderee": "4 g/6 à 8h",
+     "severe": "4 g/ 8h",
+     "terminale": "4 g/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 3,
+  "label": "Pipéracilline + tazobactam IV",
+  "y": 98.4,
+  "lines": [
+   {
+    "y": 98.4,
+    "values": {
+     "normorenal": "4 g/6 à 8h",
+     "legere": "4 g/6 à 8h",
+     "moderee": "4 g/6 à 8h",
+     "severe": "4 g/ 8h",
+     "terminale": "4 g/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en g de pipéracilline"
+  ],
+  "review": false
+ },
+ {
+  "page": 3,
+  "label": "Pivmécillinam PO",
+  "y": 141.9,
+  "lines": [
+   {
+    "y": 141.9,
+    "values": {
+     "normorenal": "400 mg/8 à 12h",
+     "legere": "400 mg/8 à 12h",
+     "moderee": "400 mg/8 à 12h",
+     "severe": "DC de 400 mg puis 200 mg/8 à 12h",
+     "terminale": "DC de 400 mg puis 200 mg /24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 3,
+  "label": "Témocilline IV",
+  "y": 171.0,
+  "lines": [
+   {
+    "y": 171.0,
+    "values": {
+     "normorenal": "2 g/8 à 12h en perfusion de 30 min",
+     "legere": "2 g/8 à 12h en perfusion de 30 min",
+     "moderee": "1 g/12h",
+     "severe": "1 g/24h",
+     "terminale": "500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 200.0,
+    "values": {
+     "normorenal": "DC de 2 g en perfusion de 30 min puis 6 g/24h en perfusion continue",
+     "legere": "DC de 2 g en perfusion de 30 min puis 6 g/24h en perfusion continue",
+     "moderee": "Aucune donnée",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 3,
+  "label": "Aztréonam IM",
+  "y": 250.1,
+  "lines": [
+   {
+    "y": 250.1,
+    "values": {
+     "normorenal": "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique",
+     "legere": "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique",
+     "moderee": "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique",
+     "severe": "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique",
+     "terminale": "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"
+    },
+    "full": true,
+    "review": false
+   },
+   {
+    "y": 281.5,
+    "values": {
+     "normorenal": "Infection urinaire haute et/ou compliquée : 1 g/12h",
+     "legere": "Infection urinaire haute et/ou compliquée : 1 g/12h",
+     "moderee": "Infection urinaire haute et/ou compliquée : 1 g/12h",
+     "severe": "½ dose",
+     "terminale": "¼ dose"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 3,
+  "label": "Aztréonam IV",
+  "y": 313.0,
+  "lines": [
+   {
+    "y": 313.0,
+    "values": {
+     "normorenal": "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h",
+     "legere": "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h",
+     "moderee": "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h",
+     "severe": "DC de 2 g puis 500 mg à 1 g/8h",
+     "terminale": "DC de 2 g puis 250 à 500 mg/8h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 344.4,
+    "values": {
+     "normorenal": "Infection sévère : 2 g/6h ou 8 g/24h en continue",
+     "legere": "Infection sévère : 2 g/6h ou 8 g/24h en continue",
+     "moderee": "Infection sévère : 2 g/6h ou 8 g/24h en continue",
+     "severe": "DC de 2 g puis 1 g/6h ou 4 g/24h en continue",
+     "terminale": "DC de 2 g puis 500 mg/6h ou 2 g/24h en continue"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 3,
+  "label": "Céfaclor PO",
+  "y": 412.6,
+  "lines": [
+   {
+    "y": 412.6,
+    "values": {
+     "normorenal": "250 à 500 mg/8h Posologie max : 1500 mg/24h",
+     "legere": "250 à 500 mg/8h Posologie max : 1500 mg/24h",
+     "moderee": "250 à 500 mg/8h Posologie max : 1500 mg/24h",
+     "severe": "250 à 500 mg/12h",
+     "terminale": "250 à 500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 3,
+  "label": "Céfadroxil PO",
+  "y": 444.0,
+  "lines": [
+   {
+    "y": 444.0,
+    "values": {
+     "normorenal": "1 g/12h",
+     "legere": "1 g/12h",
+     "moderee": "1 g/12h",
+     "severe": "500 mg/12h",
+     "terminale": "500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 3,
+  "label": "Céfalexine PO",
+  "y": 475.5,
+  "lines": [
+   {
+    "y": 475.5,
+    "values": {
+     "normorenal": "1 g/12h",
+     "legere": "1 g/12h",
+     "moderee": "500 mg/12h",
+     "severe": "500 mg/24h",
+     "terminale": "250 mg/12 à 24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 4,
+  "label": "Céfazoline IM IV",
+  "y": 101.2,
+  "lines": [
+   {
+    "y": 101.2,
+    "values": {
+     "normorenal": "Infection peu sévère : 60 à 80 mg/kg/24h en 4 à 6 injections OU en continue avec DC = 1/4 ou 1/3 de la dose journalière",
+     "legere": "Infection peu sévère : 60 à 80 mg/kg/24h en 4 à 6 injections OU en continue avec DC = 1/4 ou 1/3 de la dose journalière",
+     "moderee": "DC de 500 mg puis 125 à 250 mg/12h",
+     "severe": "DC de 500 mg puis 125 à 250 mg/24h",
+     "terminale": "DC de 500 mg puis 125 à 250 mg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 159.3,
+    "values": {
+     "normorenal": "Infection sévère : 80 à 100 mg/kg/24h en 3 perfusions de 60 min toutes les 8h OU en continue avec DC de 2 g en perfusion de 60 min puis 80 à 100 mg/kg/j en 2 perfusions de 12h",
+     "legere": "Infection sévère : 80 à 100 mg/kg/24h en 3 perfusions de 60 min toutes les 8h OU en continue avec DC de 2 g en perfusion de 60 min puis 80 à 100 mg/kg/j en 2 perfusions de 12h",
+     "moderee": "DC de 500 mg puis 250 mg/6h ou 500 mg/12h",
+     "severe": "DC de 500 mg puis 250 mg/12h ou 500 mg/24h",
+     "terminale": "DC de 500 mg puis 500 mg/48 à 72h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 4,
+  "label": "Céfépime IV (*IM possible)",
+  "y": 241.6,
+  "lines": [
+   {
+    "y": 241.6,
+    "values": {
+     "normorenal": "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *",
+     "legere": "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *",
+     "moderee": "1 g/24h",
+     "severe": "0,5 g/24h",
+     "terminale": "0,25 g/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 273.0,
+    "values": {
+     "normorenal": "Infection sévère : 2 g/12h",
+     "legere": "Infection sévère : 2 g/12h",
+     "moderee": "2 g/24h",
+     "severe": "1 g/24h",
+     "terminale": "0,5 g/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 302.0,
+    "values": {
+     "normorenal": "Infection très sévère : 2 g/8h",
+     "legere": "Infection très sévère : 2 g/8h",
+     "moderee": "1 g/8h",
+     "severe": "1 g/12h",
+     "terminale": "1 g/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 4,
+  "label": "Céfidérocol IV",
+  "y": 331.1,
+  "lines": [
+   {
+    "y": 331.1,
+    "values": {
+     "normorenal": "≥ 2 g/8h si fonction rénale 120 mL/min : 2 g/ 6h",
+     "legere": "2 g/8h",
+     "moderee": "1,5 g/8h",
+     "severe": "1 g/8h",
+     "terminale": "0,75 g/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 358.7,
+    "values": {
+     "normorenal": "≥ Si fonction rénale 120 mL/min : 2 g/6h",
+     "legere": "≥ Si fonction rénale 120 mL/min : 2 g/6h",
+     "moderee": "≥ Si fonction rénale 120 mL/min : 2 g/6h",
+     "severe": "≥ Si fonction rénale 120 mL/min : 2 g/6h",
+     "terminale": "≥ Si fonction rénale 120 mL/min : 2 g/6h"
+    },
+    "full": false,
+    "filled": [
+     "legere",
+     "moderee",
+     "severe",
+     "terminale"
+    ],
+    "missing": [],
+    "review": true
+   }
+  ],
+  "notes": [],
+  "review": true
+ },
+ {
+  "page": 4,
+  "label": "Céfixime PO",
+  "y": 386.3,
+  "lines": [
+   {
+    "y": 386.3,
+    "values": {
+     "normorenal": "200 mg/12h",
+     "legere": "200 mg/12h",
+     "moderee": "200 mg/12h",
+     "severe": "200 mg/12h",
+     "terminale": "200 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 4,
+  "label": "Céfotaxime IM IV",
+  "y": 415.3,
+  "lines": [
+   {
+    "y": 415.3,
+    "values": {
+     "normorenal": "Posologie standard : 1 à 2 g/8h",
+     "legere": "Posologie standard : 1 à 2 g/8h",
+     "moderee": "1 à 2 g/12h",
+     "severe": "750 à 1500 mg/12h",
+     "terminale": "750 à 1500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 444.4,
+    "values": {
+     "normorenal": "Infection ostéo-articulaire : 100 à 150 mg/kg/24h en 4 à 6 injections ou en continue",
+     "legere": "Infection ostéo-articulaire : 100 à 150 mg/kg/24h en 4 à 6 injections ou en continue",
+     "moderee": "75 à 112,5 mg/kg/24h",
+     "severe": "50 à 75 mg/kg/24h",
+     "terminale": "25 à 37,5 mg/kg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 473.4,
+    "values": {
+     "normorenal": "Infection méningée : 200 à 300 mg/kg/24h en 4 à 6 injections ou en continue",
+     "legere": "Infection méningée : 200 à 300 mg/kg/24h en 4 à 6 injections ou en continue",
+     "moderee": "150 à 225 mg/kg/24h",
+     "severe": "100 à 150 mg/kg/24h",
+     "terminale": "50 à 75 mg/kg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 5,
+  "label": "Céfoxitine IV",
+  "y": 98.4,
+  "lines": [
+   {
+    "y": 98.4,
+    "values": {
+     "normorenal": "Infection peu grave : 1 à 2 g/8h",
+     "legere": "Infection peu grave : 1 à 2 g/8h",
+     "moderee": "1 à 2 g/8 à 12h",
+     "severe": "1 à 2 g/12 à 24h",
+     "terminale": "0,5 à 1g/24 à 48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 141.9,
+    "values": {
+     "normorenal": "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue",
+     "legere": "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue",
+     "moderee": "Aucune donnée",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 5,
+  "label": "Cefpodoxime (proxetil) PO",
+  "y": 171.0,
+  "lines": [
+   {
+    "y": 171.0,
+    "values": {
+     "normorenal": "100 à 200 mg/12h",
+     "legere": "100 à 200 mg/12h",
+     "moderee": "100 à 200 mg/12 à 24h",
+     "severe": "100 à 200 mg/24h",
+     "terminale": "100 à 200 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 5,
+  "label": "Ceftaroline (fosamil) IV",
+  "y": 200.0,
+  "lines": [
+   {
+    "y": 200.0,
+    "values": {
+     "normorenal": "600 mg/12h",
+     "legere": "600 mg/12h",
+     "moderee": "400 mg/12h",
+     "severe": "300 mg/12h",
+     "terminale": "200 mg/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 5,
+  "label": "Ceftazidime IM IV",
+  "y": 229.1,
+  "lines": [
+   {
+    "y": 229.1,
+    "values": {
+     "normorenal": "Administration discontinue : 2 g/8h",
+     "legere": "Administration discontinue : 2 g/8h",
+     "moderee": "2 g/12h",
+     "severe": "2 g/24h",
+     "terminale": "1 g/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 272.6,
+    "values": {
+     "normorenal": "Administration continue : DC de 2 g puis 6 g/24h",
+     "legere": "Administration continue : DC de 2 g puis 6 g/24h",
+     "moderee": "DC de 2 g puis 3 g/24h",
+     "severe": "DC de 2 g puis 1 g/24h",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 5,
+  "label": "Ceftazidime + avibactam IV",
+  "y": 307.0,
+  "lines": [
+   {
+    "y": 307.0,
+    "values": {
+     "normorenal": "Administration discontinue : 2 g/8h en perfusion de 2h",
+     "legere": "Administration discontinue : 2 g/8h en perfusion de 2h",
+     "moderee": "1 g/8h",
+     "severe": "0,75 g/12h",
+     "terminale": "0,75 g/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 336.0,
+    "values": {
+     "normorenal": "Administration en continue : DC de 2 g puis 6 g/24h",
+     "legere": "Administration en continue : DC de 2 g puis 6 g/24h",
+     "moderee": "Aucune donnée sur l’administration en continue",
+     "severe": "Aucune donnée sur l’administration en continue",
+     "terminale": "Aucune donnée sur l’administration en continue"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en g de ceftazidime"
+  ],
+  "review": false
+ },
+ {
+  "page": 5,
+  "label": "Ceftobiprole IV",
+  "y": 379.6,
+  "lines": [
+   {
+    "y": 379.6,
+    "values": {
+     "normorenal": "500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h",
+     "legere": "500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h",
+     "moderee": "500 mg/12h",
+     "severe": "250 mg/12h",
+     "terminale": "250 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 5,
+  "label": "Ceftolozane + tazobactam IV",
+  "y": 423.2,
+  "lines": [
+   {
+    "y": 423.2,
+    "values": {
+     "normorenal": "1 g/8h en perfusion de 60 min Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min",
+     "legere": "1 g/8h en perfusion de 60 min Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min",
+     "moderee": "500 mg/8h 1 g/8h",
+     "severe": "250 mg /8h 500 mg/8h",
+     "terminale": "DC de 500 mg puis 8h plus tard 100 mg/8h DC 1500 mg puis 8h plus tard 300 mg/8h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en g de ceftolozane"
+  ],
+  "review": false
+ },
+ {
+  "page": 6,
+  "label": "Ceftriaxone IM IV",
+  "y": 98.4,
+  "lines": [
+   {
+    "y": 98.4,
+    "values": {
+     "normorenal": "Infection modérée : 1 à 2 g/24h Infection sévère : 2 à 4 g/24h Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l’insuffisant rénal",
+     "legere": "Infection modérée : 1 à 2 g/24h Infection sévère : 2 à 4 g/24h Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l’insuffisant rénal",
+     "moderee": "Infection modérée : 1 à 2 g/24h Infection sévère : 2 à 4 g/24h Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l’insuffisant rénal",
+     "severe": "Infection modérée : 1 à 2 g/24h Infection sévère : 2 à 4 g/24h Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l’insuffisant rénal",
+     "terminale": "Infection modérée : 1 à 2 g/24h Infection sévère : 2 à 4 g/24h Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l’insuffisant rénal"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 6,
+  "label": "Cefuroxime (axétil) PO",
+  "y": 156.4,
+  "lines": [
+   {
+    "y": 156.4,
+    "values": {
+     "normorenal": "250 à 500 mg/12h",
+     "legere": "250 à 500 mg/12h",
+     "moderee": "250 à 500 mg/12h",
+     "severe": "250 à 500 mg/24h",
+     "terminale": "250 à 500 mg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 6,
+  "label": "Cefuroxime IV",
+  "y": 185.5,
+  "lines": [
+   {
+    "y": 185.5,
+    "values": {
+     "normorenal": "2 à 6 g/24h",
+     "legere": "2 g/24h",
+     "moderee": "2 g/24h",
+     "severe": "1 g/24h",
+     "terminale": "1 g/24 à 48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 6,
+  "label": "Ertapénem IV",
+  "y": 235.6,
+  "lines": [
+   {
+    "y": 235.6,
+    "values": {
+     "normorenal": "1 g/ 24h",
+     "legere": "1 g/ 24h",
+     "moderee": "1 g/ 24h",
+     "severe": "500 mg/24h",
+     "terminale": "500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 6,
+  "label": "Imipénem + cilastatine IV",
+  "y": 264.6,
+  "lines": [
+   {
+    "y": 264.6,
+    "values": {
+     "normorenal": "500 mg/6h en perfusion de 30 min",
+     "legere": "500 mg/6h en perfusion de 30 min",
+     "moderee": "500 mg/8h",
+     "severe": "250 mg/6h",
+     "terminale": "250 mg/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 306.7,
+    "values": {
+     "normorenal": "1000 mg/8h en perfusion de 30 min",
+     "legere": "1000 mg/8h en perfusion de 30 min",
+     "moderee": "500 mg/6h",
+     "severe": "500 mg/8h",
+     "terminale": "500 mg/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 335.8,
+    "values": {
+     "normorenal": "1000 mg/6h en perfusion de 30 min",
+     "legere": "1000 mg/6h en perfusion de 30 min",
+     "moderee": "750 mg/8h",
+     "severe": "500 mg/6h",
+     "terminale": "500 mg/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en mg d’Imipénem"
+  ],
+  "review": false
+ },
+ {
+  "page": 6,
+  "label": "Imipénem + cilastatine + relebactam IV",
+  "y": 379.3,
+  "lines": [
+   {
+    "y": 379.3,
+    "values": {
+     "normorenal": "500 mg/6h en perfusion de 30 min",
+     "legere": "400 mg/6h",
+     "moderee": "300 mg/6h",
+     "severe": "200 mg/6h",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en mg d’Imipénem"
+  ],
+  "review": false
+ },
+ {
+  "page": 6,
+  "label": "Méropénem IV",
+  "y": 422.9,
+  "lines": [
+   {
+    "y": 422.9,
+    "values": {
+     "normorenal": "1 à 2 g/8h",
+     "legere": "1 à 2 g/8h",
+     "moderee": "1 à 2 g/12h",
+     "severe": "0,5 à 1 g/12h",
+     "terminale": "0,5 à 1 g/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 452.0,
+    "values": {
+     "normorenal": "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique",
+     "legere": "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique",
+     "moderee": "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique",
+     "severe": "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique",
+     "terminale": "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 6,
+  "label": "Méropénem + vaborbactam IV (ATB de réserve)",
+  "y": 466.5,
+  "lines": [
+   {
+    "y": 466.5,
+    "values": {
+     "normorenal": "2 g/8h en perfusion de 3h",
+     "legere": "2 g/8h en perfusion de 3h",
+     "moderee": "2 g/8h en perfusion de 3h",
+     "severe": "1g/8h",
+     "terminale": "0,5g/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [
+   "Posologies exprimées en g de meropenem"
+  ],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Amikacine IV",
+  "y": 119.4,
+  "lines": [
+   {
+    "y": 119.4,
+    "values": {
+     "normorenal": "15 à 30 mg/kg/j",
+     "legere": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "moderee": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "severe": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "terminale": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Gentamicine IM IV",
+  "y": 133.9,
+  "lines": [
+   {
+    "y": 119.4,
+    "values": {
+     "normorenal": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "legere": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "moderee": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "severe": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "terminale": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
+    },
+    "full": false,
+    "filled": [
+     "normorenal"
+    ],
+    "missing": [],
+    "review": true
+   },
+   {
+    "y": 133.9,
+    "values": {
+     "normorenal": "3 à 8 mg/kg/j",
+     "legere": "3 à 8 mg/kg/j",
+     "moderee": "3 à 8 mg/kg/j",
+     "severe": "3 à 8 mg/kg/j",
+     "terminale": "3 à 8 mg/kg/j"
+    },
+    "full": false,
+    "filled": [
+     "legere",
+     "moderee",
+     "severe",
+     "terminale"
+    ],
+    "missing": [],
+    "review": true
+   }
+  ],
+  "notes": [],
+  "review": true
+ },
+ {
+  "page": 7,
+  "label": "Tobramycine IM IV",
+  "y": 148.4,
+  "lines": [
+   {
+    "y": 119.4,
+    "values": {
+     "normorenal": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "legere": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "moderee": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "severe": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "terminale": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
+    },
+    "full": false,
+    "filled": [
+     "normorenal"
+    ],
+    "missing": [],
+    "review": true
+   },
+   {
+    "y": 148.4,
+    "values": {
+     "normorenal": "3 à 8 mg/kg/j",
+     "legere": "3 à 8 mg/kg/j",
+     "moderee": "3 à 8 mg/kg/j",
+     "severe": "3 à 8 mg/kg/j",
+     "terminale": "3 à 8 mg/kg/j"
+    },
+    "full": false,
+    "filled": [
+     "legere",
+     "moderee",
+     "severe",
+     "terminale"
+    ],
+    "missing": [],
+    "review": true
+   }
+  ],
+  "notes": [],
+  "review": true
+ },
+ {
+  "page": 7,
+  "label": "Ciprofloxacine PO",
+  "y": 183.9,
+  "lines": [
+   {
+    "y": 183.9,
+    "values": {
+     "normorenal": "500 à 750 mg/12h",
+     "legere": "500 à 750 mg/12h",
+     "moderee": "250-500 mg/12h",
+     "severe": "250-500 mg/24h",
+     "terminale": "250-500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Ciprofloxacine IV",
+  "y": 213.0,
+  "lines": [
+   {
+    "y": 213.0,
+    "values": {
+     "normorenal": "400 mg/8 à 12h",
+     "legere": "400 mg/8 à 12h",
+     "moderee": "400 mg/12h",
+     "severe": "400 mg/24h",
+     "terminale": "400 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Délafloxacine PO",
+  "y": 242.0,
+  "lines": [
+   {
+    "y": 242.0,
+    "values": {
+     "normorenal": "450 mg/12h",
+     "legere": "450 mg/12h",
+     "moderee": "450 mg/12h",
+     "severe": "450 mg/12h",
+     "terminale": "Déconseillé"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Délafloxacine IV",
+  "y": 271.1,
+  "lines": [
+   {
+    "y": 271.1,
+    "values": {
+     "normorenal": "300 mg/ 12 h en perfusion de 60 min",
+     "legere": "300 mg/ 12 h en perfusion de 60 min",
+     "moderee": "300 mg/ 12 h en perfusion de 60 min",
+     "severe": "200 mg/12 h",
+     "terminale": "Déconseillé"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Lévofloxacine IV PO",
+  "y": 300.1,
+  "lines": [
+   {
+    "y": 300.1,
+    "values": {
+     "normorenal": "500 mg/12 à 24h",
+     "legere": "500 mg/12 à 24h",
+     "moderee": "DC de 500 mg puis 250 mg/12 à 24h",
+     "severe": "DC de 500 mg puis 250 mg/24 à 48h",
+     "terminale": "DC de 500 mg puis 125 à 250 mg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 333.0,
+    "values": {
+     "normorenal": "Cystite non compliquée : 250 mg /24h",
+     "legere": "Cystite non compliquée : 250 mg /24h",
+     "moderee": "DC de 250 mg puis 125 mg/24h",
+     "severe": "DC de 250 mg puis 125 mg/24h",
+     "terminale": "DC de 250 mg puis 125 mg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Moxifloxacine IV PO",
+  "y": 365.9,
+  "lines": [
+   {
+    "y": 365.9,
+    "values": {
+     "normorenal": "400 mg/24h",
+     "legere": "400 mg/24h",
+     "moderee": "400 mg/24h",
+     "severe": "400 mg/24h",
+     "terminale": "400 mg/24h"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Norfloxacine PO",
+  "y": 394.9,
+  "lines": [
+   {
+    "y": 394.9,
+    "values": {
+     "normorenal": "400 mg/12 à 24 h",
+     "legere": "400 mg/12 à 24 h",
+     "moderee": "400 mg/12 à 24 h",
+     "severe": "400 mg/24h",
+     "terminale": "400 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 7,
+  "label": "Ofloxacine IV PO",
+  "y": 424.0,
+  "lines": [
+   {
+    "y": 424.0,
+    "values": {
+     "normorenal": "Dose usuelle : 200 mg/12h",
+     "legere": "Dose usuelle : 200 mg/12h",
+     "moderee": "200 mg/24h",
+     "severe": "200 mg/24h",
+     "terminale": "200 mg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 453.0,
+    "values": {
+     "normorenal": "Infection sévère : 400 mg/12h",
+     "legere": "Infection sévère : 400 mg/12h",
+     "moderee": "400 mg/24h",
+     "severe": "400 mg/24h",
+     "terminale": "200 mg/24h OU 400 mg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Dalbavancine IV",
+  "y": 116.6,
+  "lines": [
+   {
+    "y": 116.6,
+    "values": {
+     "normorenal": "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après",
+     "legere": "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après",
+     "moderee": "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après",
+     "severe": "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après",
+     "terminale": "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Oritavancine IV",
+  "y": 145.6,
+  "lines": [
+   {
+    "y": 145.6,
+    "values": {
+     "normorenal": "1200 mg (dose unique) en perfusion de 3h",
+     "legere": "1200 mg (dose unique) en perfusion de 3h",
+     "moderee": "1200 mg (dose unique) en perfusion de 3h",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Teicoplanine IM IV",
+  "y": 172.8,
+  "lines": [
+   {
+    "y": 172.8,
+    "values": {
+     "normorenal": "Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h",
+     "legere": "Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h",
+     "moderee": "DC de 6 mg/kg/12h les 3 premières injections puis 3 mg/kg/24h ou 6 mg/kg/48h",
+     "severe": "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h",
+     "terminale": "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 230.9,
+    "values": {
+     "normorenal": "Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h",
+     "legere": "Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h",
+     "moderee": "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 6 mg/kg/24h ou 12 mg/kg/48h",
+     "severe": "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h",
+     "terminale": "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Teicoplanine PO",
+  "y": 289.0,
+  "lines": [
+   {
+    "y": 289.0,
+    "values": {
+     "normorenal": "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.",
+     "legere": "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.",
+     "moderee": "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.",
+     "severe": "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.",
+     "terminale": "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours."
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Vancomycine IV",
+  "y": 312.9,
+  "lines": [
+   {
+    "y": 312.9,
+    "values": {
+     "normorenal": "DC 30 mg/kg en perfusion de 2h puis : 20 à 40 mg/kg/j",
+     "legere": "DC, puis adapter en fonction de la concentration plasmatique à l’équilibre",
+     "moderee": "DC, puis adapter en fonction de la concentration plasmatique à l’équilibre",
+     "severe": "DC, puis adapter en fonction de la concentration plasmatique à l’équilibre",
+     "terminale": "DC, puis adapter en fonction de la concentration plasmatique à l’équilibre"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Vancomycine PO",
+  "y": 355.7,
+  "lines": [
+   {
+    "y": 355.7,
+    "values": {
+     "normorenal": "Traitement des infections à Clostridium difficile (ICD) : 125 mg/ 6h pendant 10 jours pour un 1er épisode d'ICD non sévère. Cette dose peut être augmentée à 500 mg/6h pendant 10 jours en cas d'ICD sévère ou compliquée. La dose maximale journalière ne devrait pas dépasser 2g.",
+     "legere": "Traitement des infections à Clostridium difficile (ICD) : 125 mg/ 6h pendant 10 jours pour un 1er épisode d'ICD non sévère. Cette dose peut être augmentée à 500 mg/6h pendant 10 jours en cas d'ICD sévère ou compliquée. La dose maximale journalière ne devrait pas dépasser 2g.",
+     "moderee": "Traitement des infections à Clostridium difficile (ICD) : 125 mg/ 6h pendant 10 jours pour un 1er épisode d'ICD non sévère. Cette dose peut être augmentée à 500 mg/6h pendant 10 jours en cas d'ICD sévère ou compliquée. La dose maximale journalière ne devrait pas dépasser 2g.",
+     "severe": "Traitement des infections à Clostridium difficile (ICD) : 125 mg/ 6h pendant 10 jours pour un 1er épisode d'ICD non sévère. Cette dose peut être augmentée à 500 mg/6h pendant 10 jours en cas d'ICD sévère ou compliquée. La dose maximale journalière ne devrait pas dépasser 2g.",
+     "terminale": "Traitement des infections à Clostridium difficile (ICD) : 125 mg/ 6h pendant 10 jours pour un 1er épisode d'ICD non sévère. Cette dose peut être augmentée à 500 mg/6h pendant 10 jours en cas d'ICD sévère ou compliquée. La dose maximale journalière ne devrait pas dépasser 2g."
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Métronidazole PO",
+  "y": 415.7,
+  "lines": [
+   {
+    "y": 415.7,
+    "values": {
+     "normorenal": "250 mg/6h",
+     "legere": "250 mg/6h",
+     "moderee": "250 mg/6h",
+     "severe": "250 mg/6h",
+     "terminale": "250 mg/12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 435.9,
+    "values": {
+     "normorenal": "500 mg/8h",
+     "legere": "500 mg/8h",
+     "moderee": "500 mg/8h",
+     "severe": "500 mg/8h",
+     "terminale": "250 mg/8h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 456.2,
+    "values": {
+     "normorenal": "500 mg/12h",
+     "legere": "500 mg/12h",
+     "moderee": "500 mg/12h",
+     "severe": "500 mg/12h",
+     "terminale": "500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Métronidazole IV",
+  "y": 476.3,
+  "lines": [
+   {
+    "y": 476.3,
+    "values": {
+     "normorenal": "500 mg/8h",
+     "legere": "500 mg/8h",
+     "moderee": "500 mg/8h",
+     "severe": "500 mg/8h",
+     "terminale": "250 mg/8h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 496.5,
+    "values": {
+     "normorenal": "750 mg/8h",
+     "legere": "750 mg/8h",
+     "moderee": "750 mg/8h",
+     "severe": "750 mg/8h",
+     "terminale": "375 mg/8h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 8,
+  "label": "Ornidazole IV PO",
+  "y": 516.6,
+  "lines": [
+   {
+    "y": 516.6,
+    "values": {
+     "normorenal": "Infection à germes anaérobies : 1 à 1,5g /24h",
+     "legere": "Infection à germes anaérobies : 1 à 1,5g /24h",
+     "moderee": "Infection à germes anaérobies : 1 à 1,5g /24h",
+     "severe": "Infection à germes anaérobies : 1 à 1,5g /24h",
+     "terminale": "Infection à germes anaérobies : 1 à 1,5g /24h"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Azithromycine PO",
+  "y": 125.1,
+  "lines": [
+   {
+    "y": 125.1,
+    "values": {
+     "normorenal": "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5",
+     "legere": "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5",
+     "moderee": "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5",
+     "severe": "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5",
+     "terminale": "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Clarithromycine PO",
+  "y": 154.2,
+  "lines": [
+   {
+    "y": 154.2,
+    "values": {
+     "normorenal": "250 mg/12h",
+     "legere": "250 mg/12h",
+     "moderee": "250 mg/12h",
+     "severe": "250 mg/24h",
+     "terminale": "250 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 175.8,
+    "values": {
+     "normorenal": "500 mg/12h",
+     "legere": "500 mg/12h",
+     "moderee": "500 mg/12h",
+     "severe": "500 mg/24h",
+     "terminale": "500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Clarithromycine IV",
+  "y": 197.4,
+  "lines": [
+   {
+    "y": 197.4,
+    "values": {
+     "normorenal": "500 mg/12h",
+     "legere": "500 mg/12h",
+     "moderee": "500 mg/12h",
+     "severe": "500 mg/24h",
+     "terminale": "500 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Clindamycine IV PO",
+  "y": 219.0,
+  "lines": [
+   {
+    "y": 219.0,
+    "values": {
+     "normorenal": "600 mg/6 à 8h",
+     "legere": "600 mg/6 à 8h",
+     "moderee": "600 mg/6 à 8h",
+     "severe": "600 mg/6 à 8h",
+     "terminale": "600 mg/6 à 8h"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Erythromycine IV PO",
+  "y": 248.0,
+  "lines": [
+   {
+    "y": 248.0,
+    "values": {
+     "normorenal": "1 g/8 à 12h",
+     "legere": "1 g/8 à 12h",
+     "moderee": "1 g/8 à 12h",
+     "severe": "1 g/8 à 12h",
+     "terminale": "500 à 750 mg/8 à 12h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Pristinamycine PO",
+  "y": 277.1,
+  "lines": [
+   {
+    "y": 277.1,
+    "values": {
+     "normorenal": "1 g/8 à 12h (posologie maximale = 4 g/24h)",
+     "legere": "1 g/8 à 12h (posologie maximale = 4 g/24h)",
+     "moderee": "1 g/8 à 12h (posologie maximale = 4 g/24h)",
+     "severe": "1 g/8 à 12h (posologie maximale = 4 g/24h)",
+     "terminale": "1 g/8 à 12h (posologie maximale = 4 g/24h)"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Roxithromycine PO",
+  "y": 306.1,
+  "lines": [
+   {
+    "y": 306.1,
+    "values": {
+     "normorenal": "150 mg/12h",
+     "legere": "150 mg/12h",
+     "moderee": "150 mg/12h",
+     "severe": "150 mg/12h",
+     "terminale": "150 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Spiramycine IV PO",
+  "y": 335.2,
+  "lines": [
+   {
+    "y": 335.2,
+    "values": {
+     "normorenal": "Per os : 3 MUI/8 à 12h",
+     "legere": "Per os : 3 MUI/8 à 12h",
+     "moderee": "Per os : 3 MUI/8 à 12h",
+     "severe": "Per os : 3 MUI/8 à 12h",
+     "terminale": "Per os : 3 MUI/8 à 12h"
+    },
+    "full": true,
+    "review": false
+   },
+   {
+    "y": 364.2,
+    "values": {
+     "normorenal": "IV : 1,5 à 3 MUI/8h",
+     "legere": "IV : 1,5 à 3 MUI/8h",
+     "moderee": "IV : 1,5 à 3 MUI/8h",
+     "severe": "IV : 1,5 à 3 MUI/8h",
+     "terminale": "IV : 1,5 à 3 MUI/8h"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 9,
+  "label": "Spiramycine + Métronidazole PO",
+  "y": 393.2,
+  "lines": [
+   {
+    "y": 393.2,
+    "values": {
+     "normorenal": "1,5 MUI (spiramycine) + 250 mg (métronidazole) /8h",
+     "legere": "1,5 MUI (spiramycine) + 250 mg (métronidazole) /8h",
+     "moderee": "1,5 MUI (spiramycine) + 250 mg (métronidazole) /8h",
+     "severe": "1,5 MUI (spiramycine) + 250 mg (métronidazole) /8h",
+     "terminale": "1,5 MUI (spiramycine) + 125 mg (métronidazole) /8h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 10,
+  "label": "Cotrimoxazole IV PO",
+  "y": 118.6,
+  "lines": [
+   {
+    "y": 118.6,
+    "values": {
+     "normorenal": "800 mg de sulfaméthoxazole + 160 mg de triméthoprime / 12h",
+     "legere": "800 mg de sulfaméthoxazole + 160 mg de triméthoprime / 12h",
+     "moderee": "800 mg de sulfaméthoxazole + 160 mg de triméthoprime / 12h",
+     "severe": "800 mg/160 mg/24h",
+     "terminale": "Contre-indiqué"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 10,
+  "label": "Sulfadiazine PO",
+  "y": 156.6,
+  "lines": [
+   {
+    "y": 156.6,
+    "values": {
+     "normorenal": "Préventif : 2 g/j Curatif : 4 à 6 g/j en 4 à 6 prises",
+     "legere": "Réduction de la posologie",
+     "moderee": "Réduction de la posologie",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 10,
+  "label": "Triméthoprime PO",
+  "y": 211.8,
+  "lines": [
+   {
+    "y": 211.8,
+    "values": {
+     "normorenal": "Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours",
+     "legere": "Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours",
+     "moderee": "Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 10,
+  "label": "Doxycycline IV PO",
+  "y": 271.9,
+  "lines": [
+   {
+    "y": 271.9,
+    "values": {
+     "normorenal": "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …",
+     "legere": "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …",
+     "moderee": "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …",
+     "severe": "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …",
+     "terminale": "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 10,
+  "label": "Lymecycline PO",
+  "y": 333.5,
+  "lines": [
+   {
+    "y": 333.5,
+    "values": {
+     "normorenal": "300 mg/12h",
+     "legere": "Aucune donnée",
+     "moderee": "Aucune donnée",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 354.0,
+    "values": {
+     "normorenal": "Acné : 300 mg/24h",
+     "legere": "Aucune donnée",
+     "moderee": "Aucune donnée",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 10,
+  "label": "Minocycline PO",
+  "y": 374.5,
+  "lines": [
+   {
+    "y": 374.5,
+    "values": {
+     "normorenal": "200 mg/j en 2 prises",
+     "legere": "200 mg/j en 2 prises",
+     "moderee": "200 mg/j en 2 prises",
+     "severe": "200 mg/j en 2 prises",
+     "terminale": "200 mg/j en 2 prises"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 10,
+  "label": "Tigécycline IV",
+  "y": 408.9,
+  "lines": [
+   {
+    "y": 408.9,
+    "values": {
+     "normorenal": "Infection non sévère : DC de 100 mg puis 50 mg/12h",
+     "legere": "Infection non sévère : DC de 100 mg puis 50 mg/12h",
+     "moderee": "Infection non sévère : DC de 100 mg puis 50 mg/12h",
+     "severe": "Infection non sévère : DC de 100 mg puis 50 mg/12h",
+     "terminale": "Infection non sévère : DC de 100 mg puis 50 mg/12h"
+    },
+    "full": true,
+    "review": false
+   },
+   {
+    "y": 437.9,
+    "values": {
+     "normorenal": "Infection sévère : DC de 200 mg puis 100 mg/12h",
+     "legere": "Infection sévère : DC de 200 mg puis 100 mg/12h",
+     "moderee": "Infection sévère : DC de 200 mg puis 100 mg/12h",
+     "severe": "Infection sévère : DC de 200 mg puis 100 mg/12h",
+     "terminale": "Infection sévère : DC de 200 mg puis 100 mg/12h"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Acide Fusidique IV PO",
+  "y": 118.6,
+  "lines": [
+   {
+    "y": 118.6,
+    "values": {
+     "normorenal": "500 mg/8 à 12h",
+     "legere": "500 mg/8 à 12h",
+     "moderee": "500 mg/8 à 12h",
+     "severe": "500 mg/8 à 12h",
+     "terminale": "500 mg/8 à 12h"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Colistine IV (Colistiméthate sodique)",
+  "y": 150.1,
+  "lines": [
+   {
+    "y": 150.1,
+    "values": {
+     "normorenal": "DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations",
+     "legere": "DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations",
+     "moderee": "DC de 9 MUI puis 5,5 à 7,5 MUI/24h en 2 perfusions",
+     "severe": "DC de 9 MUI puis 4,5 à 5,5 MUI/24h en 2 perfusions",
+     "terminale": "DC de 9 MUI puis 3,5 MUI/24h en 2 perfusions"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Daptomycine IV",
+  "y": 208.2,
+  "lines": [
+   {
+    "y": 208.2,
+    "values": {
+     "normorenal": "Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h",
+     "legere": "Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h",
+     "moderee": "Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h",
+     "severe": "6 à 8 mg/kg/48h",
+     "terminale": "6 à 8 mg/kg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 241.1,
+    "values": {
+     "normorenal": "Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h",
+     "legere": "Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h",
+     "moderee": "Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h",
+     "severe": "Aucune donnée au-delà de 10 mg/kg/48h",
+     "terminale": "Aucune donnée au-delà de 10 mg/kg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Fidaxomicine PO",
+  "y": 274.0,
+  "lines": [
+   {
+    "y": 274.0,
+    "values": {
+     "normorenal": "200 mg/12h",
+     "legere": "200 mg/12h",
+     "moderee": "200 mg/12h",
+     "severe": "200 mg/12h",
+     "terminale": "200 mg/12h"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Fosfomycine trométamol PO",
+  "y": 306.9,
+  "lines": [
+   {
+    "y": 306.9,
+    "values": {
+     "normorenal": "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique",
+     "legere": "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique",
+     "moderee": "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique",
+     "severe": "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique",
+     "terminale": "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Fosfomycine IV",
+  "y": 339.7,
+  "lines": [
+   {
+    "y": 339.7,
+    "values": {
+     "normorenal": "8 à 16 g/24h, en perfusion de 4 g, sur 30 min à 4h, toutes les 6 à 12h (max 8 g/prise)",
+     "legere": "8 à 16 g/24h, en perfusion de 4 g, sur 30 min à 4h, toutes les 6 à 12h (max 8 g/prise)",
+     "moderee": "4 g toutes les 12 à 24h",
+     "severe": "4 g toutes les 36 à 48h",
+     "terminale": "2 g toutes les 48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Linezolide IV PO",
+  "y": 372.6,
+  "lines": [
+   {
+    "y": 372.6,
+    "values": {
+     "normorenal": "600 mg/12h",
+     "legere": "600 mg/12h",
+     "moderee": "600 mg/12h",
+     "severe": "600 mg/24h",
+     "terminale": "600 mg/24h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 404.1,
+    "values": {
+     "normorenal": "Infections graves de réanimation : 600 mg/8h",
+     "legere": "Infections graves de réanimation : 600 mg/8h",
+     "moderee": "Infections graves de réanimation : 600 mg/8h",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Nitrofurantoïne PO",
+  "y": 435.5,
+  "lines": [
+   {
+    "y": 435.5,
+    "values": {
+     "normorenal": "100 mg/8h",
+     "legere": "100 mg/8h",
+     "moderee": "Déconseillé",
+     "severe": "Contre-indiqué",
+     "terminale": "Contre-indiqué"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 11,
+  "label": "Tédizolide PO",
+  "y": 467.0,
+  "lines": [
+   {
+    "y": 467.0,
+    "values": {
+     "normorenal": "200 mg/24h",
+     "legere": "200 mg/24h",
+     "moderee": "200 mg/24h",
+     "severe": "200 mg/24h",
+     "terminale": "200 mg/24h"
+    },
+    "full": true,
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 12,
+  "label": "Bédaquiline PO",
+  "y": 118.6,
+  "lines": [
+   {
+    "y": 118.6,
+    "values": {
+     "normorenal": "Semaines 1 et 2 : 400 mg, 1 fois par jour Semaines 3 à 24 : 200 mg, 3 fois par semaine, avec un intervalle d’au moins 48 heures entre chaque prise",
+     "legere": "Semaines 1 et 2 : 400 mg, 1 fois par jour Semaines 3 à 24 : 200 mg, 3 fois par semaine, avec un intervalle d’au moins 48 heures entre chaque prise",
+     "moderee": "Semaines 1 et 2 : 400 mg, 1 fois par jour Semaines 3 à 24 : 200 mg, 3 fois par semaine, avec un intervalle d’au moins 48 heures entre chaque prise",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 12,
+  "label": "Delamanide PO",
+  "y": 168.0,
+  "lines": [
+   {
+    "y": 168.0,
+    "values": {
+     "normorenal": "100 mg deux fois par jour pendant 24 semaines",
+     "legere": "100 mg deux fois par jour pendant 24 semaines",
+     "moderee": "100 mg deux fois par jour pendant 24 semaines",
+     "severe": "Aucune donnée",
+     "terminale": "Aucune donnée"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 12,
+  "label": "Ethambutol M IV PO",
+  "y": 199.4,
+  "lines": [
+   {
+    "y": 199.4,
+    "values": {
+     "normorenal": "15 à 20 mg/kg/24h (25 mg/kg/j maximum)",
+     "legere": "15 mg/kg/j",
+     "moderee": "10 mg/kg/j",
+     "severe": "10 mg/kg/j",
+     "terminale": "10 mg/kg/j"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 12,
+  "label": "Isoniazide IM IV PO",
+  "y": 237.4,
+  "lines": [
+   {
+    "y": 237.4,
+    "values": {
+     "normorenal": "4 à 5 mg/kg/24h (300 mg/j maximum)",
+     "legere": "3 à 5 mg/kg/24h",
+     "moderee": "3 à 5 mg/kg/24h",
+     "severe": "3 à 5 mg/kg/24h (200 mg/j maximum)",
+     "terminale": "3 à 5 mg/kg/24h (200 mg/j maximum)"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 12,
+  "label": "Pyrazinamide PO",
+  "y": 275.3,
+  "lines": [
+   {
+    "y": 275.3,
+    "values": {
+     "normorenal": "30 mg/kg/24h en 1 prise /j",
+     "legere": "30 mg/kg/24h en 1 prise /j",
+     "moderee": "30 mg/kg/24h en 1 prise /j",
+     "severe": "30 mg/kg/48h",
+     "terminale": "30 mg/kg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 12,
+  "label": "Rifabutine PO",
+  "y": 299.8,
+  "lines": [
+   {
+    "y": 299.8,
+    "values": {
+     "normorenal": "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j",
+     "legere": "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j",
+     "moderee": "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j",
+     "severe": "Poids > 50 kg : 300 mg/24h Poids < 50 kg : 450 mg/48h Si association avec la Clarithromycine : 150 mg/j",
+     "terminale": "Poids > 50 kg : 300 mg/24h Poids < 50 kg : 450 mg/48h Si association avec la Clarithromycine : 150 mg/j"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   },
+   {
+    "y": 373.6,
+    "values": {
+     "normorenal": "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j",
+     "legere": "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j",
+     "moderee": "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j",
+     "severe": "150 mg/24h Si association avec Indinavir ou Nelfinavir : 150 mg/48h",
+     "terminale": "150 mg/24h Si association avec Indinavir ou Nelfinavir : 150 mg/48h"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ },
+ {
+  "page": 12,
+  "label": "Rifampicine IV PO",
+  "y": 427.2,
+  "lines": [
+   {
+    "y": 427.2,
+    "values": {
+     "normorenal": "Tuberculose : 8 à 12 mg/kg/24h",
+     "legere": "Tuberculose : 8 à 12 mg/kg/24h",
+     "moderee": "Tuberculose : 8 à 12 mg/kg/24h",
+     "severe": "Tuberculose : 8 à 12 mg/kg/24h",
+     "terminale": "Tuberculose : 8 à 12 mg/kg/24h"
+    },
+    "full": true,
+    "review": false
+   },
+   {
+    "y": 458.7,
+    "values": {
+     "normorenal": "Infection à germes gram + ou - : 20 à 30 mg/kg/24h",
+     "legere": "Infection à germes gram + ou - : 20 à 30 mg/kg/24h",
+     "moderee": "espacer les prises si besoin me selon rifampicémie du 2 ou me 3 jour du traitement",
+     "severe": "espacement des prises indispensable",
+     "terminale": "espacement des prises indispensable"
+    },
+    "full": false,
+    "filled": [],
+    "missing": [],
+    "review": false
+   }
+  ],
+  "notes": [],
+  "review": false
+ }
+]

@@ -1,0 +1,31 @@
+# v17.3 — Règles de cache pour Netlify et Cloudflare Pages (lues depuis la racine du site).
+#
+# Pourquoi ces règles : l'export statique produit des fichiers `_next/static/**` au nom
+# haché. Sans `immutable`, chaque visite revalide des dizaines de morceaux — le budget
+# réseau de l'application hors-ligne en dépend. Les pages HTML et le service worker, eux,
+# doivent être revalidés, sinon une mise à jour mettrait des semaines à atteindre
+# les appareils (le service worker gère l'absence de réseau, pas la fraîcheur).
+#
+# NB : GitHub Pages ne lit PAS ce fichier (aucun en-tête personnalisé n'y est possible) ;
+# voir README § Déploiement pour ce que cela implique.
+#
+# Le serveur d'audit local (scripts/static-out.mjs) applique exactement les mêmes règles.
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+  Service-Worker-Allowed: /
+
+/manifest.webmanifest
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ref-index.json
+  Cache-Control: public, max-age=3600
+
+/icons/*
+  Cache-Control: public, max-age=604800, immutable
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate

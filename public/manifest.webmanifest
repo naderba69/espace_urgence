@@ -1,0 +1,109 @@
+{
+  "name": "Espace Urgence TN — Références & outils SMU",
+  "short_name": "Urgence TN",
+  "description": "Protocoles, médicaments, calculateurs et ECG pour les urgences et le SAMU — bilingue FR/AR, hors-ligne.",
+  "lang": "fr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "categories": [
+    "medical",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "🫀 Réanimation (ACR, RSI, amines)",
+      "short_name": "Réa",
+      "url": "./rea",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "⚡ Mode terrain (doses 1er geste)",
+      "short_name": "Terrain",
+      "url": "./terrain",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "🩺 Intervention guidée",
+      "short_name": "Guidage",
+      "url": "./guidage",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "🚨 Mode urgence (ACR, anaphylaxie)",
+      "short_name": "Urgence",
+      "url": "./?urgence=1",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Vitesses PSE",
+      "short_name": "PSE",
+      "url": "./calculateurs/perfusions",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Localisation du ST+",
+      "short_name": "ST+",
+      "url": "./calculateurs/stemi",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

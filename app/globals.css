@@ -1,0 +1,534 @@
+@import "tailwindcss";
+
+/* Mode sombre piloté par la classe .dark sur <html> (pas prefers-color-scheme) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Variables de thème — clair / sombre (sombre par défaut, exigé cahier des charges) */
+:root {
+  --bg: #f8fafc;
+  --fg: #0f172a;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --line: #e2e8f0;
+  /* --font-inter / --font-arabic fournis par next/font (layout.tsx) — ne pas redéfinir ici */
+}
+.dark {
+  --bg: #0f172a;         /* navy profond (charte) */
+  --fg: #f1f5f9;
+  --surface: #1e293b;
+  --surface-2: #0b1220;
+  --line: #334155;
+}
+/* v1.6 — AMOLED : noir pur (économie batterie + confort de nuit), placé après .dark
+   pour gagner à spécificité égale quand les deux classes sont présentes. */
+.amoled {
+  --bg: #000000;
+  --fg: #f1f5f9;
+  --surface: #0a0f16;
+  --surface-2: #05080d;
+  --line: #1e293b;
+}
+/* AMOLED : coupe les halos lumineux (fond radial, mesh, verre) pour un noir réel.
+   Préfixe html.amoled : spécificité supérieure aux règles .dark définies plus bas. */
+html.amoled body { background-image: none; }
+html.amoled .hero-mesh { background: none; }
+html.amoled .blur-3xl { display: none; } /* هالة hero الضبابية */
+html.amoled .stat-chip { backdrop-filter: none; background: rgba(21, 101, 192, 0.10); }
+html.amoled .card { box-shadow: none; }
+html.amoled .eutn-header { box-shadow: none; }
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface-2);
+  --color-line: var(--line);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Police arabe quand la langue active = ar */
+html[lang="ar"] body {
+  font-family: var(--font-arabic), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.8; /* respiration des diacritiques arabes */
+}
+/* v1.8 — l'espacement négatif des lettres casse les liaisons arabes (glyphes superposés) */
+html[lang="ar"] * { letter-spacing: 0 !important; }
+html[lang="ar"] #contenu h1 { line-height: 1.45; }
+html[lang="ar"] #contenu h2 { line-height: 1.5; }
+
+/* Accessibilité : focus visible partout */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Cibles tactiles >= 44px (mobile-first, usage ambulancier)
+   Dans @layer components : les utilitaires Tailwind (justify-*, items-*, flex, …)
+   doivent pouvoir la surcharger — corrige les boutons « collés » ou mal alignés. */
+@layer components {
+  .touch {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ---- Impression : uniquement le contenu, pas de nav/boutons ---- */
+
+
+/* Animation du témoin de métronome RCP */
+@keyframes cpr-beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.25); }
+}
+.cpr-beat { animation: cpr-beat 0.545s infinite; }
+
+/* Tracé ECG : dessin progressif de l'onde */
+.ecg-draw { animation: ecg-draw 3.2s linear forwards; }
+@keyframes ecg-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ============ Améliorations UI/UX — professionnalisation ============ */
+:root {
+  /* typographie de base */
+  line-height: 1.6;
+}
+html { scroll-behavior: smooth; }
+::selection { background: color-mix(in srgb, var(--accent) 35%, transparent); }
+
+/* Espacement contenu — meilleure densité mobile / respiration desktop */
+#contenu { padding: 1rem 1rem 3.5rem; }
+@media (min-width: 640px) { #contenu { padding: 1.75rem 1.75rem 4rem; } }
+
+/* En-têtes : hiérarchie nette */
+#contenu h1 { line-height: 1.2; letter-spacing: -0.01em; }
+#contenu h2 { line-height: 1.3; }
+
+/* Cartes unifiées : ombre douce + bord lisible + hover subtil */
+.card {
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.06), 0 4px 14px -6px rgba(2, 6, 23, 0.10);
+}
+.dark .card { box-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px -12px rgba(0,0,0,0.55); }
+a.card { transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+a.card:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(2,6,23,.08), 0 12px 28px -10px color-mix(in srgb, var(--accent) 25%, transparent); }
+
+/* Boutons : retour tactile net */
+button, a { -webkit-tap-highlight-color: transparent; }
+button:active { transform: scale(0.98); }
+.touch { transition: background-color .15s ease, color .15s ease, transform .1s ease; }
+
+/* Inputs : rendu clinique (gros, lisible, centré) */
+input, textarea, select {
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+input:focus, textarea:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); outline: none; }
+
+/* Chiffres/tabular-nums cohérents dans les doses */
+.tabular-nums { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* Nav : item actif mis en valeur par un liseré */
+nav a[aria-current="page"] { position: relative; }
+nav a[aria-current="page"]::before {
+  content: ""; position: absolute; inset-inline-start: -0.75rem; top: 15%; bottom: 15%;
+  width: 4px; border-radius: 4px; background: var(--accent);
+}
+
+/* Header flottant plus net */
+header.sticky { backdrop-filter: saturate(1.2) blur(10px); box-shadow: 0 1px 8px rgba(2,6,23,.06); }
+
+/* Listes numérotées des protocoles : espacement aéré */
+#contenu ol li, #contenu ul li { margin-top: 0.1rem; }
+
+/* Bulles abbr : soulignement pointillé pro */
+button[aria-expanded] { text-decoration-thickness: 1.5px; }
+
+/* Petits écrans : tout bouton d'action primaire passe en pleine largeur par défaut */
+@media (max-width: 480px) {
+  #contenu { font-size: 0.98rem; }
+}
+
+/* Accessibilité : réduire les animations si demandé */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .animate-pulse, .cpr-beat { animation: none !important; }
+}
+
+/* Barre de défilement discrète */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(100,116,139,.4); border-radius: 8px; }
+.dark ::-webkit-scrollbar-thumb { background: rgba(148,163,184,.25); }
+
+/* ============ RESPONSIVE PRO — أمان من التجاوز على كل الشاشات ============ */
+
+/* 1) قاعدة: لا شيء يتجاوز عرض الشاشة */
+html { height: 100%; overflow: hidden; }
+html, body { overflow-x: clip; }
+/* Zones « en sûreté » du téléphone (encoche / barre gestuelle) — clé pour un rendu natif edge-to-edge */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+/* sensation d'app native : pas de rebond/étirement WebView, pas de flash gris au toucher */
+html, body, main, aside { overscroll-behavior: none; }
+main, aside { overscroll-behavior: contain; }
+* { -webkit-tap-highlight-color: transparent; }
+footer, .bottom-safe { padding-bottom: env(safe-area-inset-bottom); }
+main { scroll-behavior: smooth; }
+* { min-width: 0; }
+main, section, article, .card { max-width: 100%; }
+#contenu { width: 100%; }
+
+/* 2) الكلمات الطويلة والأرقام والروابط تنكسر */
+p, li, td, summary { overflow-wrap: anywhere; }
+span, button, a, label { overflow-wrap: break-word; }
+/* jamais de césure automatique dans les titres (évite « Glas-gow », « inter-hos-pitalier ») */
+h1, h2, h3 { overflow-wrap: break-word; hyphens: manual; }
+
+/* 3) الجداول: تمرير أفقي انسيابي داخل إطار بدل كسر الصفحة */
+table { border-collapse: collapse; width: 100%; }
+div:has(> table), .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+@media (max-width: 640px) {
+  .overflow-x-auto table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+
+/* 4) الأرقام الضخمة (مؤقتات، جرعات) تتقلص بدل الخروج —
+   محصورة في فئات الحجم الكبيرة فقط حتى لا تُضخَّم الأرقام الصغيرة
+   (أرقام هواتف، فروقات +1، قيم خيارات) عن غير قصد */
+[class*="text-3xl"], [class*="text-4xl"], [class*="text-5xl"], [class*="text-6xl"], [class*="text-7xl"] {
+  font-size: clamp(1.5rem, 6vw + 0.75rem, 3.75rem) !important;
+  line-height: 1.15 !important;
+}
+
+/* 5) الصور والفيديو لا تتجاوز */
+img, svg, video, canvas { max-width: 100%; height: auto; }
+
+
+/* 8) النوافذ المنبثقة للاختصارات لا تخرج — قاعدة مخصصة للتلميح فقط (لا تمس نافذة وضع الاستعجال بملء الشاشة) */
+.abbr-tip { max-inline-size: min(280px, calc(100vw - 2rem)); }
+
+/* 9) الحقول والنصوص المنسدلة تملأ بلا فيض */
+input, select, textarea { max-width: 100%; box-sizing: border-box; }
+
+/* 10) الهيدر والبطاقات: padding متجاوب */
+@media (max-width: 640px) {
+  .card { border-radius: 18px !important; }
+  header.sticky .max-w-6xl { padding-inline: 0.5rem; }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  #contenu { padding-inline: 1.5rem; }
+}
+@media (min-width: 1280px) {
+  #contenu { max-width: 72rem; }
+}
+
+/* 11) تمنع التمرير الأفقي الناتج عن الشبكات المتعددة الأعمدة */
+.min-w-0 { min-width: 0 !important; }
+.w-full { max-width: 100%; }
+
+/* 12) خط متجاوب أساسي */
+@media (max-width: 380px) { html { font-size: 14px; } }
+@media (min-width: 381px) and (max-width: 640px) { html { font-size: 15px; } }
+
+/* ============ طلاء احترافي نهائي ============ */
+
+/* تحسين عناوين الأقسام */
+#contenu h2 { display: flex; align-items: center; gap: 0.5rem; }
+
+/* تأثير خفيف للبطاقات الرئيسية */
+.card { position: relative; }
+.card::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  opacity: 0; pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: opacity .2s;
+}
+a.card:hover::after { opacity: 1; }
+
+/* الخلفية الرئيسية بدرجة دقيقة */
+body { background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(21,101,192,.06), transparent); }
+.dark body { background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(21,101,192,.10), transparent); }
+
+/* v9.0 — MDCalc-flat : plus d'ombre automatique sur tout bouton « bg-* »
+   (cette règle ajoutait un halo parasite aux boutons fantômes type hover:bg-surface2).
+   Les CTA pleins portent leur propre ombre (shadow-lg / shadow-md / .btn-primary). */
+
+/* شارة نبض ناعمة للطوارئ */
+@keyframes sos-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.45);} 50% { box-shadow: 0 0 0 10px rgba(220,38,38,0);} }
+
+/* لمس نحيف لقوائم السجل */
+ol li, ul li { scroll-margin-top: 5rem; }
+
+
+/* ── Tiroir ☰ natif (slide-in RTL/LTR) + backdrop estompé ────────────── */
+@keyframes eutn-drawer-in-ltr { from { transform: translateX(-100%); opacity: .4 } to { transform: translateX(0); opacity: 1 } }
+@keyframes eutn-drawer-in-rtl { from { transform: translateX(100%);  opacity: .4 } to { transform: translateX(0); opacity: 1 } }
+@keyframes eutn-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@media (prefers-reduced-motion: no-preference) {
+  .eutn-drawer { animation: eutn-drawer-in-ltr .18s ease-out; }
+  html[dir="rtl"] .eutn-drawer { animation: eutn-drawer-in-rtl .18s ease-out; }
+  .eutn-backdrop { animation: eutn-fade-in .15s ease-out; }
+}
+@media (prefers-reduced-motion: reduce) { .eutn-drawer, .eutn-backdrop { animation: none !important; } }
+/* Impression : flux multi-pages normal */
+
+
+/* ════════════════════════════════════════════════════════════════════
+   v1.4 — DESIGN SYSTEM 2026 : glass, gradients, bottom-tabs, motion
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --grad-brand: linear-gradient(135deg, #1565c0 0%, #1e88e5 100%);
+  --grad-brand-soft: linear-gradient(135deg, rgba(21,101,192,.14), rgba(30,136,229,.05));
+}
+
+/* ── Header verre dépoli + séparation lumineuse ── */
+.eutn-header {
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 8px 24px -18px rgba(2,6,23,.5);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .eutn-header { background: color-mix(in srgb, var(--surface) 72%, transparent); }
+}
+
+/* ── Tiroir : ressort natif (courbe iOS-like) ── */
+@keyframes eutn-drawer-in-ltr { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes eutn-drawer-in-rtl { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes eutn-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@media (prefers-reduced-motion: no-preference) {
+  .eutn-drawer { animation: eutn-drawer-in-ltr .26s cubic-bezier(.32,.72,.24,1); }
+  html[dir="rtl"] .eutn-drawer { animation: eutn-drawer-in-rtl .26s cubic-bezier(.32,.72,.24,1); }
+  .eutn-backdrop { animation: eutn-fade-in .2s ease-out; }
+}
+
+/* ── Bottom tabs (mobile) ── */
+@keyframes eutn-tabs-up { from { transform: translateY(110%); } to { transform: translateY(0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .eutn-tabs { animation: eutn-tabs-up .28s cubic-bezier(.32,.72,.24,1); }
+}
+#contenu { padding-bottom: calc(4.9rem + env(safe-area-inset-bottom)); }
+@media (min-width: 1024px) { #contenu { padding-bottom: 1.5rem; } }
+
+
+
+.eutn-tab { position: relative; }
+nav .eutn-tab::before {
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 22px; height: 3px; border-radius: 0 0 4px 4px; background: transparent; transition: background .2s;
+}
+nav .eutn-tab[aria-current="page"]::before { background: var(--accent); }
+.eutn-tab:active .tab-ico { transform: scale(.92); }
+.eutn-tab .tab-ico { will-change: transform; }
+
+/* ── Bouton urgence : pouls vie ── */
+@keyframes sos-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.42), 0 8px 20px -6px rgba(220,38,38,.4);} 50% { box-shadow: 0 0 0 9px rgba(220,38,38,0), 0 8px 20px -6px rgba(220,38,38,.4);} }
+.sos-pulse { animation: sos-pulse 2.4s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) { .sos-pulse { animation: none; } }
+
+/* ── Hero mesh (accueil) ── */
+.hero-mesh {
+  background:
+    radial-gradient(1100px 420px at 50% -100px, rgba(21,101,192,.18), transparent 62%),
+    radial-gradient(560px 300px at 88% -40px, rgba(30,136,229,.10), transparent 60%),
+    radial-gradient(480px 280px at 8% 0%, rgba(100,181,246,.09), transparent 55%);
+}
+.dark .hero-mesh {
+  background:
+    radial-gradient(1100px 420px at 50% -100px, rgba(21,101,192,.22), transparent 62%),
+    radial-gradient(560px 300px at 88% -40px, rgba(30,136,229,.13), transparent 60%),
+    radial-gradient(480px 280px at 8% 0%, rgba(100,181,246,.10), transparent 55%);
+}
+
+/* ── Tuiles d'action rapide : lift + glow au toucher ── */
+.quick-tile { transition: transform .18s cubic-bezier(.32,.72,.24,1), box-shadow .18s ease, opacity .18s ease; }
+.quick-tile:hover { transform: translateY(-2px); }
+.quick-tile:active { transform: scale(.97); }
+
+/* ── Chips statistiques ── */
+.stat-chip {
+  background: var(--grad-brand-soft);
+  border: 1px solid rgba(21,101,192,.25);
+  backdrop-filter: blur(6px);
+}
+
+/* ── Impression : la barre d'onglets disparaît ── */
+
+
+/* ── v1.5 : fieldset/legend — en flex, la légende redevient un bloc normal
+   (plus d'encoche dans la bordure, plus de flottement autour des boutons) ── */
+fieldset.card { display: flex; flex-direction: column; }
+/* Légende en pastille flottante assumée (style champ « outlined ») */
+fieldset.card > legend {
+  margin-inline-start: 0.9rem;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  font-size: 0.92em;
+}
+
+/* ── v1.5 : transition d'entrée des pages (douce, RTL-safe) ── */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #contenu > article, #contenu > div { animation: page-in 0.28s cubic-bezier(0.32, 0.72, 0.24, 1); }
+}
+
+/* ── Correctifs visuels v1.4.1 ── */
+/* Le nom de marque ne se coupure jamais avec un trait d'union */
+.hero-mesh h1, header .bg-clip-text { hyphens: none !important; -webkit-hyphens: none !important; }
+/* Onglets bas : libellés compacts qui ne débordent jamais */
+.eutn-tab span { white-space: nowrap; }
+.eutn-tab { padding-inline: 2px !important; }
+.eutn-tab .tab-ico { padding-inline: 0.65rem !important; }
+
+/* v1.9 — إخفاء أسهم الحقول الرقمية (تتراكب على الأرقام في RTL وتزيد الضجيج) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+/* ════════════════════════════════════════════════════════════════════
+   v9.0 — REDESIGN PRO : jetons sémantiques (MDCalc-like)
+   Couleurs de gravité UNIFIÉES : critical / urgent / standard
+   + échelle typographique arabe (IBM Plex Sans Arabic)
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Gravité — clair */
+  --sev-critical: #d32f2f;
+  --sev-critical-bg: #fdecea;
+  --sev-critical-line: #f5c6c2;
+  --sev-urgent: #e65100;
+  --sev-urgent-bg: #fff3e0;
+  --sev-urgent-line: #ffd9a8;
+  --sev-standard: #0f766e;
+  --sev-standard-bg: #e0f2f1;
+  --sev-standard-line: #b2dfdb;
+  /* v10.0 — M3 : accent = BLEU MÉDICAL (rouge réservé à la gravité) */
+  --accent: #1565c0;
+  --accent-strong: #0d47a1;
+  --accent-soft: rgba(21, 101, 192, 0.10);
+  /* Rayons et ombres unifiés — v10.0 M3 : carte 20px, boutons pilule */
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
+  --r-card: 20px; --r-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(2, 6, 23, .06), 0 4px 12px -6px rgba(2, 6, 23, .10);
+  --shadow-2: 0 2px 4px rgba(2, 6, 23, .08), 0 12px 28px -10px rgba(2, 6, 23, .18);
+}
+.dark {
+  /* Gravité — sombre (teintes éclaircies pour contraste AA sur fond navy) */
+  --sev-critical: #ff6b6b;
+  --sev-critical-bg: rgba(211, 47, 47, .16);
+  --sev-critical-line: rgba(255, 107, 107, .35);
+  --sev-urgent: #ffa94d;
+  --sev-urgent-bg: rgba(230, 81, 0, .16);
+  --sev-urgent-line: rgba(255, 169, 77, .35);
+  --sev-standard: #4db6ac;
+  --sev-standard-bg: rgba(15, 118, 110, .18);
+  --sev-standard-line: rgba(77, 182, 172, .35);
+  --accent: #8ab4f8;
+  --accent-strong: #aecbfa;
+  --accent-soft: rgba(138, 180, 248, .14);
+}
+
+/* Badges de gravité réutilisables */
+.sev-badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  border-radius: 999px; padding: .1rem .6rem;
+  font-size: .72rem; font-weight: 800; letter-spacing: .02em;
+  border: 1px solid transparent; white-space: nowrap;
+}
+/* v9.1 — couleur+fond réservés au badge : les cartes (.sev-strip) restent neutres,
+   seul leur liseré latéral porte la gravité (philosophie MDCalc). */
+.sev-badge.sev-critical { color: var(--sev-critical); background: var(--sev-critical-bg); border-color: var(--sev-critical-line); }
+.sev-badge.sev-urgent   { color: var(--sev-urgent);   background: var(--sev-urgent-bg);   border-color: var(--sev-urgent-line); }
+.sev-badge.sev-standard { color: var(--sev-standard); background: var(--sev-standard-bg); border-color: var(--sev-standard-line); }
+
+/* Liseré latéral gravité (cartes protocoles) */
+.sev-strip { border-inline-start: 4px solid var(--line); }
+.sev-strip.sev-critical { border-inline-start-color: var(--sev-critical); }
+.sev-strip.sev-urgent   { border-inline-start-color: var(--sev-urgent); }
+.sev-strip.sev-standard { border-inline-start-color: var(--sev-standard); }
+
+/* Bouton primaire unifié (CTA unique par écran) */
+.btn-primary {
+  background: var(--accent); color: #fff; border-radius: var(--r-pill);
+  font-weight: 800; transition: background .15s ease, transform .1s ease;
+}
+.btn-primary:hover { background: var(--accent-strong); }
+.btn-primary:active { transform: scale(.98); }
+
+/* IBM Plex Sans Arabic : respiration optimisée (chiffres latins tabulaires conservés) */
+html[lang="ar"] body { font-feature-settings: "kern"; }
+html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3 { font-weight: 700; }
+
+/* Cartes : token ombre unifié */
+.card { box-shadow: var(--shadow-1); }
+.card:hover { box-shadow: var(--shadow-2); }
+.sev-accent  { color: var(--accent); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.sev-neutral { color: var(--fg); opacity: .8; background: var(--surface-2); border-color: var(--line); }
+/* v9.0 — survol neutre sans le substring « bg- » (la règle ombre button[class*="bg-"]
+   ne doit toucher que les boutons pleins, pas les fantômes) */
+.hover-surface2:hover { background: var(--surface-2); }
+
+/* ════════════════════════════════════════════════════════════════════
+   v10.0 — MATERIAL 3 : fondations (charte figée avec l'utilisateur)
+   Bleu médical primaire · cartes 20px · boutons pilule · FAB · rail
+   ════════════════════════════════════════════════════════════════════ */
+.card { border-radius: var(--r-card); }
+
+/* FAB recherche (mobile) — au-dessus de la barre d'onglets, côté fin (RTL-safe) */
+.m3-fab {
+  position: fixed; z-index: 45;
+  inset-block-end: calc(5.1rem + env(safe-area-inset-bottom));
+  inset-inline-end: 1rem;
+  width: 56px; height: 56px; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent); color: #fff;
+  box-shadow: var(--shadow-2);
+  transition: transform .1s ease, background .15s ease;
+}
+.m3-fab:hover { background: var(--accent-strong); }
+.m3-fab:active { transform: scale(.94); }
+@media (min-width: 1024px) { .m3-fab { display: none; } } /* .m3-fab hors-couche écraserait lg:hidden */
+
+/* Navigation Rail (bureau lg+) — icône + libellé, pastille d'état actif M3 */
+.m3-rail { width: 88px; }
+.m3-rail-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 6px 0; font-size: 10px; font-weight: 700; line-height: 1.1;
+  color: var(--fg); opacity: .78; border-radius: 16px;
+}
+.m3-rail-item:hover { opacity: 1; background: var(--surface-2); }
+.m3-rail-ico {
+  display: flex; align-items: center; justify-content: center;
+  width: 56px; height: 30px; border-radius: 999px; transition: background .15s ease;
+}
+.m3-rail-item[aria-current="page"] { opacity: 1; color: var(--accent); }
+.m3-rail-item[aria-current="page"] .m3-rail-ico { background: var(--accent-soft); }
+
+/* v14 — ScrollOnce : تمرير أفقي لمرة واحدة للعناوين الطويلة */
+.eutn-so{display:block;overflow:hidden;white-space:nowrap;cursor:default}
+.eutn-so-i{display:inline-block;animation:eutn-slide-once 6s ease-in-out .8s 1 forwards}
+[dir="rtl"] .eutn-so-i{animation-name:eutn-slide-once-rtl}
+@keyframes eutn-slide-once{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(calc(-1 * var(--eutn-slide,60%)))}}
+@keyframes eutn-slide-once-rtl{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(var(--eutn-slide,60%))}}
+@media (prefers-reduced-motion: reduce){.eutn-so-i{animation:none!important}}
+
+/* v14.1 — حارس الالتفاف : لا نص يخرج عن الشاشة داخل القواميس والبطاقات */
+.eutn-legend dt, .eutn-legend dd, .eutn-legend summary { overflow-wrap: anywhere; }
+.eutn-legend dd { word-break: break-word; }
+
+/* v14.5 — Bottom Sheet لشرح الاختصارات: صعود انسيابي، دائماً داخل الشاشة */
+.eutn-sheet{animation:eutn-sheet-up .22s cubic-bezier(.2,.8,.3,1) both}
+@keyframes eutn-sheet-up{from{transform:translateY(14%);opacity:.4}to{transform:translateY(0);opacity:1}}
+@media (prefers-reduced-motion:reduce){.eutn-sheet{animation:none}}

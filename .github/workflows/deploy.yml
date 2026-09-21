@@ -1,0 +1,54 @@
+# Déploiement automatique sur GitHub Pages à chaque push sur main.
+# Site : https://naderba69.github.io/espace_urgence/
+#
+# SI « Create Pages site failed » apparaît encore : réglage UNIQUE et manuel —
+# Settings → Pages → Build and deployment → Source = "GitHub Actions",
+# puis re-run du workflow (Actions → run → Re-run all jobs).
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /espace_urgence
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+        continue-on-error: true # site déjà créé ? pas besoin d'activer à nouveau
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    if: ${{ success() }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
