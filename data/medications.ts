@@ -124,8 +124,8 @@ const medicationsCore: Medication[] = [
     },
     dilution: { fr: "Pure, IV directe lente ; dilution possible dans 10 mL NaCl 0,9 %.", ar: "نقية، وريد مباشر بطيء؛ يمكن التمديد في 10 مل مصل ملحي." },
     contraindications: {
-      fr: "Pyrale : glaucome à angle fermé, rétention urinaire aiguë — relatives en urgence vitale.",
-      ar: "نظرياً: زرق مغلق الزاوية، احتباس بولي حاد — نسبية في الخطر الحيوي.",
+      fr: "Précautions : glaucome à angle fermé, rétention urinaire aiguë — contre-indications relatives en urgence vitale.",
+      ar: "محاذير: زرق مغلق الزاوية واحتباس بولي حاد — موانع نسبية في سياق خطر حيوي."
     },
     sideEffects: { fr: "Sécheresse, mydriase, tachycardie, confusion (sujet âgé), hyperthermie.", ar: "جفاف فم، اتساع حدقة، تسرع قلب، تشوش (المسن)، فرط حرارة." },
     nursing: {
@@ -149,16 +149,16 @@ const medicationsCore: Medication[] = [
       ar: "الصدمة الإنتانية، صدمة أرجية مقاومة (بعد أدرنالين عضلي)، صدمة قلبية مع وهن وعائي (رأي مختص).",
     },
     doseAdult: {
-      fr: "PSE : débuter à 0,05–0,1 µg/kg/min, titrer à la PAM (objectif ≥65 mmHg). Choc septique : dosage usuel 0,05–1 µg/kg/min.",
-      ar: "مضخة: ابدأ 0.05-0.1 مكغ/كغ/د، عايِر على متوسط الضغط (65 أو أكثر مم زئبق). الصدمة الإنتانية: 0.05-1 مكغ/كغ/د عادة.",
+      fr: "Repère de dose du Livret RE.NAU 2018 : PSE à 0,05–0,1 µg/kg/min puis titration selon la PAM ; plage indiquée 0,05–1 µg/kg/min. SSC 2026 ne fixe pas la dose ni la durée de voie périphérique : vérifier les doses/concentrations dans le protocole local.",
+      ar: "مرجع الجرعة في دليل RE.NAU 2018: مضخة 0.05–0.1 مكغ/كغ/د ثم معايرة حسب PAM؛ المجال المذكور 0.05–1 مكغ/كغ/د. لا تحدد SSC 2026 الجرعة أو مدة الطريق الطرفي؛ تحقق من الجرعات والتركيزات في البروتوكول المحلي.",
     },
     dosePediatric: {
       fr: "0,05–0,3 µg/kg/min PSE (milieu de réanimation), titration attentive.",
       ar: "0.05-0.3 مكغ/كغ/د مضخة (وسط الإنعاش)، معايرة دقيقة.",
     },
     dilution: {
-      fr: "G5 % exclusivement (oxydation dans le sérum salé) ; voie centrale fortement recommandée (risque de nécrose en périphérique). Schéma repère : 4 mg dans 50 mL.",
-      ar: "غلوكوز 5% حصراً (تتأكسد في المصل الملحي)؛ يُستحسن بشدة خط مركزي (خطر نخر محيطي). مرجع: 4 ملغ في 50 مل.",
+      fr: "Préparation/concentration selon le produit et le protocole local (repère affiché ailleurs : 4 mg/50 mL). G5 % préféré dans le Livret RE.NAU ; vérifier la compatibilité du diluant. En choc septique, SSC 2026 suggère de commencer par voie périphérique plutôt que retarder en attendant un abord central ; surveillance étroite du site et sécurité selon protocole local.",
+      ar: "التحضير/التركيز حسب المستحضر والبروتوكول المحلي (المرجع المعروض في موضع آخر: 4 ملغ/50 مل). يفضل دليل RE.NAU غلوكوز 5%؛ تحقق من توافق المذيب. في الصدمة الإنتانية تقترح SSC 2026 البدء عبر وريد طرفي بدلاً من التأخير انتظاراً لخط مركزي؛ مع مراقبة لصيقة للموضع والسلامة وفق البروتوكول المحلي.",
     },
     contraindications: {
       fr: "Hypovolémie non corrigée (à remplir d'abord) ; relatives : thrombose mésentérique/périphérique.",
@@ -177,7 +177,7 @@ const medicationsCore: Medication[] = [
     interactions: [
       { drug: "IMAO / antidépresseurs tricycliques", severity: "high", description: { fr: "HTA majeure par potentialisation — réduire la dose initiale fortement.", ar: "ارتفاع ضغط شديد بالتفعيل — خفّض الجرعة الابتدائية كثيراً." } },
     ],
-    meta: { sources: ["Surviving Sepsis Campaign 2021", "ERC 2021"], lastReviewed: "2026-08" },
+    meta: { sources: ["Livret RE.NAU 2018 (dose/preparation)", "Surviving Sepsis Campaign 2026 (MAP, first-line agent, peripheral start)", "ERC 2021"], lastReviewed: "2026-10" },
   },
   {
     id: "midazolam",

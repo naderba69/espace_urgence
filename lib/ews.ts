@@ -1,5 +1,7 @@
-// v7.8 — Scores d'alerte précoce calculés en direct dans la réévaluation.
-// MEWS (Modified Early Warning Score) + qSOFA — référentiels standard (NEWS2 dérivé, Surviving Sepsis 2021).
+// v7.8 — Formules MEWS/qSOFA utilisées par les outils de réévaluation.
+// MEWS ne reçoit pas l'âge : les interfaces réservent son affichage aux adultes (≥18 ans).
+// qSOFA renvoie null avant 18 ans ; il n'est pas diagnostique et ne doit pas être le seul outil
+// de dépistage du sepsis (SSC 2026, adultes).
 
 export interface VitalInput {
   rr: number;      // FR /min
@@ -29,12 +31,14 @@ export function mews(v: VitalInput): ScoreResult {
 }
 
 export interface QsofaInput {
+  age: number;      // années révolues ; qSOFA n'est pas évalué ici avant 18 ans
   rr: number;
   sbp: number;
   altered: boolean; // conscience altérée (V/P/U)
 }
 
-export function qsofa(q: QsofaInput): ScoreResult {
+export function qsofa(q: QsofaInput): ScoreResult | null {
+  if (!Number.isInteger(q.age) || q.age < 18) return null;
   const score = (q.rr >= 22 ? 1 : 0) + (q.sbp <= 100 ? 1 : 0) + (q.altered ? 1 : 0);
   return { score, risk: score >= 2 ? "high" : "low" };
 }

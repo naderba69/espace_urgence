@@ -130,20 +130,21 @@ export const TRIAGE_CASES: TriageCase[] = [
   {
     id: "choc-sepsis",
     system: "infectieux",
-    title: { fr: "Sepsis suspecté / hypotension", ar: "اشتباه إنتان / هبوط ضغط" },
+    title: { fr: "Sepsis suspecté chez l'adulte / choc", ar: "اشتباه إنتان عند بالغ / صدمة" },
     priority: "P1",
-    colorLabel: { fr: "ROUGE — bundle 1 heure", ar: "أحمر — حزمة الساعة الأولى" },
+    colorLabel: { fr: "ROUGE — évaluation rapide, conduite selon le contexte", ar: "أحمر — تقييم سريع وتصرف حسب السياق" },
     triggers: [
-      { fr: "qSOFA ≥ 2 : FR ≥ 22, PAS ≤ 100, GCS < 15 + foyer infectieux suspecté", ar: "‏qSOFA‎ 2 أو أكثر: FR‎ 22 أو أكثر، انقباضي 100 أو أقل، غلاسكو أقل من 15 + بؤرة مشتبهة" },
-      { fr: "Marbrures, temps de recoloration > 3 s, oligoanurie, lactate > 2", ar: "بقع، إعادة تلوّن أكثر من 3 ث، قلة بيلة، لاكتات أكثر من 2" },
+      { fr: "Infection suspectée avec dysfonction d'organe ou hypoperfusion ; qSOFA ≥ 2 peut alerter, mais ne doit pas être l'unique outil de dépistage", ar: "عدوى مشتبهة مع قصور عضوي أو نقص تروية؛ قد ينبه qSOFA ≥ 2 لكنه ليس أداة التحري الوحيدة" },
+      { fr: "Marbrures, temps de recoloration prolongé, oligurie ou lactate élevé : signes à interpréter avec l'examen clinique", ar: "تبقع أو إطالة إعادة التلوّن أو قلة بول أو ارتفاع لاكتات: تُفسر مع الفحص السريري" },
     ],
     immediate: [
-      { fr: "Remplissage NaCl 30 mL/kg si PAS < 90 ou lactate ≥ 4 (par bolus 500 mL/15 min, réévaluer)", ar: "امتلاء 30 مل/كغ إن انقباضي أقل من 90 أو لاكتات 4 أو أكثر (دفعات 500 مل، أعد التقييم)" },
-      { fr: "Antibiotiques dans l'heure ; hémocultures avant si pas de retard ; biologie lactate", ar: "مضادات خلال الساعة؛ زراعات قبلها؛ لاكتات" },
-      { fr: "Noradrénaline PSE si PAS < 65 après remplissage (avoie centrale si possible)", ar: "نورأدرينالين إن متوسط أقل من 65 بعد الامتلاء (خط مركزي)" },
+      { fr: "Adultes avec hypoperfusion induite par le sepsis ou choc septique : cristalloïdes IV ≥30 mL/kg dans les 3 premières heures ; poids réel, ou ajusté/idéal si IMC >30 ; réévaluation fréquente et cristalloïdes équilibrés de préférence (sauf contexte tel qu'un TCC).", ar: "للبالغين ذوي نقص التروية الناجم عن الإنتان أو الصدمة: بلّوريات وريدية ≥30 مل/كغ خلال أول 3 ساعات؛ الوزن الفعلي أو المعدل/المثالي إذا IMC >30؛ إعادة تقييم متكررة ويفضل محلول متوازن (مع مراعاة إصابة الرأس)." },
+      { fr: "Antibiotiques : choc possible ou sepsis probable/confirmé → immédiatement, idéalement ≤1 h ; sepsis possible sans choc → évaluation rapide et, si soupçon persistant, ≤3 h ; faible probabilité sans choc → différer peut se discuter sous surveillance rapprochée.", ar: "المضادات: صدمة محتملة أو إنتان مرجح/مؤكد ← فوراً ويفضل خلال ساعة؛ إنتان محتمل بلا صدمة ← تقييم سريع، وإذا استمر الاشتباه فخلال 3 ساعات؛ احتمال منخفض بلا صدمة ← يمكن التأجيل مع مراقبة لصيقة." },
+      { fr: "Cultures dès que possible, idéalement avant l'antibiotique sans le retarder ; mesurer le lactate selon le contexte.", ar: "الزرع بأسرع ما يمكن، ويفضل قبل المضاد دون تأخيره؛ قِس اللاكتات حسب السياق." },
+      { fr: "Si l'hypotension persiste : noradrénaline en 1re ligne ; commencer par voie périphérique plutôt que retarder pour un abord central. PAM initiale : 65 mmHg, ou 60–65 chez l'adulte ≥65 ans.", ar: "إذا استمر هبوط الضغط: النورأدرينالين خط أول؛ ابدأ عبر وريد طرفي بدلاً من التأخير حتى الخط المركزي. هدف PAM الابتدائي 65، أو 60–65 للبالغ بعمر 65 سنة فأكثر." },
     ],
     protocolIds: ["choc-septique"],
-    source: "SSC 2021 ; RE.NAU choc septique",
+    source: "Surviving Sepsis Campaign 2026 (adult guidelines, SCCM)",
   },
   {
     id: "convulsion",
@@ -213,7 +214,7 @@ export const TRIAGE_CASES: TriageCase[] = [
     ],
     immediate: [
       { fr: "Immobilisation complète : plan dur, collier, immo du bassin si instable", ar: "تثبيت كامل: لوح صلب، طوق، تثبيت حوض" },
-      { fr: "Libération déglutition + aspiration ; O2 ; exsufflation si pneumothorax suffocant (45°)", ar: "تحرير تناول + شفط؛ أكسجين؛ إنفاغ إذا صدر منضغّ (45°)" },
+      { fr: "Libérer les voies aériennes et aspirer si nécessaire ; O₂ selon l'état clinique ; si pneumothorax sous tension suspecté et décompression indiquée, suivre la filière locale sans délai.", ar: "أمّن انفتاح مجرى الهواء والشفط عند الحاجة؛ أعطِ الأكسجين بحسب الحالة؛ وعند الاشتباه باسترواح ضاغط واستطباب إزالة الضغط، اتبع المسار المحلي دون تأخير." },
       { fr: "Remplissage raisonné + tranéxamique (voir hémorragie)", ar: "امتلاء مدروس + ترانيكساميك" },
     ],
     protocolIds: ["polytraumatisme", "traumatisme-cranien"],

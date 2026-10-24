@@ -38,7 +38,7 @@ export const MOTIFS: Motif[] = [
       { href: "/protocoles/asthme-aigu-grave", fr: "Asthme aigu grave / BPCO", ar: "ربو حاد/انسداد مزمن", sev: 1, cond: { siff: true }, hintFr: "Bronchodilatateurs + O2 ciblé", hintAr: "موسعات قصبات + أكسجين موجّه" },
       { href: "/protocoles/oap", fr: "OAP / détresse pulmonaire", ar: "وذمة رئة حادة", sev: 1, cond: { orth: true }, hintFr: "Assis + CPAP si disponible", hintAr: "جلوس + CPAP إن توفر" },
       { href: "/protocoles/embolie-pulmonaire", fr: "Embolie pulmonaire", ar: "انصمام رئوي", sev: 1, cond: { oedem: true }, hintFr: "Penser TVP", hintAr: "فكّر بخثار وريدي عميق" },
-      { href: "/protocoles/choc-septique", fr: "Pneumonie / sepsis", ar: "ذات رئة/إنتان", sev: 2, cond: { fiev: true }, hintFr: "Antibiotiques < 1 h", hintAr: "مضادات خلال ساعة" },
+      { href: "/protocoles/choc-septique", fr: "Pneumonie / sepsis possible", ar: "ذات رئة / إنتان محتمل", sev: 2, cond: { fiev: true }, hintFr: "Évaluer rapidement la probabilité de sepsis et le choc ; timing antibiotique selon contexte", hintAr: "قيّم سريعاً احتمال الإنتان والصدمة؛ توقيت المضاد حسب السياق" },
       { href: "/protocoles/anaphylaxie", fr: "Anaphylaxie", ar: "تأق", sev: 1, cond: { allerg: true }, hintFr: "Adrénaline IM", hintAr: "أدرينالين عضلي" },
     ],
   },
@@ -89,7 +89,7 @@ export const MOTIFS: Motif[] = [
     outcomes: [
       { href: "/protocoles/choc-septique", fr: "Méningite", ar: "التهاب سحايا", sev: 1, cond: { nuque: true }, hintFr: "Ceftriaxone 2 g IV", hintAr: "سيفترياكسون ٢ غ وريدي" },
       { href: "/protocoles/choc-septique", fr: "Meningococcémie / purpura fulminans", ar: "فرفرية صاعقة", sev: 1, cond: { purp: true }, hintFr: "Urgence absolue", hintAr: "طوارئ قصوى" },
-      { href: "/protocoles/choc-septique", fr: "Choc septique", ar: "صدمة إنتانية", sev: 1, cond: { choc: true }, hintFr: "Bundle 1 h", hintAr: "حزمة الساعة الأولى" },
+      { href: "/protocoles/choc-septique", fr: "Choc septique possible", ar: "صدمة إنتانية محتملة", sev: 1, cond: { choc: true }, hintFr: "Évaluation et traitement immédiats ; réanimation selon l'état clinique", hintAr: "تقييم وعلاج فوريان؛ إنعاش حسب الحالة السريرية" },
       { href: "/protocoles/choc-septique", fr: "Pneumonie", ar: "ذات رئة", sev: 2, cond: { toux: true }, hintFr: "CRB-65 pour orienter", hintAr: "سكور CRB-65 للتوجيه" },
     ],
   },

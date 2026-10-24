@@ -1,13 +1,9 @@
-// v18.1 — تقدير التصفية الكلوية: مزمن (CKD-EPI 2021) / حادّ (KDIGO) / أطفال (CKID U25).
-// Estimation de la fonction rénale : chronique (CKD-EPI 2021), agression aiguë (KDIGO),
-// enfant (CKID U25 — Schwartz) + règle d'escalade prudente (GPR) et poids de calcul.
+// تقدير الوظيفة الكلوية: مزمن (CKD-EPI 2021) / حادّ (KDIGO) / أطفال (CKID U25).
+// Estimation rénale : CKD-EPI 2021, repérage/stadification KDIGO, CKID U25 et calcul Cockcroft-Gault séparé.
 // دوالّ نقية، بلا واجهة — مُختبَرة في __tests__/renal-clearance.test.ts.
 import type { Localized } from "@/data/types";
 import type { AtbStageId } from "@/data/atb-renal";
-import { cockcroftGault, stageFromCrCl, toMgDl } from "./atb-dose";
-
-/** المراحل مرتّبة من الأخفّ إلى الأشدّ. */
-export const STAGE_ORDER: AtbStageId[] = ["normorenal", "legere", "moderee", "severe", "terminale"];
+import { cockcroftGault, isAmbiguousAtbDfgBoundary, stageFromDfg, toMgDl } from "./atb-dose";
 
 /** حدود استعمال CKD-EPI 2021 (معادلة البالغين، بلا معامل العِرق). */
 export function ckdEpi2021(ageYears: number, scrMgDl: number, sexe: "m" | "f"): number | null {
@@ -69,68 +65,84 @@ export interface AkiInput {
   /** diurèse horaire (mL/kg/h) et durée d'observation (h). */
   urineMlKgH?: number | null;
   urineHours?: number | null;
+  /** RRT initiation is a KDIGO stage 3 criterion. */
+  renalReplacementTherapy?: boolean;
 }
 
 export interface AkiResult {
   stage: AkiStage;
   /** مفاتيح المعايير المتحقّقة (تُترجم في الواجهة). */
-  criteria: ("scr-up-48h" | "scr-ratio-48h" | "scr-ratio-7d" | "urine-6h")[];
+  criteria: (
+    | "scr-up-48h"
+    | "scr-ratio-48h"
+    | "scr-ratio-7d"
+    | "scr-4mg"
+    | "urine-stage-1"
+    | "urine-stage-2"
+    | "urine-stage-3"
+    | "anuria-stage-3"
+    | "renal-replacement"
+  )[];
   ratio48h: number | null;
   ratio7d: number | null;
 }
 
 /**
- * معايير KDIGO (تذكير للمساعدة على القرار، ليس تشخيصًا): +0,3 مغ/دل/48 سا، أو ×1,5/48 سا،
- * أو ×1,5/7 أيام، أو دُرْيَة < 0,5 مل/كغ/سا لمدّة 6 ساعات. الشرط: استبعاد نقص الحجم أولاً.
+ * KDIGO AKI (ليس تشخيصاً): الكرياتينين + معايير الإدرار المرحلية؛ العلاج الإحلالي الكلوي Stage 3.
+ * Acute kidney injury criteria from KDIGO 2012; urine-output durations determine stages 1–3.
  */
 export function akiKdigo(input: AkiInput): AkiResult {
   const criteria: AkiResult["criteria"] = [];
   const now = input.scrNow;
-  const r48 = input.scr48h && input.scr48h > 0 ? now / input.scr48h : null;
-  const r7 = input.scr7d && input.scr7d > 0 ? now / input.scr7d : null;
-  if (input.scr48h && input.scr48h > 0 && now - input.scr48h >= 0.3) criteria.push("scr-up-48h");
+  const r48 = input.scr48h != null && Number.isFinite(input.scr48h) && input.scr48h > 0 && Number.isFinite(now)
+    ? now / input.scr48h
+    : null;
+  const r7 = input.scr7d != null && Number.isFinite(input.scr7d) && input.scr7d > 0 && Number.isFinite(now)
+    ? now / input.scr7d
+    : null;
+  const acuteCreatinineRise = input.scr48h != null && Number.isFinite(input.scr48h) && input.scr48h > 0
+    && Number.isFinite(now) && now - input.scr48h >= 0.3;
+  const documentedCreatinineIncrease =
+    (input.scr48h != null && Number.isFinite(input.scr48h) && input.scr48h > 0 && Number.isFinite(now) && now > input.scr48h)
+    || (input.scr7d != null && Number.isFinite(input.scr7d) && input.scr7d > 0 && Number.isFinite(now) && now > input.scr7d);
+  const scr4Criterion = Number.isFinite(now) && now >= 4 && documentedCreatinineIncrease;
+  if (acuteCreatinineRise) criteria.push("scr-up-48h");
   if (r48 !== null && r48 >= 1.5) criteria.push("scr-ratio-48h");
   if (r7 !== null && r7 >= 1.5) criteria.push("scr-ratio-7d");
-  if (
-    input.urineMlKgH !== null &&
-    input.urineMlKgH !== undefined &&
-    input.urineMlKgH > 0 &&
-    input.urineMlKgH < 0.5 &&
-    (input.urineHours ?? 0) >= 6
-  ) {
-    criteria.push("urine-6h");
+  if (scr4Criterion) criteria.push("scr-4mg");
+  if (input.renalReplacementTherapy) criteria.push("renal-replacement");
+
+  let urineStage: AkiStage = 0;
+  const urineRate = input.urineMlKgH;
+  const urineHours = input.urineHours;
+  if (urineRate != null && Number.isFinite(urineRate) && urineRate >= 0
+    && urineHours != null && Number.isFinite(urineHours) && urineHours >= 0) {
+    if (urineRate === 0 && urineHours >= 12) {
+      urineStage = 3;
+      criteria.push("anuria-stage-3");
+    } else if (urineRate < 0.3 && urineHours >= 24) {
+      urineStage = 3;
+      criteria.push("urine-stage-3");
+    } else if (urineRate < 0.5 && urineHours >= 12) {
+      urineStage = 2;
+      criteria.push("urine-stage-2");
+    } else if (urineRate < 0.5 && urineHours >= 6) {
+      urineStage = 1;
+      criteria.push("urine-stage-1");
+    }
   }
-  // شدّة (KDIGO 1/2/3) على أساس النسبة وليس على التشخيص
+
   const ratioMax = Math.max(r48 ?? 0, r7 ?? 0);
-  let stage: AkiStage = 0;
-  if (ratioMax >= 3 || now >= 4) stage = 3;
-  else if (ratioMax >= 2) stage = 2;
-  else if (criteria.length) stage = 1;
-  if (stage === 0 && criteria.length) stage = 1;
+  const creatinineStage: AkiStage = input.renalReplacementTherapy || ratioMax >= 3 || scr4Criterion
+    ? 3
+    : ratioMax >= 2
+      ? 2
+      : ratioMax >= 1.5 || acuteCreatinineRise
+        ? 1
+        : 0;
+  const stage = Math.max(creatinineStage, urineStage) as AkiStage;
   return { stage, criteria, ratio48h: r48, ratio7d: r7 };
 }
-
-/** أدوية لا يجوز فيها تصعيد المرحلة عند DFG < 30 (تجنّب نقص الجرعة في الإنتانات الخطيرة). */
-export const LIFESAVING_IDS: string[] = [
-  "ceftriaxone-im-iv",
-  "cefotaxime-im-iv",
-  "amikacine-iv",
-  "gentamicine-im-iv",
-  "vancomycine-iv",
-  "piperacilline-tazobactam-iv",
-  "metronidazole-iv",
-  "metronidazole-po",
-];
-
-/** تصعيد المرحلة بعدد من الدرجات (قصوى: المرحلة الأخيرة). */
-export function escalateStage(stage: AtbStageId, steps = 2): AtbStageId {
-  const i = STAGE_ORDER.indexOf(stage);
-  if (i < 0) return stage;
-  return STAGE_ORDER[Math.min(STAGE_ORDER.length - 1, i + steps)];
-}
-
-const worse = (a: AtbStageId, b: AtbStageId): AtbStageId =>
-  STAGE_ORDER.indexOf(a) >= STAGE_ORDER.indexOf(b) ? a : b;
 
 export interface StageInput {
   ageYears: number;
@@ -143,30 +155,26 @@ export interface StageInput {
   scr7d?: number | null;
   urineMlKgH?: number | null;
   urineHours?: number | null;
-  /** DFG 30–90 avec dégradation documentée (< 3 mois) : règle GPR d'escalade prudente. */
-  degraded?: boolean;
-  /** molécule affichée (sert à l'exception « médicaments vitaux »). */
-  moleculeId?: string;
+  /** Patient sous épuration extrarénale : hors périmètre du tableau OMEDIT non dialysé. */
+  onRenalReplacementTherapy?: boolean;
   /** poids idéal coché : force l'usage du poids idéal dans Cockcroft-Gault. */
   useIdealWeight?: boolean;
 }
 
-export type StageRefusal = "inputs" | "height";
+export type StageRefusal = "inputs" | "height" | "boundary" | "aki" | "pediatric" | "dialysis";
 
 export interface StageResult {
-  /** المرحلة المعتمدة للعرض (بعد كل القواعد). */
-  stage: AtbStageId;
-  baseStage: AtbStageId;
-  /** التقدير الأساسي المستعمل. */
-  primary: "ckd-epi" | "ckid" | "cg";
+  /** المرحلة المعتمدة للعرض (بعد كل القواعد)، أو null إذا لم يمكن حسابها بأمان. */
+  stage: AtbStageId | null;
+  baseStage: AtbStageId | null;
+  /** التقدير الأساسي المستعمل، أو null عند رفض المدخلات. */
+  primary: "ckd-epi" | "ckid" | null;
   egfrCkd: number | null;
   egfrCkid: number | null;
   crclCg: number | null;
   cgWeight: number | null;
   usedAbw: boolean;
   aki: AkiResult;
-  escalated: boolean;
-  escalationExempt: boolean;
   warningKey: "indexed-low-weight" | null;
   refusal?: StageRefusal;
   /** تنبيهات جاهزة للعرض (FR/AR) — تُبنى هنا حتى تبقى القواعد في مكان واحد. */
@@ -175,30 +183,31 @@ export interface StageResult {
 
 const W = {
   indexed: {
-    fr: "CKD-EPI est indexé (mL/min/1,73 m²) — surestime la posologie si le poids est très bas : contrôle par Cockcroft-Gault.",
-    ar: "قيمة CKD-EPI مُفهرَسة (mL/min/1,73 م²) — قد تبالغ في الجرعة إذا كان الوزن منخفضًا جدًّا: تحقّق بـ Cockcroft-Gault.",
+    fr: "CKD-EPI donne un DFG indexé (mL/min/1,73 m²). En poids très bas, interpréter avec prudence et vérifier séparément la ClCr Cockcroft–Gault seulement si le RCP du produit l'utilise ; la ClCr ne choisit jamais une colonne du tableau DFG.",
+    ar: "يعطي CKD-EPI قيمة DFG مفهرسة (مل/د/1.73 م²). عند انخفاض الوزن كثيراً، فسّرها بحذر وافحص ClCr بمعادلة Cockcroft–Gault بشكل منفصل فقط إذا كانت نشرة المنتج تعتمدها؛ لا تختار ClCr عموداً من جدول DFG.",
   },
   aki: {
-    fr: "Critères KDIGO d'agression aiguë réunis : le stade le plus prudent des deux estimations est retenu (à confirmer après correction volémique).",
-    ar: "معايير KDIGO للقصور الحادّ متحقّقة: تُعتمد المرحلة الأكثر حذرًا من التقديرين (تُؤكَّد بعد تصحيح نقص الحجم).",
+    fr: "Critères KDIGO d'agression rénale aiguë présents : la créatinine n'est pas à l'état stable. Ni le DFG estimé ni la ClCr Cockcroft–Gault ne sélectionnent automatiquement une colonne du tableau ; aucun stade/dose automatique. Revue clinique et choix manuel validé requis.",
+    ar: "معايير KDIGO للقصور الكلوي الحاد متحققة: الكرياتينين غير مستقر. لا يختار DFG المقدّر ولا ClCr بمعادلة Cockcroft–Gault عموداً آلياً من الجدول؛ لا تُعرض مرحلة أو جرعة آلية. تلزم مراجعة سريرية واختيار يدوي معتمد.",
   },
-  escalated: {
-    fr: "Escalade prudente GPR : DFG 30–90 dégradé ⇒ traitement comme deux stades plus sévères (dose non changeante pour les molécules vitales si DFG < 30).",
-    ar: "تصعيد حذر (GPR): تصفية 30–90 مع تدهور ⇒ التعامل كمرحلتين أشدّ (باستثناء الأدوية الحيوية إذا كانت التصفية < 30).",
+  dialysis: {
+    fr: "Patient sous dialyse/épuration extrarénale : hors du périmètre adulte non dialysé du tableau OMEDIT. Aucun stade ni dosage n'est proposé ici ; vérifier le protocole de dialyse, le RCP et un avis spécialisé.",
+    ar: "المريض يخضع للغسيل/الإحلال الكلوي: خارج نطاق جدول OMEDIT المخصص للبالغين غير الخاضعين للغسيل. لا تُعرض هنا مرحلة أو جرعة؛ راجع بروتوكول الغسيل ونشرة المنتج واستشر اختصاصياً.",
   },
-  exempt: {
-    fr: "Escalade NON appliquée : molécule vitale avec DFG < 30 — éviter le sous-dosage de l'infection grave.",
-    ar: "لم يُطبَّق التصعيد: دواء حيوي وتصفية < 30 — لتجنّب نقص الجرعة في الإنتان الخطير.",
+  boundary: {
+    fr: "DFG = 30 : le tableau source place 30 dans les stades modéré et sévère. Aucun stade ni dose n'est choisi automatiquement. Vérifier le PDF original et faire valider le stade par un médecin/pharmacien.",
+    ar: "التصفية = 30: يدرج المصدر 30 ضمن المرحلتين المتوسطة والشديدة. أُوقف الاختيار الآلي للمرحلة والجرعة؛ راجع ملف المصدر وحدّد المرحلة مع طبيب أو صيدلي.",
   },
   ckid: {
-    fr: "Enfant (< 18 ans) : CKID U25 (0,413 × taille/créatinine), lu comme équivalent de clairance — NE PAS mélanger avec le moteur pédiatrique d'antibiotiques.",
-    ar: "طفل (< 18 سنة): CKID U25 (0,413 × الطول/الكرياتينين)، تُقرأ كمعادل تصفية — لا تُخلط مع محرّك جرعات الأطفال.",
+    fr: "Enfant (< 18 ans) : CKID U25 calculé à titre informatif ; le tableau de doses est réservé aux adultes. Aucun stade ni dosage adulte n'est sélectionné.",
+    ar: "طفل (< 18 سنة): حُسب CKID U25 للمعلومة فقط؛ جدول الجرعات للبالغين. لم تُحدَّد مرحلة أو جرعة للبالغين.",
   },
 };
 
 /**
- * المرحلة الكلوية المعتمدة: CKD-EPI للمزمن، CKID U25 للطفل، وCockcroft-Gault كتقدير ثانٍ
- * ومصدر «الأكثر حذرًا» عند القصور الحادّ. لا تُغيّر أي رقم جرعة — اختيار المرحلة فقط.
+ * يختار الأعمدة المزمنة من DFG فقط (CKD-EPI 2021 للبالغ؛ CKID U25 للمعلومة عند الطفل).
+ * لا يُحوَّل Cockcroft–Gault إلى DFG ولا يحدد عموداً. عند KDIGO-AKI أو العمر <18
+ * يُحجب اختيار عمود/جرعة البالغ تلقائياً؛ الحالات الحدّية تطلب مراجعة يدوية.
  */
 export function chooseStage(input: StageInput): StageResult {
   const aki = akiKdigo({
@@ -207,23 +216,26 @@ export function chooseStage(input: StageInput): StageResult {
     scr7d: input.scr7d,
     urineMlKgH: input.urineMlKgH,
     urineHours: input.urineHours,
+    renalReplacementTherapy: input.onRenalReplacementTherapy,
   });
   const warnings: Localized[] = [];
   const empty: StageResult = {
-    stage: "normorenal",
-    baseStage: "normorenal",
-    primary: "cg",
+    stage: null,
+    baseStage: null,
+    primary: null,
     egfrCkd: null,
     egfrCkid: null,
     crclCg: null,
     cgWeight: null,
     usedAbw: false,
     aki,
-    escalated: false,
-    escalationExempt: false,
     warningKey: null,
     warnings,
   };
+
+  if (input.onRenalReplacementTherapy) {
+    return { ...empty, refusal: "dialysis", warnings: [W.dialysis] };
+  }
 
   const pediatric = input.ageYears > 0 && input.ageYears < 18;
   const essentials =
@@ -241,51 +253,68 @@ export function chooseStage(input: StageInput): StageResult {
   const egfrCkd = pediatric ? null : ckdEpi2021(input.ageYears, input.scrMgDl, input.sexe);
   const egfrCkid = pediatric ? schwartzCkidU25(input.heightCm as number, input.scrMgDl) : null;
 
-  let primary: StageResult["primary"] = pediatric ? "ckid" : "ckd-epi";
-  let baseStage: AtbStageId;
+  const primary: Exclude<StageResult["primary"], null> = pediatric ? "ckid" : "ckd-epi";
+  const primaryDfg = pediatric ? egfrCkid : egfrCkd;
+
+  // Le tableau est adulte/non dialysé. CKID U25 reste une information pédiatrique,
+  // jamais un sélecteur de posologie adulte.
   if (pediatric) {
-    baseStage = stageFromCrCl(egfrCkid as number);
-  } else {
-    baseStage = stageFromCrCl(egfrCkd as number);
-    // القصور الحادّ: نأخذ الأكثر حذرًا بين CKD-EPI و Cockcroft-Gault
-    if (aki.stage >= 1 && crclCg !== null) {
-      const cgStage = stageFromCrCl(crclCg);
-      const chosen = worse(baseStage, cgStage);
-      if (chosen !== baseStage) primary = "cg";
-      baseStage = chosen;
-      warnings.push(W.aki);
-    }
+    return {
+      ...empty,
+      primary,
+      egfrCkd,
+      egfrCkid,
+      crclCg,
+      cgWeight,
+      usedAbw: w.usedAbw,
+      refusal: "pediatric",
+      warnings: [W.ckid],
+    };
   }
 
-  // CKD-EPI مُفهرَس: تنبيه إذا كان الوزن < 0,8 × المثالي
+  // Les colonnes DFG sont sélectionnées uniquement depuis le DFG (CKD-EPI ici), jamais depuis ClCr.
+  const ambiguousBoundary = isAmbiguousAtbDfgBoundary(primaryDfg);
+  if (ambiguousBoundary) {
+    return {
+      ...empty,
+      primary,
+      egfrCkd,
+      egfrCkid,
+      crclCg,
+      cgWeight,
+      usedAbw: w.usedAbw,
+      refusal: "boundary",
+      warnings: aki.stage >= 1 ? [W.boundary, W.aki] : [W.boundary],
+    };
+  }
+
+  const baseStage = stageFromDfg(primaryDfg ?? NaN);
+  if (baseStage === null) return { ...empty, refusal: "inputs", warnings };
+
+  // Creatinine non stable : les équations DFG et Cockcroft ne déterminent pas seules une dose.
+  if (aki.stage >= 1) {
+    return {
+      ...empty,
+      primary,
+      egfrCkd,
+      egfrCkid,
+      crclCg,
+      cgWeight,
+      usedAbw: w.usedAbw,
+      refusal: "aki",
+      warnings: [W.aki],
+    };
+  }
+
+  // CKD-EPI est indexé : avertissement si le poids < 0,8 × le poids idéal.
   let warningKey: StageResult["warningKey"] = null;
-  if (!pediatric && w.ibw && input.weightKg < 0.8 * w.ibw) {
+  if (w.ibw && input.weightKg < 0.8 * w.ibw) {
     warningKey = "indexed-low-weight";
     warnings.push(W.indexed);
   }
 
-  // التصعيد الحذر (GPR) — للمراحل 30–90 فقط
-  const inRange = STAGE_ORDER.indexOf(baseStage) === 1 || STAGE_ORDER.indexOf(baseStage) === 2;
-  const lifesaving = input.moleculeId ? LIFESAVING_IDS.includes(input.moleculeId) : false;
-  const minEstimate = Math.min(
-    ...[egfrCkd, crclCg].filter((v): v is number => v !== null && Number.isFinite(v)),
-  );
-  const escalationExempt = lifesaving && Number.isFinite(minEstimate) && minEstimate < 30;
-  let escalated = false;
-  let stage = baseStage;
-  if (input.degraded && inRange) {
-    if (escalationExempt) {
-      warnings.push(W.exempt);
-    } else {
-      stage = escalateStage(baseStage, 2);
-      escalated = true;
-      warnings.push(W.escalated);
-    }
-  }
-  if (pediatric) warnings.push(W.ckid);
-
   return {
-    stage,
+    stage: baseStage,
     baseStage,
     primary,
     egfrCkd,
@@ -294,14 +323,12 @@ export function chooseStage(input: StageInput): StageResult {
     cgWeight,
     usedAbw: w.usedAbw,
     aki,
-    escalated,
-    escalationExempt,
     warningKey,
     warnings,
   };
 }
 
 /** تحويل وحدة الكرياتينين قبل الحساب (يُصدَّر للاستعمال في الواجهة). */
-export function scrToMgDl(value: number, unit: "mg" | "umol"): { mgDl: number; suspectUnit: boolean } {
+export function scrToMgDl(value: number, unit: "mg" | "umol"): { mgDl: number | null; suspectUnit: boolean } {
   return toMgDl(value, unit);
 }

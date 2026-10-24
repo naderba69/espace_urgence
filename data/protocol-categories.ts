@@ -17,6 +17,7 @@ export interface ProtocolCategory {
 export const protocolCategories: ProtocolCategory[] = [
   { id: "reanimation", label: { fr: "Réanimation", ar: "الإنعاش" } },
   { id: "medecine", label: { fr: "Urgences médicales", ar: "استعجالات طبية" } },
+  { id: "avc", label: { fr: "Neurovasculaire", ar: "الأمراض الوعائية الدماغية" } },
   { id: "traumatologie", label: { fr: "Traumatologie", ar: "الإصابات والجروح" } },
   { id: "pediatrie", label: { fr: "Pédiatrie", ar: "طب الأطفال" } },
   { id: "obstetrique", label: { fr: "Obstétrique", ar: "التوليد" } },

@@ -18,19 +18,20 @@ export default function MedTools({ medId, hasNativeDose, linkedProtos = [] }: { 
   const links = manual?.links ?? [];
   const protos = manual?.protocols ?? [];
   const badges = manual?.badges;
-  const [tab, setTab] = useState<"dose" | "pump" | "links">(pump ? "pump" : wd && !hasNativeDose ? "dose" : "links");
+  const hasWeightDose = Boolean(wd && Number.isFinite(wd.mgPerKg) && wd.mgPerKg > 0 && Number.isFinite(wd.maxMg) && wd.maxMg > 0);
+  const [tab, setTab] = useState<"dose" | "pump" | "links">(pump ? "pump" : hasWeightDose && !hasNativeDose ? "dose" : "links");
   const [weight, setWeight] = useState("70");
 
-  if (!pump && !wd && links.length === 0 && protos.length === 0) return null;
+  if (!pump && !hasWeightDose && links.length === 0 && protos.length === 0) return null;
 
   const tabs = [
-    (wd && !hasNativeDose) && { id: "dose" as const, label: <span className="inline-flex items-center gap-1"><Scale className="h-4 w-4" aria-hidden /><T fr="Dose" ar="الجرعة" /></span> },
+    (hasWeightDose && !hasNativeDose) && { id: "dose" as const, label: <span className="inline-flex items-center gap-1"><Scale className="h-4 w-4" aria-hidden /><T fr="Dose" ar="الجرعة" /></span> },
     pump && { id: "pump" as const, label: <span className="inline-flex items-center gap-1"><Syringe className="h-4 w-4" aria-hidden /><T fr="Pompe" ar="المضخة" /></span> },
     (links.length > 0 || protos.length > 0) && { id: "links" as const, label: <span className="inline-flex items-center gap-1"><Link2 className="h-4 w-4" aria-hidden /><T fr="Liens" ar="روابط" /></span> },
   ].filter(Boolean) as { id: "dose" | "pump" | "links"; label: React.ReactNode }[];
 
   const w = Number(weight);
-  const doseMg = wd ? clampDose(wd.mgPerKg, w, wd.maxMg) : 0;
+  const doseMg = hasWeightDose && wd ? clampDose(wd.mgPerKg, w, wd.maxMg) : null;
   const dec = wd?.decimals ?? 1;
   // les protocoles liés sont fournis par le serveur (voir lib/medication-props.ts)
 
@@ -52,7 +53,7 @@ export default function MedTools({ medId, hasNativeDose, linkedProtos = [] }: { 
 
       {tabs.length > 1 && <TabBar tabs={tabs} active={tab} onChange={setTab} />}
 
-      {tab === "dose" && wd && (
+      {tab === "dose" && hasWeightDose && wd && doseMg !== null && (
         <div className="flex flex-col gap-3">
           <NumField label={<T fr="Poids (kg)" ar="الوزن (كغ)" />} value={weight} onChange={setWeight} suffix="kg" />
           <Hero value={doseMg.toFixed(dec)} unit="mg" sub={<>{doseMg >= wd.maxMg ? <T fr="plafond atteint" ar="بلغت الحد الأقصى" /> : <span dir="ltr" className="tabular-nums">{wd.mgPerKg} mg/kg</span>}</>} />
@@ -61,7 +62,11 @@ export default function MedTools({ medId, hasNativeDose, linkedProtos = [] }: { 
       )}
 
       {tab === "pump" && pump && (
-        <PumpTool cfg={pump} storageKey={`eutn:pump:${medId}`} />
+        <PumpTool
+          cfg={pump}
+          // Do not reuse the legacy 5 mg/mL dobutamine preparation after switching the default to the RCP-table 1 mg/mL.
+          storageKey={medId === "dobutamine" ? "eutn:pump:dobutamine:v2-1mg-ml" : `eutn:pump:${medId}`}
+        />
       )}
 
       {tab === "links" && (

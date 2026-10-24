@@ -69,6 +69,5 @@ export const ProcedureSchema = z.object({
   steps: z.array(LocalizedSchema).min(1),
   nursing: z.array(LocalizedSchema).min(1),
   timeTarget: LocalizedSchema.optional(),
-  stepTimes: z.array(z.number().positive()).optional(),
   meta: ReviewMetaSchema,
 });

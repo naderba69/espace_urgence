@@ -78,27 +78,27 @@ export const protocolsPhase7: Protocol[] = [
     title: { fr: "Plaie thoracique pénétrante", ar: "جرح صدر نافذ" },
     category: "traumatologie",
     severity: "critical",
-    summary: { fr: "Sceller la plaie, dépister pneumothorax et tamponnade, drain thoracique précoce — ne jamais sonder la plaie.", ar: "إغلاق الجرح، كشف الاسترواح والاندحاس، أنبوبة صدرية مبكرة — لا تستكشف الجرح أبداً." },
+    summary: { fr: "Évaluer la plaie et rechercher pneumothorax/tamponnade ; appliquer le protocole trauma local pour le pansement et le drainage lorsqu'ils sont indiqués — ne jamais sonder la plaie.", ar: "قيّم الجرح وابحث عن استرواح أو اندحاس؛ واتبع بروتوكول الرضوض المحلي للضماد والتصريف عند استطبابهما؛ ولا تستكشف الجرح أبداً." },
     exams: {
       bio: [{ fr: "Groupe/rhésus, lactate", ar: "زمرة، لاكتات" }],
       img: [{ fr: "eFAST (épanchement + pneumothorax), radio thorax", ar: "eFAST (انصباب + استرواح)، صورة صدر" }],
       ecg: [{ fr: "ECG + scope (trajet « boîte cardiaque » ?)", ar: "تخطيط + مراقبة (مسار «العلبة القلبية»؟)" }],
     },
     steps: [
-      { title: { fr: "Pansement occlusif 3 côtés (ou valve commerciale) sur la plaie — effet clapet anti-stabilisant", ar: "ضمادة عاصلة من 3 جهات (أو صمام تجاري) — تعمل كصمام أمان" } },
+      { title: { fr: "Plaie thoracique ouverte : appliquer la prise en charge prévue par le protocole trauma local et la notice du dispositif choisi ; réévaluer la respiration.", ar: "جرح صدري مفتوح: اتبع التدبير المحدد في بروتوكول الرضوض المحلي وتعليمات الجهاز المختار؛ وأعد تقييم التنفس." } },
       { title: { fr: "NE JAMAIS sonder la plaie ni retirer un objet empalé (le stabiliser)", ar: "لا تستكشف الجرح ولا تنزع جسماً مغروساً (ثبّته)" } },
       { title: { fr: "ABCDE + O₂ + 2 VVP + TXA 1 g si saignement significatif", ar: "ABCDE + أكسجين + وريدان + TXA ‏1 غ للنزف المهم" } },
       { title: { fr: "Zone « boîte cardiaque » (clavicules→xiphoïde, mamelons→mamelons) : eFAST péricarde obligatoire", ar: "منطقة «العلبة القلبية»: eFLASH للاندحاب إجباري" } },
-      { title: { fr: "Pneumothorax/hémothorax ⇒ drain thoracique 28-32 Ch (4ᵉ-5ᵉ EIC, ligne médio-axillaire)", ar: "استرواح/دم صدري ⇒ أنبوبة صدرية 28-32 (الفضاء 4-5، الخط الإبطي الأوسط)" } },
+      { title: { fr: "Pneumothorax/hémothorax : drainage définitif selon le protocole trauma local et le dispositif ; ne pas utiliser cette fiche comme guide technique d'insertion.", ar: "استرواح/دم صدري: تصريف نهائي وفق بروتوكول الرضوض المحلي والجهاز؛ لا تستخدم هذه البطاقة دليلاً تقنياً للإدخال." } },
       { title: { fr: "Tamponnade ⇒ péricardiocentèse de sauvetage + thoracotomie chirurgicale", ar: "اندحاس ⇒ بزل التأمور الإنقاذي + فتح صدر جراحي" } },
     ],
     keyPoints: [
-      { fr: "Un pansement totalement occlusif des 4 côtés peut créer un pneumothorax suffocant — laisser un côté libre.", ar: "الضمادة العاصلة من 4 جهات قد تصنع استرواحاً ضاغطاً — اترك جهة حرة." },
+      { fr: "Ne pas improviser le choix du pansement ou du drain : suivre le protocole trauma local et la notice du dispositif utilisé.", ar: "لا ترتجل اختيار الضماد أو المصرف؛ اتبع بروتوكول الرضوض المحلي وتعليمات الجهاز المستخدم." },
       { fr: "Toute plaie sous le mamelon = lésion abdominale associée jusqu'à preuve du contraire (trajet diaphragmatique).", ar: "كل جرح تحت الحلمة = إصابة بطنية مرافقة حتى يثبت العكس." },
     ],
     trajectory: [
-      { when: { fr: "Détresse brutale : tympanisme, déviation trachéale", ar: "ضائقة مفاجئة: طبلة، انحراف رغامي" }, do: [
-        { fr: "Retirer le pansement + décompression à l'aiguille puis drain — pneumothorax suffocant.", ar: "انزع الضمادة + تنفيس بإبرة ثم أنبوبة — استرواح ضاغط." },
+      { when: { fr: "Détresse respiratoire ou circulatoire aiguë avec signes thoraciques compatibles", ar: "ضائقة تنفسية أو دورانية حادة مع علامات صدرية ملائمة" }, do: [
+        { fr: "Évaluer et traiter une cause thoracique urgente selon l'algorithme local ; ne pas retarder le transfert ou l'intervention indiquée pour une imagerie non urgente.", ar: "قيّم وعالج السبب الصدري الطارئ وفق الخوارزمية المحلية؛ ولا تؤخر النقل أو التدخل المستطب من أجل تصوير غير عاجل." },
       ]},
       { when: { fr: "Choc + veines turgescentes + bruits cardiaques assourdis", ar: "صدمة + أوردة منتفخة + أصوات قلب مكتومة" }, do: [
         { fr: "Tamponnade : eFLASH, péricardiocentèse échoguidée, chirurgie immédiate.", ar: "اندحاس: eFAST، بزل تأمور بالإيكو، جراحة فورية." },
@@ -199,7 +199,7 @@ export const protocolsPhase7: Protocol[] = [
         { fr: "Laparotomie/thoracotomie selon fenêtre positive — ne pas attendre le scanner.", ar: "فتح بطن/صدر حسب النافذة الإيجابية — لا تنتظر الماسح." },
       ]},
       { when: { fr: "Absence de glissement pleural + point pouls", ar: "غياب الانزلاق + نقطة النبض" }, do: [
-        { fr: "Pneumothorax confirmé : décompression si mal toléré, drain thoracique.", ar: "استرواح مؤكد: تفريغ إن ضعُف التحمل، أنبوبة صدرية." },
+        { fr: "Pneumothorax confirmé : évaluer la gravité et suivre le protocole trauma local ; décompression ou drainage selon l'indication clinique, le dispositif et les compétences disponibles.", ar: "استرواح مؤكد: قيّم الشدة واتبع بروتوكول الرضوض المحلي؛ ويُجرى تفريغ الضغط أو التصريف وفق الاستطباب السريري والجهاز والمهارات المتاحة." },
       ]},
     ],
     medications: [],
@@ -274,7 +274,7 @@ export const protocolsPhase7: Protocol[] = [
       ]},
     ],
     medications: ["aspirine", "enoxaparine", "heparine", "trinitrine", "morphine", "amiodarone"],
-    calculators: ["heart", "scores", "enoxaparine"],
+    calculators: ["heart", "enoxaparine"],
     meta: { sources: ["ESC NSTE-ACS 2023"], lastReviewed: "2026-09" },
   },
   {
@@ -309,7 +309,7 @@ export const protocolsPhase7: Protocol[] = [
       ]},
     ],
     medications: ["esmolol", "amiodarone", "midazolam", "propofol", "enoxaparine"],
-    calculators: ["qtc", "scores"],
+    calculators: ["qtc", "has-bled", "noac"],
     meta: { sources: ["ESC AF 2024"], lastReviewed: "2026-09" },
   },
   {

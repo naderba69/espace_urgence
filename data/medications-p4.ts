@@ -61,39 +61,107 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "cefotaxime",
     name: { fr: "Céfotaxime (C3G)", ar: "سيفوتاكسيم" },
-    brands: "Claforan® 1 g ; Céfotaxime Panpharma® 1 g",
+    brands: "Claforan® 1 g ; Céfotaxime Panpharma® 1 g (spécialités françaises ; disponibilité tunisienne à vérifier)",
     synonyms: ["cefotaxime", "c3g", "cephalosporine", "سيفوتاكسيم", "كلافوران", "claforan"],
     klass: { fr: "Antibiotique β-lactamine (céphalosporine 3ᵉ gén.)", ar: "مضاد حيوي بيتا-لاكتام (سيفالوسبورين ج3)" },
     highRisk: false,
-    indications: { fr: "Choc septique (porte d'entrée pulmonaire/urinaire/neuroméningée), méningite, pneumopathie grave.", ar: "صدمة إنتانية (رئوية/بولية/سحائية)، التهاب سحايا، التهاب رئوي وخيم." },
-    doseAdult: { fr: "1-2 g IV lente (2 g si sepsis sévère/méningite), puis toutes les 6-8 h.", ar: "1-2 غ وريدي بطيء (2 غ بالإنتان الشديد/السحايا) كل 6-8 س." },
-    dosePediatric: { fr: "50 mg/kg IV (méningite : 50 mg/kg × 4/j).", ar: "50 ملغ/كغ وريدي (السحايا: 50 ملغ/كغ ×4/ي)." },
-    dilution: { fr: "1 g dans 10 mL EPPI, IV directe sur 3-5 min ou perfusion 20-30 min.", ar: "1 غ في 10 مل ماء للحقن، حقن بطيء 3-5 د أو تسريب 20-30 د." },
-    contraindications: { fr: "Allergie vraie aux céphalosporines (choc antérieur).", ar: "حساسية مؤكدة للسيفالوسبورينات (صدمة سابقة)." },
-    sideEffects: { fr: "Allergies, troubles digestifs, colite pseudomembraneuse (traitements prolongés).", ar: "حساسية، اضطرابات هضمية، التهاب قولون غشائي كاذب." },
-    nursing: { fr: "Administrer < 1 h dans le sepsis, APRÈS hémocultures ; adapter à la fonction rénale.", ar: "أعطِ خلال ساعة بالإنتان بعد مزارع الدم؛ عاير حسب وظيفة الكلى." },
-    storage: { fr: "T° ambiante à l'abri de la lumière ; reconstitué : stabilité courte.", ar: "حرارة الغرفة بعيداً عن الضوء؛ المعاد تحضيره استقرار قصير." },
+    indications: {
+      fr: "Selon le RCP Panpharma (France) : infections sévères dues à des bactéries sensibles, notamment septicémies, endocardites et méningites (Listeria exclue). Le choix empirique dépend du foyer, de la sensibilité et du protocole local.",
+      ar: "وفق نشرة Panpharma الفرنسية: إنتانات شديدة بجراثيم حساسة، ولا سيما تجرثم الدم والتهاب الشغاف والسحايا (تُستثنى الليستيريا). يحدد الاختيار التجريبي حسب البؤرة والحساسية والبروتوكول المحلي.",
+    },
+    doseAdult: {
+      fr: "RCP ANSM Panpharma (France) : 3 g/j en moyenne, jusqu'à 12 g/j selon la gravité ; infection urinaire : 2 g/j peuvent suffire. Méningite : 200–300 mg/kg/j (pas de données d'efficacité/tolérance au-delà de 24 g/j). Méningite pneumococcique : 50–75 mg/kg toutes les 6 h pendant les premières 48–72 h. Ce n'est pas une posologie unique du sepsis ; vérifier le protocole local.",
+      ar: "وفق RCP الفرنسي لـANSM/‏Panpharma: متوسط 3 غ/يوم، وقد يصل إلى 12 غ/يوم حسب الشدة؛ التهاب البول: قد تكفي 2 غ/يوم. التهاب السحايا: 200–300 ملغ/كغ/يوم (لا بيانات فعالية/تحمل فوق 24 غ/يوم). التهاب السحايا بالمكورات الرئوية: 50–75 ملغ/كغ كل 6 ساعات في أول 48–72 ساعة. ليست هذه جرعة موحدة للإنتان؛ تحقّق من البروتوكول المحلي.",
+    },
+    dosePediatric: {
+      fr: "RCP ANSM Panpharma (France) : nouveau-né/nourrisson/enfant, 50 mg/kg/j en moyenne en 3 injections IV, jusqu'à 200 mg/kg/j selon la gravité. Prématuré : 50 mg/kg/j en 2 injections IV, jusqu'à 100 mg/kg/j si infection sévère. Méningite pneumococcique après 3 mois : 50–75 mg/kg toutes les 6 h (200–300 mg/kg/j) au début, puis adapter à la CMI. Vérifier un protocole pédiatrique local avant toute utilisation.",
+      ar: "وفق RCP الفرنسي لـANSM/‏Panpharma: حديثو الولادة والرضع والأطفال: متوسط 50 ملغ/كغ/يوم في 3 جرعات وريدية، حتى 200 ملغ/كغ/يوم حسب الشدة. الخديج: 50 ملغ/كغ/يوم في جرعتين وريديتين، حتى 100 ملغ/كغ/يوم عند الإنتان الشديد. التهاب السحايا بالمكورات الرئوية بعد عمر 3 أشهر: 50–75 ملغ/كغ كل 6 ساعات (200–300 ملغ/كغ/يوم) في البداية، ثم تُعدّل حسب CMI. تحقّق من بروتوكول أطفال محلي قبل الاستعمال.",
+    },
+    dilution: {
+      fr: "RCP ANSM Panpharma : IV directe en 3–5 min ou perfusion de 20–60 min ; IM profonde. Le volume/diluant de reconstitution n'est pas précisé ici : vérifier la notice de la spécialité locale. Préparer extemporanément, utiliser immédiatement ; ne pas mélanger avec un autre antibiotique.",
+      ar: "وفق RCP الفرنسي لـANSM/‏Panpharma: حقن وريدي مباشر خلال 3–5 دقائق أو تسريب 20–60 دقيقة؛ وحقن عضلي عميق. لا يحدد هذا المرجع حجم/مذيب إعادة التحضير هنا؛ تحقّق من نشرة المنتج المحلي. حضّر وقت الاستعمال واستعمل فوراً؛ لا تخلطه مع مضاد حيوي آخر.",
+    },
+    contraindications: {
+      fr: "RCP ANSM : hypersensibilité au céfotaxime, aux céphalosporines ou à un excipient ; antécédent d'hypersensibilité grave à une autre bêta-lactamine (pénicillines, monobactames ou carbapénèmes).",
+      ar: "وفق RCP الفرنسي: فرط حساسية للسيفوتاكسيم أو السيفالوسبورينات أو أحد السواغات؛ أو سابقة فرط حساسية شديدة لبيتا-لاكتام آخر (البنسلينات أو المونوباكتام أو الكاربابينيمات).",
+    },
+    sideEffects: {
+      fr: "RCP ANSM : anaphylaxie/angio-œdème/bronchospasme ; réactions cutanées graves ; convulsions/encéphalopathie surtout en cas de forte dose ou d'insuffisance rénale ; diarrhée/colite pseudomembraneuse ; cytopénies et atteinte hépatique/rénale ; phlébite/veinite ; arythmie après injection IV rapide par cathéter central.",
+      ar: "وفق RCP الفرنسي: تأق/وذمة وعائية/تشنج قصبي؛ تفاعلات جلدية خطيرة؛ اختلاجات/اعتلال دماغي خصوصاً مع الجرعات العالية أو القصور الكلوي؛ إسهال/التهاب قولون غشائي كاذب؛ نقص خلايا الدم وأذية كبدية/كلوية؛ التهاب الوريد؛ واضطراب نظم بعد حقن وريدي سريع عبر قثطار مركزي.",
+    },
+    nursing: {
+      fr: "SSC 2026 (adultes, délai uniquement) : choc possible ou sepsis probable/confirmé → immédiatement, idéalement ≤1 h ; sepsis possible sans choc → évaluation rapide, puis ≤3 h si le soupçon persiste ; faible probabilité sans choc → différer peut se discuter sous surveillance rapprochée. Hémocultures avant l'antibiotique si cela ne le retarde pas. RCP ANSM : ClCr <10 mL/min, après la dose initiale habituelle, réduire de moitié l'entretien sans changer l'intervalle ; hémodialyse : 1–2 g/j selon gravité, après la séance le jour même. Surveiller fonction rénale/neurologique et NFS si traitement >10 j ; choix et dose à vérifier localement.",
+      ar: "SSC 2026 (للبالغين، التوقيت فقط): صدمة محتملة أو إنتان مرجح/مؤكد ← فوراً ويفضل خلال ساعة؛ إنتان محتمل بلا صدمة ← تقييم سريع ثم خلال 3 ساعات إذا استمر الاشتباه؛ احتمال منخفض بلا صدمة ← يمكن التأجيل مع مراقبة لصيقة. خذ زراعات الدم قبل المضاد إذا لم يؤخره. وفق RCP الفرنسي: إذا كانت تصفية الكرياتينين <10 مل/د، فبعد الجرعة الابتدائية المعتادة تُخفض جرعات الاستمرار إلى النصف دون تغيير الفاصل؛ في الديلزة الدموية: 1–2 غ/يوم حسب الشدة، بعد جلسة الديلزة في يومها. راقب الكلى والحالة العصبية وتعداد الدم إذا تجاوز العلاج 10 أيام؛ ويجب التحقق محلياً من الاختيار والجرعة.",
+    },
+    storage: {
+      fr: "Conserver dans l'emballage d'origine à l'abri de la lumière ; après reconstitution/dilution, utiliser immédiatement (RCP ANSM Panpharma).",
+      ar: "يُحفظ في العبوة الأصلية بعيداً عن الضوء؛ وبعد إعادة التحضير/التمديد يُستعمل فوراً (وفق RCP الفرنسي لـANSM/‏Panpharma).",
+    },
     alternatives: [],
-    meta: { sources: ["SSC 2021", "SPILF"], lastReviewed: "2026-09" },
+    meta: {
+      sources: ["ANSM (France) — RCP Céfotaxime Panpharma 1 g, mise à jour 12/04/2024, §§4.1–4.8 et 6.2–6.4", "SSC 2026 (délai d'antibiothérapie adulte uniquement)"],
+      lastReviewed: "2026-10",
+    },
   },
   {
     id: "amikacine",
     name: { fr: "Amikacine", ar: "أميكاسين" },
-    brands: "Amiklin® 500 mg/2 mL ; Amikacine Kabi®",
     synonyms: ["amikacine", "amikacin", "أميكاسين"],
     klass: { fr: "Antibiotique aminoside", ar: "مضاد حيوي أمينوزيد" },
     highRisk: true,
-    indications: { fr: "Choc septique : dose « choc » unique d'association (association C3G) surtout porte urinaire/digestive.", ar: "صدمة إنتانية: جرعة «صدمة» وحيدة مرافقة (بوابة بولية/هضمية)." },
-    doseAdult: { fr: "25-30 mg/kg IV sur 30 min — dose UNIQUE.", ar: "25-30 ملغ/كغ وريدي على 30 د — جرعة وحيدة." },
-    dosePediatric: { fr: "30 mg/kg IV dose unique (avis spécialisé).", ar: "30 ملغ/كغ وريدي جرعة وحيدة (استشارة)." },
-    dilution: { fr: "Dans 100-200 mL NaCl 0,9 % ou G5 %, perfusion 30 min.", ar: "في 100-200 مل NaCl أو G5%، تسريب 30 د." },
-    contraindications: { fr: "Insuffisance rénale sévère (adapter), myasthénie, grossesse (ototoxicité fœtale), association diurétiques de l'anse.", ar: "قصور كلوي شديد، وهن عضلي، حمل، تزامن مع مدرات العروة." },
-    sideEffects: { fr: "Néphrotoxicité, ototoxicité (surdosage), paralysie neuromusculaire.", ar: "سمية كلوية، سمية سمعية، شلل عصبي عضلي." },
-    nursing: { fr: "Contrôler diurèse et créat ; pic/résiduel selon protocole si cure prolongée.", ar: "راقب التحبور والكرياتينين؛ قياس الذروة/البواقي إذا تعددت الجرعات." },
-    storage: { fr: "T° ambiante.", ar: "حرارة الغرفة." },
+    indications: {
+      fr: "Infections sévères dues à des bactéries sensibles à l'amikacine ; généralement en association à d'autres antibiotiques, notamment une bêta-lactamine. En choc septique ou en pyélonéphrite grave, l'ajout et sa durée dépendent du foyer, des sensibilités bactériennes et du protocole actualisé ; ne pas présenter l'amikacine comme une monothérapie ou une « dose unique » systématique.",
+      ar: "للإنتانات الشديدة الناجمة عن بكتيريا حساسة للأميكاسين؛ ويُستخدم غالباً مع مضادات أخرى، ولا سيما بيتا-لاكتام. في الصدمة الإنتانية أو التهاب الحويضة الشديد، يحدد بؤرة العدوى وحساسية الجرثوم والبروتوكول المحدّث قرار الإضافة ومدتها؛ ولا يُعرض الأميكاسين كعلاج منفرد أو كجرعة واحدة ثابتة لكل الحالات.",
+    },
+    doseAdult: {
+      fr: "Les références varient selon le produit et le contexte. CA-SFM/SPILF/SFPT 2025 : chez l'adulte non obèse, sans insuffisance rénale ou hépatique, 25–30 mg/kg IV en 30 min, une administration par jour. SRLF 2015 soutient 25–30 mg/kg/j dans le choc septique pour moins de 5 jours ; STPI Tunisie 2018 indique 30 mg/kg/j pendant 1–3 jours pour une pyélonéphrite grave. « Une fois par jour » ne signifie pas « une seule injection au total ». RCP Viatris 2024 : 15–30 mg/kg/j, maximum 30 mg/kg/j ; RCP Panpharma 2024 : 15 mg/kg/j, maximum 1,5 g/j. Vérifier la spécialité locale, la fonction rénale, le poids corrigé en cas d'obésité et les dosages avant toute réinjection. Le CA-SFM 2025 ne fixe pas de plafond absolu en mg.",
+      ar: "تختلف المراجع بحسب المستحضر والسياق. وفق CA-SFM/SPILF/SFPT 2025: للبالغ غير البدين، من دون قصور كلوي أو كبدي، 25–30 ملغ/كغ وريدياً خلال 30 دقيقة، مرة يومياً. يدعم SRLF 2015 جرعة 25–30 ملغ/كغ/يوم في الصدمة الإنتانية لمدة أقل من 5 أيام؛ وتذكر STPI تونس 2018 جرعة 30 ملغ/كغ/يوم لمدة 1–3 أيام في التهاب الحويضة الشديد. «مرة يومياً» لا تعني «حقنة واحدة طوال العلاج». نشرة Viatris لعام 2024: ‏15–30 ملغ/كغ/يوم، بحد أقصى 30 ملغ/كغ/يوم؛ ونشرة Panpharma لعام 2024: ‏15 ملغ/كغ/يوم، بحد أقصى 1.5 غ/يوم. تحقّق من المستحضر المحلي ووظيفة الكلى والوزن المصحح عند البدانة ومستويات الدواء قبل أي جرعة تالية. لا يحدد مرجع CA-SFM 2025 سقفاً مطلقاً بالملغ.",
+    },
+    dosePediatric: {
+      fr: "Ne pas transposer automatiquement la dose adulte de 25–30 mg/kg. RCP Panpharma : de 4 semaines à 11 ans, 15–20 mg/kg/j en une dose quotidienne ou 7,5 mg/kg toutes les 12 h ; nouveau-né (0–27 jours), dose initiale de 10 mg/kg puis 7,5 mg/kg/12 h ; prématuré, 7,5 mg/kg/12 h. Adapter au produit, à l'âge post-conceptionnel, à la fonction rénale et au protocole pédiatrique spécialisé.",
+      ar: "لا تُنقل جرعة البالغين 25–30 ملغ/كغ إلى الأطفال تلقائياً. وفق RCP Panpharma: من عمر 4 أسابيع إلى 11 سنة، 15–20 ملغ/كغ/يوم مرة يومياً أو 7.5 ملغ/كغ كل 12 ساعة؛ وحديث الولادة (0–27 يوماً): جرعة بدء 10 ملغ/كغ ثم 7.5 ملغ/كغ كل 12 ساعة؛ والخديج 7.5 ملغ/كغ كل 12 ساعة. تُعدّل الجرعة حسب المستحضر والعمر الحملي المصحح ووظيفة الكلى وبروتوكول اختصاصي الأطفال.",
+    },
+    dilution: {
+      fr: "RCP Viatris (poudre 250 mg) : reconstituer le flacon dans 2 mL d'eau PPI, puis diluer dans NaCl 0,9 % ou glucose isotonique à raison de 250 mg pour 25–100 mL (2,5–10 mg/mL) ; perfuser en 30 min. Les solutions d'amikacine prêtes à l'emploi ont d'autres concentrations. Pour une forte dose, vérifier la présentation, la concentration finale et le volume dans le RCP réellement disponible.",
+      ar: "وفق RCP Viatris (مسحوق 250 ملغ): يُحلّ القارور في 2 مل من ماء الحقن، ثم يُخفف في NaCl 0.9% أو غلوكوز متساوي التوتر بمقدار 250 ملغ لكل 25–100 مل (2.5–10 ملغ/مل)؛ ويُسرب خلال 30 دقيقة. تختلف تراكيز محاليل الأميكاسين الجاهزة. عند الجرعة العالية تحقّق من شكل المستحضر والتركيز النهائي والحجم في النشرة المتاحة فعلياً.",
+    },
+    contraindications: {
+      fr: "RCP Viatris France (spécifique à cette spécialité) : hypersensibilité à l'amikacine/aux aminosides ou à un excipient, cirrhose Child-Pugh B ou C, myasthénie, association simultanée à un autre aminoside, voie sous-cutanée et association à l'ataluren. Les RCP diffèrent selon le produit : vérifier la notice locale. Insuffisance rénale, grossesse et diurétiques de l'anse imposent une évaluation/une prudence particulières, mais ne sont pas des contre-indications universelles de toute amikacine.",
+      ar: "وفق نشرة Viatris الفرنسية (خاصة بهذا المستحضر): فرط الحساسية للأميكاسين/الأمينوزيدات أو لأحد السواغات، تشمع الكبد Child-Pugh B أو C، الوهن العضلي، الاستعمال المتزامن لأمينوزيد آخر، الطريق تحت الجلد، أو المشاركة مع ataluren. تختلف النشرات حسب المنتج؛ تحقّق من النشرة المحلية. قصور الكلى والحمل ومدرات العروة تستلزم تقييماً وحذراً خاصين، لكنها ليست موانع مطلقة عامة لكل مستحضرات الأميكاسين.",
+    },
+    sideEffects: {
+      fr: "Néphrotoxicité ; ototoxicité cochléaire ou vestibulaire (acouphènes, vertiges, baisse auditive parfois irréversible) ; bloc neuromusculaire pouvant aller jusqu'à la paralysie respiratoire ; hypersensibilité, anaphylaxie ou bronchospasme (traces de sulfites selon le produit). Nausées/vomissements, rash et réactions locales possibles. Le risque augmente notamment avec l'insuffisance rénale, la déshydratation, les doses ou durées élevées et les médicaments néphro-/ototoxiques.",
+      ar: "سمية كلوية؛ وسمية سمعية قوقعية أو دهليزية (طنين، دوار، نقص سمع قد يكون غير عكوس)؛ وحصار عصبي عضلي قد يصل إلى شلل التنفس؛ وفرط حساسية أو تأق أو تشنج قصبي (قد توجد آثار سلفيت بحسب المنتج). قد يحدث غثيان/قيء أو طفح أو تفاعل موضعي. يزداد الخطر مع قصور الكلى والجفاف والجرعات أو المدد الطويلة والأدوية السامة للكلى أو السمع.",
+    },
+    nursing: {
+      fr: "Avant traitement puis régulièrement : créatinine/clairance, diurèse, hydratation ; rechercher acouphènes, vertiges ou baisse auditive et surveiller le risque neuromusculaire. Le suivi thérapeutique n'est pas identique pour toutes les spécialités : pic/résiduel selon sévérité, fonction rénale, durée et protocole ; ne pas réinjecter automatiquement si le résiduel est élevé. CA-SFM 2025 s'applique aux adultes non obèses sans insuffisance rénale/hépatique ; réinjections et durée doivent suivre le RCP du produit et le protocole local.",
+      ar: "قبل العلاج ثم بانتظام: راقب الكرياتينين/تصفية الكرياتينين والإدرار والإماهة؛ وابحث عن الطنين والدوار ونقص السمع وراقب خطر الحصار العصبي العضلي. تختلف المراقبة الدوائية بين المستحضرات؛ ويُقاس مستوى الذروة/المتبقي حسب الشدة ووظيفة الكلى والمدة والبروتوكول؛ لا تُكرر الجرعة آلياً إذا كان المستوى المتبقي مرتفعاً. ينطبق مرجع CA-SFM 2025 على البالغ غير البدين دون قصور كلوي/كبدي؛ وتُحدد الجرعات التالية والمدة وفق نشرة المنتج والبروتوكول المحلي.",
+    },
+    storage: {
+      fr: "Conservation et stabilité après reconstitution/dilution : spécifiques à la présentation. RCP Panpharma solution 250 mg/mL : utiliser immédiatement d'un point de vue microbiologique. En cas d'utilisation différée, les conditions relèvent de la responsabilité de l'utilisateur et ne doivent pas dépasser 24 h à 2–8 °C selon le RCP. Vérifier la notice du produit disponible.",
+      ar: "الحفظ والثبات بعد الحل أو التخفيف يختلفان بحسب شكل المستحضر. وفق RCP Panpharma محلول 250 ملغ/مل: يُستعمل فوراً من الناحية الجرثومية. إذا تأخر الاستعمال فتقع شروط الحفظ على مسؤولية المستخدم ولا تتجاوز 24 ساعة عند 2–8°م حسب النشرة. تحقّق من نشرة المنتج المتاح.",
+    },
     alternatives: [],
-    weightDose: { mgPerKg: 28, maxMg: 3000, note: { fr: "Dose choc : 25-30 mg/kg IV sur 30 min, prise unique.", ar: "جرعة صدمة: 25-30 ملغ/كغ وريدي على 30 د، وحيدة." } },
-    meta: { sources: ["SSC 2021", "SPILF aminosides"], lastReviewed: "2026-09" },
+    weightDose: {
+      kind: "range",
+      requiresContext: true,
+      minMgPerKg: 25,
+      maxMgPerKg: 30,
+      note: {
+        fr: "Plage CA-SFM/SPILF/SFPT 2025 pour l'adulte non obèse, sans insuffisance rénale/hépatique : 25–30 mg/kg IV une fois par jour. Le calcul affiche une plage sans plafond absolu en mg, car ce référentiel n'en fixe pas. Ne pas utiliser cette valeur adulte chez l'enfant ; en cas d'obésité, utiliser le poids corrigé du RCP du produit, pas le poids réel saisi ici. Les réinjections nécessitent une décision selon le produit, la fonction rénale et le suivi thérapeutique.",
+        ar: "مجال CA-SFM/SPILF/SFPT 2025 للبالغ غير البدين دون قصور كلوي/كبدي: ‏25–30 ملغ/كغ وريدياً مرة يومياً. تعرض الحاسبة مجالاً بلا سقف مطلق بالملغ لأن هذا المرجع لا يحدده. لا تستخدم جرعة البالغ للطفل؛ وعند البدانة يُستخدم الوزن المصحح وفق نشرة المنتج لا الوزن الفعلي المُدخل هنا. تُقرر الجرعات التالية حسب المنتج ووظيفة الكلى ومستويات الدواء.",
+      },
+    },
+    meta: {
+      sources: [
+        "CA-SFM/SPILF/SFPT 2025 v1.1 — amikacine 25–30 mg/kg en 30 min, dose unique journalière (adultes non obèses, sans insuffisance rénale/hépatique)",
+        "SRLF 2015 — aminosides en réanimation : amikacine 25–30 mg/kg/j en choc septique, durée <5 jours",
+        "STPI Tunisie 2018 — PNA grave adulte uniquement : amikacine 30 mg/kg/j pendant 1–3 jours (référence historique, protocole actuel à confirmer)",
+        "ANSM (France) — RCP AMIKACINE VIATRIS 250 mg, mise à jour 27/05/2024, §§4.2–4.6 (15–30 mg/kg/j, poids corrigé, surveillance)",
+        "ANSM (France) — RCP AMIKACINE PANPHARMA 250 mg/mL, mise à jour 30/07/2024, §§4.2–4.4 et 6.2–6.4 (schéma différent, plafond produit 1,5 g/j)",
+      ],
+      lastReviewed: "2026-10",
+    },
   },
   {
     id: "levetiracetam",

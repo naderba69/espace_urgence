@@ -16,6 +16,65 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 272.0,
+      "y1": 301.1,
+      "text": "1 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 272.0,
+      "y1": 301.1,
+      "text": "DC de 1 g puis 500 mg/8h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 272.0,
+      "y1": 301.1,
+      "text": "DC de 1 g puis 750 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -30,10 +89,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 301.1,
+      "y1": 330.1,
+      "text": "1 g/12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 301.1,
+      "y1": 330.1,
+      "text": "DC de 1 g puis 500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 301.1,
+      "y1": 330.1,
+      "text": "DC de 1 g puis 500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -53,6 +172,65 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 330.1,
+      "y1": 359.2,
+      "text": "100 mg/kg/24h en 4 injections"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 330.1,
+      "y1": 359.2,
+      "text": "50 mg/kg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 330.1,
+      "y1": 359.2,
+      "text": "25 mg/kg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -67,10 +245,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 359.2,
+      "y1": 388.2,
+      "text": "200 mg/kg/24h en 6 injections"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 359.2,
+      "y1": 388.2,
+      "text": "100 mg/kg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 359.2,
+      "y1": 388.2,
+      "text": "50 mg/kg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -90,11 +328,81 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 388.2,
+      "y1": 417.3,
+      "text": "1 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 388.2,
+      "y1": 417.3,
+      "text": "DC de 1 g puis 500 mg/8h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 388.2,
+      "y1": 417.3,
+      "text": "DC de 1 g puis 750 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [
    "Posologies exprimées en g d’amoxicilline"
+  ],
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 417.3,
+    "y1": 431.8,
+    "text": "Posologies exprimées en g d’amoxicilline",
+    "reason": "italique"
+   }
   ],
   "review": false
  },
@@ -115,6 +423,65 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 431.8,
+      "y1": 460.8,
+      "text": "1 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 431.8,
+      "y1": 460.8,
+      "text": "DC de 1 g puis 500 mg/8h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 431.8,
+      "y1": 460.8,
+      "text": "DC de 1 g puis 750 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -129,11 +496,81 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 460.8,
+      "y1": 489.9,
+      "text": "2 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 460.8,
+      "y1": 489.9,
+      "text": "3 g/24h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 460.8,
+      "y1": 489.9,
+      "text": "1,5 g/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [
    "Posologies exprimées en g d’amoxicilline ; /!\\ acide clavulanique : dose max 200 mg/injection et 1200 mg/24h"
+  ],
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 489.9,
+    "y1": 504.4,
+    "text": "Posologies exprimées en g d’amoxicilline ; /!\\ acide clavulanique : dose max 200 mg/injection et 1200 mg/24h",
+    "reason": "italique"
+   }
   ],
   "review": false
  },
@@ -148,13 +585,74 @@
      "normorenal": "Posologie usuelle : 1 à 2 g /6 à 12h",
      "legere": "Posologie usuelle : 1 à 2 g /6 à 12h",
      "moderee": "Posologie usuelle : 1 à 2 g /6 à 12h",
-     "severe": "DC de 1 g puis 500 mg/12h",
-     "terminale": "DC de 1 g puis 250 mg/12h"
+     "severe": "DC de 1 g puis 500 mg/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 98.4,
+      "y1": 126.0,
+      "text": "Posologie usuelle : 1 à 2 g /6 à 12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 705.3,
+      "y0": 98.4,
+      "y1": 126.0,
+      "text": "DC de 1 g puis 500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 705.3,
+      "x1": 795.5,
+      "y0": 98.4,
+      "y1": 126.0,
+      "text": "DC de 1 g puis 250 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2,
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "terminale"
+    ],
+    "unselected_cell_ids": [
+     3
+    ],
+    "review": true
    },
    {
     "y": 126.0,
@@ -168,13 +666,83 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 126.0,
+      "y1": 153.6,
+      "text": "Infection à Acinetobacter spp : 3 g /6 à 8h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 126.0,
+      "y1": 153.6,
+      "text": "3 g/12h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 126.0,
+      "y1": 153.6,
+      "text": "3 g/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [
    "Posologies exprimées en g d’ampicilline"
   ],
-  "review": false
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 153.6,
+    "y1": 168.1,
+    "text": "Posologies exprimées en g d’ampicilline",
+    "reason": "italique"
+   }
+  ],
+  "review": true
  },
  {
   "page": 2,
@@ -193,11 +761,81 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 168.1,
+      "y1": 197.2,
+      "text": "1 g/12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 168.1,
+      "y1": 197.2,
+      "text": "500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 168.1,
+      "y1": 197.2,
+      "text": "250 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [
    "Posologies exprimées en g d’ampicilline"
+  ],
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 197.2,
+    "y1": 211.7,
+    "text": "Posologies exprimées en g d’ampicilline",
+    "reason": "italique"
+   }
   ],
   "review": false
  },
@@ -211,32 +849,151 @@
     "values": {
      "normorenal": "2,4 MUI tous les 8 jours",
      "legere": "2,4 MUI tous les 8 jours",
-     "moderee": "1,8 MUI tous les 8 jours",
      "severe": "1,8 MUI tous les 8 jours",
      "terminale": "Aucune donnée"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 211.7,
+      "y1": 239.3,
+      "text": "2,4 MUI tous les 8 jours"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 670.6,
+      "y0": 211.7,
+      "y1": 239.3,
+      "text": "1,8 MUI tous les 8 jours"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 211.7,
+      "y1": 239.3,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee"
+    ],
+    "unselected_cell_ids": [],
+    "review": true
    },
    {
     "y": 239.3,
     "values": {
      "normorenal": "1,2 MUI toutes les 3 à 4 semaines",
      "legere": "1,2 MUI toutes les 3 à 4 semaines",
-     "moderee": "0,9 MUI toutes les 3 à 4 semaines",
      "severe": "0,9 MUI toutes les 3 à 4 semaines",
      "terminale": "Aucune donnée"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 239.3,
+      "y1": 268.3,
+      "text": "1,2 MUI toutes les 3 à 4 semaines"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 670.6,
+      "y0": 239.3,
+      "y1": 268.3,
+      "text": "0,9 MUI toutes les 3 à 4 semaines"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 239.3,
+      "y1": 268.3,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee"
+    ],
+    "unselected_cell_ids": [],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 2,
@@ -247,19 +1004,99 @@
     "y": 268.3,
     "values": {
      "normorenal": "12 à 24 MUI/j en 6 injections ou en perfusion continue",
-     "legere": "3 MUI /4h",
-     "moderee": "2 MUI/4h",
+     "legere": "12 à 24 MUI/j en 6 injections ou en perfusion continue",
      "severe": "1 MUI/4h",
      "terminale": "0,5 MUI/6h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 268.3,
+      "y1": 326.4,
+      "text": "12 à 24 MUI/j en 6 injections ou en perfusion continue"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 473.2,
+      "y0": 268.3,
+      "y1": 326.4,
+      "text": "3 MUI /4h"
+     },
+     {
+      "id": 3,
+      "x0": 473.2,
+      "x1": 540.9,
+      "y0": 268.3,
+      "y1": 326.4,
+      "text": "2 MUI/4h"
+     },
+     {
+      "id": 4,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 268.3,
+      "y1": 326.4,
+      "text": "1 MUI/4h"
+     },
+     {
+      "id": 5,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 268.3,
+      "y1": 326.4,
+      "text": "0,5 MUI/6h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2,
+      3
+     ],
+     "severe": [
+      4
+     ],
+     "terminale": [
+      5
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 4,
+     "terminale": 5
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee"
+    ],
+    "unselected_cell_ids": [
+     2,
+     3
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 2,
@@ -278,10 +1115,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 326.4,
+      "y1": 356.7,
+      "text": "50 mg/kg/24h en 3 prises (sans dépasser 4 g/24h)"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 326.4,
+      "y1": 356.7,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -301,10 +1190,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 356.7,
+      "y1": 400.2,
+      "text": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 356.7,
+      "y1": 400.2,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -322,10 +1263,56 @@
      "terminale": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 400.2,
+      "y1": 443.8,
+      "text": "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -345,10 +1332,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 443.8,
+      "y1": 488.1,
+      "text": "1 MUI/6 à 8h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 443.8,
+      "y1": 488.1,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -361,18 +1400,79 @@
     "values": {
      "normorenal": "4 g/6 à 8h",
      "legere": "4 g/6 à 8h",
-     "moderee": "4 g/6 à 8h",
-     "severe": "4 g/ 8h",
      "terminale": "4 g/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 495.7,
+      "y0": 488.1,
+      "y1": 517.1,
+      "text": "4 g/6 à 8h"
+     },
+     {
+      "id": 2,
+      "x0": 495.7,
+      "x1": 631.1,
+      "y0": 488.1,
+      "y1": 517.1,
+      "text": "4 g/ 8h"
+     },
+     {
+      "id": 3,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 488.1,
+      "y1": 517.1,
+      "text": "4 g/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2,
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 3,
@@ -384,20 +1484,91 @@
     "values": {
      "normorenal": "4 g/6 à 8h",
      "legere": "4 g/6 à 8h",
-     "moderee": "4 g/6 à 8h",
-     "severe": "4 g/ 8h",
      "terminale": "4 g/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 495.7,
+      "y0": 98.4,
+      "y1": 127.4,
+      "text": "4 g/6 à 8h"
+     },
+     {
+      "id": 2,
+      "x0": 495.7,
+      "x1": 631.1,
+      "y0": 98.4,
+      "y1": 127.4,
+      "text": "4 g/ 8h"
+     },
+     {
+      "id": 3,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 98.4,
+      "y1": 127.4,
+      "text": "4 g/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2,
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [
    "Posologies exprimées en g de pipéracilline"
   ],
-  "review": false
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 127.4,
+    "y1": 141.9,
+    "text": "Posologies exprimées en g de pipéracilline",
+    "reason": "italique"
+   }
+  ],
+  "review": true
  },
  {
   "page": 3,
@@ -416,10 +1587,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 141.9,
+      "y1": 171.0,
+      "text": "400 mg/8 à 12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 141.9,
+      "y1": 171.0,
+      "text": "DC de 400 mg puis 200 mg/8 à 12h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 141.9,
+      "y1": 171.0,
+      "text": "DC de 400 mg puis 200 mg /24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -439,6 +1670,73 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 171.0,
+      "y1": 200.0,
+      "text": "2 g/8 à 12h en perfusion de 30 min"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 171.0,
+      "y1": 200.0,
+      "text": "1 g/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 171.0,
+      "y1": 200.0,
+      "text": "1 g/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 171.0,
+      "y1": 200.0,
+      "text": "500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -453,10 +1751,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 200.0,
+      "y1": 229.1,
+      "text": "DC de 2 g en perfusion de 30 min puis 6 g/24h en perfusion continue"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 795.5,
+      "y0": 200.0,
+      "y1": 229.1,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -474,6 +1824,51 @@
      "terminale": "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 250.1,
+      "y1": 281.5,
+      "text": "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -488,10 +1883,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 281.5,
+      "y1": 313.0,
+      "text": "Infection urinaire haute et/ou compliquée : 1 g/12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 281.5,
+      "y1": 313.0,
+      "text": "½ dose"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 281.5,
+      "y1": 313.0,
+      "text": "¼ dose"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -511,6 +1966,65 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 313.0,
+      "y1": 344.4,
+      "text": "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 313.0,
+      "y1": 344.4,
+      "text": "DC de 2 g puis 500 mg à 1 g/8h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 313.0,
+      "y1": 344.4,
+      "text": "DC de 2 g puis 250 à 500 mg/8h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -525,10 +2039,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 344.4,
+      "y1": 391.6,
+      "text": "Infection sévère : 2 g/6h ou 8 g/24h en continue"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 344.4,
+      "y1": 391.6,
+      "text": "DC de 2 g puis 1 g/6h ou 4 g/24h en continue"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 344.4,
+      "y1": 391.6,
+      "text": "DC de 2 g puis 500 mg/6h ou 2 g/24h en continue"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -548,10 +2122,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 412.6,
+      "y1": 444.0,
+      "text": "250 à 500 mg/8h Posologie max : 1500 mg/24h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 412.6,
+      "y1": 444.0,
+      "text": "250 à 500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 412.6,
+      "y1": 444.0,
+      "text": "250 à 500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -564,18 +2198,79 @@
     "values": {
      "normorenal": "1 g/12h",
      "legere": "1 g/12h",
-     "moderee": "1 g/12h",
-     "severe": "500 mg/12h",
      "terminale": "500 mg/24h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 495.7,
+      "y0": 444.0,
+      "y1": 475.5,
+      "text": "1 g/12h"
+     },
+     {
+      "id": 2,
+      "x0": 495.7,
+      "x1": 631.1,
+      "y0": 444.0,
+      "y1": 475.5,
+      "text": "500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 444.0,
+      "y1": 475.5,
+      "text": "500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2,
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 3,
@@ -594,10 +2289,78 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 475.5,
+      "y1": 506.9,
+      "text": "1 g/12h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 475.5,
+      "y1": 506.9,
+      "text": "500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 475.5,
+      "y1": 506.9,
+      "text": "500 mg/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 475.5,
+      "y1": 506.9,
+      "text": "250 mg/12 à 24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -617,6 +2380,73 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 101.2,
+      "y1": 159.3,
+      "text": "Infection peu sévère : 60 à 80 mg/kg/24h en 4 à 6 injections OU en continue avec DC = 1/4 ou 1/3 de la dose journalière"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 101.2,
+      "y1": 159.3,
+      "text": "DC de 500 mg puis 125 à 250 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 101.2,
+      "y1": 159.3,
+      "text": "DC de 500 mg puis 125 à 250 mg/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 101.2,
+      "y1": 159.3,
+      "text": "DC de 500 mg puis 125 à 250 mg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -631,10 +2461,78 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 159.3,
+      "y1": 241.6,
+      "text": "Infection sévère : 80 à 100 mg/kg/24h en 3 perfusions de 60 min toutes les 8h OU en continue avec DC de 2 g en perfusion de 60 min puis 80 à 100 mg/kg/j en 2 perfusions de 12h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 159.3,
+      "y1": 241.6,
+      "text": "DC de 500 mg puis 250 mg/6h ou 500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 159.3,
+      "y1": 241.6,
+      "text": "DC de 500 mg puis 250 mg/12h ou 500 mg/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 159.3,
+      "y1": 241.6,
+      "text": "DC de 500 mg puis 500 mg/48 à 72h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -647,46 +2545,254 @@
     "values": {
      "normorenal": "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *",
      "legere": "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *",
-     "moderee": "1 g/24h",
-     "severe": "0,5 g/24h",
-     "terminale": "0,25 g/24h"
+     "severe": "0,5 g/24h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 241.6,
+      "y1": 273.0,
+      "text": "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 241.6,
+      "y1": 273.0,
+      "text": "1 g/24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 705.3,
+      "y0": 241.6,
+      "y1": 273.0,
+      "text": "0,5 g/24h"
+     },
+     {
+      "id": 4,
+      "x0": 705.3,
+      "x1": 795.5,
+      "y0": 241.6,
+      "y1": 273.0,
+      "text": "0,25 g/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3,
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "terminale"
+    ],
+    "unselected_cell_ids": [
+     2,
+     4
+    ],
+    "review": true
    },
    {
     "y": 273.0,
     "values": {
      "normorenal": "Infection sévère : 2 g/12h",
      "legere": "Infection sévère : 2 g/12h",
-     "moderee": "2 g/24h",
-     "severe": "1 g/24h",
-     "terminale": "0,5 g/24h"
+     "severe": "1 g/24h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 273.0,
+      "y1": 302.0,
+      "text": "Infection sévère : 2 g/12h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 273.0,
+      "y1": 302.0,
+      "text": "2 g/24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 705.3,
+      "y0": 273.0,
+      "y1": 302.0,
+      "text": "1 g/24h"
+     },
+     {
+      "id": 4,
+      "x0": 705.3,
+      "x1": 795.5,
+      "y0": 273.0,
+      "y1": 302.0,
+      "text": "0,5 g/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3,
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "terminale"
+    ],
+    "unselected_cell_ids": [
+     2,
+     4
+    ],
+    "review": true
    },
    {
     "y": 302.0,
     "values": {
      "normorenal": "Infection très sévère : 2 g/8h",
      "legere": "Infection très sévère : 2 g/8h",
-     "moderee": "1 g/8h",
-     "severe": "1 g/12h",
-     "terminale": "1 g/24h"
+     "severe": "1 g/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 302.0,
+      "y1": 331.1,
+      "text": "Infection très sévère : 2 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 302.0,
+      "y1": 331.1,
+      "text": "1 g/8h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 705.3,
+      "y0": 302.0,
+      "y1": 331.1,
+      "text": "1 g/12h"
+     },
+     {
+      "id": 4,
+      "x0": 705.3,
+      "x1": 795.5,
+      "y0": 302.0,
+      "y1": 331.1,
+      "text": "1 g/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3,
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "terminale"
+    ],
+    "unselected_cell_ids": [
+     2,
+     4
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 4,
@@ -705,6 +2811,81 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 331.1,
+      "y1": 358.7,
+      "text": "≥ 2 g/8h si fonction rénale 120 mL/min : 2 g/ 6h"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 405.5,
+      "y0": 331.1,
+      "y1": 386.3,
+      "text": "2 g/8h"
+     },
+     {
+      "id": 3,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 331.1,
+      "y1": 386.3,
+      "text": "1,5 g/8h"
+     },
+     {
+      "id": 4,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 331.1,
+      "y1": 386.3,
+      "text": "1 g/8h"
+     },
+     {
+      "id": 5,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 331.1,
+      "y1": 386.3,
+      "text": "0,75 g/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      3
+     ],
+     "severe": [
+      4
+     ],
+     "terminale": [
+      5
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 3,
+     "severe": 4,
+     "terminale": 5
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -724,10 +2905,46 @@
      "terminale"
     ],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 358.7,
+      "y1": 386.3,
+      "text": "≥ Si fonction rénale 120 mL/min : 2 g/6h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [],
+     "moderee": [],
+     "severe": [],
+     "terminale": []
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "nearest-fill",
+     "moderee": "nearest-fill",
+     "severe": "nearest-fill",
+     "terminale": "nearest-fill"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": true
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": true
  },
  {
@@ -741,17 +2958,69 @@
      "normorenal": "200 mg/12h",
      "legere": "200 mg/12h",
      "moderee": "200 mg/12h",
-     "severe": "200 mg/12h",
      "terminale": "200 mg/24h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 631.1,
+      "y0": 386.3,
+      "y1": 415.3,
+      "text": "200 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 386.3,
+      "y1": 415.3,
+      "text": "200 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1,
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "severe"
+    ],
+    "unselected_cell_ids": [],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 4,
@@ -770,6 +3039,73 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 415.3,
+      "y1": 444.4,
+      "text": "Posologie standard : 1 à 2 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 415.3,
+      "y1": 444.4,
+      "text": "1 à 2 g/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 415.3,
+      "y1": 444.4,
+      "text": "750 à 1500 mg/12h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 415.3,
+      "y1": 444.4,
+      "text": "750 à 1500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -784,6 +3120,73 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 444.4,
+      "y1": 473.4,
+      "text": "Infection ostéo-articulaire : 100 à 150 mg/kg/24h en 4 à 6 injections ou en continue"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 444.4,
+      "y1": 473.4,
+      "text": "75 à 112,5 mg/kg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 444.4,
+      "y1": 473.4,
+      "text": "50 à 75 mg/kg/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 444.4,
+      "y1": 473.4,
+      "text": "25 à 37,5 mg/kg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -798,10 +3201,78 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 473.4,
+      "y1": 502.5,
+      "text": "Infection méningée : 200 à 300 mg/kg/24h en 4 à 6 injections ou en continue"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 473.4,
+      "y1": 502.5,
+      "text": "150 à 225 mg/kg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 473.4,
+      "y1": 502.5,
+      "text": "100 à 150 mg/kg/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 473.4,
+      "y1": 502.5,
+      "text": "50 à 75 mg/kg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -814,14 +3285,83 @@
     "values": {
      "normorenal": "Infection peu grave : 1 à 2 g/8h",
      "legere": "Infection peu grave : 1 à 2 g/8h",
-     "moderee": "1 à 2 g/8 à 12h",
-     "severe": "1 à 2 g/12 à 24h",
-     "terminale": "0,5 à 1g/24 à 48h"
+     "severe": "1 à 2 g/12 à 24h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 98.4,
+      "y1": 141.9,
+      "text": "Infection peu grave : 1 à 2 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 98.4,
+      "y1": 141.9,
+      "text": "1 à 2 g/8 à 12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 705.3,
+      "y0": 98.4,
+      "y1": 141.9,
+      "text": "1 à 2 g/12 à 24h"
+     },
+     {
+      "id": 4,
+      "x0": 705.3,
+      "x1": 795.5,
+      "y0": 98.4,
+      "y1": 141.9,
+      "text": "0,5 à 1g/24 à 48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3,
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "terminale"
+    ],
+    "unselected_cell_ids": [
+     2,
+     4
+    ],
+    "review": true
    },
    {
     "y": 141.9,
@@ -835,11 +3375,63 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 141.9,
+      "y1": 171.0,
+      "text": "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 795.5,
+      "y0": 141.9,
+      "y1": 171.0,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 5,
@@ -858,10 +3450,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 171.0,
+      "y1": 200.0,
+      "text": "100 à 200 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 171.0,
+      "y1": 200.0,
+      "text": "100 à 200 mg/12 à 24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 171.0,
+      "y1": 200.0,
+      "text": "100 à 200 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -874,18 +3526,88 @@
     "values": {
      "normorenal": "600 mg/12h",
      "legere": "600 mg/12h",
-     "moderee": "400 mg/12h",
      "severe": "300 mg/12h",
      "terminale": "200 mg/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 200.0,
+      "y1": 229.1,
+      "text": "600 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 200.0,
+      "y1": 229.1,
+      "text": "400 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 200.0,
+      "y1": 229.1,
+      "text": "300 mg/12h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 200.0,
+      "y1": 229.1,
+      "text": "200 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 5,
@@ -904,6 +3626,73 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 229.1,
+      "y1": 272.6,
+      "text": "Administration discontinue : 2 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 229.1,
+      "y1": 272.6,
+      "text": "2 g/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 229.1,
+      "y1": 272.6,
+      "text": "2 g/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 229.1,
+      "y1": 272.6,
+      "text": "1 g/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -918,10 +3707,78 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 272.6,
+      "y1": 307.0,
+      "text": "Administration continue : DC de 2 g puis 6 g/24h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 272.6,
+      "y1": 307.0,
+      "text": "DC de 2 g puis 3 g/24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 272.6,
+      "y1": 307.0,
+      "text": "DC de 2 g puis 1 g/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 272.6,
+      "y1": 307.0,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -934,34 +3791,165 @@
     "values": {
      "normorenal": "Administration discontinue : 2 g/8h en perfusion de 2h",
      "legere": "Administration discontinue : 2 g/8h en perfusion de 2h",
-     "moderee": "1 g/8h",
      "severe": "0,75 g/12h",
      "terminale": "0,75 g/24h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 307.0,
+      "y1": 336.0,
+      "text": "Administration discontinue : 2 g/8h en perfusion de 2h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 307.0,
+      "y1": 336.0,
+      "text": "1 g/8h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 307.0,
+      "y1": 336.0,
+      "text": "0,75 g/12h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 307.0,
+      "y1": 336.0,
+      "text": "0,75 g/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    },
    {
     "y": 336.0,
     "values": {
      "normorenal": "Administration en continue : DC de 2 g puis 6 g/24h",
      "legere": "Administration en continue : DC de 2 g puis 6 g/24h",
-     "moderee": "Aucune donnée sur l’administration en continue",
      "severe": "Aucune donnée sur l’administration en continue",
      "terminale": "Aucune donnée sur l’administration en continue"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 336.0,
+      "y1": 365.1,
+      "text": "Administration en continue : DC de 2 g puis 6 g/24h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 795.5,
+      "y0": 336.0,
+      "y1": 365.1,
+      "text": "Aucune donnée sur l’administration en continue"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee"
+    ],
+    "unselected_cell_ids": [],
+    "review": true
    }
   ],
   "notes": [
    "Posologies exprimées en g de ceftazidime"
   ],
-  "review": false
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 365.1,
+    "y1": 379.6,
+    "text": "Posologies exprimées en g de ceftazidime",
+    "reason": "italique"
+   }
+  ],
+  "review": true
  },
  {
   "page": 5,
@@ -973,18 +3961,88 @@
     "values": {
      "normorenal": "500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h",
      "legere": "500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h",
-     "moderee": "500 mg/12h",
      "severe": "250 mg/12h",
      "terminale": "250 mg/24h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 379.6,
+      "y1": 423.2,
+      "text": "500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 379.6,
+      "y1": 423.2,
+      "text": "500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 379.6,
+      "y1": 423.2,
+      "text": "250 mg/12h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 379.6,
+      "y1": 423.2,
+      "text": "250 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 5,
@@ -996,20 +4054,100 @@
     "values": {
      "normorenal": "1 g/8h en perfusion de 60 min Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min",
      "legere": "1 g/8h en perfusion de 60 min Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min",
-     "moderee": "500 mg/8h 1 g/8h",
      "severe": "250 mg /8h 500 mg/8h",
      "terminale": "DC de 500 mg puis 8h plus tard 100 mg/8h DC 1500 mg puis 8h plus tard 300 mg/8h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 423.2,
+      "y1": 499.0,
+      "text": "1 g/8h en perfusion de 60 min Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 423.2,
+      "y1": 499.0,
+      "text": "500 mg/8h 1 g/8h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 423.2,
+      "y1": 499.0,
+      "text": "250 mg /8h 500 mg/8h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 423.2,
+      "y1": 499.0,
+      "text": "DC de 500 mg puis 8h plus tard 100 mg/8h DC 1500 mg puis 8h plus tard 300 mg/8h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [
    "Posologies exprimées en g de ceftolozane"
   ],
-  "review": false
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 499.0,
+    "y1": 513.5,
+    "text": "Posologies exprimées en g de ceftolozane",
+    "reason": "italique"
+   }
+  ],
+  "review": true
  },
  {
   "page": 6,
@@ -1026,10 +4164,56 @@
      "terminale": "Infection modérée : 1 à 2 g/24h Infection sévère : 2 à 4 g/24h Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l’insuffisant rénal"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 98.4,
+      "y1": 156.4,
+      "text": "Infection modérée : 1 à 2 g/24h Infection sévère : 2 à 4 g/24h Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l’insuffisant rénal"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1049,10 +4233,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 156.4,
+      "y1": 185.5,
+      "text": "250 à 500 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 156.4,
+      "y1": 185.5,
+      "text": "250 à 500 mg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 156.4,
+      "y1": 185.5,
+      "text": "250 à 500 mg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1072,10 +4316,78 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 185.5,
+      "y1": 214.6,
+      "text": "2 à 6 g/24h"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 540.9,
+      "y0": 185.5,
+      "y1": 214.6,
+      "text": "2 g/24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 185.5,
+      "y1": 214.6,
+      "text": "1 g/24h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 185.5,
+      "y1": 214.6,
+      "text": "1 g/24 à 48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1095,10 +4407,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 235.6,
+      "y1": 264.6,
+      "text": "1 g/ 24h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 235.6,
+      "y1": 264.6,
+      "text": "500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1110,49 +4474,264 @@
     "y": 264.6,
     "values": {
      "normorenal": "500 mg/6h en perfusion de 30 min",
-     "legere": "500 mg/6h en perfusion de 30 min",
-     "moderee": "500 mg/8h",
-     "severe": "250 mg/6h",
      "terminale": "250 mg/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 360.4,
+      "y0": 264.6,
+      "y1": 306.7,
+      "text": "500 mg/6h en perfusion de 30 min"
+     },
+     {
+      "id": 2,
+      "x0": 360.4,
+      "x1": 495.7,
+      "y0": 264.6,
+      "y1": 306.7,
+      "text": "500 mg/8h"
+     },
+     {
+      "id": 3,
+      "x0": 495.7,
+      "x1": 631.1,
+      "y0": 264.6,
+      "y1": 306.7,
+      "text": "250 mg/6h"
+     },
+     {
+      "id": 4,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 264.6,
+      "y1": 306.7,
+      "text": "250 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1,
+      2
+     ],
+     "moderee": [
+      2,
+      3
+     ],
+     "severe": [
+      3,
+      4
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "legere",
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2,
+     3
+    ],
+    "review": true
    },
    {
     "y": 306.7,
     "values": {
      "normorenal": "1000 mg/8h en perfusion de 30 min",
-     "legere": "1000 mg/8h en perfusion de 30 min",
-     "moderee": "500 mg/6h",
-     "severe": "500 mg/8h",
      "terminale": "500 mg/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 360.4,
+      "y0": 306.7,
+      "y1": 335.8,
+      "text": "1000 mg/8h en perfusion de 30 min"
+     },
+     {
+      "id": 2,
+      "x0": 360.4,
+      "x1": 495.7,
+      "y0": 306.7,
+      "y1": 335.8,
+      "text": "500 mg/6h"
+     },
+     {
+      "id": 3,
+      "x0": 495.7,
+      "x1": 631.1,
+      "y0": 306.7,
+      "y1": 335.8,
+      "text": "500 mg/8h"
+     },
+     {
+      "id": 4,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 306.7,
+      "y1": 335.8,
+      "text": "500 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1,
+      2
+     ],
+     "moderee": [
+      2,
+      3
+     ],
+     "severe": [
+      3,
+      4
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "legere",
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2,
+     3
+    ],
+    "review": true
    },
    {
     "y": 335.8,
     "values": {
      "normorenal": "1000 mg/6h en perfusion de 30 min",
-     "legere": "1000 mg/6h en perfusion de 30 min",
-     "moderee": "750 mg/8h",
-     "severe": "500 mg/6h",
      "terminale": "500 mg/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 360.4,
+      "y0": 335.8,
+      "y1": 364.8,
+      "text": "1000 mg/6h en perfusion de 30 min"
+     },
+     {
+      "id": 2,
+      "x0": 360.4,
+      "x1": 495.7,
+      "y0": 335.8,
+      "y1": 364.8,
+      "text": "750 mg/8h"
+     },
+     {
+      "id": 3,
+      "x0": 495.7,
+      "x1": 631.1,
+      "y0": 335.8,
+      "y1": 364.8,
+      "text": "500 mg/6h"
+     },
+     {
+      "id": 4,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 335.8,
+      "y1": 364.8,
+      "text": "500 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1,
+      2
+     ],
+     "moderee": [
+      2,
+      3
+     ],
+     "severe": [
+      3,
+      4
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "legere",
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2,
+     3
+    ],
+    "review": true
    }
   ],
   "notes": [
    "Posologies exprimées en mg d’Imipénem"
   ],
-  "review": false
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 364.8,
+    "y1": 379.3,
+    "text": "Posologies exprimées en mg d’Imipénem",
+    "reason": "italique"
+   }
+  ],
+  "review": true
  },
  {
   "page": 6,
@@ -1171,11 +4750,97 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 379.3,
+      "y1": 408.4,
+      "text": "500 mg/6h en perfusion de 30 min"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 405.5,
+      "y0": 379.3,
+      "y1": 408.4,
+      "text": "400 mg/6h"
+     },
+     {
+      "id": 3,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 379.3,
+      "y1": 408.4,
+      "text": "300 mg/6h"
+     },
+     {
+      "id": 4,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 379.3,
+      "y1": 408.4,
+      "text": "200 mg/6h"
+     },
+     {
+      "id": 5,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 379.3,
+      "y1": 408.4,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      3
+     ],
+     "severe": [
+      4
+     ],
+     "terminale": [
+      5
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 3,
+     "severe": 4,
+     "terminale": 5
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [
    "Posologies exprimées en mg d’Imipénem"
+  ],
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 408.4,
+    "y1": 422.9,
+    "text": "Posologies exprimées en mg d’Imipénem",
+    "reason": "italique"
+   }
   ],
   "review": false
  },
@@ -1189,14 +4854,74 @@
     "values": {
      "normorenal": "1 à 2 g/8h",
      "legere": "1 à 2 g/8h",
-     "moderee": "1 à 2 g/12h",
-     "severe": "0,5 à 1 g/12h",
      "terminale": "0,5 à 1 g/12h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 422.9,
+      "y1": 452.0,
+      "text": "1 à 2 g/8h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 586.0,
+      "y0": 422.9,
+      "y1": 452.0,
+      "text": "1 à 2 g/12h"
+     },
+     {
+      "id": 3,
+      "x0": 586.0,
+      "x1": 795.5,
+      "y0": 422.9,
+      "y1": 452.0,
+      "text": "0,5 à 1 g/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2,
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    },
    {
     "y": 452.0,
@@ -1208,11 +4933,57 @@
      "terminale": "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 452.0,
+      "y1": 466.5,
+      "text": "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 6,
@@ -1223,21 +4994,101 @@
     "y": 466.5,
     "values": {
      "normorenal": "2 g/8h en perfusion de 3h",
-     "legere": "2 g/8h en perfusion de 3h",
-     "moderee": "2 g/8h en perfusion de 3h",
-     "severe": "1g/8h",
-     "terminale": "0,5g/12h"
+     "legere": "2 g/8h en perfusion de 3h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 495.7,
+      "y0": 466.5,
+      "y1": 495.5,
+      "text": "2 g/8h en perfusion de 3h"
+     },
+     {
+      "id": 2,
+      "x0": 495.7,
+      "x1": 631.1,
+      "y0": 466.5,
+      "y1": 495.5,
+      "text": "1g/8h"
+     },
+     {
+      "id": 3,
+      "x0": 631.1,
+      "x1": 705.3,
+      "y0": 466.5,
+      "y1": 495.5,
+      "text": "1g/12h"
+     },
+     {
+      "id": 4,
+      "x0": 705.3,
+      "x1": 795.5,
+      "y0": 466.5,
+      "y1": 495.5,
+      "text": "0,5g/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2,
+      3
+     ],
+     "terminale": [
+      3,
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "severe",
+     "terminale"
+    ],
+    "unselected_cell_ids": [
+     2,
+     3,
+     4
+    ],
+    "review": true
    }
   ],
   "notes": [
    "Posologies exprimées en g de meropenem"
   ],
-  "review": false
+  "note_cells": [
+   {
+    "id": 1,
+    "x0": 133.9,
+    "x1": 795.5,
+    "y0": 495.5,
+    "y1": 510.0,
+    "text": "Posologies exprimées en g de meropenem",
+    "reason": "italique"
+   }
+  ],
+  "review": true
  },
  {
   "page": 7,
@@ -1256,10 +5107,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 119.4,
+      "y1": 133.9,
+      "text": "15 à 30 mg/kg/j"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 795.5,
+      "y0": 119.4,
+      "y1": 162.9,
+      "text": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 2,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1270,17 +5173,58 @@
    {
     "y": 119.4,
     "values": {
-     "normorenal": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
      "legere": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
      "moderee": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
      "severe": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
-     "terminale": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
+     "terminale": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "normorenal": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
     },
     "full": false,
     "filled": [
      "normorenal"
     ],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 270.1,
+      "x1": 795.5,
+      "y0": 119.4,
+      "y1": 162.9,
+      "text": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1,
+     "normorenal": 1
+    },
+    "mapping_method": {
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap",
+     "normorenal": "nearest-fill"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": true
    },
    {
@@ -1300,10 +5244,46 @@
      "terminale"
     ],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 133.9,
+      "y1": 148.4,
+      "text": "3 à 8 mg/kg/j"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [],
+     "moderee": [],
+     "severe": [],
+     "terminale": []
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "nearest-fill",
+     "moderee": "nearest-fill",
+     "severe": "nearest-fill",
+     "terminale": "nearest-fill"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": true
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": true
  },
  {
@@ -1314,17 +5294,58 @@
    {
     "y": 119.4,
     "values": {
-     "normorenal": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
      "legere": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
      "moderee": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
      "severe": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
-     "terminale": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
+     "terminale": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses.",
+     "normorenal": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
     },
     "full": false,
     "filled": [
      "normorenal"
     ],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 270.1,
+      "x1": 795.5,
+      "y0": 119.4,
+      "y1": 162.9,
+      "text": "En cas de situation clinique justifiant l’administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d’espacer les doses."
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1,
+     "normorenal": 1
+    },
+    "mapping_method": {
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap",
+     "normorenal": "nearest-fill"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": true
    },
    {
@@ -1344,10 +5365,46 @@
      "terminale"
     ],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 148.4,
+      "y1": 162.9,
+      "text": "3 à 8 mg/kg/j"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [],
+     "moderee": [],
+     "severe": [],
+     "terminale": []
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "nearest-fill",
+     "moderee": "nearest-fill",
+     "severe": "nearest-fill",
+     "terminale": "nearest-fill"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": true
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": true
  },
  {
@@ -1367,10 +5424,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 183.9,
+      "y1": 213.0,
+      "text": "500 à 750 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 183.9,
+      "y1": 213.0,
+      "text": "250-500 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 183.9,
+      "y1": 213.0,
+      "text": "250-500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1390,10 +5507,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 213.0,
+      "y1": 242.0,
+      "text": "400 mg/8 à 12h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 213.0,
+      "y1": 242.0,
+      "text": "400 mg/12h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 213.0,
+      "y1": 242.0,
+      "text": "400 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1413,10 +5590,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 242.0,
+      "y1": 271.1,
+      "text": "450 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 242.0,
+      "y1": 271.1,
+      "text": "Déconseillé"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1436,10 +5665,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 271.1,
+      "y1": 300.1,
+      "text": "300 mg/ 12 h en perfusion de 60 min"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 271.1,
+      "y1": 300.1,
+      "text": "200 mg/12 h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 271.1,
+      "y1": 300.1,
+      "text": "Déconseillé"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1459,6 +5748,73 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 300.1,
+      "y1": 333.0,
+      "text": "500 mg/12 à 24h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 300.1,
+      "y1": 333.0,
+      "text": "DC de 500 mg puis 250 mg/12 à 24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 300.1,
+      "y1": 333.0,
+      "text": "DC de 500 mg puis 250 mg/24 à 48h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 300.1,
+      "y1": 333.0,
+      "text": "DC de 500 mg puis 125 à 250 mg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -1466,18 +5822,79 @@
     "values": {
      "normorenal": "Cystite non compliquée : 250 mg /24h",
      "legere": "Cystite non compliquée : 250 mg /24h",
-     "moderee": "DC de 250 mg puis 125 mg/24h",
-     "severe": "DC de 250 mg puis 125 mg/24h",
      "terminale": "DC de 250 mg puis 125 mg/48h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 333.0,
+      "y1": 365.9,
+      "text": "Cystite non compliquée : 250 mg /24h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 631.1,
+      "y0": 333.0,
+      "y1": 365.9,
+      "text": "DC de 250 mg puis 125 mg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 333.0,
+      "y1": 365.9,
+      "text": "DC de 250 mg puis 125 mg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2,
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 7,
@@ -1494,10 +5911,56 @@
      "terminale": "400 mg/24h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 365.9,
+      "y1": 394.9,
+      "text": "400 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1517,10 +5980,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 394.9,
+      "y1": 424.0,
+      "text": "400 mg/12 à 24 h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 394.9,
+      "y1": 424.0,
+      "text": "400 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1533,32 +6048,153 @@
     "values": {
      "normorenal": "Dose usuelle : 200 mg/12h",
      "legere": "Dose usuelle : 200 mg/12h",
-     "moderee": "200 mg/24h",
-     "severe": "200 mg/24h",
      "terminale": "200 mg/48h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 424.0,
+      "y1": 453.0,
+      "text": "Dose usuelle : 200 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 631.1,
+      "y0": 424.0,
+      "y1": 453.0,
+      "text": "200 mg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 424.0,
+      "y1": 453.0,
+      "text": "200 mg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2,
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    },
    {
     "y": 453.0,
     "values": {
      "normorenal": "Infection sévère : 400 mg/12h",
      "legere": "Infection sévère : 400 mg/12h",
-     "moderee": "400 mg/24h",
-     "severe": "400 mg/24h",
      "terminale": "200 mg/24h OU 400 mg/48h"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 453.0,
+      "y1": 482.1,
+      "text": "Infection sévère : 400 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 631.1,
+      "y0": 453.0,
+      "y1": 482.1,
+      "text": "400 mg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 631.1,
+      "x1": 795.5,
+      "y0": 453.0,
+      "y1": 482.1,
+      "text": "200 mg/24h OU 400 mg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      2,
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "severe"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 8,
@@ -1577,10 +6213,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 116.6,
+      "y1": 145.6,
+      "text": "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 116.6,
+      "y1": 145.6,
+      "text": "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1600,10 +6288,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 145.6,
+      "y1": 172.8,
+      "text": "1200 mg (dose unique) en perfusion de 3h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 145.6,
+      "y1": 172.8,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1623,6 +6363,65 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 172.8,
+      "y1": 230.9,
+      "text": "Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 172.8,
+      "y1": 230.9,
+      "text": "DC de 6 mg/kg/12h les 3 premières injections puis 3 mg/kg/24h ou 6 mg/kg/48h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 172.8,
+      "y1": 230.9,
+      "text": "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -1637,10 +6436,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 230.9,
+      "y1": 289.0,
+      "text": "Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 230.9,
+      "y1": 289.0,
+      "text": "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 6 mg/kg/24h ou 12 mg/kg/48h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 230.9,
+      "y1": 289.0,
+      "text": "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1658,10 +6517,56 @@
      "terminale": "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours."
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 289.0,
+      "y1": 312.9,
+      "text": "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours."
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1681,10 +6586,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 312.9,
+      "y1": 355.7,
+      "text": "DC 30 mg/kg en perfusion de 2h puis : 20 à 40 mg/kg/j"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 795.5,
+      "y0": 312.9,
+      "y1": 355.7,
+      "text": "DC, puis adapter en fonction de la concentration plasmatique à l’équilibre"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 2,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1702,10 +6659,56 @@
      "terminale": "Traitement des infections à Clostridium difficile (ICD) : 125 mg/ 6h pendant 10 jours pour un 1er épisode d'ICD non sévère. Cette dose peut être augmentée à 500 mg/6h pendant 10 jours en cas d'ICD sévère ou compliquée. La dose maximale journalière ne devrait pas dépasser 2g."
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 355.7,
+      "y1": 396.7,
+      "text": "Traitement des infections à Clostridium difficile (ICD) : 125 mg/ 6h pendant 10 jours pour un 1er épisode d'ICD non sévère. Cette dose peut être augmentée à 500 mg/6h pendant 10 jours en cas d'ICD sévère ou compliquée. La dose maximale journalière ne devrait pas dépasser 2g."
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1725,6 +6728,57 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 415.7,
+      "y1": 435.9,
+      "text": "250 mg/6h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 415.7,
+      "y1": 435.9,
+      "text": "250 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -1739,6 +6793,57 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 435.9,
+      "y1": 456.2,
+      "text": "500 mg/8h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 435.9,
+      "y1": 456.2,
+      "text": "250 mg/8h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -1753,10 +6858,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 456.2,
+      "y1": 476.3,
+      "text": "500 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 456.2,
+      "y1": 476.3,
+      "text": "500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1776,6 +6933,57 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 476.3,
+      "y1": 496.5,
+      "text": "500 mg/8h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 476.3,
+      "y1": 496.5,
+      "text": "250 mg/8h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -1790,10 +6998,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 496.5,
+      "y1": 516.6,
+      "text": "750 mg/8h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 496.5,
+      "y1": 516.6,
+      "text": "375 mg/8h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1811,10 +7071,56 @@
      "terminale": "Infection à germes anaérobies : 1 à 1,5g /24h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 516.6,
+      "y1": 539.8,
+      "text": "Infection à germes anaérobies : 1 à 1,5g /24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1832,10 +7138,56 @@
      "terminale": "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 125.1,
+      "y1": 154.2,
+      "text": "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1855,6 +7207,57 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 154.2,
+      "y1": 175.8,
+      "text": "250 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 154.2,
+      "y1": 175.8,
+      "text": "250 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -1869,10 +7272,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 175.8,
+      "y1": 197.4,
+      "text": "500 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 175.8,
+      "y1": 197.4,
+      "text": "500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1892,10 +7347,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 197.4,
+      "y1": 219.0,
+      "text": "500 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 197.4,
+      "y1": 219.0,
+      "text": "500 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1913,10 +7420,56 @@
      "terminale": "600 mg/6 à 8h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 219.0,
+      "y1": 248.0,
+      "text": "600 mg/6 à 8h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1936,10 +7489,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 248.0,
+      "y1": 277.1,
+      "text": "1 g/8 à 12h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 248.0,
+      "y1": 277.1,
+      "text": "500 à 750 mg/8 à 12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1957,10 +7562,56 @@
      "terminale": "1 g/8 à 12h (posologie maximale = 4 g/24h)"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 277.1,
+      "y1": 306.1,
+      "text": "1 g/8 à 12h (posologie maximale = 4 g/24h)"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -1980,10 +7631,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 306.1,
+      "y1": 335.2,
+      "text": "150 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 306.1,
+      "y1": 335.2,
+      "text": "150 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2001,6 +7704,51 @@
      "terminale": "Per os : 3 MUI/8 à 12h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 335.2,
+      "y1": 364.2,
+      "text": "Per os : 3 MUI/8 à 12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -2013,10 +7761,56 @@
      "terminale": "IV : 1,5 à 3 MUI/8h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 364.2,
+      "y1": 393.2,
+      "text": "IV : 1,5 à 3 MUI/8h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2036,10 +7830,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 670.6,
+      "y0": 393.2,
+      "y1": 448.5,
+      "text": "1,5 MUI (spiramycine) + 250 mg (métronidazole) /8h"
+     },
+     {
+      "id": 2,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 393.2,
+      "y1": 448.5,
+      "text": "1,5 MUI (spiramycine) + 125 mg (métronidazole) /8h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2059,10 +7905,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 118.6,
+      "y1": 156.6,
+      "text": "800 mg de sulfaméthoxazole + 160 mg de triméthoprime / 12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 118.6,
+      "y1": 156.6,
+      "text": "800 mg/160 mg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 118.6,
+      "y1": 156.6,
+      "text": "Contre-indiqué"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2082,10 +7988,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 156.6,
+      "y1": 211.8,
+      "text": "Préventif : 2 g/j Curatif : 4 à 6 g/j en 4 à 6 prises"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 540.9,
+      "y0": 156.6,
+      "y1": 211.8,
+      "text": "Réduction de la posologie"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 156.6,
+      "y1": 211.8,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2105,10 +8071,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 211.8,
+      "y1": 250.9,
+      "text": "Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 211.8,
+      "y1": 250.9,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2126,10 +8144,56 @@
      "terminale": "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 271.9,
+      "y1": 333.5,
+      "text": "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2149,6 +8213,57 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 333.5,
+      "y1": 354.0,
+      "text": "300 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 795.5,
+      "y0": 333.5,
+      "y1": 354.0,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 2,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -2163,10 +8278,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 354.0,
+      "y1": 374.5,
+      "text": "Acné : 300 mg/24h"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 795.5,
+      "y0": 354.0,
+      "y1": 374.5,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 2,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2184,10 +8351,56 @@
      "terminale": "200 mg/j en 2 prises"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 374.5,
+      "y1": 408.9,
+      "text": "200 mg/j en 2 prises"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2205,6 +8418,51 @@
      "terminale": "Infection non sévère : DC de 100 mg puis 50 mg/12h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 408.9,
+      "y1": 437.9,
+      "text": "Infection non sévère : DC de 100 mg puis 50 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -2217,10 +8475,56 @@
      "terminale": "Infection sévère : DC de 200 mg puis 100 mg/12h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 437.9,
+      "y1": 467.0,
+      "text": "Infection sévère : DC de 200 mg puis 100 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2238,10 +8542,56 @@
      "terminale": "500 mg/8 à 12h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 118.6,
+      "y1": 150.1,
+      "text": "500 mg/8 à 12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2254,18 +8604,88 @@
     "values": {
      "normorenal": "DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations",
      "legere": "DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations",
-     "moderee": "DC de 9 MUI puis 5,5 à 7,5 MUI/24h en 2 perfusions",
-     "severe": "DC de 9 MUI puis 4,5 à 5,5 MUI/24h en 2 perfusions",
-     "terminale": "DC de 9 MUI puis 3,5 MUI/24h en 2 perfusions"
+     "severe": "DC de 9 MUI puis 4,5 à 5,5 MUI/24h en 2 perfusions"
     },
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 450.6,
+      "y0": 150.1,
+      "y1": 208.2,
+      "text": "DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations"
+     },
+     {
+      "id": 2,
+      "x0": 450.6,
+      "x1": 540.9,
+      "y0": 150.1,
+      "y1": 208.2,
+      "text": "DC de 9 MUI puis 5,5 à 7,5 MUI/24h en 2 perfusions"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 705.3,
+      "y0": 150.1,
+      "y1": 208.2,
+      "text": "DC de 9 MUI puis 4,5 à 5,5 MUI/24h en 2 perfusions"
+     },
+     {
+      "id": 4,
+      "x0": 705.3,
+      "x1": 795.5,
+      "y0": 150.1,
+      "y1": 208.2,
+      "text": "DC de 9 MUI puis 3,5 MUI/24h en 2 perfusions"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1,
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3,
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "severe": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "severe": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "moderee",
+     "terminale"
+    ],
+    "unselected_cell_ids": [
+     2,
+     4
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 11,
@@ -2284,6 +8704,57 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 208.2,
+      "y1": 241.1,
+      "text": "Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 208.2,
+      "y1": 241.1,
+      "text": "6 à 8 mg/kg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -2298,10 +8769,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 241.1,
+      "y1": 274.0,
+      "text": "Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 241.1,
+      "y1": 274.0,
+      "text": "Aucune donnée au-delà de 10 mg/kg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2319,10 +8842,56 @@
      "terminale": "200 mg/12h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 274.0,
+      "y1": 306.9,
+      "text": "200 mg/12h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2340,10 +8909,56 @@
      "terminale": "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 306.9,
+      "y1": 339.7,
+      "text": "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2363,10 +8978,78 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 339.7,
+      "y1": 372.6,
+      "text": "8 à 16 g/24h, en perfusion de 4 g, sur 30 min à 4h, toutes les 6 à 12h (max 8 g/prise)"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 339.7,
+      "y1": 372.6,
+      "text": "4 g toutes les 12 à 24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 670.6,
+      "y0": 339.7,
+      "y1": 372.6,
+      "text": "4 g toutes les 36 à 48h"
+     },
+     {
+      "id": 4,
+      "x0": 670.6,
+      "x1": 795.5,
+      "y0": 339.7,
+      "y1": 372.6,
+      "text": "2 g toutes les 48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      4
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 4
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2386,6 +9069,57 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 372.6,
+      "y1": 404.1,
+      "text": "600 mg/12h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 372.6,
+      "y1": 404.1,
+      "text": "600 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -2400,10 +9134,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 404.1,
+      "y1": 435.5,
+      "text": "Infections graves de réanimation : 600 mg/8h"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 404.1,
+      "y1": 435.5,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2423,10 +9209,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 435.5,
+      "y1": 467.0,
+      "text": "100 mg/8h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 435.5,
+      "y1": 467.0,
+      "text": "Déconseillé"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 435.5,
+      "y1": 467.0,
+      "text": "Contre-indiqué"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2444,10 +9290,56 @@
      "terminale": "200 mg/24h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 467.0,
+      "y1": 498.4,
+      "text": "200 mg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2467,10 +9359,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 118.6,
+      "y1": 168.0,
+      "text": "Semaines 1 et 2 : 400 mg, 1 fois par jour Semaines 3 à 24 : 200 mg, 3 fois par semaine, avec un intervalle d’au moins 48 heures entre chaque prise"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 118.6,
+      "y1": 168.0,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2490,10 +9434,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 168.0,
+      "y1": 199.4,
+      "text": "100 mg deux fois par jour pendant 24 semaines"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 168.0,
+      "y1": 199.4,
+      "text": "Aucune donnée"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2505,7 +9501,6 @@
     "y": 199.4,
     "values": {
      "normorenal": "15 à 20 mg/kg/24h (25 mg/kg/j maximum)",
-     "legere": "15 mg/kg/j",
      "moderee": "10 mg/kg/j",
      "severe": "10 mg/kg/j",
      "terminale": "10 mg/kg/j"
@@ -2513,11 +9508,74 @@
     "full": false,
     "filled": [],
     "missing": [],
-    "review": false
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 199.4,
+      "y1": 237.4,
+      "text": "15 à 20 mg/kg/24h (25 mg/kg/j maximum)"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 360.4,
+      "y0": 199.4,
+      "y1": 237.4,
+      "text": "15 mg/kg/j"
+     },
+     {
+      "id": 3,
+      "x0": 360.4,
+      "x1": 795.5,
+      "y0": 199.4,
+      "y1": 237.4,
+      "text": "10 mg/kg/j"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2,
+      3
+     ],
+     "moderee": [
+      3
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "moderee": 3,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [
+     "legere"
+    ],
+    "unselected_cell_ids": [
+     2
+    ],
+    "review": true
    }
   ],
   "notes": [],
-  "review": false
+  "note_cells": [],
+  "review": true
  },
  {
   "page": 12,
@@ -2536,10 +9594,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 270.1,
+      "y0": 237.4,
+      "y1": 275.3,
+      "text": "4 à 5 mg/kg/24h (300 mg/j maximum)"
+     },
+     {
+      "id": 2,
+      "x0": 270.1,
+      "x1": 540.9,
+      "y0": 237.4,
+      "y1": 275.3,
+      "text": "3 à 5 mg/kg/24h"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 237.4,
+      "y1": 275.3,
+      "text": "3 à 5 mg/kg/24h (200 mg/j maximum)"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      2
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 2,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2559,10 +9677,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 275.3,
+      "y1": 299.8,
+      "text": "30 mg/kg/24h en 1 prise /j"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 275.3,
+      "y1": 299.8,
+      "text": "30 mg/kg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2582,6 +9752,57 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 299.8,
+      "y1": 373.6,
+      "text": "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 299.8,
+      "y1": 373.6,
+      "text": "Poids > 50 kg : 300 mg/24h Poids < 50 kg : 450 mg/48h Si association avec la Clarithromycine : 150 mg/j"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -2596,10 +9817,62 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 540.9,
+      "y0": 373.6,
+      "y1": 427.2,
+      "text": "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j"
+     },
+     {
+      "id": 2,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 373.6,
+      "y1": 427.2,
+      "text": "150 mg/24h Si association avec Indinavir ou Nelfinavir : 150 mg/48h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      2
+     ],
+     "terminale": [
+      2
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 2,
+     "terminale": 2
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  },
  {
@@ -2617,6 +9890,51 @@
      "terminale": "Tuberculose : 8 à 12 mg/kg/24h"
     },
     "full": true,
+    "filled": [],
+    "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 795.5,
+      "y0": 427.2,
+      "y1": 458.7,
+      "text": "Tuberculose : 8 à 12 mg/kg/24h"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      1
+     ],
+     "severe": [
+      1
+     ],
+     "terminale": [
+      1
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 1,
+     "severe": 1,
+     "terminale": 1
+    },
+    "mapping_method": {
+     "normorenal": "full-width",
+     "legere": "full-width",
+     "moderee": "full-width",
+     "severe": "full-width",
+     "terminale": "full-width"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    },
    {
@@ -2631,10 +9949,70 @@
     "full": false,
     "filled": [],
     "missing": [],
+    "source_cells": [
+     {
+      "id": 1,
+      "x0": 133.9,
+      "x1": 405.5,
+      "y0": 458.7,
+      "y1": 502.1,
+      "text": "Infection à germes gram + ou - : 20 à 30 mg/kg/24h"
+     },
+     {
+      "id": 2,
+      "x0": 405.5,
+      "x1": 540.9,
+      "y0": 458.7,
+      "y1": 502.1,
+      "text": "espacer les prises si besoin me selon rifampicémie du 2 ou me 3 jour du traitement"
+     },
+     {
+      "id": 3,
+      "x0": 540.9,
+      "x1": 795.5,
+      "y0": 458.7,
+      "y1": 502.1,
+      "text": "espacement des prises indispensable"
+     }
+    ],
+    "stage_cells": {
+     "normorenal": [
+      1
+     ],
+     "legere": [
+      1
+     ],
+     "moderee": [
+      2
+     ],
+     "severe": [
+      3
+     ],
+     "terminale": [
+      3
+     ]
+    },
+    "mapped_cell": {
+     "normorenal": 1,
+     "legere": 1,
+     "moderee": 2,
+     "severe": 3,
+     "terminale": 3
+    },
+    "mapping_method": {
+     "normorenal": "majority-overlap",
+     "legere": "majority-overlap",
+     "moderee": "majority-overlap",
+     "severe": "majority-overlap",
+     "terminale": "majority-overlap"
+    },
+    "ambiguous_stages": [],
+    "unselected_cell_ids": [],
     "review": false
    }
   ],
   "notes": [],
+  "note_cells": [],
   "review": false
  }
 ]

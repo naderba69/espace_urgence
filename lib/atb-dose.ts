@@ -3,60 +3,202 @@
 // quantité absolue pour un poids donné. Fonctions pures, testées (__tests__/atb-renal.test.ts).
 //
 // ⚠️ Le texte source n'est JAMAIS modifié ni interprété au-delà de ce qu'il dit :
-//    on ne calcule que ce qui est explicitement pondéral (`mg/kg`). Tout le reste (doses
-//    fixes en mg/g/MUI, « DC », « Aucune donnée », « Déconseillé ») est laissé tel quel.
-//    ⚠️ لا يُحسب إلا ما ورد وزنيًا في المصدر (mg/kg)؛ كل ما هو ثابت يُترك كما هو.
+//    seules les quantités explicitement pondérales (`mg/kg`) sont converties. Les doses fixes
+//    en mg/g/MUI et les valeurs non calculables restent inchangées. Une dose de charge `mg/kg`
+//    est convertie en quantité, sans reconstruire le schéma complet ni inférer un nombre de prises.
+//    ⚠️ تُحوَّل الكمية المذكورة صراحةً بوحدة mg/kg فقط، حتى في جرعة التحميل؛ ولا يُستنتج نظام
+//    إعطاء غير مذكور. الجرعات الثابتة والنصوص غير القابلة للحساب تبقى كما هي.
 
 export interface WeightDose {
   /** المقطع الأصلي من النصّ الذي حُسب — fragment source (français). */
   source: string;
-  /** المجال بالملّيغرام: الأدنى (والأعلى إن كان النصّ مجالاً). */
+  /** المجال العددي بوحدة mg/kg كما ورد في المصدر. */
   lowMg: number;
   highMg: number;
-  /** الفاصل الزمني بالساعات كما ورد (24, 12, 8, 48, 72) أو null إن كان «/j» أو مجهولاً. */
+  /** الفاصل بالساعات كما ورد؛ «/j» و«1 fois/24h» يمثّلان 24 ساعة. */
   intervalH: number | null;
-  /** true إذا كان النصّ يعني «/24h» أو «/j» (جرعة يومية). */
+  /** true إذا كانت الكمية المذكورة مجموع جرعة 24 ساعة. */
   per24h: boolean;
-  /** عدد الجرعات اليومية المستخرج من « en N injections/prises/perfusions » إن وُجد. */
+  /** عدد الجرعات اليومي فقط إذا كان ثابتاً ومذكوراً صراحة. */
   dosesPerDay: number | null;
+}
+
+export type WeightDoseRefusal = "source-check" | "unsupported-maximum";
+
+export interface WeightDoseCalculation {
+  text: string | null;
+  /** سبب حجب الحساب؛ لا يُستخدم لاختيار جرعة بديلة. */
+  refusal: WeightDoseRefusal | null;
 }
 
 /** الحدّ الأدنى للتحويل إلى غرام: 1000 مغ. */
 const G_THRESHOLD = 1000;
 
-// مجالات الجرعة كما ترد في الجدول: « 15 à 30 mg/kg/j », « 100 mg/kg/24h », « 6 à 8 mg/kg/12h »…
-const WEIGHT_RE = /(\d+(?:[.,]\d+)?)\s*(?:à\s*(\d+(?:[.,]\d+)?)\s*)?mg\/kg(?:\s*\/\s*(\d+)\s*h|\s*\/\s*j(?:our)?)?/g;
-const PER_DOSE_RE = /(\d+)\s*(?:injections?|prises?|perfusions?|administrations?)/;
-/** عبارات تُبطل الحساب لأنّ الجرعة فيها ثابتة أو ممنوعة أو منقوصة الوصف. */
-const NO_COMPUTE_RE = /(dose unique|Aucune donnée|Déconseillé|Contre-indiqué|Réduction de la posologie|½ dose|¼ dose)/i;
+// مجالات الجرعة كما ترد في خلايا الجدول: «15 à 30 mg/kg/j»، «100 mg/kg/24h»…
+const WEIGHT_RE = /(\d+(?:[.,]\d+)?)\s*(?:à\s*(\d+(?:[.,]\d+)?)\s*)?mg\s*\/\s*kg(?:\s*\/\s*(\d+)\s*h|\s*\/\s*j(?:our)?)?/g;
+const PER_DOSE_RE = /\ben\s+(\d+)\s+(?:injections?|prises?|perfusions?|administrations?)\b/i;
+const ONCE_PER_DAY_RE = /\b(?:1|une)\s*fois\s*(?:\/\s*(?:24\s*h|j)|par\s+jour)\b/i;
+/** عبارات تُبطل الحساب لأنّ المصدر لا يقدّم جرعة رقمية وحيدة قابلة للحساب. */
+const NO_COMPUTE_RE = /(dose unique|Aucune donnée|Déconseillé|Contre-indiqué|Réduction de la posologie|½\s*dose|¼\s*dose|1\s*\/\s*2\s*dose|1\s*\/\s*4\s*dose)/i;
+const MAXIMUM_MARKER_RE = /(?:\bmax(?:imum|imale)?\b|sans\s+d[ée]passer|(?:dose|posologie)\s+max)/i;
+
+interface WeightDoseCap {
+  maxMg: number;
+  /** الحدّ مكتوب mg/kg (لا mg أو g مطلقة). */
+  perKg: boolean;
+  /** «/24h» أو «/j» أو لكل جرعة؛ null تعني أن الوحدة الزمنية غير محددة. */
+  period: "24h" | "dose" | null;
+  source: string;
+  start: number;
+  end: number;
+}
+
+interface ParsedWeightDose {
+  dose: WeightDose;
+  start: number;
+  end: number;
+}
+
+interface WeightDoseAnalysis {
+  doses: ParsedWeightDose[];
+  cap: WeightDoseCap | null;
+  refusal: WeightDoseRefusal | null;
+}
 
 const num = (s: string): number => parseFloat(s.replace(",", "."));
 
-/** يستخرج كل المقاطع الوزنية القابلة للحساب من نصّ جرعة واحد. */
-export function parseWeightDoses(text: string): WeightDose[] {
-  if (!text || NO_COMPUTE_RE.test(text)) return [];
-  const out: WeightDose[] = [];
-  for (const m of text.matchAll(WEIGHT_RE)) {
-    const low = num(m[1]);
-    const high = m[2] ? num(m[2]) : low;
-    const rawInterval = m[3] ? parseInt(m[3], 10) : null;
-    // « mg/kg/j » (sans nombre) vaut 24 h ; « mg/kg » seul = dose unitaire (intervalle inconnu)
-    const per24h = /mg\/kg\s*\/\s*j/.test(m[0]) || rawInterval === 24;
-    out.push({
-      source: m[0],
-      lowMg: low,
-      highMg: high,
-      intervalH: rawInterval,
-      per24h,
-      dosesPerDay: null,
+function periodFromText(value: string | undefined): WeightDoseCap["period"] {
+  if (!value) return null;
+  if (/prise/i.test(value)) return "dose";
+  if (/24|j/i.test(value)) return "24h";
+  return null;
+}
+
+function capToMg(amount: string, unit: string): number {
+  const value = num(amount);
+  return unit.toLowerCase() === "g" ? value * 1000 : value;
+}
+
+/**
+ * Extrait uniquement les plafonds explicitement chiffrés et munis de leur unité.
+ * Les formes visées sont celles présentes dans le PDF : « sans dépasser 4 g/24h »,
+ * « 300 mg/j maximum » et « 25 mg/kg/j maximum ». Toute autre forme reste bloquée.
+ */
+function parseWeightDoseCaps(text: string): WeightDoseCap[] {
+  const caps: WeightDoseCap[] = [];
+  const add = (
+    match: RegExpMatchArray,
+    amount: string,
+    unit: string,
+    perKg: boolean,
+    periodText: string | undefined,
+  ) => {
+    const start = match.index ?? 0;
+    caps.push({
+      maxMg: capToMg(amount, unit),
+      perKg,
+      period: periodFromText(periodText),
+      source: match[0],
+      start,
+      end: start + match[0].length,
     });
+  };
+
+  // « sans dépasser 4 g/24h », « maximum 300 mg/j », « max 25 mg/kg/j ».
+  const prefix = /\b(?:sans\s+d[ée]passer|(?:dose|posologie)\s+max(?:imum|imale)?|max(?:imum|imale)?)\s*(?:(?:de|=|:)\s*)?(\d+(?:[.,]\d+)?)\s*(mg|g)\s*(?:\/\s*(kg)\s*(?:\/\s*(24\s*h|j(?:our)?|prise))?|\/\s*(24\s*h|j(?:our)?|prise))?/gi;
+  for (const match of text.matchAll(prefix)) {
+    add(match, match[1], match[2], Boolean(match[3]), match[4] ?? match[5]);
   }
-  if (!out.length) return [];
-  // « … en 4 injections » : le nombre de prises ne concerne que le DERNIER fragment
-  // (c'est la forme rencontrée dans le tableau : « 100 mg/kg/24h en 4 injections »).
-  const perDose = text.match(PER_DOSE_RE);
-  if (perDose) out[out.length - 1].dosesPerDay = parseInt(perDose[1], 10);
-  return out;
+
+  // Plafonds dont « maximum » est placé après la quantité dans la cellule PDF.
+  const suffixPerKg = /(\d+(?:[.,]\d+)?)\s*mg\s*\/\s*kg\s*\/\s*(24\s*h|j(?:our)?)\s*(?:maximum|max(?:imale)?)\b/gi;
+  for (const match of text.matchAll(suffixPerKg)) {
+    add(match, match[1], "mg", true, match[2]);
+  }
+  const suffixAbsolute = /(\d+(?:[.,]\d+)?)\s*(mg|g)\s*\/\s*(24\s*h|j(?:our)?|prise)\s*(?:maximum|max(?:imale)?)\b/gi;
+  for (const match of text.matchAll(suffixAbsolute)) {
+    add(match, match[1], match[2], false, match[3]);
+  }
+
+  // Un plafond peut correspondre à la forme préfixe et suffixe simultanément (ex. « max … maximum »).
+  // Dédupliquer seulement les mêmes limites qui se chevauchent, sans fusionner des limites différentes.
+  const unique: WeightDoseCap[] = [];
+  for (const cap of caps.sort((a, b) => a.start - b.start)) {
+    const duplicate = unique.some((existing) =>
+      existing.start < cap.end && cap.start < existing.end
+      && existing.maxMg === cap.maxMg
+      && existing.perKg === cap.perKg
+      && existing.period === cap.period,
+    );
+    if (!duplicate) unique.push(cap);
+  }
+  return unique;
+}
+
+function analyzeWeightDoses(text: string): WeightDoseAnalysis {
+  if (!text || NO_COMPUTE_RE.test(text)) {
+    return {
+      doses: [],
+      cap: null,
+      refusal: /mg\s*\/\s*kg/i.test(text) && NO_COMPUTE_RE.test(text) ? "source-check" : null,
+    };
+  }
+
+  const caps = parseWeightDoseCaps(text);
+  const maximumMentioned = MAXIMUM_MARKER_RE.test(text);
+  const rawMatches = Array.from(text.matchAll(WEIGHT_RE));
+  const matches = rawMatches.filter((match) => {
+    const start = match.index ?? 0;
+    const end = start + match[0].length;
+    // « 25 mg/kg/j maximum » est un plafond, pas une seconde posologie.
+    return !caps.some((cap) => start < cap.end && cap.start < end);
+  });
+
+  const doses = matches.map((match, index): ParsedWeightDose => {
+    const low = num(match[1]);
+    const high = match[2] ? num(match[2]) : low;
+    const rawInterval = match[3] ? parseInt(match[3], 10) : null;
+    const start = (match.index ?? 0) + match[0].length;
+    const end = matches[index + 1]?.index ?? text.length;
+    // N'associer fréquence et dose que dans le fragment immédiatement concerné, avant « ou/puis ».
+    // Une fourchette (« en 4 à 6 injections ») n'est jamais ramenée arbitrairement à un nombre.
+    const localText = text.slice(start, end).split(/\b(?:ou|puis)\b/i, 1)[0];
+    const perDose = localText.match(PER_DOSE_RE);
+    const oncePerDay = ONCE_PER_DAY_RE.test(localText);
+    const per24h = rawInterval === 24 || /\/\s*j(?:our)?\b/i.test(match[0]) || oncePerDay;
+
+    return {
+      dose: {
+        source: match[0],
+        lowMg: low,
+        highMg: high,
+        intervalH: rawInterval ?? (oncePerDay ? 24 : null),
+        per24h,
+        dosesPerDay: perDose ? parseInt(perDose[1], 10) : oncePerDay ? 1 : null,
+      },
+      start: match.index ?? 0,
+      end: (match.index ?? 0) + match[0].length,
+    };
+  });
+
+  // Une dose fixe n'appelle aucun calcul mg/kg, même si la cellule précise un maximum.
+  if (doses.length === 0) return { doses, cap: null, refusal: null };
+  if (maximumMentioned && caps.length === 0) {
+    return { doses, cap: null, refusal: "unsupported-maximum" };
+  }
+  if (caps.length > 1 || (caps.length === 1 && doses.length !== 1)) {
+    return { doses, cap: null, refusal: "unsupported-maximum" };
+  }
+  const cap = caps[0] ?? null;
+  if (cap && cap.period === null) return { doses, cap: null, refusal: "unsupported-maximum" };
+  return { doses, cap, refusal: null };
+}
+
+/** يستخرج المقاطع الوزنية القابلة للحساب؛ الحدود القصوى لا تعود كأنها جرعات مستقلة. */
+export function parseWeightDoses(text: string): WeightDose[] {
+  const analysis = analyzeWeightDoses(text);
+  if (analysis.refusal) return [];
+  return analysis.doses.map(({ dose }) => dose);
 }
 
 /** تنسيق كمية بالملّيغرام: غرام عندما ≥ 1000 مغ، مع تقليم الأصفار. */
@@ -69,52 +211,156 @@ export function fmtMass(mg: number, lang: "fr" | "ar"): string {
   return toAr(`${Math.round(mg * 10) / 10} mg`);
 }
 
-/**
- * يحوّل نصّ جرعة إلى جملة مقدار مطلق للوزن المعطى، أو null إذا لا شيء وزنيّ قابل للحساب.
- * Exemple : `100 mg/kg/24h en 4 injections` à 70 kg → « ≈ 7 g/24h · 1,75 g par prise (4 prises) ».
- */
-export function weightDoseText(text: string, weightKg: number, lang: "fr" | "ar"): string | null {
-  if (!Number.isFinite(weightKg) || weightKg <= 0) return null;
-  const parts = parseWeightDoses(text);
-  if (!parts.length) return null;
-  const chunks = parts.map((p) => {
-    const lo = p.lowMg * weightKg;
-    const hi = p.highMg * weightKg;
-    // كتلة الجرعة: رقم واحد أو مجال
-    const mass = lo === hi
-      ? fmtMass(lo, lang)
-      : lang === "ar"
-        ? `${fmtMass(lo, lang)} إلى ${fmtMass(hi, lang)}`
-        : `${fmtMass(lo, lang)} à ${fmtMass(hi, lang)}`;
-    // الفاصل: /24h أو /Xh أو جرعة وحيدة مجهولة الفاصل
-    const per = p.per24h
-      ? (lang === "ar" ? "/24 سا" : "/24h")
-      : p.intervalH
-        ? (lang === "ar" ? ` كل ${p.intervalH} سا` : ` toutes les ${p.intervalH} h`)
-        : (lang === "ar" ? " للجرعة" : " par prise");
-    // « en 4 injections » ⇒ كمية الجرعة الواحدة
-    if (p.dosesPerDay && p.dosesPerDay > 1 && p.per24h) {
-      const lo1 = lo / p.dosesPerDay;
-      const hi1 = hi / p.dosesPerDay;
-      const unit = lo1 === hi1
-        ? fmtMass(lo1, lang)
-        : lang === "ar"
-          ? `${fmtMass(lo1, lang)} إلى ${fmtMass(hi1, lang)}`
-          : `${fmtMass(lo1, lang)} à ${fmtMass(hi1, lang)}`;
-      const n = lang === "ar" ? String(p.dosesPerDay) : `${p.dosesPerDay}`;
-      const nTxt = lang === "ar" ? n.replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[+d]) : n;
-      return lang === "ar"
-        ? `${mass}${per} · ${unit} لكل جرعة (${nTxt} جرعات)`
-        : `${mass}${per} · ${unit} par prise (${n} prises)`;
+function formatMassRange(low: number, high: number, lang: "fr" | "ar"): string {
+  if (low === high) return fmtMass(low, lang);
+  return lang === "ar"
+    ? `${fmtMass(low, lang)} إلى ${fmtMass(high, lang)}`
+    : `${fmtMass(low, lang)} à ${fmtMass(high, lang)}`;
+}
+
+interface AbsoluteDoseRange {
+  lowMg: number;
+  highMg: number;
+  capped: boolean;
+}
+
+/** يطبّق الحدّ الصريح فقط عندما تتطابق وحدته وفترته مع نصّ الجرعة. */
+function applyExplicitMaximum(
+  dose: WeightDose,
+  weightKg: number,
+  cap: WeightDoseCap | null,
+): AbsoluteDoseRange | null {
+  const rawLow = dose.lowMg * weightKg;
+  const rawHigh = dose.highMg * weightKg;
+  if (!cap) return { lowMg: rawLow, highMg: rawHigh, capped: false };
+
+  if (cap.period === "24h") {
+    if (!dose.per24h) return null;
+    if (cap.perKg) {
+      const lowRate = Math.min(dose.lowMg, cap.maxMg);
+      const highRate = Math.min(dose.highMg, cap.maxMg);
+      return {
+        lowMg: lowRate * weightKg,
+        highMg: highRate * weightKg,
+        capped: highRate < dose.highMg,
+      };
     }
-    return `${mass}${per}`;
+    return {
+      lowMg: Math.min(rawLow, cap.maxMg),
+      highMg: Math.min(rawHigh, cap.maxMg),
+      capped: rawHigh > cap.maxMg,
+    };
+  }
+
+  // الحدّ لكل جرعة. إذا كان الأصل مجموعاً يومياً، يلزم عدد جرعات ثابت وصريح قبل تطبيقه.
+  const dosesPerDay = dose.dosesPerDay;
+  if (dose.per24h && (!dosesPerDay || dosesPerDay < 1)) return null;
+  const divisor = dose.per24h ? dosesPerDay! : 1;
+  if (cap.perKg) {
+    const lowRate = Math.min(dose.lowMg / divisor, cap.maxMg);
+    const highRate = Math.min(dose.highMg / divisor, cap.maxMg);
+    return {
+      lowMg: lowRate * weightKg * divisor,
+      highMg: highRate * weightKg * divisor,
+      capped: highRate < dose.highMg / divisor,
+    };
+  }
+  const lowPerDose = Math.min(rawLow / divisor, cap.maxMg);
+  const highPerDose = Math.min(rawHigh / divisor, cap.maxMg);
+  return {
+    lowMg: lowPerDose * divisor,
+    highMg: highPerDose * divisor,
+    capped: highPerDose < rawHigh / divisor,
+  };
+}
+
+function localizedCount(value: number, lang: "fr" | "ar"): string {
+  const text = String(value);
+  return lang === "ar" ? text.replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[+d]) : text;
+}
+
+function renderWeightDose(
+  dose: WeightDose,
+  weightKg: number,
+  cap: WeightDoseCap | null,
+  lang: "fr" | "ar",
+): { text: string; capped: boolean } | null {
+  const range = applyExplicitMaximum(dose, weightKg, cap);
+  if (!range) return null;
+  const mass = formatMassRange(range.lowMg, range.highMg, lang);
+  const per = dose.per24h
+    ? (lang === "ar" ? "/24 سا" : "/24h")
+    : dose.intervalH
+      ? (lang === "ar" ? ` كل ${dose.intervalH} سا` : ` toutes les ${dose.intervalH} h`)
+      : (lang === "ar" ? " للجرعة" : " par prise");
+
+  let text = `${mass}${per}`;
+  if (dose.dosesPerDay && dose.dosesPerDay > 1 && dose.per24h) {
+    const count = dose.dosesPerDay;
+    const perDose = formatMassRange(range.lowMg / count, range.highMg / count, lang);
+    text += lang === "ar"
+      ? ` · ${perDose} لكل جرعة (${localizedCount(count, lang)} جرعات)`
+      : ` · ${perDose} par prise (${count} prises)`;
+  }
+  if (range.capped) {
+    text += lang === "ar"
+      ? " (طُبّق الحد الأقصى الصريح الوارد في المصدر)"
+      : " (plafond explicite de la source appliqué)";
+  }
+  return { text, capped: range.capped };
+}
+
+function connectorBetween(text: string, leftEnd: number, rightStart: number, lang: "fr" | "ar"): string {
+  const gap = text.slice(leftEnd, rightStart);
+  // « ou » a الأولوية على « puis » عندما يذكر المصدر بديل تسريب بعد جرعة تحميل.
+  if (/\bou\b/i.test(gap)) return lang === "ar" ? " أو " : " ou ";
+  if (/\bpuis\b/i.test(gap)) return lang === "ar" ? " ثم " : " puis ";
+  return lang === "ar" ? " · " : " · ";
+}
+
+/**
+ * يحوّل فقط المقاطع الوزنية الصريحة، مع احترام سقف المصدر. السقف المبهم أو غير المتوافق
+ * مع الوحدة/التوقيت يحجب الحساب بدلاً من تجاهله. يبقى النص الفرنسي الأصلي ظاهراً في الواجهة.
+ */
+export function calculateWeightDose(
+  text: string,
+  weightKg: number,
+  lang: "fr" | "ar",
+): WeightDoseCalculation {
+  if (!Number.isFinite(weightKg) || weightKg <= 0) return { text: null, refusal: null };
+  const analysis = analyzeWeightDoses(text);
+  if (analysis.refusal) return { text: null, refusal: analysis.refusal };
+  if (!analysis.doses.length) return { text: null, refusal: null };
+
+  const rendered = analysis.doses.map(({ dose }) => renderWeightDose(dose, weightKg, analysis.cap, lang));
+  if (rendered.some((part) => part === null)) return { text: null, refusal: "unsupported-maximum" };
+  const parts = rendered as Array<{ text: string; capped: boolean }>;
+  const chunks = parts.map((part, index) => {
+    if (index === parts.length - 1) return part.text;
+    const next = analysis.doses[index + 1];
+    return `${part.text}${connectorBetween(text, analysis.doses[index].end, next.start, lang)}`;
   });
-  return [...new Set(chunks)].join(lang === "ar" ? " · ثم " : " · puis ");
+  return { text: chunks.join(""), refusal: null };
+}
+
+/** واجهة نصية مختصرة للعرض القديم؛ استخدم calculateWeightDose لمعرفة سبب الحجب. */
+export function weightDoseText(text: string, weightKg: number, lang: "fr" | "ar"): string | null {
+  return calculateWeightDose(text, weightKg, lang).text;
 }
 
 /** هل يحتوي النصّ على قيمة تحتاج قراءة بشرية فقط (لا حساب)؟ يُستخدم في الواجهة للتوضيح. */
 export function isNoData(text: string): boolean {
   return /Aucune donnée/i.test(text);
+}
+
+/** خلية جدول مدمجة/غير رقمية؛ لا يجوز ملؤها من المرحلة المجاورة. */
+export function isMergedSourceCell(text: string): boolean {
+  return /Cellule fusionnée/i.test(text);
+}
+
+/** الشريحة الهندسية تتقاطع مع خلايا مصدرية مختلفة؛ لا تُختَر جرعة مفردة آليًا. */
+export function isAmbiguousSourceCells(text: string): boolean {
+  return /Cellules source multiples/i.test(text);
 }
 
 export function isDiscouraged(text: string): boolean {
@@ -126,27 +372,35 @@ export function isContraindicated(text: string): boolean {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────────────────
-// DFG (Cockcroft-Gault) et stade rénal — adultes non dialysés uniquement.
-// ⚠️ حدود المراحل هي نفسها المعتمدة في الجدول المرجعي (≥90 / 89→60 / 59→30 / 30→15 / <15).
+// Stade du tableau DFG (mL/min/1,73 m²) — ne pas y introduire une valeur Cockcroft-Gault.
+// ⚠️ المصدر يضع 30 في المرحلتين المتجاورتين؛ تُحجب المرحلة عند هذه القيمة حتى حسمها مهنياً.
 // ─────────────────────────────────────────────────────────────────────────────────────────
 import type { AtbStageId } from "@/data/atb-renal";
 
 export const STAGE_ORDER: AtbStageId[] = ["normorenal", "legere", "moderee", "severe", "terminale"];
 
-/** المرحلة الكلوية الموافقة لتصفية معيّنة / Stade correspondant à une clairance donnée. */
-export function stageFromCrCl(crcl: number): AtbStageId {
-  if (!Number.isFinite(crcl) || crcl < 0) return "normorenal";
-  if (crcl >= 90) return "normorenal";
-  if (crcl >= 60) return "legere";
-  if (crcl >= 30) return "moderee";
-  if (crcl >= 15) return "severe";
+/** قيمة 30 متداخلة في الجدول؛ السماحية لمقاومة فروق الفاصلة العائمة فقط. */
+export function isAmbiguousAtbDfgBoundary(value: number | null | undefined): boolean {
+  return typeof value === "number" && Number.isFinite(value) && Math.abs(value - 30) <= 1e-6;
+}
+
+/** يصنّف قيمة DFG إلى أعمدة جدول المضادات؛ لا تمرّر إليه ClCr Cockcroft–Gault. */
+export function stageFromDfg(dfg: number): AtbStageId | null {
+  // Une valeur absente, infinie, négative ou exactement au seuil ambigu ne donne pas de stade.
+  // Refuser le stade évite de proposer silencieusement une dose à partir d'un choix arbitraire.
+  if (!Number.isFinite(dfg) || dfg < 0 || isAmbiguousAtbDfgBoundary(dfg)) return null;
+  if (dfg >= 90) return "normorenal";
+  if (dfg >= 60) return "legere";
+  if (dfg > 30) return "moderee";
+  if (dfg >= 15) return "severe";
   return "terminale";
 }
 
-/** كل مغ/دل = 88,4 µmol/L. حماية من إدخال µmol/L في خانة mg/dL. */
-export function toMgDl(value: number, unit: "mg" | "umol"): { mgDl: number; suspectUnit: boolean } {
+/** كل مغ/دل = 88,4 µmol/L. القيم غير المعقولة تُرفض ولا تُحوّل آليًا إلى وحدة أخرى. */
+export function toMgDl(value: number, unit: "mg" | "umol"): { mgDl: number | null; suspectUnit: boolean } {
+  if (!Number.isFinite(value) || value <= 0) return { mgDl: null, suspectUnit: false };
   if (unit === "umol") return { mgDl: value / 88.4, suspectUnit: false };
-  if (value > 20) return { mgDl: value / 88.4, suspectUnit: true }; // créatinine humaine max ≈ 20 mg/dL
+  if (value > 20) return { mgDl: null, suspectUnit: true };
   return { mgDl: value, suspectUnit: false };
 }
 
@@ -169,7 +423,8 @@ export function isFixedOnly(text: string): boolean {
 
 /** يحتاج نصّ الجرعة مراجعة المصدر الأصلي (لا يُشتَقّ منه رقم) — راجع الجدول الورقي. */
 // Marqueurs pour lesquels la source ne donne PAS de valeur chiffrée exploitable :
-// « Aucune donnée », « Réduction de la posologie » (sans pourcentage), ½ / ¼ dose.
+// « Aucune donnée », cellule fusionnée ou ambiguë, réduction non chiffrée, ½ / ¼ dose.
 export function requiresSourceCheck(text: string): boolean {
-  return isNoData(text) || /Réduction de la posologie|½\s*dose|¼\s*dose|1\/2 dose|1\/4 dose/i.test(text);
+  return isNoData(text) || isMergedSourceCell(text) || isAmbiguousSourceCells(text)
+    || /Réduction de la posologie|½\s*dose|¼\s*dose|1\/2 dose|1\/4 dose/i.test(text);
 }

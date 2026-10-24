@@ -39,10 +39,13 @@ function Seg({ value, onChange }: { value: number; onChange: (v: number) => void
 
 export default function ScoresPage() {
   useRegisterRecent("calculateur:scores");
+  const [qAge, setQAge] = useState("");
   const [rr, setRr] = useState("20");
   const [sbp, setSbp] = useState("120");
   const [alt, setAlt] = useState(false);
-  const q = qsofa(Number(rr), Number(sbp), alt);
+  const qAgeYears = qAge.trim() === "" ? Number.NaN : Number(qAge);
+  const qApplicable = Number.isInteger(qAgeYears) && qAgeYears >= 18;
+  const q = qApplicable ? qsofa(Number(rr), Number(sbp), alt) : null;
 
   const [sp, setSp] = useState<boolean[]>(Array(6).fill(false));
   const s = spesi({ age80: sp[0], cancer: sp[1], hf: sp[2], hr110: sp[3], sbp100: sp[4], spo290: sp[5] });
@@ -75,17 +78,31 @@ export default function ScoresPage() {
 
       <section className="card rounded-2xl border border-line bg-surface p-4">
         <h2 className="mb-3 font-extrabold text-sky-500">qSOFA</h2>
-        <div className="flex gap-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          <NumField label={<T fr="Âge (années révolues)" ar="العمر (سنوات كاملة)" />} value={qAge} onChange={setQAge} />
           <NumField label={<T fr="FR /min" ar="التردد/د" />} value={rr} onChange={setRr} />
           <NumField label={<T fr="PAS mmHg" ar="الانقباضي" />} value={sbp} onChange={setSbp} />
         </div>
         <div className="mt-2">
           <Check on={alt} onToggle={() => setAlt(!alt)}><T fr="Trouble de conscience (GCS < 15)" ar="اضطراب وعي (غلاسكو أقل من 15)" /></Check>
         </div>
-        <p className={`mt-3 rounded-xl p-3 text-center text-xl font-black tabular-nums ${q >= 2 ? "bg-red-600/15 text-red-500" : "bg-blue-600/15 text-blue-500"}`}>
-          {q} / 3 — {q >= 2
-            ? <T fr="≥ 2: pronostic péjoratif, évoquer sepsis, lactates + surveillance rapprochée" ar="≥ 2: إنذار سيئ، فكّ بالإنتان، لاكتات ومراقبة لصيقة" />
-            : <T fr="< 2: pas d'alerte qSOFA" ar="أقل من 2: لا إنذار qSOFA" />}
+        {q !== null ? (
+          <p aria-label="qSOFA score" className={`mt-3 rounded-xl p-3 text-center text-xl font-black tabular-nums ${q >= 2 ? "bg-red-600/15 text-red-500" : "bg-blue-600/15 text-blue-500"}`}>
+            {q} / 3 — {q >= 2
+              ? <T fr="≥ 2 : signal de risque ; évaluer cliniquement, sans en faire un diagnostic." ar="≥ 2: إشارة خطورة؛ قيّم سريرياً ولا تعتبرها تشخيصاً." />
+              : <T fr="< 2 : un qSOFA bas n'exclut pas le sepsis." ar="< 2: الدرجة المنخفضة لا تنفي الإنتان." />}
+          </p>
+        ) : (
+          <p role="status" className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-center text-sm font-bold">
+            {qAge.trim() === ""
+              ? <T fr="Saisir un âge adulte (≥18 ans) pour calculer qSOFA." ar="أدخل عمر بالغ (18 سنة فأكثر) لحساب qSOFA." />
+              : !Number.isInteger(qAgeYears) || qAgeYears < 0
+                ? <T fr="Saisir l'âge en années révolues." ar="أدخل العمر بالسنوات الكاملة." />
+                : <T fr="qSOFA adulte non appliqué avant 18 ans ; choisir un outil pédiatrique adapté." ar="لا يُطبّق qSOFA البالغين قبل 18 سنة؛ استخدم أداة أطفال ملائمة." />}
+          </p>
+        )}
+        <p role="note" className="mt-2 text-xs font-bold opacity-70">
+          <T fr="qSOFA est réservé à l'adulte, non diagnostique ; un score bas n'exclut pas le sepsis. SSC 2026 : à l'hôpital, préférer NEWS/NEWS2, MEWS ou SIRS à qSOFA seul comme outil de dépistage." ar="qSOFA للبالغين فقط وليس تشخيصاً؛ الدرجة المنخفضة لا تنفي الإنتان. SSC 2026: في المستشفى، فضّل NEWS/NEWS2 أو MEWS أو SIRS على qSOFA وحده كأداة تحرٍ." />
         </p>
       </section>
 

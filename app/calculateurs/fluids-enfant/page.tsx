@@ -25,7 +25,7 @@ export default function FluidsEnfantPage() {
       <div className="card rounded-2xl border border-line bg-surface p-4 text-sm font-bold">
         <p className="mb-1 text-base font-black" style={{ color: "var(--accent)" }}><T fr="Bolus de réanimation" ar="دفعات الإنعاش" /></p>
         <p><T fr="Enfant: NaCl 0,9 % 20 mL/kg en 5-10 min, réévaluer." ar="طفل: ملح ٠٫٩٪ ٢٠ مل/كغ خلال ٥-١٠ د ثم أعد التقييم." /></p>
-        <p><T fr="Adulte sepsis: 30 mL/kg de cristalloïdes dans la première heure." ar="بالغ (إنتان): ٣٠ مل/كغ بلورات خلال الساعة الأولى." /></p>
+        <p><T fr="Adulte : si hypoperfusion induite par le sepsis ou choc septique, au moins 30 mL/kg de cristalloïdes IV dans les 3 premières heures ; poids réel, ou ajusté/idéal si IMC >30, avec réévaluation fréquente (SSC 2026)." ar="البالغ: عند نقص تروية ناجم عن الإنتان أو صدمة إنتانية، ما لا يقل عن 30 مل/كغ من البلّوريات وريدياً خلال أول 3 ساعات؛ الوزن الفعلي أو المعدل/المثالي إذا IMC >30، مع إعادة تقييم متكررة (SSC 2026)." /></p>
         <p><T fr="TRAUMA crânien: éviter surcharge; choc hémorragique = sang tôt." ar="رض رأس: تجنّب فرط الحمولة؛ صدمة نزفية = دم مبكراً." /></p>
       </div>
       </header>

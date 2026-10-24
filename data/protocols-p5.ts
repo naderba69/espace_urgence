@@ -179,7 +179,7 @@ export const protocolsP5: Protocol[] = [
       },
     ],
     medications: [],
-    calculators: ["hyperkaliemie"],
+    calculators: ["hyperkalemie"],
     meta: { sources: ["ATLS crush syndrome", "KDIGO AKI"], lastReviewed: "2026-09" },
   },
   {

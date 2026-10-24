@@ -1,9 +1,10 @@
 // v16.0 — محرّك رصد التدهور: قواعد إنذار مبنية على الثوابت المُدخلة بعد إعادة التقييم.
 // الاشتباه ≠ تشخيص: كل قاعدة تعرض معايير تأكيد سريرية — والتأكيد قرار المهني وحده.
-// المراجع المعتمدة: ESC 2021 (Insuffisance cardiaque aiguë) · SSC 2021 (Hour-1) · ERC 2021.
+// Références selon la règle : ESC 2021 (OAP) · SSC 2026 (sepsis adulte) · ERC 2021 (réanimation).
 // استعمال شخصي بحت — لا يُغني عن الحكم السريري.
 
 export interface Vitals {
+  age?: number;  // age in completed years; adult sepsis rules require >=18
   fc?: number;   // fréquence cardiaque /min
   pas?: number;  // pression artérielle systolique mmHg
   fr?: number;   // fréquence respiratoire /min
@@ -67,8 +68,8 @@ export const DETER_RULES: DeterRule[] = [
   {
     id: "choc",
     sev: "critical",
-    title: { fr: "Choc — hypoperfusion", ar: "صدمة — نقص ترويج أنسجة" },
-    when: (v) => num(v.pas) && v.pas! < 90 && num(v.fc) && v.fc! > 100,
+    title: { fr: "Choc — alerte sur seuils adultes", ar: "صدمة — إنذار وفق عتبات البالغين" },
+    when: (v) => num(v.age) && v.age! >= 18 && num(v.pas) && v.pas! < 90 && num(v.fc) && v.fc! > 100,
     observed: (v) => `PAS ${v.pas} mmHg · FC ${v.fc}/min`,
     criteria: [
       { fr: "Marbrures / extrémités froides", ar: "بقع جلدية / أطراف باردة" },
@@ -78,8 +79,8 @@ export const DETER_RULES: DeterRule[] = [
     ],
     steps: [
       { fr: "VVP ×2 + lactate + hémocultures", ar: "خطّان وريديان + لاكتات + دمويّات" },
-      { fr: "NaCl 250–500 ml en 15–30 min (prudence si OAP)", ar: "محلول ملح 250–500 مل في 15–30 د (حذر إن وذمة رئوية)" },
-      { fr: "Noradrénaline si hypotension persistante — cible PAM ≥65 mmHg", ar: "نورأدرينالين إذا استمر الانخفاض — هدف الضغط الوسطي ≥65" },
+      { fr: "Avant tout remplissage, évaluer la cause du choc ; si des cristalloïdes sont indiqués, individualiser la quantité selon l'âge, le contexte et la réponse, avec réévaluation rapprochée.", ar: "قبل إعطاء السوائل، قيّم سبب الصدمة؛ وإذا كانت البلّوريات مستطبة ففصّل الكمية حسب العمر والسياق والاستجابة مع إعادة تقييم متقاربة." },
+      { fr: "Hypotension persistante : appliquer la conduite adaptée à l'âge et à l'étiologie ; pour le choc septique adulte, ouvrir l'assistant sepsis SSC 2026.", ar: "عند استمرار انخفاض الضغط: اتبع التدبير الملائم للعمر والسبب؛ وللصدمة الإنتانية عند البالغ افتح مساعد الإنتان وفق SSC 2026." },
       { fr: "Chercher la cause : hémorragie, sepsis, IDM, embolie — POCUS", ar: "البحث عن السبب: نزف، إنتان، احتشاء، انصمام — تصوير بؤري" },
     ],
     links: [
@@ -87,13 +88,14 @@ export const DETER_RULES: DeterRule[] = [
       { href: "/calculateurs/amines", fr: "Amines vasopressives", ar: "الأمينات المقبضة" },
       { href: "/calculateurs/pocus", fr: "POCUS", ar: "التصوير البؤري" },
     ],
-    ref: "SSC 2021 · ESC 2021",
+    ref: "Sepsis adulte : SSC 2026 ; autres chocs : protocole clinique adapté",
   },
   {
     id: "sepsis",
     sev: "urgent",
-    title: { fr: "qSOFA ≥2 — risque d'infection sévère", ar: "qSOFA ≥2 — خطر إنتان شديد" },
+    title: { fr: "Sepsis possible — signal qSOFA (adulte, non diagnostique)", ar: "إنتان محتمل — إشارة qSOFA (للبالغ، لا تشخيصية)" },
     when: (v) => {
+      if (!num(v.age) || v.age! < 18) return false;
       let s = 0;
       if (num(v.fr) && v.fr! >= 22) s++;
       if (num(v.pas) && v.pas! <= 100) s++;
@@ -104,23 +106,22 @@ export const DETER_RULES: DeterRule[] = [
       [num(v.fr) ? `FR ${v.fr}/min` : null, num(v.pas) ? `PAS ${v.pas} mmHg` : null, num(v.gcs) ? `GCS ${v.gcs}/15` : null]
         .filter(Boolean).join(" · "),
     criteria: [
-      { fr: "Fièvre >38 °C ou <36 °C / frissons", ar: "حرارة >38 أو <36 / قشعريرة" },
-      { fr: "Foyer infectieux identifié ou probable", ar: "بؤرة إنتانية مؤكدة أو مرجّحة" },
-      { fr: "Confusion récente", ar: "توشّح حديث" },
+      { fr: "Ce signal qSOFA ne confirme ni n'exclut un sepsis ; l'âge doit être ≥18 ans pour appliquer cette règle.", ar: "إشارة qSOFA لا تثبت الإنتان ولا تنفيه؛ ويجب أن يكون العمر 18 سنة فأكثر لتطبيق هذه القاعدة." },
+      { fr: "À l'hôpital, SSC 2026 recommande NEWS/NEWS2, MEWS ou SIRS plutôt que qSOFA seul ; un qSOFA bas n'exclut pas le sepsis.", ar: "في المستشفى، توصي SSC 2026 بـ NEWS/NEWS2 أو MEWS أو SIRS بدلاً من qSOFA وحده؛ والدرجة المنخفضة لا تنفي الإنتان." },
+      { fr: "Enfant : cette alerte adulte ne s'applique pas ; utiliser l'évaluation et le protocole pédiatriques adaptés.", ar: "الطفل: لا ينطبق إنذار البالغين هذا؛ استخدم التقييم والبروتوكول المناسبين للأطفال." },
     ],
     steps: [
-      { fr: "Mesurer le lactate (refaire si >2 mmol/L)", ar: "قياس اللاكتات (إعادة إذا >2)" },
-      { fr: "Hémocultures ± ECBU avant antibiothérapie", ar: "دمويّات ± تحليل بول قبل المضاد الحيوي" },
-      { fr: "Antibiothérapie à large spectre ≤1 h si infection probable", ar: "مضاد حيوي واسع الطيف ≤1 ساعة إذا اشتباه إنتاني" },
-      { fr: "NaCl 30 ml/kg si hypotension ou lactate ≥4", ar: "ملح 30 مل/كغ إذا انخفاض الضغط أو لاكتات ≥4" },
-      { fr: "Réévaluation continue — noradrénaline si persistance", ar: "إعادة تقييم مستمرة — نورأدرينالين عند الاستمرار" },
+      { fr: "Adultes : délai antibiotique selon choc et probabilité — choc possible ou sepsis probable/confirmé : immédiatement, idéalement ≤1 h ; sepsis possible sans choc : évaluation rapide, puis ≤3 h si le soupçon persiste ; faible probabilité sans choc : différer peut se discuter sous surveillance rapprochée.", ar: "للبالغين: توقيت المضاد حسب الصدمة واحتمال الإنتان — صدمة محتملة أو إنتان مرجح/مؤكد: فوراً ويفضل خلال ساعة؛ إنتان محتمل بلا صدمة: تقييم سريع ثم خلال 3 ساعات إذا استمر الاشتباه؛ احتمال منخفض بلا صدمة: يمكن التأجيل مع مراقبة لصيقة." },
+      { fr: "Prélever les cultures dès que possible, avant l'antibiotique si cela ne le retarde pas ; interpréter le lactate avec l'examen clinique, sans décision thérapeutique sur sa seule valeur.", ar: "خذ الزرعات بأسرع ما يمكن وقبل المضاد إن لم يؤخره؛ وفسّر اللاكتات مع الفحص السريري دون قرار علاجي اعتماداً على قيمته وحدها." },
+      { fr: "Adulte avec hypoperfusion induite par le sepsis ou choc septique : SSC suggère au moins 30 mL/kg de cristalloïdes IV dans les 3 premières heures ; choisir le poids et réévaluer fréquemment. Ne pas déclencher les fluides sur qSOFA ou lactate seuls.", ar: "للبالغ مع نقص تروية ناجم عن الإنتان أو صدمة إنتانية: تقترح SSC ما لا يقل عن 30 مل/كغ من البلّوريات وريدياً خلال أول 3 ساعات؛ اختر الوزن وأعد التقييم مراراً. لا تبدأ السوائل اعتماداً على qSOFA أو اللاكتات وحدهما." },
+      { fr: "Si l'hypotension persiste chez l'adulte : noradrénaline en première ligne ; commencer par voie périphérique plutôt que retarder l'initiation en attendant un abord central. PAM initiale autour de 65 mmHg.", ar: "إذا استمر انخفاض الضغط عند البالغ: النورأدرينالين خط أول؛ ابدأ طرفياً بدلاً من تأخير العلاج انتظاراً لخط مركزي. هدف PAM الابتدائي نحو 65 مم زئبق." },
     ],
     links: [
-      { href: "/calculateurs/sepsis-commandement", fr: "Sepsis — commandement", ar: "الإنتان — القيادة" },
-      { href: "/calculateurs/lactate", fr: "Lactate", ar: "اللاكتات" },
+      { href: "/calculateurs/sepsis-commandement", fr: "Assistant sepsis adulte", ar: "مساعد الإنتان للبالغ" },
+      { href: "/calculateurs/lactate", fr: "Lactate — aide non diagnostique", ar: "اللاكتات — أداة غير تشخيصية" },
       { href: "/medicaments/noradrenaline", fr: "Noradrénaline", ar: "نورأدرينالين" },
     ],
-    ref: "SSC 2021 — Hour-1 bundle",
+    ref: "SSC 2026 — recommandations adultes (SCCM)",
   },
   {
     id: "hypoglycemie",

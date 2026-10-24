@@ -8,7 +8,7 @@ import { useRegisterRecent } from "@/components/SearchBar";
 import T from "@/components/T";
 import Badge from "@/components/ui/Badge";
 
-interface Sit { id: string; href: string; fr: string; ar: string; actFr: string; actAr: string; dose: (w: number, ped: boolean) => string; prep?: (w: number, ped: boolean) => string | null; sev: 1 | 2 | 3 }
+interface Sit { id: string; href: string; fr: string; ar: string; actFr: string; actAr: string; dose?: (w: number, ped: boolean) => string; prep?: (w: number, ped: boolean) => string | null; sev: 1 | 2 | 3 }
 
 const SITS: Sit[] = [
   {
@@ -25,7 +25,7 @@ const SITS: Sit[] = [
   },
   {
     id: "neo", sev: 1, href: "/calculateurs/neonat-ran", fr: "Nouveau-né (minute d'or)", ar: "وليد (الدقيقة الذهبية)",
-    actFr: "VPP efficace dans les 60 s", actAr: "تهوية فعالة خلال 60 ث",
+    actFr: "Si VPP indiquée : la débuter dans les 60 s", actAr: "إذا كانت التهوية بالضغط الإيجابي مستطبة، فابدأها خلال 60 ث",
     dose: (w) => `Adrénaline 0,01-0,03 mg/kg = ${(w * 0.1).toFixed(1)}-${(w * 0.3).toFixed(1)} mL/kg (1:10 000)`,
     prep: (w) => `1 mL ampoule + 9 mL NaCl → injecter ${(w * 0.1).toFixed(1)}-${(w * 0.3).toFixed(1)} mL/kg`,
   },
@@ -112,13 +112,12 @@ const SITS: Sit[] = [
   },
   {
     id: "sep", sev: 1, href: "/calculateurs/sepsis-commandement", fr: "Sepsis / choc septique", ar: "إنتان / صدمة إنتانية",
-    actFr: "Cultures puis antibiotiques < 1 h", actAr: "مزارع ثم مضادات خلال ساعة",
-    dose: (w) => `Ceftriaxone 2 g IV + cristalloïdes ${w * 30} mL (30 mL/kg)`,
+    actFr: "Évaluer rapidement la probabilité de sepsis/choc ; antibiotiques, fluides et vasopresseurs selon le contexte et le protocole local.",
+    actAr: "قيّم سريعاً احتمال الإنتان/الصدمة؛ المضادات والسوائل ومقبضات الأوعية حسب السياق والبروتوكول المحلي.",
   },
   {
     id: "pno", sev: 1, href: "/protocoles/pneumothorax-suffocant", fr: "PNO suffocant", ar: "استرواح خانق",
-    actFr: "Exsufflation immédiate (clinique)", actAr: "سحب هواء فوراً (سريري)",
-    dose: () => "Aiguille 14-16 G 4ᵉ EIC, ligne axillaire ant. puis tube",
+    actFr: "Décompression si indiquée, selon protocole local et notice du dispositif", actAr: "أزل الضغط عند استطبابه وفق البروتوكول المحلي وتعليمات الجهاز",
   },
   {
     id: "brul", sev: 1, href: "/calculateurs/brulures", fr: "Brûlure grave", ar: "حرق شديد",
@@ -189,7 +188,9 @@ export default function TerrainPage() {
               <div className="flex shrink-0 gap-1">
                 <button
                   onClick={() => {
-                    if (typeof navigator !== "undefined") void navigator.clipboard?.writeText(`${lang === "ar" ? s.ar : s.fr} — ${s.actFr} — ${s.dose(w, ped)}`);
+                    const dose = s.dose?.(w, ped);
+                    const action = lang === "ar" ? s.actAr : s.actFr;
+                    if (typeof navigator !== "undefined") void navigator.clipboard?.writeText(`${lang === "ar" ? s.ar : s.fr} — ${action}${dose ? ` — ${dose}` : ""}`);
                     setCopiedId(s.id); setTimeout(() => setCopiedId(null), 1200);
                   }}
                   aria-label={lang === "ar" ? "نسخ" : "copier"}
@@ -202,7 +203,7 @@ export default function TerrainPage() {
               </div>
             </div>
             <p className="text-sm font-bold text-amber-500">{lang === "ar" ? s.actAr : s.actFr}</p>
-            <p className="rounded-xl bg-surface2 p-2 text-sm font-black text-blue-500" dir="ltr">{s.dose(w, ped)}</p>
+            {s.dose && <p className="rounded-xl bg-surface2 p-2 text-sm font-black text-blue-500" dir="ltr">{s.dose(w, ped)}</p>}
             {s.prep?.(w, ped) && (
               <p className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-2 text-xs font-black text-amber-500" dir="ltr">
                 {lang === "ar" ? "تحضير: " : "Prépa : "}{s.prep(w, ped)}

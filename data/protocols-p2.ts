@@ -163,7 +163,7 @@ export const protocolsP2: Protocol[] = [
         { fr: "Poursuivre β2 horaire puis espacer ; corticoïdes oraux ; NE PAS sortir avant 1 h après la dernière dose.", ar: "واصل β2 كل ساعة ثم تباعد؛ كورتيكويدات فموية؛ لا خروج قبل ساعة من آخر جرعة." },
       ]},
       { when: { fr: "Complication : pneumothorax (déviation, douleur brutale, SpO₂ ↓)", ar: "مضاعفة: استرواح (انحراف، ألم مفاجئ، هبوط تشبع)" }, do: [
-        { fr: "Exsufflation/drainage en urgence si suffocant ; réduire le débit de ventilation si ventilé.", ar: "شفط/تصريف عاجل إذا خانق؛ قلّل حجم التهوية إن كان على منفسة." },
+        { fr: "Si pneumothorax sous tension suspecté et décompression indiquée : appliquer sans délai la filière locale et la notice du dispositif ; si ventilation mécanique, alerter l'équipe responsable et réévaluer.", ar: "عند الاشتباه باسترواح ضاغط واستطباب إزالة الضغط: اتبع فوراً المسار المحلي وتعليمات الجهاز؛ وإذا كان المريض على تهوية آلية فأبلغ الفريق المسؤول وأعد التقييم." },
       ]},
     ],
     medications: ["salbutamol", "hydrocortisone", "sulfate-magnesium"],
@@ -172,34 +172,36 @@ export const protocolsP2: Protocol[] = [
   },
   {
     id: "choc-septique",
-    title: { fr: "Sepsis sévère / Choc septique", ar: "إنتان شديد / صدمة إنتانية" },
+    title: { fr: "Sepsis / Choc septique", ar: "إنتان / صدمة إنتانية" },
     category: "reanimation",
     severity: "critical",
-    summary: { fr: "Sepsis avec défaillance d'organe : cultures, antibiotiques < 1 h, remplissage et noradrénaline.", ar: "إنتان مع قصور عضوي: مزارع، مضادات <ساعة، تعويض ونورأدرينالين." },
+    summary: { fr: "Sepsis adulte : timing antibiotique selon probabilité/choc ; fluides si hypoperfusion liée au sepsis ou choc ; réévaluation fréquente et vasopresseur sans délai central inutile.", ar: "إنتان البالغ: توقيت المضاد حسب الاحتمال/الصدمة؛ السوائل عند نقص تروية ناجم عن الإنتان أو صدمة؛ إعادة تقييم متكررة ومقبض وعائي دون تأخير غير لازم للخط المركزي." },
   exams: {
     bio: [{ fr: "Lactates itératifs, hémocultures avant antibio, NFS/CRP, créatinine", ar: "لاكتات متكرر، مزارع دم قبل المضاد، تعداد/CRP، كرياتينين" }],
     img: [{ fr: "Recherche de la source (radio thorax, ECBU, écho…)", ar: "بحث عن المصدر (صدر، بول، إيكو…)" }],
     ecg: [{ fr: "Monitorage continu + diurèse horaire", ar: "مراقبة مستمرة + إدرار ساعي" }],
   },
     steps: [
-      { title: { fr: "Dépistage : infection suspectée + hypotension/tachycardie/hypoperfusion (marbrures, confusion, oligurie)", ar: "اشتباه عدوى + انخفاض ضغط/تسرع/نقص تروية (تبرقش، تشوش، قلة بول)" } },
-      { title: { fr: "Lactate artériel/veineux capillaire + cultures AVANT antibiotiques (ne retardent pas)", ar: "لاكتات + مزارع قبل المضادات (دون تأخير)" } },
-      { title: { fr: "ANTIBIOTHÉRAPIE LARGE < 1 h (probabilité selon porte d'entrée locale)", ar: "مضاد حيوي واسع خلال <ساعة حسب البوابة" } },
-      { title: { fr: "Remplissage : 30 mL/kg de cristalloïdes rapides (réévaluer de près, surtout cardiaque/IRC)", ar: "توسيع: 30 مل/كغ بلّوريات سريعة مع تقييم دقيق (خاصة القلبي/الكلوي)" } },
-      { title: { fr: "Noradrénaline PSE si PAM < 65 persistante (titrée à PAM 65)", ar: "نورأدرنالين مضخة إن بقي متوسط الضغط أقل من 65 (عايِر إلى 65)" } },
-      { title: { fr: "Contrôle de la source (drainage, chirurgie) dès que possible ; O2/ventilation selon besoin", ar: "ضبط المصدر (تصريف/جراحة) مبكراً؛ أكسجين/تهوية حسب الحاجة" } },
-      { title: { fr: "Hydrocortisone 200 mg/j si choc septique réfractaire aux amines", ar: "هيدروكورتيزون 200 ملغ/ي عند صدمة مقاومة للأمينات" } },
+      { title: { fr: "Dépistage adulte : suspicion d'infection avec dysfonction d'organe/hypoperfusion ; SSC 2026 recommande NEWS/NEWS2, MEWS ou SIRS plutôt que qSOFA seul", ar: "تحري البالغ: عدوى مشتبهة مع قصور عضو/نقص تروية؛ توصي SSC 2026 بـ NEWS/NEWS2 أو MEWS أو SIRS بدلاً من qSOFA وحده" } },
+      { title: { fr: "Hémocultures dès que possible, idéalement avant les antimicrobiens sans retarder leur administration ; lactate selon le contexte", ar: "زراعات الدم بأسرع ما يمكن، ويفضل قبل المضادات دون تأخيرها؛ واللاكتات حسب السياق" } },
+      { title: { fr: "Antibiotiques : choc possible ou sepsis probable/confirmé → immédiatement, idéalement ≤1 h ; sepsis possible sans choc → évaluation rapide et ≤3 h si le soupçon persiste ; faible probabilité sans choc → différer peut se discuter sous surveillance rapprochée", ar: "المضادات: صدمة محتملة أو إنتان مرجح/مؤكد ← فوراً ويفضل خلال ساعة؛ إنتان محتمل بلا صدمة ← تقييم سريع وخلال 3 ساعات إذا استمر الاشتباه؛ احتمال منخفض بلا صدمة ← يمكن التأجيل مع مراقبة لصيقة" } },
+      { title: { fr: "Adultes avec hypoperfusion induite par le sepsis ou choc septique : cristalloïdes IV ≥30 mL/kg dans les 3 premières heures ; poids réel, ou ajusté/idéal si IMC >30 ; individualiser et réévaluer fréquemment. Cristalloïdes équilibrés préférés au NaCl 0,9 %, sauf contexte tel qu'un traumatisme crânien", ar: "للبالغين ذوي نقص تروية ناجم عن الإنتان أو صدمة: بلّوريات وريدية ≥30 مل/كغ خلال أول 3 ساعات؛ الوزن الفعلي أو المعدل/المثالي إذا IMC >30؛ فصّل الكمية وأعد التقييم مراراً. تُفضّل البلّوريات المتوازنة على NaCl 0.9% مع مراعاة سياقات مثل إصابة الدماغ الرضّية" } },
+      { title: { fr: "Si l'hypotension persiste, vasopresseur ; la noradrénaline est le premier choix. Début périphérique pour restaurer la PAM plutôt que retarder jusqu'à l'abord central", ar: "إذا استمر انخفاض الضغط، استخدم مقبضاً وعائياً؛ النورأدرينالين هو الخيار الأول. ابدأ طرفياً لاستعادة PAM بدلاً من التأخير حتى الخط المركزي" } },
+      { title: { fr: "PAM cible initiale : 65 mmHg chez l'adulte ; plage 60–65 mmHg à considérer à partir de 65 ans", ar: "هدف PAM الابتدائي 65 مم زئبق للبالغ؛ ويُنظر في نطاق 60–65 بدءاً من عمر 65 سنة" } },
+      { title: { fr: "Contrôle rapide du foyer ; si indiqué, contrôle de source précoce ; oxygénation/ventilation selon état clinique", ar: "البحث السريع عن البؤرة وضبطها مبكراً عند الاستطباب؛ الأكسجة/التهوية حسب الحالة السريرية" } },
+      { title: { fr: "Corticostéroïdes IV à envisager dans le choc septique selon la recommandation SSC et le protocole clinique local", ar: "يمكن النظر في الكورتيكوستيرويدات الوريدية بالصدمة الإنتانية وفق توصية SSC والبروتوكول السريري المحلي" } },
     ],
     keyPoints: [
-      { fr: "Lactate ≥ 2 mmol/L + hypotension = alerte rouge (mortalité élevée).", ar: "لاكتات 2 أو أكثر + انخفاض ضغط = إنذار أحمر." },
-      { fr: "La 1ère heure (« golden hour ») = antibiotiques + remplissage + source control.", ar: "الساعة الذهبية = مضاد حيوي + توسيع + ضبط مصدر." },
+      { fr: "Le lactate est à interpréter avec l'examen clinique et son évolution ; une valeur isolée ne diagnostique pas le sepsis et ne commande pas seule les fluides.", ar: "يُفسر اللاكتات مع الفحص السريري وتطوره؛ القيمة المفردة لا تشخص الإنتان ولا تحدد السوائل وحدها." },
+      { fr: "Après le bolus initial, individualiser les fluides et utiliser la réévaluation/mesures dynamiques ; ne pas poursuivre les liquides uniquement pour normaliser le lactate.", ar: "بعد الدفعة الأولية، فصّل السوائل واستخدم إعادة التقييم/المقاييس الديناميكية؛ لا تواصلها لمجرد تطبيع اللاكتات." },
     ],
     trajectory: [
-      { when: { fr: "PAS < 65 malgré noradrénaline ≥ 0,5 à 1 µg/kg/min", ar: "انقباضي أقل من 65 رغم نورأدرينالين 0.5 أو أكثر إلى 1 ميكروغ/كغ/د" }, do: [
-        { fr: "Réévaluer le remplissage (échographie) ; hydrocortisone 200 mg/24 h ; ajouter adrénaline/vasopressine ; réanimation.", ar: "أعد تقييم التعويض (تخطيط صدري)؛ هيدروكورتيزون 200 ملغ/24 س؛ أضف أدرينالين/فازوبريسين؛ إنعاش." },
+      { when: { fr: "PAM hors cible malgré une prise en charge initiale et des vasopresseurs en escalade", ar: "PAM خارج الهدف رغم العلاج الأولي وتصاعد الحاجة إلى المقبضات الوعائية" }, do: [
+        { fr: "Réévaluer perfusion, statut volémique, fonction cardiaque et foyer. Si besoins en noradrénaline augmentent, SSC suggère d'ajouter la vasopressine ; si PAM insuffisante malgré noradrénaline + vasopressine, envisager l'adrénaline. Corticostéroïdes IV à discuter selon indication et protocole local.", ar: "أعد تقييم التروية والحجم ووظيفة القلب والبؤرة. إذا تزايدت الحاجة للنورأدرينالين، تقترح SSC إضافة الفازوبريسين؛ وإذا بقيت PAM غير كافية رغم النورأدرينالين والفازوبريسين، ففكّر بالأدرينالين. تُناقش الكورتيكوستيرويدات الوريدية حسب الاستطباب والبروتوكول المحلي." },
       ]},
-      { when: { fr: "Lactates non clairants / oligurie à H2 à H4", ar: "لاكتات غير مرتدة / قلة بول بين الساعتين والرابعة" }, do: [
-        { fr: "Optimiser (vol, débit, O₂) ; imagerie du foyer + drainage/chirurgie si collection ; contrôle lactates itératif.", ar: "حسّن (حجم، تدفق، أكسجين)؛ صور البؤرة + تصريف/جراحة إن وُجد تجمع؛ مراقبة اللاكتات المتكررة." },
+
+      { when: { fr: "Lactate ne diminuant pas, oligurie ou perfusion qui ne s'améliore pas", ar: "اللاكتات لا ينخفض أو قلة بول أو عدم تحسن التروية" }, do: [
+        { fr: "Réévaluer l'état clinique, les causes et la perfusion ; guider les fluides par la réponse aux mesures dynamiques. Ne pas augmenter/continuer les liquides sur le lactate seul ; rechercher une source drainable.", ar: "أعد تقييم الحالة السريرية والأسباب والتروية؛ ووجّه السوائل باستجابة المقاييس الديناميكية. لا تزد/تواصل السوائل بناء على اللاكتات وحده؛ وابحث عن بؤرة قابلة للتصريف." },
       ]},
       { when: { fr: "Complication : OAP / SDRA après remplissage", ar: "مضاعفة: وذمة رئة / SDRA بعد التعويض" }, do: [
         { fr: "Arrêter les bolus ; VNI ou ventilation mécanique ; diurétique si rein fonctionnel ; positionnement.", ar: "أوقف الدفعات؛ VNI أو تهوية ميكانيكية؛ مدرّ إن الكلى عاملة؛ ضبط الوضعية." },
@@ -210,7 +212,7 @@ export const protocolsP2: Protocol[] = [
     ],
     medications: ["noradrenaline", "hydrocortisone"],
     calculators: [],
-    meta: { sources: ["Surviving Sepsis Campaign 2021", "ERC 2021"], lastReviewed: "2026-08" },
+    meta: { sources: ["Surviving Sepsis Campaign 2026 (adult guidelines, SCCM)"], lastReviewed: "2026-10" },
   },
   {
     id: "acidocetose-diabetique",

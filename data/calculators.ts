@@ -168,7 +168,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Besoins d'entretien, contenu ionique des solutes et strategie par situation.", ar: "احتياجات الصيانة والمحتوى الأيوني واستراتيجية كل حالة." },
     href: "/calculateurs/fluides-sodium",
     icon: "Droplets",
-    meta: { sources: ["Surviving Sepsis 2021", "NICE CG174"], lastReviewed: "2026-09" },
+    meta: { sources: ["Surviving Sepsis Campaign 2026 (adult guidelines, SCCM)", "NICE CG174"], lastReviewed: "2026-10" },
   },
   {
     id: "safe-dose",
@@ -181,10 +181,10 @@ export const calculators: CalculatorMeta[] = [
   {
     id: "renal-dose",
     title: { fr: "Bridge renal pharmacologique", ar: "جسر الصيدلة للفشل الكلوي" },
-    description: { fr: "Cockcroft-Gault puis adaptation de 16 medicaments par bande.", ar: "Cockcroft-Gault ثم تكييف ١٦ دواءً حسب النطاق." },
+    description: { fr: "Clairance Cockcroft-Gault ; tableau OMEDIT des antibiotiques et RCP individuels liés pour gabapentine/prégabaline ; autres lignes à vérifier.", ar: "تصفية Cockcroft-Gault؛ جدول OMEDIT للمضادات ونشرات فردية مرتبطة لغابابنتين وبريغابالين؛ بقية الأسطر تحتاج إلى التحقق." },
     href: "/calculateurs/renal-dose",
     icon: "Gauge",
-    meta: { sources: ["Cockcroft-Gault", "SPILF"], lastReviewed: "2026-09" },
+    meta: { sources: ["Cockcroft-Gault", "OMEDIT V2.3 (antibiotiques uniquement)", "RCP ANSM Gabapentine Zentiva 400 mg (2026)", "RCP ANSM Pregabaline HCS 75 mg (2024)"], lastReviewed: "2026-09" },
   },
   {
     id: "interactions",
@@ -284,11 +284,11 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     id: "lactate",
-    title: { fr: "Lactate et sepsis biologique", ar: "اللاكتات والانتان المخبري" },
-    description: { fr: "Valeur, seuils d'hypoperfusion et clairance apres reanimation.", ar: "القيمة وعتبات نقص الاوراء ومعدل التصفية." },
+    title: { fr: "Lactate : valeur et évolution", ar: "اللاكتات: القيمة والتطور" },
+    description: { fr: "Valeur et évolution du lactate ; résultat non spécifique, à interpréter cliniquement.", ar: "قيمة اللاكتات وتطورها؛ نتيجة غير نوعية يجب تفسيرها سريرياً." },
     href: "/calculateurs/lactate",
     icon: "Gauge",
-    meta: { sources: ["Surviving Sepsis 2021"], lastReviewed: "2026-09" },
+    meta: { sources: ["Surviving Sepsis Campaign 2026 (adult guidelines, SCCM)"], lastReviewed: "2026-10" },
   },
   {
     id: "dic",
@@ -632,7 +632,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Holliday-Segar et déficit de déshydratation.", ar: "هوليداي-سيغار وعجز التجفاف." },
     href: "/calculateurs/fluids-enfant",
     icon: "Baby",
-    meta: { sources: ["APLS 2020"], lastReviewed: "2026-09" },
+    meta: { sources: ["APLS 2020", "Surviving Sepsis Campaign 2026 (adult-only fluid note)"], lastReviewed: "2026-10" },
   },
   {
     id: "vni",
@@ -693,10 +693,10 @@ export const calculators: CalculatorMeta[] = [
   {
     id: "qsofa",
     title: { fr: "qSOFA (sepsis)", ar: "qSOFA (الإنتان)" },
-    description: { fr: "FR, PAS, conscience : alerte pronostique au lit du patient.", ar: "تردد، ضغط، وعي: إنذار سريع بجانب المريض." },
+    description: { fr: "Score qSOFA d'alerte pronostique ; ne pas l'utiliser seul pour dépister ou exclure un sepsis.", ar: "درجة qSOFA للتنبيه الإنذاري؛ لا تستخدم وحدها لتحري الإنتان أو استبعاده." },
     href: "/calculateurs/scores",
     icon: "Activity",
-    meta: { sources: ["Sepsis-3"], lastReviewed: "2026-09" },
+    meta: { sources: ["Sepsis-3", "Surviving Sepsis Campaign 2026 (screening adults)"], lastReviewed: "2026-10" },
   },
   {
     id: "spesi",
@@ -764,11 +764,11 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     id: "sepsis-cde",
-    title: { fr: "Assistant heure-1 sepsis", ar: "مساعد الساعة الأولى للإنتان" },
-    description: { fr: "Votre pense-bête individuel du bundle première heure.", ar: "مذكّرتك الفردية لحزمة الساعة الأولى." },
+    title: { fr: "Assistant sepsis adulte", ar: "مساعد إنتان البالغين" },
+    description: { fr: "Aide au timing antibiotique, aux fluides conditionnels et au suivi selon SSC 2026.", ar: "مساعدة في توقيت المضاد والسوائل المشروطة والمتابعة وفق SSC 2026." },
     href: "/calculateurs/sepsis-commandement",
     icon: "Droplets",
-    meta: { sources: ["Surviving Sepsis Campaign 2021"], lastReviewed: "2026-09" },
+    meta: { sources: ["Surviving Sepsis Campaign 2026 (adult guidelines, SCCM)"], lastReviewed: "2026-10" },
   },
   {
     id: "neonat-ran",
@@ -933,10 +933,10 @@ export const calculators: CalculatorMeta[] = [
   {
     id: "pac",
     title: { fr: "Assistant pneumonie (PAC) individuel", ar: "مساعد ذات الرئة الفردي" },
-    description: { fr: "CURB-65 orientant + antibiotique heure-1 horodaté.", ar: "CURB-65 موجِّه + مضاد الساعة الأولى مؤرّخ." },
+    description: { fr: "CURB-65 pour orienter ; consigner l'antibiothérapie sans imposer un délai d'une heure à toutes les pneumonies.", ar: "CURB-65 للتوجيه؛ سجّل توقيت المضاد دون فرض مهلة ساعة على كل ذات رئة." },
     href: "/calculateurs/pac",
     icon: "Wind",
-    meta: { sources: ["BTS 2019"], lastReviewed: "2026-09" },
+    meta: { sources: ["BTS 2019 (CURB-65)", "Surviving Sepsis Campaign 2026 (sepsis timing distinction)"], lastReviewed: "2026-10" },
   },
   {
     id: "hemo-digestive",
@@ -1024,7 +1024,7 @@ export const calculators: CalculatorMeta[] = [
     description: { fr: "Le moteur détecte le dérèglement et cadre la conduite, adapté au patient.", ar: "محرك يكشف التعكر ويؤطر التصرف بتكيف مع المريض." },
     href: "/guidage",
     icon: "Stethoscope",
-    meta: { sources: ["SSC 2021", "ATLS", "ERC 2021"], lastReviewed: "2026-09" },
+    meta: { sources: ["SSC 2026 (adult sepsis timing/resuscitation)", "ATLS", "ERC 2021"], lastReviewed: "2026-10" },
   },
   {
     id: "jumeaux",

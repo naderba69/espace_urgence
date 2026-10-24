@@ -1,4 +1,5 @@
-// Modèles de données — tout élément de contenu porte ses sources et sa date de revue.
+// Types partagés. ReviewMeta est utilisé par certains registres ; d'autres jeux de données gardent
+// leurs références dans une autre forme et ne disposent pas toujours d'une date par entrée.
 export interface Localized {
   fr: string;
   ar: string;
@@ -14,6 +15,10 @@ export interface DrugInteraction {
   severity: "high" | "moderate";
   description: Localized;
 }
+
+export type WeightDose =
+  | { kind?: "fixed"; mgPerKg: number; maxMg: number; note: Localized }
+  | { kind: "range"; minMgPerKg: number; maxMgPerKg: number; maxMg?: number; requiresContext?: true; note: Localized };
 
 export interface Medication {
   id: string;
@@ -32,8 +37,8 @@ export interface Medication {
   storage: Localized;
   alternatives: string[];
   interactions?: DrugInteraction[];
-  // Permet au calculateur « dose selon le poids » de chiffrer automatiquement
-  weightDose?: { mgPerKg: number; maxMg: number; note: Localized };
+  // Dose fixe plafonnée ou plage posologique ; un plafond absolu n'est optionnel que pour une plage sourcée.
+  weightDose?: WeightDose;
   meta: ReviewMeta;
 }
 

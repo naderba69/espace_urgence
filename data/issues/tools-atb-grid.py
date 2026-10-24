@@ -4,15 +4,19 @@ Lecteur de table PDF « par cellules » : une cellule existe si ses quatre bords
 traits vectoriels. On énumère toutes les paires de niveaux (x0,x1)×(y0,y1), on garde les
 cellules **maximales** — c'est ce qui reconstitue correctement les cellules fusionnées
 (une même valeur couvre souvent plusieurs stades de DFG).
-Sortie : /home/user/atb_cells.json + contrôle d'intégrité (chaque span texte attribué à 1 cellule).
+Sortie par défaut : /tmp/eutn-atb-audit/atb_cells.json (chaque span texte est contrôlé).
 """
-import json, sys
+import json, sys, tempfile
+from pathlib import Path
 import pymupdf
 
-PDF = sys.argv[1] if len(sys.argv) > 1 else "/home/user/uploads/20260427_ATB-et-IR_version-ETS_V23_260921_083056.pdf"
-OUT = sys.argv[2] if len(sys.argv) > 2 else "/home/user/atb_cells.json"
+ISSUES_DIR = Path(__file__).resolve().parent
+TMP_DIR = Path(tempfile.gettempdir()) / "eutn-atb-audit"
+TMP_DIR.mkdir(parents=True, exist_ok=True)
+PDF = Path(sys.argv[1]) if len(sys.argv) > 1 else ISSUES_DIR / "OMEDIT-ATB-IR-V2.3-avril2026.pdf"
+OUT = Path(sys.argv[2]) if len(sys.argv) > 2 else TMP_DIR / "atb_cells.json"
 TOL = 1.6
-doc = pymupdf.open(PDF)
+doc = pymupdf.open(str(PDF))
 
 def page_lines(page):
     H, V = [], []

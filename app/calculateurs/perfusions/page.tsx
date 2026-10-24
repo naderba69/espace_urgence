@@ -27,8 +27,18 @@ export default function PerfusionsPage() {
   useEffect(() => {
     if (!hydrated) return;
     const saved = readJSON<{ idx: number; weight: string; dose: number }>(STORE, null as never);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration localStorage après hydratation (anti-mismatch)
-    if (saved) { setIdx(saved.idx ?? 0); setWeight(saved.weight ?? "70"); setDose(saved.dose || 0); }
+    /* eslint-disable react-hooks/set-state-in-effect -- restauration localStorage après hydratation, pour éviter un mismatch SSR/hydratation. */
+    if (saved) {
+      const restoredIdx = Number.isInteger(saved.idx) && saved.idx >= 0 && saved.idx < PERFUSIONS.length ? saved.idx : 0;
+      const preset = PERFUSIONS[restoredIdx];
+      const savedDose = Number.isFinite(saved.dose) && saved.dose > 0
+        ? Math.min(Math.max(saved.dose, preset.doseMin), preset.doseMax)
+        : 0;
+      setIdx(restoredIdx);
+      setWeight(saved.weight ?? "70");
+      setDose(savedDose);
+    }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [hydrated]);
   useEffect(() => {
     if (hydrated) writeJSON(STORE, { idx, weight, dose });
@@ -124,7 +134,10 @@ export default function PerfusionsPage() {
         <div className="flex items-end gap-2">
           <label className="flex flex-1 flex-col gap-1 text-sm font-semibold">
             {lang === "ar" ? `جرعة مخصصة (${p.unit})` : `Dose précise (${p.unit})`}
-            <NumStepper value={String(dose)} onValue={(v) => setDose(Number(v))} step={p.doseStep} placeholder={String(p.doseStart ?? "")} className="rounded-xl border border-line bg-surface2 px-3 py-3 text-center text-xl tabular-nums outline-none focus:ring-2 focus:ring-blue-600" label="dose" />
+            <NumStepper value={String(doseClamped)} onValue={(v) => {
+              const value = Number(v);
+              setDose(Number.isFinite(value) && value > 0 ? Math.min(Math.max(value, p.doseMin), p.doseMax) : 0);
+            }} step={p.doseStep} min={p.doseMin} max={p.doseMax} className="rounded-xl border border-line bg-surface2 px-3 py-3 text-center text-xl tabular-nums outline-none focus:ring-2 focus:ring-blue-600" label="dose" />
           </label>
           <div className="rounded-xl bg-blue-600 px-5 py-3 text-center text-white">
             <p className="text-xs opacity-90">{lang === "ar" ? "تدفق" : "débit"}</p>

@@ -1,15 +1,15 @@
-// ⚕️ تكييف المضادات الحيوية مع الوظيفة الكلوية — بيانات مستخرجة حرفيًا من الجدول المرجعي.
-// Antibiotiques et insuffisance rénale — données extraites à l'identique du tableau de référence :
+// ⚕️ تكييف المضادات الحيوية مع الوظيفة الكلوية — بيانات مستندة إلى الجدول مع توثيق التعديلات البنيوية.
+// Antibiotiques et insuffisance rénale — données dérivées de l'extraction du tableau de référence :
 //   « Adaptation des antibiotiques à la fonction rénale », OMEDIT Pays de la Loire, V2.3 (avril 2026),
 //   données sources RCP / GPR (SPILF–SFPT–CA-SFM juin 2023) / ePOPI, arrêtées au 10/01/2024.
 //
-// ⚠️ Adultes NON dialysés, selon le DFG (mL/min/1,73 m²). Le contenu français est reproduit mot pour mot
-//    (jamais paraphrasé : une dose se recopie, elle ne se traduit pas) ; l'interface est bilingue.
-//    ⚠️ À faire valider par un médecin/pharmacien tunisien avant usage clinique.
+// ⚠️ Adultes NON dialysés, selon le DFG (mL/min/1,73 m²). Les chaînes FR proviennent du PDF ; les
+//    corrections de structure/notes sont listées dans PATCH. Les noms et notes AR sont des traductions éditoriales.
+//    ⚠️ La génération ne prouve ni fidélité cellule par cellule ni validation clinique indépendante.
 //
-// طريقة الاستخراج: قُرئت حدود الخلايا المتجهية من ملف PDF ثم رُتّبت القيم في أعمدة المراحل الخمس،
-// ثم راجعنا الصفحات الاثنتي عشرة بصريًا سطرًا سطرًا. البنود التي كان فيها الجدول المصدر غير محاذٍ
-// هندسيًا صُحّحت يدويًا (انظر tools/gen_atb_ts.py) ولا تحمل أي قيمة مُخمَّنة.
+// منهج النقل: حُفظت خلايا PDF وإحداثياتها؛ إذا تقاطعت المرحلة مع نصوص خلايا مختلفة فلا تُختار جرعة، وتُعرض النصوص في ملاحظة مقيّدة بالمرحلة.
+// الصفوف المستكملة هندسياً والخلايا غير المختارة موسومة للمراجعة؛ الاستثناءات النصية/البنيوية موثقة في PATCH.
+// لا يستنتج الإسقاط حدود DFG سريرية، ولا يثبت التوليد أو الفحص البنيوي صحة الجرعات.
 
 export type AtbStageId = "normorenal" | "legere" | "moderee" | "severe" | "terminale";
 
@@ -62,7 +62,7 @@ export interface AtbRenalRow {
   /** رقم الصفحة في الملف المصدر (للتحقق اليدوي السريع). */
   page: number;
   lines: AtbRenalLine[];
-  notes: { fr: string; ar: string }[];
+  notes: { fr: string; ar: string; stages?: AtbStageId[] }[];
 }
 
 /** 93 سطرًا: كل تركيبة (جزيئة × طريق إعطاء) كما في الجدول المصدر. */
@@ -125,11 +125,12 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "penicillines",
     page: 2,
     lines: [
-      { kind: "dose", d: ["Posologie usuelle : 1 à 2 g /6 à 12h", "Posologie usuelle : 1 à 2 g /6 à 12h", "Posologie usuelle : 1 à 2 g /6 à 12h", "DC de 1 g puis 500 mg/12h", "DC de 1 g puis 250 mg/12h"] },
-      { kind: "dose", d: ["Infection à Acinetobacter spp : 3 g /6 à 8h", "Infection à Acinetobacter spp : 3 g /6 à 8h", "Infection à Acinetobacter spp : 3 g /6 à 8h", "3 g/12h", "3 g/24h"] },
+      { kind: "dose", d: ["Posologie usuelle : 1 à 2 g /6 à 12h", "Posologie usuelle : 1 à 2 g /6 à 12h", "Posologie usuelle : 1 à 2 g /6 à 12h", "DC de 1 g puis 500 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", d: ["Infection à Acinetobacter spp : 3 g /6 à 8h", "Infection à Acinetobacter spp : 3 g /6 à 8h", "Infection à Acinetobacter spp : 3 g /6 à 8h", "3 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g d'ampicilline", ar: "الجرعات معبَّر عنها بغرامات الأمبيسيلين" },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC terminale (DFG < 15) : DC de 1 g puis 500 mg/12h | DC de 1 g puis 250 mg/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي نهائي (DFG < 15): DC de 1 g puis 500 mg/12h | DC de 1 g puis 250 mg/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["terminale"] },
     ],
   },
   {
@@ -152,10 +153,12 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "penicillines",
     page: 2,
     lines: [
-      { kind: "dose", d: ["2,4 MUI tous les 8 jours", "2,4 MUI tous les 8 jours", "1,8 MUI tous les 8 jours", "1,8 MUI tous les 8 jours", "Aucune donnée"] },
-      { kind: "dose", d: ["1,2 MUI toutes les 3 à 4 semaines", "1,2 MUI toutes les 3 à 4 semaines", "0,9 MUI toutes les 3 à 4 semaines", "0,9 MUI toutes les 3 à 4 semaines", "Aucune donnée"] },
+      { kind: "dose", d: ["2,4 MUI tous les 8 jours", "2,4 MUI tous les 8 jours", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1,8 MUI tous les 8 jours", "Aucune donnée"] },
+      { kind: "dose", d: ["1,2 MUI toutes les 3 à 4 semaines", "1,2 MUI toutes les 3 à 4 semaines", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,9 MUI toutes les 3 à 4 semaines", "Aucune donnée"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 2,4 MUI tous les 8 jours | 1,8 MUI tous les 8 jours | 1,2 MUI toutes les 3 à 4 semaines | 0,9 MUI toutes les 3 à 4 semaines. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 2,4 MUI tous les 8 jours | 1,8 MUI tous les 8 jours | 1,2 MUI toutes les 3 à 4 semaines | 0,9 MUI toutes les 3 à 4 semaines. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+    ],
   },
   {
     id: "benzylpenicilline-sodique-im-ou-iv",
@@ -164,9 +167,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "penicillines",
     page: 2,
     lines: [
-      { kind: "dose", d: ["12 à 24 MUI/j en 6 injections ou en perfusion continue", "3 MUI /4h", "2 MUI/4h", "1 MUI/4h", "0,5 MUI/6h"] },
+      { kind: "dose", d: ["12 à 24 MUI/j en 6 injections ou en perfusion continue", "12 à 24 MUI/j en 6 injections ou en perfusion continue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 MUI/4h", "0,5 MUI/6h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 12 à 24 MUI/j en 6 injections ou en perfusion continue | 3 MUI /4h | 2 MUI/4h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 12 à 24 MUI/j en 6 injections ou en perfusion continue | 3 MUI /4h | 2 MUI/4h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+    ],
   },
   {
     id: "cloxacilline-po",
@@ -219,9 +224,12 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "penicillines",
     page: 2,
     lines: [
-      { kind: "dose", d: ["4 g/6 à 8h", "4 g/6 à 8h", "4 g/6 à 8h", "4 g/ 8h", "4 g/12h"] },
+      { kind: "dose", d: ["4 g/6 à 8h", "4 g/6 à 8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "4 g/12h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 4 g/6 à 8h | 4 g/ 8h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 4 g/6 à 8h | 4 g/ 8h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : 4 g/ 8h | 4 g/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): 4 g/ 8h | 4 g/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
+    ],
   },
   {
     id: "piperacilline-tazobactam-iv",
@@ -230,10 +238,12 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "penicillines",
     page: 3,
     lines: [
-      { kind: "dose", d: ["4 g/6 à 8h", "4 g/6 à 8h", "4 g/6 à 8h", "4 g/ 8h", "4 g/12h"] },
+      { kind: "dose", d: ["4 g/6 à 8h", "4 g/6 à 8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "4 g/12h"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g de pipéracilline", ar: "الجرعات معبَّر عنها بغرامات البيبراسيلين" },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 4 g/6 à 8h | 4 g/ 8h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 4 g/6 à 8h | 4 g/ 8h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : 4 g/ 8h | 4 g/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): 4 g/ 8h | 4 g/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
     ],
   },
   {
@@ -266,7 +276,7 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "monobactames",
     page: 3,
     lines: [
-      { kind: "dose", d: ["Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "½ dose", "¼ dose"] },
+      { kind: "dose", d: ["Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"] },
       { kind: "dose", d: ["Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "½ dose", "¼ dose"] },
     ],
     notes: [],
@@ -301,9 +311,12 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 3,
     lines: [
-      { kind: "dose", d: ["1 g/12h", "1 g/12h", "1 g/12h", "500 mg/12h", "500 mg/24h"] },
+      { kind: "dose", d: ["1 g/12h", "1 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/24h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 1 g/12h | 500 mg/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 1 g/12h | 500 mg/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : 500 mg/12h | 500 mg/24h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): 500 mg/12h | 500 mg/24h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
+    ],
   },
   {
     id: "cefalexine-po",
@@ -335,11 +348,14 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 4,
     lines: [
-      { kind: "dose", d: ["Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *", "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *", "1 g/24h", "0,5 g/24h", "0,25 g/24h"] },
-      { kind: "dose", d: ["Infection sévère : 2 g/12h", "Infection sévère : 2 g/12h", "2 g/24h", "1 g/24h", "0,5 g/24h"] },
-      { kind: "dose", d: ["Infection très sévère : 2 g/8h", "Infection très sévère : 2 g/8h", "1 g/8h", "1 g/12h", "1 g/24h"] },
+      { kind: "dose", d: ["Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *", "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,5 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", d: ["Infection sévère : 2 g/12h", "Infection sévère : 2 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", d: ["Infection très sévère : 2 g/8h", "Infection très sévère : 2 g/8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h * | 1 g/24h | Infection sévère : 2 g/12h | 2 g/24h | Infection très sévère : 2 g/8h | 1 g/8h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h * | 1 g/24h | Infection sévère : 2 g/12h | 2 g/24h | Infection très sévère : 2 g/8h | 1 g/8h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC terminale (DFG < 15) : 0,5 g/24h | 0,25 g/24h | 1 g/24h | 1 g/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي نهائي (DFG < 15): 0,5 g/24h | 0,25 g/24h | 1 g/24h | 1 g/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["terminale"] },
+    ],
   },
   {
     id: "cefiderocol-iv",
@@ -350,7 +366,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     lines: [
       { kind: "dose", d: ["2 g/8h si fonction rénale ≥ 120 mL/min : 2 g/6h", "2 g/8h", "1,5 g/8h", "1 g/8h", "0,75 g/12h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Si fonction rénale ≥ 120 mL/min : 2 g/6h", ar: "إذا كان الترشيح الكلوي ≥ 120 مل/دقيقة: 2 غ كل 6 ساعات", stages: ["normorenal"] },
+    ],
   },
   {
     id: "cefixime-po",
@@ -359,9 +377,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 4,
     lines: [
-      { kind: "dose", d: ["200 mg/12h", "200 mg/12h", "200 mg/12h", "200 mg/12h", "200 mg/24h"] },
+      { kind: "dose", d: ["200 mg/12h", "200 mg/12h", "200 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/24h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : 200 mg/12h | 200 mg/24h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): 200 mg/12h | 200 mg/24h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
+    ],
   },
   {
     id: "cefotaxime-im-iv",
@@ -383,10 +403,13 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 5,
     lines: [
-      { kind: "dose", d: ["Infection peu grave : 1 à 2 g/8h", "Infection peu grave : 1 à 2 g/8h", "1 à 2 g/8 à 12h", "1 à 2 g/12 à 24h", "0,5 à 1g/24 à 48h"] },
-      { kind: "dose", d: ["Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue", "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue", "Aucune donnée", "Aucune donnée", "Aucune donnée"] },
+      { kind: "dose", d: ["Infection peu grave : 1 à 2 g/8h", "Infection peu grave : 1 à 2 g/8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 à 2 g/12 à 24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", d: ["Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue", "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Aucune donnée", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Infection peu grave : 1 à 2 g/8h | 1 à 2 g/8 à 12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Infection peu grave : 1 à 2 g/8h | 1 à 2 g/8 à 12h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC terminale (DFG < 15) : 1 à 2 g/12 à 24h | 0,5 à 1g/24 à 48h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي نهائي (DFG < 15): 1 à 2 g/12 à 24h | 0,5 à 1g/24 à 48h. لم تُختَر جرعة واحدة آليًا.", stages: ["terminale"] },
+    ],
   },
   {
     id: "cefpodoxime-proxetil-po",
@@ -406,9 +429,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 5,
     lines: [
-      { kind: "dose", d: ["600 mg/12h", "600 mg/12h", "400 mg/12h", "300 mg/12h", "200 mg/12h"] },
+      { kind: "dose", d: ["600 mg/12h", "600 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "300 mg/12h", "200 mg/12h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 600 mg/12h | 400 mg/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 600 mg/12h | 400 mg/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+    ],
   },
   {
     id: "ceftazidime-im-iv",
@@ -429,11 +454,12 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 5,
     lines: [
-      { kind: "dose", d: ["Administration discontinue : 2 g/8h en perfusion de 2h", "Administration discontinue : 2 g/8h en perfusion de 2h", "1 g/8h", "0,75 g/12h", "0,75 g/24h"] },
-      { kind: "dose", d: ["Administration en continue : DC de 2 g puis 6 g/24h", "Administration en continue : DC de 2 g puis 6 g/24h", "Aucune donnée sur l'administration en continue", "Aucune donnée sur l'administration en continue", "Aucune donnée sur l'administration en continue"] },
+      { kind: "dose", d: ["Administration discontinue : 2 g/8h en perfusion de 2h", "Administration discontinue : 2 g/8h en perfusion de 2h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,75 g/12h", "0,75 g/24h"] },
+      { kind: "dose", d: ["Administration en continue : DC de 2 g puis 6 g/24h", "Administration en continue : DC de 2 g puis 6 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Aucune donnée sur l'administration en continue", "Aucune donnée sur l'administration en continue"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g de ceftazidime", ar: "الجرعات معبَّر عنها بغرامات السيفتازيديم" },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Administration discontinue : 2 g/8h en perfusion de 2h | 1 g/8h | Administration en continue : DC de 2 g puis 6 g/24h | Aucune donnée sur l'administration en continue. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Administration discontinue : 2 g/8h en perfusion de 2h | 1 g/8h | Administration en continue : DC de 2 g puis 6 g/24h | Aucune donnée sur l'administration en continue. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
     ],
   },
   {
@@ -443,9 +469,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 5,
     lines: [
-      { kind: "dose", d: ["500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h", "500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h", "500 mg/12h", "250 mg/12h", "250 mg/24h"] },
+      { kind: "dose", d: ["500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h", "500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg/12h", "250 mg/24h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h | 500 mg/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h | 500 mg/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+    ],
   },
   {
     id: "ceftolozane-tazobactam-iv",
@@ -454,11 +482,12 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 5,
     lines: [
-      { kind: "dose", d: ["1 g/8h en perfusion de 60 min", "1 g/8h en perfusion de 60 min", "500 mg/8h", "250 mg /8h", "DC de 500 mg puis 8h plus tard 100 mg/8h"] },
-      { kind: "dose", d: ["Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "1 g/8h", "500 mg/8h", "DC 1500 mg puis 8h plus tard 300 mg/8h"] },
+      { kind: "dose", d: ["1 g/8h en perfusion de 60 min", "1 g/8h en perfusion de 60 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg /8h", "DC de 500 mg puis 8h plus tard 100 mg/8h"] },
+      { kind: "dose", d: ["Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/8h", "DC 1500 mg puis 8h plus tard 300 mg/8h"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g de ceftolozane", ar: "الجرعات معبَّر عنها بغرامات السيفتولوزان" },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 1 g/8h en perfusion de 60 min Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min | 500 mg/8h 1 g/8h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 1 g/8h en perfusion de 60 min Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min | 500 mg/8h 1 g/8h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
     ],
   },
   {
@@ -468,7 +497,7 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "cephalosporines",
     page: 6,
     lines: [
-      { kind: "info", d: ["Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; « Aucune donnée chez l'insuffisant rénal »", "Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; « Aucune donnée chez l'insuffisant rénal »", "Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; « Aucune donnée chez l'insuffisant rénal »", "Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; « Aucune donnée chez l'insuffisant rénal »", "Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; « Aucune donnée chez l'insuffisant rénal »"] },
+      { kind: "info", d: ["Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l'insuffisant rénal", "Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l'insuffisant rénal", "Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l'insuffisant rénal", "Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l'insuffisant rénal", "Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l'insuffisant rénal"] },
     ],
     notes: [],
   },
@@ -512,12 +541,15 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "carbapenemes",
     page: 6,
     lines: [
-      { kind: "dose", d: ["500 mg/6h en perfusion de 30 min", "500 mg/6h en perfusion de 30 min", "500 mg/8h", "250 mg/6h", "250 mg/12h"] },
-      { kind: "dose", d: ["1000 mg/8h en perfusion de 30 min", "1000 mg/8h en perfusion de 30 min", "500 mg/6h", "500 mg/8h", "500 mg/12h"] },
-      { kind: "dose", d: ["1000 mg/6h en perfusion de 30 min", "1000 mg/6h en perfusion de 30 min", "750 mg/8h", "500 mg/6h", "500 mg/12h"] },
+      { kind: "dose", d: ["500 mg/6h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg/12h"] },
+      { kind: "dose", d: ["1000 mg/8h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/12h"] },
+      { kind: "dose", d: ["1000 mg/6h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/12h"] },
     ],
     notes: [
       { fr: "Posologies exprimées en mg d'Imipénem", ar: "الجرعات معبَّر عنها بمغ الإيميبينيم" },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC légère (DFG 89 → 60) : 500 mg/6h en perfusion de 30 min | 500 mg/8h | 1000 mg/8h en perfusion de 30 min | 500 mg/6h | 1000 mg/6h en perfusion de 30 min | 750 mg/8h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي خفيف (DFG 89 → 60): 500 mg/6h en perfusion de 30 min | 500 mg/8h | 1000 mg/8h en perfusion de 30 min | 500 mg/6h | 1000 mg/6h en perfusion de 30 min | 750 mg/8h. لم تُختَر جرعة واحدة آليًا.", stages: ["legere"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 500 mg/8h | 250 mg/6h | 500 mg/6h | 750 mg/8h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 500 mg/8h | 250 mg/6h | 500 mg/6h | 750 mg/8h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : 250 mg/6h | 250 mg/12h | 500 mg/8h | 500 mg/12h | 500 mg/6h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): 250 mg/6h | 250 mg/12h | 500 mg/8h | 500 mg/12h | 500 mg/6h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
     ],
   },
   {
@@ -540,9 +572,13 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "carbapenemes",
     page: 6,
     lines: [
-      { kind: "dose", d: ["1 à 2 g/8h", "1 à 2 g/8h", "1 à 2 g/12h", "0,5 à 1 g/12h", "0,5 à 1 g/12h"] },
+      { kind: "dose", d: ["1 à 2 g/8h", "1 à 2 g/8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,5 à 1 g/12h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique", ar: "عند الجرعات العالية (> 6 غ/24 سا): تُجرى مراقبة علاجية لتركيز الدواء." },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 1 à 2 g/8h | 1 à 2 g/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 1 à 2 g/8h | 1 à 2 g/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : 1 à 2 g/12h | 0,5 à 1 g/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): 1 à 2 g/12h | 0,5 à 1 g/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
+    ],
   },
   {
     id: "meropenem-vaborbactam-iv-atb-de-reserve",
@@ -551,10 +587,13 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "carbapenemes",
     page: 6,
     lines: [
-      { kind: "dose", d: ["2 g/8h en perfusion de 3h", "2 g/8h en perfusion de 3h", "2 g/8h en perfusion de 3h", "1g/8h", "0,5g/12h"] },
+      { kind: "dose", d: ["2 g/8h en perfusion de 3h", "2 g/8h en perfusion de 3h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g de meropenem", ar: "الجرعات معبَّر عنها بغرامات الميروبينيم" },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 2 g/8h en perfusion de 3h | 1g/8h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 2 g/8h en perfusion de 3h | 1g/8h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : 1g/8h | 1g/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): 1g/8h | 1g/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC terminale (DFG < 15) : 1g/12h | 0,5g/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي نهائي (DFG < 15): 1g/12h | 0,5g/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["terminale"] },
     ],
   },
   {
@@ -564,10 +603,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "aminosides",
     page: 7,
     lines: [
-      { kind: "dose", d: ["15 à 30 mg/kg/j", "15 à 30 mg/kg/j", "15 à 30 mg/kg/j", "15 à 30 mg/kg/j", "15 à 30 mg/kg/j"] },
+      { kind: "dose", d: ["15 à 30 mg/kg/j", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau"] },
     ],
     notes: [
-      { fr: "En cas de situation clinique justifiant l'administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d'espacer les doses.", ar: "إذا استدعى الوضع السريري الإعطاء فلا تُخفَّض الجرعة الواحدية. في معظم الحالات تكفي حقنة واحدة يوميًا؛ وإذا تكرّرت الحقن فلا بدّ من معايرة المستوى المتبقّي وتباعد الجرعات." },
+      { fr: "En cas de situation clinique justifiant l'administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d'espacer les doses.", ar: "إذا استدعى الوضع السريري الإعطاء فلا تُخفَّض الجرعة الواحدية. في معظم الحالات تكفي حقنة واحدة؛ وإذا تكرّرت الحقن فلا بدّ من معايرة المستوى المتبقّي وتباعد الجرعات.", stages: ["legere", "moderee", "severe", "terminale"] },
+      { fr: "Cette entrée reproduit le tableau OMEDIT V2.3, dont les références sont arrêtées au 10/01/2024 ; elle ne doit pas être confondue avec la recommandation CA-SFM/SPILF/SFPT 2025 de 25–30 mg/kg/j chez l'adulte non obèse à fonction rénale normale, affichée séparément. Les colonnes sont en DFG (mL/min/1,73 m²), pas en ClCr Cockcroft–Gault. Vérifier le RCP du produit, l'indication, le TDM et le protocole local.", ar: "هذا السطر من جدول OMEDIT V2.3 ذي المراجع المتوقفة عند 10/01/2024؛ لا تخلطه مع توصية CA-SFM/SPILF/SFPT لعام 2025 بجرعة 25–30 ملغ/كغ/يوم للبالغ غير البدين ذي الوظيفة الكلوية الطبيعية، المعروضة بشكل منفصل. أعمدة الجدول هي DFG (مل/د/1.73 م²) وليست ClCr بمعادلة Cockcroft–Gault. تحقّق من نشرة المنتج والاستطباب وقياس مستويات الدواء والبروتوكول المحلي." },
     ],
   },
   {
@@ -577,10 +617,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "aminosides",
     page: 7,
     lines: [
-      { kind: "dose", d: ["3 à 8 mg/kg/j", "3 à 8 mg/kg/j", "3 à 8 mg/kg/j", "3 à 8 mg/kg/j", "3 à 8 mg/kg/j"] },
+      { kind: "dose", d: ["3 à 8 mg/kg/j", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau"] },
     ],
     notes: [
-      { fr: "En cas de situation clinique justifiant l'administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d'espacer les doses.", ar: "إذا استدعى الوضع السريري الإعطاء فلا تُخفَّض الجرعة الواحدية. في معظم الحالات تكفي حقنة واحدة يوميًا؛ وإذا تكرّرت الحقن فلا بدّ من معايرة المستوى المتبقّي وتباعد الجرعات." },
+      { fr: "En cas de situation clinique justifiant l'administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d'espacer les doses.", ar: "إذا استدعى الوضع السريري الإعطاء فلا تُخفَّض الجرعة الواحدية. في معظم الحالات تكفي حقنة واحدة؛ وإذا تكرّرت الحقن فلا بدّ من معايرة المستوى المتبقّي وتباعد الجرعات.", stages: ["legere", "moderee", "severe", "terminale"] },
     ],
   },
   {
@@ -590,10 +630,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "aminosides",
     page: 7,
     lines: [
-      { kind: "dose", d: ["3 à 8 mg/kg/j", "3 à 8 mg/kg/j", "3 à 8 mg/kg/j", "3 à 8 mg/kg/j", "3 à 8 mg/kg/j"] },
+      { kind: "dose", d: ["3 à 8 mg/kg/j", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau", "Cellule fusionnée — voir la note commune du tableau"] },
     ],
     notes: [
-      { fr: "En cas de situation clinique justifiant l'administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d'espacer les doses.", ar: "إذا استدعى الوضع السريري الإعطاء فلا تُخفَّض الجرعة الواحدية. في معظم الحالات تكفي حقنة واحدة يوميًا؛ وإذا تكرّرت الحقن فلا بدّ من معايرة المستوى المتبقّي وتباعد الجرعات." },
+      { fr: "En cas de situation clinique justifiant l'administration, la posologie unitaire ne doit pas être diminuée. Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est indispensable de réaliser des dosages du résiduel et d'espacer les doses.", ar: "إذا استدعى الوضع السريري الإعطاء فلا تُخفَّض الجرعة الواحدية. في معظم الحالات تكفي حقنة واحدة؛ وإذا تكرّرت الحقن فلا بدّ من معايرة المستوى المتبقّي وتباعد الجرعات.", stages: ["legere", "moderee", "severe", "terminale"] },
     ],
   },
   {
@@ -647,10 +687,13 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "fluoroquinolones",
     page: 7,
     lines: [
-      { kind: "dose", d: ["500 mg/12 à 24h", "500 mg/12 à 24h", "DC de 500 mg puis 250 mg/12 à 24h", "DC de 500 mg puis 250 mg/24 à 48h", "DC de 500 mg puis 125 à 250 mg/48h"] },
-      { kind: "dose", d: ["Cystite non compliquée : 250 mg /24h", "Cystite non compliquée : 250 mg /24h", "DC de 250 mg puis 125 mg/24h", "DC de 250 mg puis 125 mg/24h", "DC de 250 mg puis 125 mg/48h"] },
+      { kind: "dose", d: ["500 mg/12 à 24h", "500 mg/12 à 24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 500 mg puis 125 à 250 mg/48h"] },
+      { kind: "dose", d: ["Cystite non compliquée : 250 mg /24h", "Cystite non compliquée : 250 mg /24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 250 mg puis 125 mg/48h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Cystite non compliquée : 250 mg /24h | DC de 250 mg puis 125 mg/24h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Cystite non compliquée : 250 mg /24h | DC de 250 mg puis 125 mg/24h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : DC de 250 mg puis 125 mg/24h | DC de 250 mg puis 125 mg/48h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): DC de 250 mg puis 125 mg/24h | DC de 250 mg puis 125 mg/48h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
+    ],
   },
   {
     id: "moxifloxacine-iv-po",
@@ -681,10 +724,13 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "fluoroquinolones",
     page: 7,
     lines: [
-      { kind: "dose", d: ["Dose usuelle : 200 mg/12h", "Dose usuelle : 200 mg/12h", "200 mg/24h", "200 mg/24h", "200 mg/48h"] },
-      { kind: "dose", d: ["Infection sévère : 400 mg/12h", "Infection sévère : 400 mg/12h", "400 mg/24h", "400 mg/24h", "200 mg/24h OU 400 mg/48h"] },
+      { kind: "dose", d: ["Dose usuelle : 200 mg/12h", "Dose usuelle : 200 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/48h"] },
+      { kind: "dose", d: ["Infection sévère : 400 mg/12h", "Infection sévère : 400 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/24h OU 400 mg/48h"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Dose usuelle : 200 mg/12h | 200 mg/24h | Infection sévère : 400 mg/12h | 400 mg/24h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Dose usuelle : 200 mg/12h | 200 mg/24h | Infection sévère : 400 mg/12h | 400 mg/24h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC sévère (DFG 30 → 15) : 200 mg/24h | 200 mg/48h | 400 mg/24h | 200 mg/24h OU 400 mg/48h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي شديد (DFG 30 → 15): 200 mg/24h | 200 mg/48h | 400 mg/24h | 200 mg/24h OU 400 mg/48h. لم تُختَر جرعة واحدة آليًا.", stages: ["severe"] },
+    ],
   },
   {
     id: "dalbavancine-iv",
@@ -987,9 +1033,12 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "autres",
     page: 11,
     lines: [
-      { kind: "dose", d: ["DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations", "DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations", "DC de 9 MUI puis 5,5 à 7,5 MUI/24h en 2 perfusions", "DC de 9 MUI puis 4,5 à 5,5 MUI/24h en 2 perfusions", "DC de 9 MUI puis 3,5 MUI/24h en 2 perfusions"] },
+      { kind: "dose", d: ["DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations", "DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 9 MUI puis 4,5 à 5,5 MUI/24h en 2 perfusions", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations | DC de 9 MUI puis 5,5 à 7,5 MUI/24h en 2 perfusions. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): DC de 9 MUI en perfusion de 30 min puis 9 MUI/24h en 2 ou 3 administrations | DC de 9 MUI puis 5,5 à 7,5 MUI/24h en 2 perfusions. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC terminale (DFG < 15) : DC de 9 MUI puis 4,5 à 5,5 MUI/24h en 2 perfusions | DC de 9 MUI puis 3,5 MUI/24h en 2 perfusions. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي نهائي (DFG < 15): DC de 9 MUI puis 4,5 à 5,5 MUI/24h en 2 perfusions | DC de 9 MUI puis 3,5 MUI/24h en 2 perfusions. لم تُختَر جرعة واحدة آليًا.", stages: ["terminale"] },
+    ],
   },
   {
     id: "daptomycine-iv",
@@ -1099,9 +1148,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     section: "antituberculeux",
     page: 12,
     lines: [
-      { kind: "dose", d: ["15 à 20 mg/kg/24h (25 mg/kg/j maximum)", "15 mg/kg/j", "10 mg/kg/j", "10 mg/kg/j", "10 mg/kg/j"] },
+      { kind: "dose", d: ["15 à 20 mg/kg/24h (25 mg/kg/j maximum)", "Cellules source multiples — consulter la note; aucune dose unique retenue", "10 mg/kg/j", "10 mg/kg/j", "10 mg/kg/j"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Plusieurs cellules distinctes du tableau source dans IRC légère (DFG 89 → 60) : 15 mg/kg/j | 10 mg/kg/j. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي خفيف (DFG 89 → 60): 15 mg/kg/j | 10 mg/kg/j. لم تُختَر جرعة واحدة آليًا.", stages: ["legere"] },
+    ],
   },
   {
     id: "isoniazide-im-iv-po",
@@ -1145,7 +1196,7 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     page: 12,
     lines: [
       { kind: "dose", d: ["Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h"] },
-      { kind: "dose", d: ["Infection à germes gram + ou - : 20 à 30 mg/kg/24h", "Infection à germes gram + ou - : 20 à 30 mg/kg/24h", "espacer les prises si besoin me selon rifampicémie du 2 ou me 3 jour du traitement", "espacement des prises indispensable", "espacement des prises indispensable"] },
+      { kind: "dose", d: ["Infection à germes gram + ou - : 20 à 30 mg/kg/24h", "Infection à germes gram + ou - : 20 à 30 mg/kg/24h", "espacer les prises si besoin selon rifampicémie du 2ᵉ ou 3ᵉ jour du traitement", "espacement des prises indispensable", "espacement des prises indispensable"] },
     ],
     notes: [],
   },

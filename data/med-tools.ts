@@ -36,7 +36,9 @@ export const MED_TOOLS: Record<string, MedToolCfg> = {
     protocols: ["choc-septique"],
   },
   dobutamine: {
-    pump: { unit: "µg/kg/min", doseMin: 1, doseMax: 20, doseStep: 1, doseStart: 5, defAmpMg: 250, defAmpVol: 10, defCount: 1, defTarget: 50 },
+    // Référence RCP Panpharma : 250 mg complétés au volume final de 250 mL (≈1 mg/mL).
+    // Version de préparation à incrémenter si la concentration standard évolue.
+    pump: { unit: "µg/kg/min", doseMin: 2.5, doseMax: 10, doseStep: 2.5, doseStart: 2.5, defAmpMg: 250, defAmpVol: 20, defCount: 1, defTarget: 250, warnAbove: 10 },
     protocols: ["oap"],
   },
   adrenaline: {
@@ -50,6 +52,13 @@ export const MED_TOOLS: Record<string, MedToolCfg> = {
     weightDose: { mgPerKg: 5, maxMg: 300, note: { fr: "ACR pédiatrique : 5 mg/kg (max 300)", ar: "توقف القلب للطفل: 5 ملغ/كغ (الحد 300)" } },
     protocols: ["tachycardie", "acr-adulte"],
     badges: { qt: { fr: "Allonge QT", ar: "يطيل QT" } },
+  },
+  amikacine: {
+    links: [
+      { href: "/calculateurs/antibiotiques", label: { fr: "Dose adulte + ClCr (Cockcroft–Gault)", ar: "جرعة البالغ + ClCr (Cockcroft–Gault)" } },
+      { href: "/calculateurs/antibio-renal?q=Amikacine", label: { fr: "Tableau rénal séparé (DFG)", ar: "جدول كلوي منفصل (DFG)" } },
+    ],
+    badges: { renal: { fr: "Répétition guidée par la fonction rénale/TDM", ar: "تكرار الجرعة حسب الكلى وقياس مستويات الدواء" } },
   },
   enoxaparine: {
     links: [{ href: "/calculateurs/enoxaparine", label: { fr: "Dose par poids et clairance", ar: "الجرعة بالوزن والتصفية" } }],
@@ -97,8 +106,12 @@ import { PERFUSIONS } from "./perfusions";
 
 /** v2.3 — pompe auto-configurée depuis la préparation RE.NAU de toute perfusion connue. */
 export function pumpCfgFromPerfusion(medId: string): PumpCfg | undefined {
-  const p = PERFUSIONS.find((x) => x.drugId === medId);
-  if (!p) return undefined;
+  const matches = PERFUSIONS.filter((x) => x.drugId === medId);
+  // Un même médicament peut avoir plusieurs préparations/indications (p. ex. héparine SCA/EP).
+  // Choisir la première par ordre du tableau masquerait ce contexte et pourrait afficher une dose
+  // inadaptée. Dans ce cas, seule une configuration explicitement sélectionnée ailleurs est sûre.
+  if (matches.length !== 1) return undefined;
+  const [p] = matches;
   const isUI = p.unit.startsWith("UI");
   const mm = p.prep.fr.match(/([\d\s.,]+)\s*(mg|UI|g)\b/i);
   const mv = p.prep.fr.match(/(\d+)\s*mL/i);

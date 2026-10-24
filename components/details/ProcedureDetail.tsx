@@ -111,9 +111,6 @@ export default function ProcedureDetail({ procedure: p }: { procedure: Procedure
             <li key={i} className="flex gap-3">
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-sm font-black text-white tabular-nums">{i + 1}</span>
               <span className="pt-0.5"><T fr={s.fr} ar={s.ar} /></span>
-              {p.stepTimes?.[i] !== undefined && (
-                <span className="ms-auto shrink-0 self-start rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-black tabular-nums text-amber-500" dir="ltr">≤ {fmtMMSS(p.stepTimes[i])}</span>
-              )}
             </li>
           ))}
         </ol>

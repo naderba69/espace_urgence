@@ -2,7 +2,7 @@
 // v16.0 — إعادة التقييم: إدخال الثوابت الحيوية عند كل مراجعة → محرّك رصد التدهور
 // يرفع الاشتباه (مثال: SCA تدهورت → علامات OAP) → معايير تأكيد سريري → عند التأكيد
 // تُضاف المضاعفة إلى مشيخة المريض النشطة مع الـconduite المرجعية والروابط.
-// الاشتباه ≠ تشخيص — التأكيد قرار المهني (ESC 2021 · SSC 2021 · ERC 2021).
+// الاشتباه ≠ تشخيص — التأكيد قرار المهني؛ تحري الإنتان qSOFA هنا للبالغ فقط وفق SSC 2026.
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useApp } from "@/components/Providers";
@@ -12,8 +12,8 @@ import PageHeader from "@/components/ui/PageHeader";
 import { evaluateVitals, getProblems, addProblem, removeProblem, type Alert, type Problem, type Vitals } from "@/lib/deterioration";
 import { pushVitals } from "@/lib/casesummary";
 
-type Fields = Record<"fc" | "pas" | "fr" | "spo2" | "gcs" | "gly" | "k", string>;
-const EMPTY: Fields = { fc: "", pas: "", fr: "", spo2: "", gcs: "", gly: "", k: "" };
+type Fields = Record<"fc" | "pas" | "fr" | "spo2" | "gcs" | "gly" | "k" | "age", string>;
+const EMPTY: Fields = { fc: "", pas: "", fr: "", spo2: "", gcs: "", gly: "", k: "", age: "" };
 
 const PARSE: Array<{ k: keyof Fields; fr: string; ar: string }> = [
   { k: "fc", fr: "FC /min", ar: "النبض /د" },
@@ -23,6 +23,7 @@ const PARSE: Array<{ k: keyof Fields; fr: string; ar: string }> = [
   { k: "gcs", fr: "GCS /15", ar: "غلاسكو /15" },
   { k: "gly", fr: "Glycémie g/L", ar: "السكر غ/ل" },
   { k: "k", fr: "K⁺ mmol/L (si dispo)", ar: "البوتاسيوم (إن توفر)" },
+  { k: "age", fr: "Âge (années) — requis pour alertes adultes", ar: "العمر (سنة) — مطلوب للتنبيهات الخاصة بالبالغين" },
 ];
 
 export default function ReevaluationPage() {
@@ -44,7 +45,7 @@ export default function ReevaluationPage() {
   const num = (s: string) => (s.trim() === "" ? undefined : Number(s.replace(",", ".")));
 
   const run = () => {
-    const v: Vitals = { fc: num(f.fc), pas: num(f.pas), fr: num(f.fr), spo2: num(f.spo2), gcs: num(f.gcs), gly: num(f.gly), k: num(f.k) };
+    const v: Vitals = { age: num(f.age), fc: num(f.fc), pas: num(f.pas), fr: num(f.fr), spo2: num(f.spo2), gcs: num(f.gcs), gly: num(f.gly), k: num(f.k) };
     if (Object.values(v).some((x) => typeof x === "number" && Number.isFinite(x))) pushVitals(v); // v16.2 — لقطة لاتجاه الثوابت
     setAlerts(evaluateVitals(v).filter((a) => !dismissed.includes(a.rule.id)));
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -70,6 +71,9 @@ export default function ReevaluationPage() {
         title={L("Réévaluation — dépistage de la détérioration", "إعادة التقييم — رصد التدهور")}
         sub={L("Saisir les constantes à chaque visite : le moteur alerte, vous confirmez, la complication rejoint la fiche du patient.", "أدخل الثوابت عند كل مراجعة: المحرّك ينبه، أنت تؤكد، فتنضم المضاعفة إلى فيشة المريض.")}
       />
+      <p role="note" className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-sm font-bold">
+        {L("Aide à la détérioration, pas un diagnostic. Les seuils de cette page ne sont pas validés pour l'enfant : utilisez un outil pédiatrique adapté. Le qSOFA de sepsis ne se déclenche qu'après saisie d'un âge adulte ; SSC 2026 préfère NEWS/NEWS2, MEWS ou SIRS à qSOFA seul, et un qSOFA bas n'exclut pas le sepsis.", "هذه أداة لرصد التدهور وليست تشخيصاً. عتبات الصفحة غير معتمدة للأطفال؛ استخدم أداة أطفال مناسبة. لا يظهر إنذار qSOFA للإنتان إلا بعد إدخال عمر بالغ؛ وتفضل SSC 2026 استخدام NEWS/NEWS2 أو MEWS أو SIRS بدلاً من qSOFA وحده، والدرجة المنخفضة لا تنفي الإنتان.")}
+      </p>
 
       {/* الثوابت الحيوية */}
       <section className="card rounded-2xl border border-line bg-surface p-4">
@@ -108,7 +112,7 @@ export default function ReevaluationPage() {
         <section aria-live="polite" className="flex flex-col gap-3">
           {alerts.length === 0 && (
             <p className="rounded-xl border border-dashed border-line p-4 text-center text-sm font-bold opacity-75">
-              {L("Aucun signal de détérioration sur ces constantes. Réévaluer après le prochain tour.", "لا مؤشر تدهور على هذه الثوابت. أعيد التقييم بعد الجولة القادمة.")}
+              {L("Aucune alerte calculée sur ces données ne permet d'exclure une maladie grave ou un sepsis ; interpréter cliniquement et poursuivre la surveillance. Vérifier l'âge saisi pour les alertes adultes.", "عدم ظهور إنذار محسوب لا ينفي مرضاً خطيراً أو إنتاناً؛ فسّر النتائج سريرياً وواصل المراقبة، وتحقق من العمر المدخل للتنبيهات الخاصة بالبالغين.")}
             </p>
           )}
           {alerts.map((a) => (

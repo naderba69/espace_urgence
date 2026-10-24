@@ -1,14 +1,26 @@
 import { fmtJournal } from "../lib/journal";
 import { describe, it, expect } from "vitest";
 import {
-  clampDose, dripRate, parkland, parklandRates, concUgPerMl, amineFlow,
+  clampDose, dripRate, parseDecimalInput, parkland, parklandRates, concUgPerMl, amineFlow,
   pediatricWeight, pediatricTubeSize, pediatricDefibJ, ibwKg, tidalVolumeRange,
   curb65Outcome, wellsEpLikely, prepVolume, shockIndex, shockIndexBand, meanArterialPressure, pulsePressure, qtc, qtcBand, enoxaparin, tenecteplaseMg, alteplaseStroke, calciumCorrected, potassiumDeficit, hollidaySegar, dehydrationDeficit, nacProtocol, nivStart, abcd2, abcd2Band, alvarado, alvaradoBand, massiveTransfusion, flowForUnit, startTriage, startTriageStep, weaningReady, qsofa, spesi, heartBand, mgso4DrawMl, mgso4RateMlH, dkaBolusMl, dkaInsulinUh, dkaKDecision, dkaNeedsDextrose, broselowZone, broselowDoses, type BroselowZone, monthsSince, fmtMMSS, reviewDueCount, daysSince, doseFromFlow, inferConcUgMl, interpretAbg, peepForFio2, ventSuggest, hasBledHighRisk, nihssBand,
   adrogueMadias, totalBodyWater, maxCorrectionRate, heparin, insulinDka, dkaPotassiumAction, weightResusPanel,
-  doseLadder, sbtPassed, extubationOk, mgso4GPerMl, BROSELOW,
+  doseLadder, sbtPassed, extubationOk, mgso4GPerMl, BROSELOW, weightDoseForWeight,
 } from "../lib/calc";
 import { searchItems, loadSearchIndex } from "../lib/search";
-import { pumpCfgFromPerfusion } from "../data/med-tools";
+import { MED_TOOLS, pumpCfgFromPerfusion } from "../data/med-tools";
+
+describe("saisie décimale des poids", () => {
+  it("accepte virgule ou point comme séparateur décimal", () => {
+    expect(parseDecimalInput("3,2")).toBeCloseTo(3.2);
+    expect(parseDecimalInput("3.2")).toBeCloseTo(3.2);
+  });
+  it("rejette une chaîne vide, un signe négatif et plusieurs séparateurs", () => {
+    expect(parseDecimalInput("")).toBeNull();
+    expect(parseDecimalInput("-3,2")).toBeNull();
+    expect(parseDecimalInput("1,234.5")).toBeNull();
+  });
+});
 
 describe("doses", () => {
   it("adrénaline ACR pédiatrique : 0,01 mg/kg", () => {
@@ -21,6 +33,20 @@ describe("doses", () => {
   it("entrées invalides → 0", () => {
     expect(clampDose(0.01, 0, 1)).toBe(0);
     expect(clampDose(0, 50, 1)).toBe(0);
+  });
+});
+
+describe("plage de doses pondérales", () => {
+  it("calcule 25–30 mg/kg sans plafond absolu implicite", () => {
+    const result = weightDoseForWeight({ kind: "range", minMgPerKg: 25, maxMgPerKg: 30, note: { fr: "", ar: "" } }, 80);
+    expect(result).toMatchObject({ minMg: 2000, maxMg: 2400, capped: false, isRange: true, absoluteMaxMg: undefined });
+  });
+  it("applique seulement un plafond absolu explicitement fourni", () => {
+    const result = weightDoseForWeight({ kind: "range", minMgPerKg: 25, maxMgPerKg: 30, maxMg: 2000, note: { fr: "", ar: "" } }, 80);
+    expect(result).toMatchObject({ minMg: 2000, maxMg: 2000, capped: true, absoluteMaxMg: 2000 });
+  });
+  it("refuse une plage marquée comme dépendante du contexte clinique dans un widget poids seul", () => {
+    expect(weightDoseForWeight({ kind: "range", minMgPerKg: 25, maxMgPerKg: 30, requiresContext: true, note: { fr: "", ar: "" } }, 80)).toBeNull();
   });
 });
 
@@ -163,12 +189,16 @@ import { PERFUSIONS, perfusionFlow } from "../data/perfusions";
 
 const preset = (drugId: string, unit: string) => PERFUSIONS.find((x) => x.drugId === drugId && x.unit === unit)!;
 
-describe("abaques RE.NAU", () => {
-  it("dobutamine 5 µg/kg/min à 70 kg (250 mg/50 mL) → 4,2 mL/h", () => {
-    expect(perfusionFlow(preset("dobutamine", "µg/kg/min"), 5, 70)).toBeCloseTo(4.2, 1);
+describe("abaques de perfusion", () => {
+  it("dobutamine 5 µg/kg/min à 70 kg (1 mg/mL, concentration du tableau RCP) → 21 mL/h", () => {
+    const p = preset("dobutamine", "µg/kg/min");
+    expect(p.concUgPerMl).toBe(1000);
+    expect(p.doseMin).toBe(2.5);
+    expect(p.doseMax).toBe(10);
+    expect(perfusionFlow(p, 5, 70)).toBeCloseTo(21, 1);
   });
-  it("dobutamine 5 µg/kg/min à 100 kg → 6 mL/h (abaque RE.NAU)", () => {
-    expect(perfusionFlow(preset("dobutamine", "µg/kg/min"), 5, 100)).toBeCloseTo(6, 1);
+  it("dobutamine 5 µg/kg/min à 100 kg → 30 mL/h", () => {
+    expect(perfusionFlow(preset("dobutamine", "µg/kg/min"), 5, 100)).toBeCloseTo(30, 1);
   });
   it("noradrénaline RE.NAU 1 mg/h (8 mg/40 mL) → 5 mL/h", () => {
     expect(perfusionFlow(preset("noradrenaline", "mg/h"), 1, 1)).toBeCloseTo(5, 1);
@@ -349,11 +379,10 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     expect(flowForUnit("UI/kg/h", 0.1, 70, 1)).toBeCloseTo(7);
     expect(flowForUnit("µg/min", 100, 70, 200)).toBeCloseTo(30);
   });
-  it("pompe dérivée de la perfusion RE.NAU", () => {
-    const c = pumpCfgFromPerfusion("noradrenaline")!;
-    expect(c.unit).toBe("µg/kg/min");
-    expect(c.defTarget).toBe(50);
-    expect(c.defAmpMg).toBe(8);
+  it("pompe dérivée seulement si une préparation unique est définie", () => {
+    // Noradrénaline a deux protocoles RE.NAU : l'écran médicament emploie son réglage explicite.
+    expect(pumpCfgFromPerfusion("noradrenaline")).toBeUndefined();
+    expect(MED_TOOLS.noradrenaline?.pump?.unit).toBe("µg/kg/min");
     const t = pumpCfgFromPerfusion("trinitrine")!;
     expect(t.defAmpMg).toBeGreaterThan(0);
   });
@@ -445,11 +474,16 @@ describe("v2.8 Broselow", () => {
 });
 
 describe("v2.8 cohérence perfusions (garde-fou données)", () => {
-  it("chaque perfusion RE.NAU produit une config pompe valide", () => {
-    for (const p of PERFUSIONS) {
-      const c = pumpCfgFromPerfusion(p.drugId);
-      expect(c, p.drugId).toBeTruthy();
-      expect(c!.defTarget, p.drugId).toBeGreaterThan(0);
+  it("chaque médicament avec une seule préparation produit une pompe ; les ambiguïtés sont refusées", () => {
+    for (const drugId of new Set(PERFUSIONS.map((p) => p.drugId))) {
+      const matches = PERFUSIONS.filter((p) => p.drugId === drugId);
+      const cfg = pumpCfgFromPerfusion(drugId);
+      if (matches.length === 1) {
+        expect(cfg, drugId).toBeTruthy();
+        expect(cfg!.defTarget, drugId).toBeGreaterThan(0);
+      } else {
+        expect(cfg, `${drugId}: plusieurs indications ne doivent pas sélectionner la première`).toBeUndefined();
+      }
     }
   });
 });

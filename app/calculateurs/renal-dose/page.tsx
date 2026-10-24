@@ -11,8 +11,17 @@ import T from "@/components/T";
 import { ibwKg } from "@/lib/calc";
 import { Gauge } from "lucide-react";
 
-type Band = { fr: string; ar: string };
-type Row = { fr: string; ar: string; bands: Band[]; sev: [number, number, number, number] };
+type Band = { fr: string; ar: string; range?: { fr: string; ar: string } };
+type Row = {
+  fr: string;
+  ar: string;
+  bands: Band[];
+  sev: number[];
+  /** Seuils RCP propres au médicament, classés du plus élevé au plus bas. */
+  thresholds?: number[];
+  note?: { fr: string; ar: string };
+  source?: { fr: string; ar: string; url: string };
+};
 
 const BAND_NAMES = [
   { fr: "≥ 60 mL/min", ar: "≥ ٦٠ مل/د" },
@@ -20,6 +29,25 @@ const BAND_NAMES = [
   { fr: "15-29", ar: "١٥-٢٩" },
   { fr: "< 15", ar: "< ١٥" },
 ];
+
+// Antibiotic shortcuts are routed to the complete, PDF-derived source table instead.
+const ANTIBIOTIC_SEARCH: Record<string, { query: string; fr: string; ar: string }[]> = {
+  Vancomycine: [{ query: "Vancomycine", fr: "Vancomycine", ar: "فانكومايسين" }],
+  "Gentamicine / Amikacine": [
+    { query: "Gentamicine", fr: "Gentamicine", ar: "جنتاميسين" },
+    { query: "Amikacine", fr: "Amikacine", ar: "أميكاسين" },
+  ],
+  Ceftriaxone: [{ query: "Ceftriaxone", fr: "Ceftriaxone", ar: "سيفترياكسون" }],
+  Ciprofloxacine: [{ query: "Ciprofloxacine", fr: "Ciprofloxacine", ar: "سيبروفلوكساسين" }],
+  Lévofloxacine: [{ query: "Lévofloxacine", fr: "Lévofloxacine", ar: "ليفوفلوكساسين" }],
+  Amoxicilline: [{ query: "Amoxicilline", fr: "Amoxicilline", ar: "أموكسيسيلين" }],
+  Imipénème: [{ query: "Imipénème", fr: "Imipénème", ar: "إيميبينيم" }],
+  Nitrofurantoïne: [{ query: "Nitrofurantoïne", fr: "Nitrofurantoïne", ar: "نيتروفورانتوين" }],
+};
+
+function parseInput(value: string) {
+  return Number.parseFloat(String(value).replace(",", "."));
+}
 
 const ROWS: Row[] = [
   { fr: "Metformine", ar: "ميتفورمين", sev: [0, 1, 2, 3], bands: [
@@ -77,11 +105,49 @@ const ROWS: Row[] = [
     { fr: "5-10 mg/kg /12 h.", ar: "٥-١٠ مغ/كغ كل ١٢ س." },
     { fr: "5-10 mg/kg /24 h.", ar: "٥-١٠ مغ/كغ كل ٢٤ س." },
     { fr: "5-10 mg/kg /24 h + hydratation, dose après dialyse.", ar: "٥-١٠ مغ/كغ كل ٢٤ س + إرواء، وجرعة بعد الغسل." }] },
-  { fr: "Gabapentine", ar: "غابابنتين", sev: [0, 1, 1, 2], bands: [
-    { fr: "1200-3600 mg/j.", ar: "١٢٠٠-٣٦٠٠ مغ/يوم." },
-    { fr: "400-1400 mg/j.", ar: "٤٠٠-١٤٠٠ مغ/يوم." },
-    { fr: "200-700 mg/j.", ar: "٢٠٠-٧٠٠ مغ/يوم." },
-    { fr: "100-300 mg/j.", ar: "١٠٠-٣٠٠ مغ/يوم." }] },
+  {
+    fr: "Gabapentine",
+    ar: "غابابنتين",
+    thresholds: [80, 50, 30, 15],
+    sev: [0, 1, 1, 1, 1],
+    bands: [
+      { fr: "900–3 600 mg/j, répartis en 3 prises.", ar: "٩٠٠–٣٦٠٠ مغ/ي، مقسمة على ٣ جرعات.", range: { fr: "ClCr ≥ 80 mL/min", ar: "CrCl ≥ ٨٠ مل/د" } },
+      { fr: "600–1 800 mg/j, répartis en 3 prises.", ar: "٦٠٠–١٨٠٠ مغ/ي، مقسمة على ٣ جرعات.", range: { fr: "ClCr 50–79 mL/min", ar: "CrCl ٥٠–٧٩ مل/د" } },
+      { fr: "300–900 mg/j, répartis en 3 prises.", ar: "٣٠٠–٩٠٠ مغ/ي، مقسمة على ٣ جرعات.", range: { fr: "ClCr 30–49 mL/min", ar: "CrCl ٣٠–٤٩ مل/د" } },
+      { fr: "150–600 mg/j, en 3 prises. Pour 150 mg/j : 300 mg un jour sur deux.", ar: "١٥٠–٦٠٠ مغ/ي، على ٣ جرعات. لجرعة ١٥٠ مغ/ي: ٣٠٠ مغ يوماً بعد يوم.", range: { fr: "ClCr 15–29 mL/min", ar: "CrCl ١٥–٢٩ مل/د" } },
+      { fr: "150–300 mg/j dans la catégorie < 15 ; réduire proportionnellement selon la ClCr.", ar: "١٥٠–٣٠٠ مغ/ي في فئة أقل من ١٥؛ تُخفّض الجرعة تناسبياً حسب ClCr.", range: { fr: "ClCr < 15 mL/min", ar: "CrCl < ١٥ مل/د" } },
+    ],
+    note: {
+      fr: "La dose quotidienne est normalement répartie en 3 prises. Sous 15 mL/min, l'ajustement proportionnel n'est pas calculé ici. L'hémodialyse demande un schéma distinct et une dose après séance ; vérifier le RCP. Des gélules de 100 mg peuvent être nécessaires.",
+      ar: "تُقسّم الجرعة اليومية عادةً على ٣ جرعات. دون ١٥ مل/د، لا تحسب هذه الأداة التخفيض التناسبي. للغسيل الدموي نظام خاص وجرعة بعد الجلسة؛ راجع النشرة. قد تلزم كبسولات ١٠٠ مغ.",
+    },
+    source: {
+      fr: "RCP ANSM — GABAPENTINE ZENTIVA 400 mg, gélule (mis à jour le 17/09/2026)",
+      ar: "النشرة الرسمية الفرنسية ANSM — GABAPENTINE ZENTIVA 400 mg (مراجعة 17/09/2026)",
+      url: "https://base-donnees-publique.medicaments.gouv.fr/medicament/67350239/extrait",
+    },
+  },
+  {
+    fr: "Prégabaline",
+    ar: "بريغابالين",
+    thresholds: [60, 30, 15],
+    sev: [0, 1, 1, 1],
+    bands: [
+      { fr: "Début : 150 mg/j ; maximum : 600 mg/j, en 2 ou 3 prises.", ar: "البداية: ١٥٠ مغ/ي؛ الحد الأقصى: ٦٠٠ مغ/ي، على جرعتين أو ٣.", range: { fr: "ClCr ≥ 60 mL/min", ar: "CrCl ≥ ٦٠ مل/د" } },
+      { fr: "Début : 75 mg/j ; maximum : 300 mg/j, en 2 ou 3 prises.", ar: "البداية: ٧٥ مغ/ي؛ الحد الأقصى: ٣٠٠ مغ/ي، على جرعتين أو ٣.", range: { fr: "ClCr 30–<60 mL/min", ar: "CrCl ٣٠–<٦٠ مل/د" } },
+      { fr: "Début : 25–50 mg/j ; maximum : 150 mg/j, 1 prise/j ou 2.", ar: "البداية: ٢٥–٥٠ مغ/ي؛ الحد الأقصى: ١٥٠ مغ/ي، مرة أو مرتين يومياً.", range: { fr: "ClCr 15–<30 mL/min", ar: "CrCl ١٥–<٣٠ مل/د" } },
+      { fr: "Début : 25 mg/j ; maximum : 75 mg/j, en 1 prise/j.", ar: "البداية: ٢٥ مغ/ي؛ الحد الأقصى: ٧٥ مغ/ي، مرة يومياً.", range: { fr: "ClCr < 15 mL/min", ar: "CrCl < ١٥ مل/د" } },
+    ],
+    note: {
+      fr: "La dose quotidienne totale doit être divisée selon le nombre de prises indiqué. En hémodialyse, le RCP prévoit une dose supplémentaire unique de 25–100 mg immédiatement après une séance de 4 h ; elle n'est pas calculée par cette grille.",
+      ar: "تُقسّم الجرعة اليومية حسب عدد الجرعات المذكور. في الغسيل الدموي، تذكر النشرة جرعة إضافية واحدة ٢٥–١٠٠ مغ مباشرةً بعد جلسة ٤ ساعات؛ لا تحسبها هذه القائمة.",
+    },
+    source: {
+      fr: "RCP ANSM — PREGABALINE HCS 75 mg, gélule (mis à jour le 29/03/2024)",
+      ar: "النشرة الرسمية الفرنسية ANSM — PREGABALINE HCS 75 mg (مراجعة 29/03/2024)",
+      url: "https://base-donnees-publique.medicaments.gouv.fr/medicament/63754960/extrait",
+    },
+  },
   { fr: "Morphine et opioïdes", ar: "مورفين وأفيونيات", sev: [0, 1, 2, 2], bands: [
     { fr: "Titration standard.", ar: "معايرة معتادة." },
     { fr: "Espacer, surveiller la sédation.", ar: "باعد وراقب التخدير." },
@@ -113,6 +179,7 @@ export default function RenalDosePage() {
   const [sexe, setSexe] = useState<"m" | "f">("m");
   const [unit, setUnit] = useState<"mg" | "umol">("mg");
   const [scr, setScr] = useState("");
+  const [confirmedSuspiciousUnit, setConfirmedSuspiciousUnit] = useState<string | null>(null);
   usePrefillPatient((p) => {
     if (!wt && p.w) setWt(p.w);
     if (!age && p.age) setAge(p.age);
@@ -121,17 +188,28 @@ export default function RenalDosePage() {
   });
   const [useIbw, setUseIbw] = useState(false);
 
+  const scrValue = parseInput(scr);
+  const ageValue = parseInput(age);
+  const heightValue = parseInput(ht);
+  const ibwValue = Number.isFinite(heightValue) && heightValue > 0 ? ibwKg(heightValue, sexe) : null;
+  const invalidIbw = useIbw && (ibwValue === null || ibwValue <= 0);
+  const suspiciousMgUnit = unit === "mg" && Number.isFinite(scrValue) && scrValue > 20;
+  const confirmationKey = `${unit}:${scr}`;
+  const unitConfirmed = !suspiciousMgUnit || confirmedSuspiciousUnit === confirmationKey;
+
   const r = useMemo(() => {
-    const A = parseFloat(age), W = parseFloat(wt), H = parseFloat(ht), S = parseFloat(scr);
-    if (!Number.isFinite(A) || !Number.isFinite(W) || !Number.isFinite(S) || S <= 0) return null;
-    const suspectUnit = unit === "mg" && S > 20; // une créatinine > 20 mg/dL est presque toujours des µmol/L
-    const mg = unit === "mg" ? (suspectUnit ? S / 88.4 : S) : S / 88.4;
-    const ibw = Number.isFinite(H) ? ibwKg(H, sexe) : null;
-    const weightUsed = useIbw && ibw ? Math.min(W, ibw) : W;
+    const A = parseInput(age), W = parseInput(wt), H = parseInput(ht), S = parseInput(scr);
+    if (!Number.isFinite(A) || A < 18 || A >= 140 || !Number.isFinite(W) || W <= 0 || !Number.isFinite(S) || S <= 0) return null;
+    if (suspiciousMgUnit && confirmedSuspiciousUnit !== confirmationKey) return null;
+    const ibw = Number.isFinite(H) && H > 0 ? ibwKg(H, sexe) : null;
+    if (useIbw && (ibw === null || ibw <= 0)) return null;
+    const mg = unit === "mg" ? S : S / 88.4;
+    const weightUsed = useIbw ? Math.min(W, ibw ?? W) : W;
     const crcl = ((140 - A) * weightUsed * (sexe === "f" ? 0.85 : 1)) / (72 * mg);
+    if (!Number.isFinite(crcl) || crcl < 0) return null;
     const band = crcl >= 60 ? 0 : crcl >= 30 ? 1 : crcl >= 15 ? 2 : 3;
-    return { crcl, band, mg, ibw, weightUsed, suspectUnit };
-  }, [age, wt, ht, scr, sexe, unit, useIbw]);
+    return { crcl, band, mg, ibw, weightUsed };
+  }, [age, wt, ht, scr, sexe, unit, useIbw, suspiciousMgUnit, confirmedSuspiciousUnit, confirmationKey]);
 
   const cell = "flex flex-col gap-1 rounded-xl border border-line bg-surface p-3";
 
@@ -140,8 +218,29 @@ export default function RenalDosePage() {
       <PageHeader
         icon={<Gauge className="h-6 w-6" />}
         title={lang === "ar" ? "جسر الصيدلة للفشل الكلوي" : "Bridge rénal pharmacologique"}
-        sub={lang === "ar" ? "Cockcroft-Gault ← العمر/الوزن/الكرياتينين، ثم تكييف ١٦ دواءً." : "Cockcroft-Gault ← âge/poids/créatinine, puis adaptation de 16 médicaments."}
+        sub={lang === "ar" ? "حساب Cockcroft–Gault للبالغين، مع تحويل المضادات إلى جدول PDF الكامل." : "Cockcroft–Gault chez l’adulte ; pour les antibiotiques, accès direct au tableau PDF complet."}
       />
+
+      <section className="rounded-2xl border border-blue-500/40 bg-blue-500/10 p-4 text-sm leading-relaxed">
+        <p className="font-black text-blue-500">
+          <T
+            fr="Antibiotiques : utilisez le tableau dédié issu du PDF fourni (93 lignes × 5 stades). Son DFG et ses garde-fous sont calculés dans l’outil source ; ne transposez pas directement le résultat Cockcroft–Gault affiché ici."
+            ar="المضادات الحيوية: استخدم الجدول المخصّص المستند إلى PDF المقدّم (٩٣ سطراً × ٥ مراحل). يُحسب DFG وضوابطه داخل الأداة المصدرية؛ لا تنقل نتيجة Cockcroft–Gault الظاهرة هنا مباشرةً إلى مراحل ذلك الجدول."
+          />
+        </p>
+        <Link href="/calculateurs/antibio-renal" className="mt-3 inline-flex rounded-full border border-blue-500 px-4 py-2 font-black text-blue-500">
+          <T fr="Ouvrir l’adaptation antibiotique OMEDIT" ar="افتح تكييف المضادات OMEDIT" />
+        </Link>
+      </section>
+
+      <section className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs leading-relaxed">
+        <p className="font-bold text-amber-600">
+          <T
+            fr="Le PDF fourni ne couvre que les antibiotiques. Les lignes Gabapentine et Prégabaline ont leur RCP français officiel lié sous chacune (produit et date indiqués) ; elles ne constituent pas une validation tunisienne. Les autres lignes proviennent de l’ancienne liste et restent à vérifier dans le RCP local avant tout usage clinique."
+            ar="ملف PDF المقدّم يخصّ المضادات فقط. أرفقت رابط النشرة الفرنسية الرسمية لكل من غابابنتين وبريغابالين مع اسم المنتج وتاريخه؛ وهذا لا يعني اعتماداً تونسياً. بقية الأسطر من القائمة القديمة وتحتاج إلى مراجعة النشرة المحلية قبل الاستعمال السريري."
+          />
+        </p>
+      </section>
 
       <section className="grid grid-cols-2 gap-2">
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Âge (ans)" ar="العمر (سنة)" /></span>
@@ -152,8 +251,8 @@ export default function RenalDosePage() {
           <NumStepper value={ ht } onValue={ setHt } className="field" label="ht" /></label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créatinine" ar="الكرياتينين" /></span>
           <div className="flex items-center gap-2">
-            <NumStepper value={ scr } onValue={ setScr } className="field" label="scr" />
-            <button onClick={() => setUnit((u) => (u === "mg" ? "umol" : "mg"))}
+            <NumStepper value={ scr } onValue={(value) => { setScr(value); setConfirmedSuspiciousUnit(null); }} className="field" label="scr" />
+            <button onClick={() => { setUnit((u) => (u === "mg" ? "umol" : "mg")); setConfirmedSuspiciousUnit(null); }}
               className="shrink-0 rounded-lg border border-line px-2 py-1 text-xs font-black" dir="ltr">{unit === "mg" ? "mg/dL" : "µmol/L"}</button>
           </div>
         </label>
@@ -173,6 +272,28 @@ export default function RenalDosePage() {
         </button>
       </div>
 
+      {suspiciousMgUnit && !unitConfirmed && (
+        <div role="alert" className="rounded-2xl border border-amber-500/50 bg-amber-500/10 p-3 text-sm font-bold">
+          <p><T fr="Créatinine > 20 mg/dL : unité inhabituelle. Aucun résultat ni conseil de dose n’est affiché avant vérification. Si le laboratoire confirme mg/dL, confirmez la valeur ci-dessous ; sinon, changez l’unité en µmol/L." ar="الكرياتينين > ٢٠ مغ/دل: وحدة غير معتادة. لن تظهر نتيجة أو إرشادات جرعة قبل التحقق. إذا أكّد المختبر mg/dL فأكّد القيمة أدناه؛ وإلا غيّر الوحدة إلى µmol/L." /></p>
+          <button onClick={() => setConfirmedSuspiciousUnit(confirmationKey)} className="mt-2 rounded-lg border border-amber-600 px-3 py-2 font-black">
+            <T fr="Confirmer que la valeur est bien en mg/dL" ar="أؤكد أن القيمة فعلًا بوحدة mg/dL" />
+          </button>
+        </div>
+      )}
+
+      {Number.isFinite(ageValue) && ageValue > 0 && ageValue < 18 && (
+        <p role="alert" className="rounded-2xl border border-red-500/50 bg-red-500/10 p-3 text-sm font-black text-red-500">
+          <T fr="Ce calculateur et les lignes médicamenteuses ci-dessous sont réservés à l’adulte ; aucun résultat adulte n’est affiché pour un patient pédiatrique." ar="هذه الحاسبة وأسطر الأدوية أدناه للبالغين؛ لا تُعرض نتيجة البالغين لمريض طفل." />{" "}
+          <Link href="/calculateurs/antibiotiques" className="underline"><T fr="Ouvrir l’outil pédiatrique" ar="افتح أداة الأطفال" /></Link>
+        </p>
+      )}
+
+      {invalidIbw && (
+        <p role="alert" className="rounded-xl border border-amber-500/50 bg-amber-500/10 p-3 text-sm font-bold">
+          <T fr="Saisissez une taille valide en centimètres, ou désactivez l’option de poids idéal." ar="أدخل طولاً صحيحاً بالسنتيمتر أو ألغِ خيار الوزن المثالي." />
+        </p>
+      )}
+
       {r ? (
         <>
           <div className={`card sev-strip rounded-2xl border border-line bg-surface p-4 ${r.band === 3 ? "sev-critical" : r.band === 2 ? "sev-urgent" : r.band === 1 ? "sev-standard" : ""}`}>
@@ -182,11 +303,6 @@ export default function RenalDosePage() {
                 {lang === "ar" ? BAND_NAMES[r.band].ar : BAND_NAMES[r.band].fr}
               </Badge>
             </div>
-            {r.suspectUnit && (
-              <p className="mt-2 rounded-xl p-2 text-xs font-black" style={{ background: "var(--sev-urgent-bg)", color: "var(--sev-urgent)" }}>
-                <T fr="Valeur > 20 mg/dL: unité probablement en µmol/L. Le calcul a été fait en divisant par 88,4 — confirmez l'unité du laboratoire." ar="القيمة > ٢٠ مغ/دل: الوحدة على الأرجح µmol/L. أُجري الحساب بالقسمة على ٨٨٫٤ — أكّد وحدة المختبر." />
-              </p>
-            )}
             <p className="mt-1 text-xs opacity-70">
               {lang === "ar"
                 ? `Cockcroft-Gault · وزن مستعمل ${Math.round(r.weightUsed)} كغ${r.ibw ? ` (المثالي ${Math.round(r.ibw)})` : ""} · كرياتينين ${r.mg.toFixed(2)} مغ/دل`
@@ -196,16 +312,57 @@ export default function RenalDosePage() {
 
           <ul className="flex flex-col gap-2">
             {ROWS.map((row) => {
-              const sev = row.sev[r.band];
+              const antibiotics = ANTIBIOTIC_SEARCH[row.fr];
+              const thresholdIndex = row.thresholds?.findIndex((threshold) => r.crcl >= threshold);
+              const bandIndex = thresholdIndex === undefined ? r.band : thresholdIndex < 0 ? row.thresholds!.length : thresholdIndex;
+              const doseBand = row.bands[bandIndex];
+              const sev = row.sev[bandIndex] ?? 0;
+              const tone = sev === 3 ? "critical" : sev === 2 ? "urgent" : sev === 1 ? "standard" : "neutral";
+              const sevClass = sev === 3 ? "sev-critical" : sev === 2 ? "sev-urgent" : sev === 1 ? "sev-standard" : "";
               return (
-                <li key={row.fr} className={`card sev-strip rounded-2xl border border-line bg-surface p-3 ${sev === 3 ? "sev-critical" : sev === 2 ? "sev-urgent" : sev === 1 ? "sev-standard" : ""}`}>
+                <li key={row.fr} className={`card rounded-2xl border border-line bg-surface p-3 ${antibiotics ? "" : `sev-strip ${sevClass}`}`}>
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-black">{lang === "ar" ? row.ar : row.fr}</p>
-                    <Badge tone={sev === 3 ? "critical" : sev === 2 ? "urgent" : sev === 1 ? "standard" : "neutral"}>
-                      {sev === 3 ? <T fr="Contre-indiqué" ar="ممنوع" /> : sev === 2 ? <T fr="Risque" ar="خطر" /> : sev === 1 ? <T fr="Ajuster" ar="عدّل" /> : <T fr="Inchangé" ar="بلا تغيير" />}
-                    </Badge>
+                    {antibiotics ? (
+                      <Badge tone="neutral"><T fr="Tableau PDF" ar="جدول PDF" /></Badge>
+                    ) : (
+                      <div className="flex flex-wrap justify-end gap-1">
+                        {doseBand.range && <Badge tone="neutral">{lang === "ar" ? doseBand.range.ar : doseBand.range.fr}</Badge>}
+                        <Badge tone={tone}>
+                          {sev === 3 ? <T fr="Contre-indiqué" ar="ممنوع" /> : sev === 2 ? <T fr="Risque" ar="خطر" /> : sev === 1 ? <T fr="Ajuster" ar="عدّل" /> : <T fr="Inchangé" ar="بلا تغيير" />}
+                        </Badge>
+                        <Badge tone="neutral"><T fr={row.source ? "RCP individuel" : "Hors PDF fourni"} ar={row.source ? "RCP فردي" : "خارج PDF المقدّم"} /></Badge>
+                      </div>
+                    )}
                   </div>
-                  <p className="mt-1 text-sm font-bold opacity-80">{lang === "ar" ? row.bands[r.band].ar : row.bands[r.band].fr}</p>
+                  {antibiotics ? (
+                    <div className="mt-2">
+                      <p className="text-sm font-bold opacity-80">
+                        <T fr="Les raccourcis de dose de l’ancienne liste ne sont pas affichés ; consultez les lignes détaillées du PDF source." ar="لا نعرض اختصار الجرعة من القائمة السابقة؛ راجع الأسطر التفصيلية في جدول PDF المصدر." />
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {antibiotics.map((antibiotic) => (
+                          <Link key={antibiotic.query} href={`/calculateurs/antibio-renal?q=${encodeURIComponent(antibiotic.query)}`} className="inline-flex rounded-full border border-blue-500 px-3 py-1.5 text-xs font-black text-blue-500">
+                            {lang === "ar" ? antibiotic.ar : antibiotic.fr}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="mt-1 text-sm font-bold opacity-80">{lang === "ar" ? doseBand.ar : doseBand.fr}</p>
+                      {row.note && (
+                        <p className="mt-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-2 text-xs leading-relaxed">
+                          {lang === "ar" ? row.note.ar : row.note.fr}
+                        </p>
+                      )}
+                      {row.source && (
+                        <a href={row.source.url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex text-xs font-black text-blue-500 underline underline-offset-2">
+                          {lang === "ar" ? row.source.ar : row.source.fr}
+                        </a>
+                      )}
+                    </>
+                  )}
                 </li>
               );
             })}
@@ -217,11 +374,11 @@ export default function RenalDosePage() {
             <Link href="/calculateurs/antibiotiques" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Antibiotiques" ar="المضادات الحيوية" /></Link>
           </div>
         </>
-      ) : (
+      ) : !(suspiciousMgUnit && !unitConfirmed) && !(Number.isFinite(ageValue) && ageValue > 0 && ageValue < 18) && !invalidIbw ? (
         <p className="rounded-xl border border-dashed border-line p-4 text-center text-sm opacity-70">
-          <T fr="Âge, poids et créatinine suffisent pour la clairance." ar="العمر والوزن والكرياتينين تكفي لحساب التصفية." />
+          <T fr="Saisissez un âge adulte (18–139 ans), un poids et une créatinine positifs. La taille n’est requise que si vous activez le poids idéal." ar="أدخل عمراً للبالغين (١٨–١٣٩ سنة) ووزناً وكرياتينين موجبين. لا يُطلب الطول إلا عند تفعيل الوزن المثالي." />
         </p>
-      )}
+      ) : null}
     </div>
   );
 }

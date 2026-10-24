@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, IBM_Plex_Sans_Arabic } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import { BASEPATH } from "@/lib/base";
@@ -13,11 +13,21 @@ import DisclaimerGate from "@/components/DisclaimerGate";
 import CommandPalette from "@/components/CommandPalette";
 import UpdateBanner from "@/components/UpdateBanner";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-// v9.0 — IBM Plex Sans Arabic : typographie professionnelle FR+AR unifiée (autorisée par l'utilisateur).
-const plex = IBM_Plex_Sans_Arabic({
-  subsets: ["arabic", "latin"],
-  weight: ["400", "500", "600", "700"],
+// Polices auto-hébergées : le build statique ne dépend pas d'un accès à Google Fonts.
+const inter = localFont({
+  src: "../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
+  variable: "--font-inter",
+  weight: "100 900",
+  display: "swap",
+});
+// v9.0 — IBM Plex Sans Arabic local ; Inter sert de fallback pour les glyphes latins non inclus.
+const plex = localFont({
+  src: [
+    { path: "../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2", weight: "400" },
+    { path: "../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2", weight: "500" },
+    { path: "../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-600-normal.woff2", weight: "600" },
+    { path: "../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2", weight: "700" },
+  ],
   variable: "--font-arabic",
   display: "swap",
 });
