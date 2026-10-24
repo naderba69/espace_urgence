@@ -86,9 +86,9 @@ export default function CorticoidsPage() {
 
       <section className="card sev-strip sev-urgent rounded-2xl border border-line bg-surface p-4">
         <div className="flex items-center gap-2"><Badge tone="urgent"><T fr="Choc septique" ar="الصدمة الإنتانية" /></Badge></div>
-        <p className="mt-2 text-sm font-black" dir="ltr">Hydrocortisone 200 mg/j</p>
+        <p className="mt-2 text-sm font-black"><T fr="Corticostéroïdes IV — à considérer selon SSC 2026" ar="كورتيكوستيرويدات وريدية — تُبحث وفق SSC 2026" /></p>
         <p className="mt-1 text-sm font-bold opacity-80">
-          <T fr="Si PAS < 65 malgré remplissage + noradrénaline suffisante." ar="إذا الضغط < ٦٥ رغم التعبئة والنورأدرينالين الكافي." />
+          <T fr="La recommandation SSC concerne la PAM (pression artérielle moyenne), pas la PAS. Décision, molécule, dose et modalités selon le protocole clinique local ; ne pas appliquer un seuil systolique de 65 mmHg." ar="تتعلق توصية SSC بـPAM (متوسط الضغط)، لا بالضغط الانقباضي PAS. القرار والدواء والجرعة والطريقة حسب البروتوكول السريري المحلي؛ لا تطبق عتبة انقباضية 65 مم زئبق." />
         </p>
       </section>
 

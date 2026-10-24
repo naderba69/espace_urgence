@@ -36,7 +36,7 @@ Navigateur
 | `lib/*.ts` | Logique pure : i18n, texte, recherche, calculs, audio, analytics, stockage |
 | `public/sw.js` | Service worker (précache + repli hors-ligne) |
 | `scripts/*.mjs` | Audits (liens, dictionnaire, débordements, responsive, console) + génération du précache |
-| `__tests__/` | Vitest (572 tests) — unitaires + garde-fous de source |
+| `__tests__/` | Vitest (659 tests au 2026-10-23) — unitaires + garde-fous de cohérence des sources |
 
 ## 3. Flux de données du contenu
 
@@ -166,7 +166,7 @@ mode avion : une liste précachée s'ouvrait, mais **toucher une carte aboutissa
    `_next/`), avec clé normalisée sans le paramètre `_rsc` (unique à chaque requête) et
    `Response.error()` quand le réseau échoue et que rien n'est en cache.
    En complément, `scripts/gen-precache.mjs` précache les payloads des **294 pages de détail** :
-   ~577 Ko gzip au total (98 protocoles 425 Ko, 74 médicaments 133 Ko, 131 calculateurs 20 Ko)
+   ~577 Ko gzip au total (98 protocoles 425 Ko, 73 médicaments 133 Ko, 131 calculateurs 20 Ko)
    — sans eux, seule une fiche déjà visitée s'ouvrirait.
 2. **Chemins variantes.** Un repli de navigation voit souvent `/x/` là où la visite directe a
    stocké `/x` (avec `trailingSlash: true`, le `Router` normalise). Le repli essaie désormais
@@ -199,7 +199,7 @@ pas `protocole:acr-adulte`. Avant v17.1 il fallait charger **tout** l'index de r
 (173 Ko gzip) uniquement pour traduire une poignée de clés.
 
 `app/ref-index.json/route.ts` (Route Handler `dynamic = "force-static"`, exporté en fichier
-au build sous `output: "export"`) produit 381 entrées `{k, h, t, n:[fr, ar]}` — 58,5 Ko brut,
+au build sous `output: "export"`) produit 382 entrées `{k, h, t, n:[fr, ar]}` — 58,5 Ko brut,
 **14,4 Ko gzip**. `lib/ref-index.ts` le charge une fois (mémoïsé, réessai si échec) et
 `resolveRefs()` traduit les clés. Le fichier est **précaché** et servi hors-ligne par la
 branche cache-first du SW, sinon les favoris seraient vides en mode avion.
@@ -267,7 +267,7 @@ donc volontairement élargis au strict nécessaire de l'écran, jamais au-delà 
 | `c` / `s` / `e` | catégorie, gravité, nombre d'étapes (protocoles) | `/protocoles` |
 | `g` (v17.4) | `[id, fr, ar]` de la situation de guidage, si elle existe | bannière de la fiche protocole |
 
-Poids : 381 entrées, **≈68 Ko brut / 15,4 Ko gzip** — contre 173 Ko gzip pour l'index de recherche
+Poids : 382 entrées, **≈68 Ko brut / 15,4 Ko gzip** — contre 173 Ko gzip pour l'index de recherche
 complet et ~780 Ko brut pour les trois bases réunies.
 
 **Garde-fou** : `__tests__/data.test.ts` appelle la route et compare chaque champ aux données
@@ -305,9 +305,11 @@ Plusieurs tests lisent le code source plutôt que de l'exécuter (ex.
 
 ### Contenu médical
 
-Chaque fiche porte `sources` + `lastReviewed`, et l'avertissement est vérifié par les tests.
-Une modification de dose n'est jamais cosmétique : elle doit être justifiée par un référentiel
-cité et signalée dans `CHANGELOG.md` sous « Contenu médical ».
+Les protocoles, médicaments et calculateurs ont des métadonnées `sources` + `lastReviewed`, mais
+plusieurs autres jeux (notamment guidage, réévaluations, quiz, triage et perfusions) n'ont pas de
+traçabilité complète par entrée. Ces dates ne prouvent pas une revue indépendante : l'avertissement
+reste informatif, et la validation clinique humaine est indispensable. Toute modification de dose
+doit être justifiée par un référentiel précis et signalée dans `CHANGELOG.md` sous « Contenu médical ».
 
 ## 9. Optimisations futures identifiées
 

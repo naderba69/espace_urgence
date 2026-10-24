@@ -4,8 +4,74 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versionnage
 Toutes les dates sont au format `AAAA-MM-JJ`.
 
 > **Rappel sécurité médicale** : aucun contenu clinique n'est modifié sans mention explicite
-> dans la section « Contenu médical ». Toute fiche porte `sources` + `lastReviewed` et doit être
-> relue par un médecin tunisien avant usage clinique.
+> dans la section « Contenu médical ». La traçabilité `sources` + `lastReviewed` n'est pas présente
+> sur chaque jeu/entrée et ne constitue pas une validation indépendante ; toute donnée clinique doit
+> être revue par un médecin/pharmacien tunisien avant usage.
+
+---
+
+## [Unreleased] — 2026-10-24
+
+### Corrigé
+- Les entrées manquantes et références croisées invalides sont bloquées par des tests :
+  catégorie `avc`, liens calculateur/protocole, alternatives médicamenteuses, liens et branches des arbres.
+- Calcul rénal : une clairance invalide ne devient plus « normale » ; une créatinine > 20 mg/dL n'est
+  plus convertie silencieusement et suspend l'affichage des posologies jusqu'à vérification.
+- Séparation rénale corrigée : CKD-EPI 2021 (DFG indexé) seul sélectionne une colonne du tableau adulte ; Cockcroft–Gault (ClCr) reste affiché séparément et n'influence jamais ce choix.
+- Retrait de la règle automatique non sourcée « DFG 30–90 dégradé → +2 stades » et de son exception « molécules vitales » : aucune référence primaire/édition/phrase vérifiable ne justifiait cette règle précise.
+- Stadification KDIGO de la diurèse corrigée (stades 1/2/3, anurie ≥12 h) ; hausse de créatinine ≥4 mg/dL requiert une hausse documentée. Tout critère d'AKI bloque les doses et toute sélection automatique ou manuelle dans le tableau de fonction rénale stable.
+- Dialyse/épuration extrarénale : ajout d'un garde-fou actif bloquant les stades, doses et choix manuels, conformément au périmètre non dialysé du tableau.
+- DFG exactement égal à 30 : l'ambiguïté des deux colonnes source bloque le stade et la dose
+  automatiques ; le choix manuel exige une confirmation de relecture professionnelle.
+- Tableau OMEDIT : les colonnes rénales fusionnées des aminosides ne reçoivent plus par copie la
+  posologie quotidienne de la colonne normorénale ; un marqueur bloque calcul, inférence voisine
+  et action « Retenir ».
+  La seconde mention répétée du Céfidérocol est conservée comme note source ; la traduction arabe
+  des aminosides ne surinterprète plus « une injection unique » en « une injection par jour ».
+- Moteur pondéral du PDF : les plafonds explicites (`4 g/24h`, `300 mg/j`, etc.) s'appliquent
+  avant l'affichage du calcul, et ne sont plus interprétés comme des doses supplémentaires ; une
+  limite illisible/incompatible bloque le résultat. « 1 fois/24h », « ou » et « puis » gardent
+  leur sens source dans la formule affichée.
+- Les anciens plans locaux de format v1 ne sont pas réimportés après la correction du mapping source ;
+  un avertissement invite à reconstruire et revérifier les snapshots de dose.
+- Preset amikacine Panpharma dans `safe-dose` : aucun calcul avant confirmation de l'âge adulte, de ClCr ≥50 mL/min et d'un IMC calculable <30 ; en obésité, le RCP demande un poids corrigé que l'outil n'estime pas, donc il bloque au lieu d'utiliser le poids réel.
+- Les fiches dont la configuration de calcul pondéral vaut zéro ne montrent plus « 0 mg ».
+- Une pompe n'est plus dérivée silencieusement de la première préparation RE.NAU lorsqu'un même
+  médicament a plusieurs indications (notamment héparine SCA/EP) ; il faut un choix contextuel explicite.
+- Corrections typographiques FR/AR certaines dans les fiches atropine, amoxicilline, phényléphrine,
+  noradrénaline et procédure d'intubation/pneumothorax.
+- Les polices Inter et IBM Plex Sans Arabic sont auto-hébergées : le build statique ne dépend plus
+  d'un accès à Google Fonts.
+- README et architecture : avertissement de traçabilité et nombres actuels rectifiés.
+- Reproductibilité du tableau OMEDIT : la note éditoriale d'attribution de l'amikacine est maintenant déclarée dans `PATCH.editorial_notes` et régénérée avec `data/atb-renal.ts`, au lieu d'être ajoutée manuellement après coup. Le rapport de comparaison vérifie de nouveau l'égalité octet par octet entre le générateur et les données servies ; correction de séparateur de ligne dans le rapport.
+
+### Contenu médical
+- Aucune nouvelle dose antibiotique n'a été ajoutée depuis le PDF OMEDIT. En revanche, les plages
+  de gabapentine et prégabaline ont été remplacées/ajoutées d'après deux RCP individuels ANSM
+  explicitement liés dans l'outil ; elles ne sont pas validées par un professionnel tunisien. Le
+  RCP de gabapentine demande une réduction proportionnelle sous ClCr 15 et un schéma distinct en
+  hémodialyse : ces deux ajustements ne sont pas calculés automatiquement et doivent être vérifiés
+  dans le RCP. Détails et dates :
+  `docs/RENAL-DOSE-RCP-2026-10-23.md`.
+- Amikacine : maintien séparé de trois sources/schémas qui ne sont pas interchangeables — ligne OMEDIT V2.3 (références arrêtées au 10/01/2024), CA-SFM/SPILF/SFPT 2025 (`25–30 mg/kg/j` pour adulte non obèse à fonction rénale normale) et RCP Panpharma (`15 mg/kg/j`, ClCr ≥50, max 1,5 g/j ; poids corrigé du RCP en obésité). Le preset de dose sûre est bloqué hors de son périmètre, mais ni ces références françaises ni les changements ne prouvent une adoption tunisienne. Références et limites : `docs/ANTIBIO-IR.md`.
+- Aucun schéma antibiotique nouveau n'a été proposé. Le calcul pondéral du tableau OMEDIT reste une multiplication arithmétique de ses seules cellules explicites ; les plafonds chiffrés connus sont appliqués et les cas non interprétables sont bloqués. La relecture clinique indépendante et l'adoption tunisienne restent non établies. Détails : `docs/ATB-WEIGHT-CALCULATION-AUDIT-2026-10-24.md`.
+- La comparaison visuelle OMEDIT p.7 a confirmé que les chiffres des trois aminosides apparaissent
+  en colonne normorénale, tandis que les colonnes d'IRC sont fusionnées avec une consigne commune :
+  les valeurs quotidiennes ne sont plus dupliquées dans ces cellules et aucun intervalle rénal n'a
+  été déduit. Une alerte de vérification accompagne ces cellules ; la conduite thérapeutique reste
+  à valider par un spécialiste.
+- La note du tableau OMEDIT signalant le monitorage pharmacologique du méropénem à dose élevée
+  (> 6 g/24 h) est conservée dans `notes` après avoir été supprimée par le patch de génération
+  précédent ; elle n'a pas reçu de validation clinique indépendante. Le lien alternatif
+  `metoclopramide` (entrée médicamenteuse absente) a été retiré sans proposer de remplacement.
+- Les procédures (`data/procedures.ts`) et les rappels correspondants dans `data/protocols.ts`, `data/protocols-p2.ts`, `data/protocols-p4.ts`, `data/protocols-p7.ts`, `data/trees.ts`, `data/triage.ts`, `data/guidage.ts`, `data/quiz.ts`, `data/reval.ts` et `app/terrain/page.tsx` ont été corrigés après comparaison avec les références précisées dans le rapport (dont plusieurs éditions 2024–2025) : séparation défibrillation/cardioversion, retrait des minutages/doses/calibres non étayés, correction des consignes de naissance/réanimation néonatale, précautions IO/rachis et suppression des rappels thoraciques universels non vérifiés (dont angle 45°, pansement trois côtés et drainage automatique), avec renvoi vers le protocole local adapté et la notice du dispositif. Le détail, les références et les limites (pas d'approbation tunisienne établie) figurent dans `docs/PROCEDURES-REFERENCE-AUDIT-2026-10-23.md`.
+- Les parcours généraux d'infection/sepsis adultes ont été revus selon SSC 2026 : choix du délai antibiotique selon choc/probabilité, repère d'au moins 30 mL/kg de cristalloïdes dans les 3 premières heures réservé à l'adulte avec hypoperfusion liée au sepsis/choc et poids renseigné, objectifs de PAM révisés, qSOFA non utilisé comme dépistage/exclusion autonome, cultures sans délai arbitraire et départ périphérique des vasopresseurs sans attente d'un abord central. Dans l'outil de réévaluation, le signal qSOFA et l'alerte de choc fondés sur des seuils adultes exigent maintenant un âge ≥18 ans ; le message précise qu'un score bas n'exclut pas le sepsis et que l'outil ne s'applique pas aux enfants. Le remplissage non spécifique du choc ne suggère plus de volume fixe. Le texte distingue la dose d'hydrocortisone issue de SSC 2021 de la recommandation SSC 2026, qui ne fixe pas ici de dose. Aucun de ces changements n'est une validation tunisienne ; l'enfant reste séparé, et ses recommandations nécessitent une revue pédiatrique indépendante. Détails et limites : `docs/CLINICAL-REFERENCE-REVIEW-2026-10-23.md`.
+
+### Vérifications après les corrections
+- `npm test -- --reporter=dot` : **716/716 tests** (15 fichiers) ; tests ciblés du moteur de calcul rénal/pondéral **46/46**, couvrant les plafonds, les alternatives, les fréquences explicites et la note de source séparée de l'amikacine.
+- `npx tsc --noEmit`, `npm run lint` et `npm run build` réussis ; build statique : 448 pages, precache de 1 097 fichiers (~16,0 MB).
+- Contrôles : inventaire des références **750 entrées/20 groupes**, `npm run audit:reference-inventory:check` et `git diff --check` réussis ; audit PDF : 465 cases, JSON archivé identique à la ré-extraction, les 34/34 cellules non choisies restent représentées, et TypeScript identique octet par octet au générateur.
+- Ces validations vérifient le comportement logiciel et l’intégrité des données, **pas** la sécurité clinique ni un agrément tunisien.
 
 ---
 

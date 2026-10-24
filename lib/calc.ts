@@ -1,10 +1,54 @@
 // Fonctions de calcul pures — TESTÉES (vitest). Toute logique de dose/débit/score vit ici.
 // Ne jamais écrire d'arithmétique posologique directement dans un composant.
+import type { WeightDose } from "@/data/types";
+
+/** Lit un nombre décimal saisi avec un point ou une virgule, sans accepter de séparateur de milliers. */
+export function parseDecimalInput(value: string): number | null {
+  const input = value.trim();
+  if (!/^\d+(?:[.,]\d+)?$/.test(input)) return null;
+  const parsed = Number(input.replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : null;
+}
 
 /** Dose par poids avec plafond. */
 export function clampDose(mgPerKg: number, weightKg: number, maxMg: number): number {
   if (weightKg <= 0 || mgPerKg <= 0) return 0;
   return Math.min(mgPerKg * weightKg, maxMg);
+}
+
+export interface WeightDoseResult {
+  minMg: number;
+  maxMg: number;
+  rawMinMg: number;
+  rawMaxMg: number;
+  capped: boolean;
+  isRange: boolean;
+  absoluteMaxMg?: number;
+}
+
+/** Calcule une dose fixe ou une plage pondérale, sans inventer de plafond absolu absent de la fiche. */
+export function weightDoseForWeight(dose: WeightDose, weightKg: number): WeightDoseResult | null {
+  if (!Number.isFinite(weightKg) || weightKg <= 0) return null;
+  const absoluteMaxMg = dose.maxMg !== undefined && Number.isFinite(dose.maxMg) && dose.maxMg > 0
+    ? dose.maxMg
+    : undefined;
+  const cap = (value: number) => absoluteMaxMg === undefined ? value : Math.min(value, absoluteMaxMg);
+
+  if (dose.kind === "range") {
+    // A context-dependent range belongs in its dedicated calculator, not a weight-only widget.
+    if (dose.requiresContext) return null;
+    if (!Number.isFinite(dose.minMgPerKg) || !Number.isFinite(dose.maxMgPerKg) || dose.minMgPerKg <= 0 || dose.maxMgPerKg < dose.minMgPerKg) return null;
+    const rawMinMg = dose.minMgPerKg * weightKg;
+    const rawMaxMg = dose.maxMgPerKg * weightKg;
+    const minMg = cap(rawMinMg);
+    const maxMg = cap(rawMaxMg);
+    return { minMg, maxMg, rawMinMg, rawMaxMg, capped: minMg < rawMinMg || maxMg < rawMaxMg, isRange: true, absoluteMaxMg };
+  }
+
+  if (!Number.isFinite(dose.mgPerKg) || dose.mgPerKg <= 0 || !Number.isFinite(dose.maxMg) || dose.maxMg <= 0) return null;
+  const rawMg = dose.mgPerKg * weightKg;
+  const resultMg = Math.min(rawMg, dose.maxMg);
+  return { minMg: resultMg, maxMg: resultMg, rawMinMg: rawMg, rawMaxMg: rawMg, capped: rawMg > resultMg, isRange: false, absoluteMaxMg: dose.maxMg };
 }
 
 /** Débit de perfusion : mL/h, gouttes/min et intervalle inter-goutte (s). */

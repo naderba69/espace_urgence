@@ -156,7 +156,7 @@ const acr: DecisionTree = {
         L("TAMPONNADE : péricardocentèse à l'aiguille si suspicion (traumatisme thoracique, recent MI).", "الدكاك: بزل خارج القلب بالإبرة عند الشك (رض صدري، احتشاء حديث)."),
         L("TOXIQUES : opioïdes → naloxone 0,4 mg IV bolo (pas de gain massif) ; BZD (flumazénil) si suspicion.", "سموم: أفيونات ← نالوكسون 0.4 ملغ؛ BZD ← فلومازينيل عند الشك."),
         L("THROMBOSE coronaire : persévérer, tenir pour cath-lab (évoquer l'EP si présentation compatible).", "خثرة تاجية: ثابر؛ قسطرة إن أمكن (اشتبه الصمة إن السياق)."),
-        L("pneumothorax sous TENSION : décompression (4ᵉEIC) sous scope sauf si déjà fait.", "استرواح ضاغط: بزل بالمسافة الرابعة إلا إن تم."),
+        L("Pneumothorax sous tension suspecté : décompression si indiquée, par un opérateur formé, selon le dispositif/protocole local ; monitorage, sauf si déjà fait.", "اشتباه استرواح ضاغط: أزل الضغط إن كان مستطباً بواسطة ممارس مدرّب وفق الجهاز/البروتوكول المحلي، مع المراقبة، ما لم يكن قد أُجري."),
       ],
       next: "check-rhythm",
     },
@@ -399,108 +399,105 @@ const etatMal: DecisionTree = {
 
 // ────────────────────────────────────────────────────────────────────────────
 // ────────────────────────────────────────────────────────────────────────────
-// Choc septique — Surviving Sepsis Campaign (hour-1 bundle)
+// Choc septique — Surviving Sepsis Campaign 2026 (recommandations adultes)
 // ────────────────────────────────────────────────────────────────────────────
 const sepsis: DecisionTree = {
   id: "choc-septique",
-  title: L("Sepsis sévère / choc septique", "الإنتان الشديد / الصدمة الإنتانية"),
+  title: L("Sepsis suspecté / choc septique — adulte", "اشتباه إنتان / صدمة إنتانية — بالغ"),
   description: L(
-    "Bundle de la 1ʳᵉ heure chronométré : lactates, hémocultures, antibiothérapie < 1 h, remplissage 30 mL/kg, noradrénaline.",
-    "حزمة الساعة الأولى الموقوتة: اللكتات، زراعة الدم، مضادات حيوية خلال ساعة، تعويض 30 مل/كغ، نورأدرينالين."
+    "Évaluation rapide de l'infection et de la perfusion ; antibiothérapie selon probabilité/choc ; fluides et vasopresseurs selon l'état clinique.",
+    "تقييم سريع للعدوى والتروية؛ المضاد حسب احتمال الإنتان والصدمة؛ السوائل ومقبضات الأوعية حسب الحالة السريرية."
   ),
   icon: "Droplets",
   severity: "vital",
   start: "start",
-  lastReviewed: "2026-09-01",
+  lastReviewed: "2026-10-23",
   sources: [
-    { label: "Surviving Sepsis Campaign 2021 (SCCM/ESICM)", url: "https://sccm.org/survivingsepsiscampaign" },
+    { label: "Surviving Sepsis Campaign 2026 — recommandations adultes (SCCM)", url: "https://www.sccm.org/clinical-resources/guidelines/guidelines/surviving-sepsis-campaign-international-guidelines-for-management-of-sepsis-and-septic-shock-2026" },
   ],
   nodes: {
     start: {
       kind: "decision", id: "start",
-      question: L("Infection suspectée + dysfonction d'organe (SOFA ≥ 2 : hypotension, confusion, tachypnée > 22, SpO₂ basse) ?", "عدوى مشتبهة + قصور عضوي (SOFA ≥ 2: هبوط ضغط، ارتباك، تسرع تنفس > 22)؟"),
-      note: L("qSOFA (2/3) : FR ≥ 22, GCS < 15, PAS ≤ 100 → ALERTE sepsis.", "qSOFA (2/3): تسرع تنفس ≥ 22، غلاسكو < 15، ضغط انقباضي ≤ 100 ← إنذار إنتان."),
-      yes: "hour1", no: "no-sepsis",
+      question: L("Infection suspectée avec dysfonction d'organe, hypoperfusion ou choc ?", "عدوى مشتبهة مع قصور عضوي أو نقص تروية أو صدمة؟"),
+      note: L("Dépistage adulte : SSC 2026 recommande NEWS/NEWS2, MEWS ou SIRS plutôt que qSOFA seul. Un score ne confirme ni n'exclut le sepsis.", "تحري البالغين: توصي SSC 2026 بـ NEWS/NEWS2 أو MEWS أو SIRS بدلاً من qSOFA وحده. لا تؤكد الدرجة الإنتان ولا تنفيه."),
+      yes: "initial", no: "no-sepsis",
     },
     "no-sepsis": {
       kind: "end", id: "no-sepsis",
-      title: L("Pas de critère de gravité immédiat", "لا توجد علامات خطورة فورية"),
+      title: L("Pas de dysfonction évidente à ce stade", "لا يظهر قصور عضوي واضح حالياً"),
       tone: "info",
       steps: [
-        L("Surveiller et traiter la suspicion infectieuse selon le contexte. Réévaluer le qSOFA à la moindre dégradation.", "راقب وعالج الاشتباه العدوائي حسب السياق. أعد تقييم qSOFA عند أي تدهور."),
+        L("Cela n'exclut pas une infection ni une évolution ultérieure. Réévaluer selon l'examen clinique et l'outil de dépistage validé localement ; ne pas utiliser qSOFA seul pour écarter le sepsis.", "هذا لا ينفي العدوى أو التدهور لاحقاً. أعد التقييم سريرياً وبأداة التحري المعتمدة محلياً؛ ولا تستخدم qSOFA وحده لاستبعاد الإنتان."),
       ],
     },
-    hour1: {
-      kind: "action", id: "hour1",
-      title: L("⏱ H0 — « Bundle de la 1ʳᵉ heure » (tout en parallèle)", "⏱ H0 — حزمة الساعة الأولى (كلها بالتوازي)"),
+    initial: {
+      kind: "action", id: "initial",
+      title: L("Évaluation et traitement initial — adulte", "التقييم والعلاج الأولي — بالغ"),
       steps: [
-        L("Lactates artériels/capillaires IMMÉDIATS (repère H0 ; ≥ 2 mmol/L = dysfonction).", "لاكتات فوري (مرجع H0؛ ≥ 2 = قصور عضوي)."),
-        L("Hémocultures ×2 AVANT antibiotiques (sans les retarder) + prélèvement du foyer suspect (ECBU, ponction...).", "زراعتا دم قبل المضادات (بلا تأخير) + مزرعة البؤرة."),
-        L("💉 ANTIBIOTHÉRAPIE CIBLE < 1 H : selon suspicion (mémo kit : CTX 2 g + amikacine choc si point d'appel sévère).", "💉 مضادات خلال ساعة حسب البؤرة."),
-        L("Si PAS < 90 (ou lactate ≥ 4 mmol/L) : NaCl 0,9 % 30 mL/kg RAPIDE en bolus de 500 mL, réévaluer après chaque bolus.", "إذا انقباضي < 90 أو لاكتات ≥ 4: NaCl 30 مل/كغ دفعات 500 مل مع إعادة تقييم."),
-        L("O₂ : SpO₂ cible ≥ 94 % ; ECG en continu (ischémie possible).", "أكسجين: هدف ≥ 94%؛ ECG مستمر."),
-        L("Sonde urinaire + horodatage de la diurèse (cible ≥ 0,5 mL/kg/h).", "قسطرة بولية + توقيت التحبور (هدف ≥ 0.5 مل/كغ/س)."),
+        L("Urgence médicale : commencer immédiatement l'évaluation et la réanimation adaptées au tableau clinique.", "حالة إسعافية: ابدأ فوراً التقييم والإنعاش الملائمين للصورة السريرية."),
+        L("Prélever les hémocultures dès que possible, idéalement avant les antimicrobiens, sans retarder le traitement ; mesurer le lactate selon le contexte.", "خذ زراعات الدم بأسرع ما يمكن، ويفضل قبل المضادات دون تأخير العلاج؛ وقِس اللاكتات حسب السياق."),
+        L("Antibiotiques : choc possible ou sepsis probable/confirmé → immédiatement, idéalement ≤1 h ; sepsis possible sans choc → évaluation rapide limitée dans le temps, puis ≤3 h si le soupçon persiste ; faible probabilité sans choc → différer peut se discuter sous surveillance rapprochée.", "المضادات: صدمة محتملة أو إنتان مرجح/مؤكد ← فوراً ويفضل خلال ساعة؛ إنتان محتمل بلا صدمة ← تقييم سريع محدد الزمن، ثم خلال 3 ساعات إذا استمر الاشتباه؛ احتمال منخفض بلا صدمة ← يمكن التأجيل مع مراقبة لصيقة."),
+        L("Si hypoperfusion induite par le sepsis ou choc septique : cristalloïdes IV ≥30 mL/kg dans les 3 premières heures. Poids réel ou ajusté/idéal si IMC >30 ; individualiser et réévaluer fréquemment. Cristalloïdes équilibrés préférés au NaCl 0,9 %, sauf contexte tel qu'un traumatisme crânien.", "عند نقص تروية ناجم عن الإنتان أو صدمة: بلّوريات وريدية ≥30 مل/كغ خلال أول 3 ساعات. الوزن الفعلي أو المعدل/المثالي إذا IMC >30؛ فصّل الكمية وأعد التقييم مراراً. تُفضّل البلّوريات المتوازنة على NaCl 0.9%، مع مراعاة سياقات مثل إصابة الدماغ الرضّية."),
+        L("En cas d'hypotension persistante, un vasopresseur peut être nécessaire ; dans un choc instable, fluides et vasopresseur peuvent être débutés simultanément au cas par cas.", "إذا استمر انخفاض الضغط فقد يلزم مقبض وعائي؛ وفي الصدمة غير المستقرة قد يبدأ السائل والمقبض معاً بحسب الحالة."),
+        L("Rechercher rapidement le foyer et la nécessité d'un contrôle de source ; surveiller l'oxygénation et les signes de perfusion selon le contexte.", "ابحث سريعاً عن البؤرة والحاجة إلى ضبطها؛ وراقب الأكسجة وعلامات التروية حسب السياق."),
       ],
-      timerSec: 3600,
-      timerLabel: L("Bundle < 60 min — chrono visible", "الحزمة < 60 د — العد ظاهر"),
       next: "map-check",
     },
     "map-check": {
       kind: "decision", id: "map-check",
-      question: L("Après 30 mL/kg : PAM ≥ 65 mmHg ?", "بعد 30 مل/كغ: هل الضغط المتوسط ≥ 65؟"),
-      note: L("PAM = PAS/3 + 2×PAD/3. Pas de ligne artérielle ? Prenez la tension en continu et checkez perfusion mentale (pas d'agitation, marbrures régressent).", "الضغط المتوسط = انقباضي/3 + انبساطي×2/3. بلا خط شرياني؟ راقب التروية العقلية والتبرقش."),
+      question: L("La PAM est-elle dans la cible initiale après évaluation/réévaluation ?", "هل PAM ضمن الهدف الابتدائي بعد التقييم وإعادته؟"),
+      note: L("Cible initiale : environ 65 mmHg chez l'adulte ; plage 60–65 mmHg à considérer à partir de 65 ans. Adapter au contexte clinique.", "الهدف الابتدائي نحو 65 مم زئبق للبالغ؛ ويُنظر في نطاق 60–65 بدءاً من عمر 65 سنة. كيّف حسب السياق السريري."),
       yes: "stabilized", no: "check-echo",
     },
     "check-echo": {
       kind: "decision", id: "check-echo",
-      question: L("Signes de surcharge (crépitants, OAP) ou de fuite persistante ?", "علامات فرط حجم (خراخر، وذمة) أو تسرب مستمر؟"),
-      yes: "norad", no: "more-fluids",
+      question: L("L'évaluation clinique/dynamique suggère-t-elle une réponse aux fluides sans signe de surcharge ?", "هل يشير التقييم السريري/الديناميكي إلى استجابة للسوائل دون علامات فرط حجم؟"),
+      yes: "more-fluids", no: "norad",
     },
     "more-fluids": {
       kind: "action", id: "more-fluids",
-      title: L("Encore du volume (max 40 mL/kg au total)", "مزيد من السوائل (أقصى 40 مل/كغ إجمالاً)"),
+      title: L("Fluides supplémentaires si l'évaluation les justifie", "سوائل إضافية إذا بررها التقييم"),
       steps: [
-        L("Bolus supplémentaire 500 mL, minuté, réévaluez après chaque bolus (uriner + Pouls + respiration qui ne s'accélère pas).", "دفعة 500 مل إضافية بتوقيت، وأعد التقييم بعد كل دفعة."),
-        L("⚠️ Au-delà : risque de surcharge hydrique → passer à la noradrénaline tôt.", "⚠️ فوق ذلك: خطر فرط الحجم ← ابدأ النورأدرينالين مبكراً."),
+        L("Individualiser la poursuite des cristalloïdes selon les mesures dynamiques, la perfusion, les comorbidités et le risque de surcharge ; réévaluer fréquemment.", "فصّل استمرار البلّوريات حسب المقاييس الديناميكية والتروية والأمراض المرافقة وخطر فرط الحجم؛ وأعد التقييم مراراً."),
+        L("Après 30 mL/kg avec hypoperfusion persistante, une stratégie libérale ou restrictive peut se discuter selon le patient et les ressources ; aucun plafond universel n'est indiqué ici.", "بعد 30 مل/كغ مع استمرار نقص التروية، يمكن اختيار نهج أكثر أو أقل إعطاءً حسب المريض والموارد؛ لا يُذكر هنا سقف موحد."),
       ],
-      timerSec: 600,
-      timerLabel: L("Bolus 500 mL", "دفعة 500 مل"),
       next: "map-check",
     },
     norad: {
       kind: "action", id: "norad",
-      title: L("💉 Noradrénaline — ne pas attendre le lit de réa", "💉 نورأدرينالين — لا تنتظر سرير العناية"),
+      title: L("Vasopresseur si l'hypotension persiste", "مقبض وعائي إذا استمر انخفاض الضغط"),
       steps: [
-        L("Démarrez à 0,05–0,1 µg/kg/min puis titrez à la PAM 65 (monter de 0,05 etp).", "ابدأ 0.05–0.1 مكغ/كغ/د ثم عايِر إلى متوسط 65."),
-        L("Utilisez le calculateur amines pour la concentration/les paliers prêts à l'emploi.", "استعمل حاسبة الأمينات للتركيز والدرجات الجاهزة."),
-        L("2 points de VVP sûrs/centraux idéalement ; surveillance TA continue toute 2–3 min.", "خطّان وريديان آمنان/مركزيان؛ ضغط كل 2–3 د."),
-        L("50 μg de bolus possible (ex. PSE échec) : pruéper 20 µg/mL.", "دفعة 50 مكغ ممكنة: حضّر 20 مكغ/مل."),
+        L("La noradrénaline est le vasopresseur de première ligne dans le choc septique adulte.", "النورأدرينالين هو المقبض الوعائي من الخط الأول في الصدمة الإنتانية عند البالغ."),
+        L("Commencer par voie périphérique pour restaurer la PAM plutôt que retarder l'initiation en attendant une voie centrale ; surveiller le site et appliquer le protocole local de sécurité.", "ابدأ عبر وريد طرفي لاستعادة PAM بدلاً من تأخير العلاج انتظاراً لخط مركزي؛ راقب موضع الوريد واتبع بروتوكول السلامة المحلي."),
+        L("La SSC ne fixe pas ici de dose ni de durée de voie périphérique : utiliser la préparation, la dose et la surveillance prévues par le protocole local.", "لا تحدد SSC هنا جرعة أو مدة للوريد الطرفي؛ استعمل التحضير والجرعة والمراقبة المحددة بالبروتوكول المحلي."),
+        L("Cible initiale de PAM : environ 65 mmHg ; chez l'adulte ≥65 ans, plage 60–65 mmHg à considérer.", "هدف PAM الابتدائي نحو 65 مم زئبق؛ وللبالغ بعمر 65 سنة فأكثر يُنظر في نطاق 60–65."),
       ],
       next: "stabilized-with-na",
     },
     "stabilized-with-na": {
       kind: "decision", id: "stabilized-with-na",
-      question: L("PAM ≥ 65 sur noradrénaline ?", "هل الضغط المتوسط ≥ 65 تحت النورأدرينالين؟"),
+      question: L("La PAM est-elle dans la cible initiale sous traitement ?", "هل PAM ضمن الهدف الابتدائي تحت العلاج؟"),
       yes: "stabilized", no: "refractory",
     },
     stabilized: {
       kind: "end", id: "stabilized",
-      title: L("✅ Stabilisé — poursuite", "✅ مستقر — المتابعة"),
+      title: L("✅ PAM dans la cible — poursuivre la surveillance", "✅ PAM ضمن الهدف — واصل المراقبة"),
       tone: "ok",
       steps: [
-        L("Répéter LACTATES à H3–H4 (cible normalisation).", "أعد قياس اللكتات عند H3–H4 (الهدف التطبيع)."),
-        L("Bilan étiologique (ECBU, Rx/thorax, etc.), adapters les antibiotiques aux hémocultures.", "تقييم سببي (ECBU، صورة صدر...)، تكييف المضادات مع الزراعات."),
-        L("Hospitalisation USI réanimation urgente — signalement médecin (190).", "استشفاء عاجل في العناية المركزة — إبلاغ الطبيب (190)."),
+        L("Si le lactate est élevé, le mesurer de façon sériée et interpréter sa diminution avec l'examen clinique ; ne pas continuer les fluides uniquement jusqu'à sa normalisation.", "إذا كان اللاكتات مرتفعاً، فقِسه تسلسلياً وفسّر انخفاضه مع الفحص السريري؛ ولا تواصل السوائل لمجرد تطبيعه."),
+        L("Rechercher le foyer ; adapter et désescalader les antimicrobiens selon les résultats et l'évolution. Réaliser précocement le contrôle de source lorsqu'il est indiqué.", "ابحث عن البؤرة؛ وكيّف المضادات وضيّق طيفها حسب النتائج والتطور. اضبط البؤرة مبكراً عند الاستطباب."),
+        L("Surveillance et orientation vers les soins critiques selon l'état clinique et les ressources locales.", "المراقبة والتوجيه إلى الرعاية الحرجة وفق الحالة السريرية والموارد المحلية."),
       ],
     },
     refractory: {
       kind: "end", id: "refractory",
-      title: L("🚨 Choc septique RÉFRACTAIRE", "🚨 صدمة إنتانية مقاومة"),
+      title: L("🚨 Hypotension persistante sous vasopresseur", "🚨 استمرار هبوط الضغط تحت المقبض الوعائي"),
       tone: "warn",
       steps: [
-        L("Surcritère : hydrocortisone 200 mg/j IV (SI ADRESSE > 90 min pour stabiliser).", "هرمون قشر كظر: هيدروكورتيزون 200 ملغ/يوم (إذا تطلب التثبيت > 90 دقيقة)."),
-        L("Si ANC persistante : examen cardiocomprimé/discussion vasopressine, drainage du foyer infectieux URGENT.", "إذا استمرت: مناقشة فازوبريسين، وتصريف البؤرة العدوائية عاجلاً."),
-        L("Centre régulateur 190 immédiat — transfert critique avec médicalisation.", "الاتصال بالمُنظّم 190 فوراً — نقل حرج بمرافقة طبية."),
+        L("Réévaluer le diagnostic, la perfusion, le volume et la fonction cardiaque ; rechercher rapidement un foyer nécessitant un contrôle urgent.", "أعد تقييم التشخيص والتروية والحجم ووظيفة القلب؛ وابحث سريعاً عن بؤرة تحتاج إلى ضبط عاجل."),
+        L("Si les besoins en noradrénaline augmentent, la SSC suggère d'ajouter la vasopressine ; si la PAM reste insuffisante sous noradrénaline et vasopressine, envisager l'adrénaline selon le contexte.", "إذا تزايدت الحاجة إلى النورأدرينالين، تقترح SSC إضافة الفازوبريسين؛ وإذا بقيت PAM غير كافية رغم النورأدرينالين والفازوبريسين، ففكّر بالأدرينالين حسب السياق."),
+        L("Les corticostéroïdes IV peuvent être envisagés dans le choc septique ; posologie et modalités selon protocole local.", "يمكن النظر في الكورتيكوستيرويدات الوريدية بالصدمة الإنتانية؛ والجرعة والطريقة حسب البروتوكول المحلي."),
+        L("Demander sans délai l'équipe de soins critiques et organiser le transfert selon les ressources locales.", "اطلب فريق الرعاية الحرجة دون تأخير ونظّم النقل حسب الموارد المحلية."),
       ],
     },
   },
@@ -818,7 +815,7 @@ const polytraumatisme: DecisionTree = {
       title: L("B — Breathing & ventilation", "ب — التنفس"),
       steps: [
         L("FR, SpO₂, auscultation bilatérale, thorax inspecté (lésions ouvertes, fléau, MPU).", "معدل التنفس، التشبع، سماع ثنائي، فحص الصدر (جروح مفتوحة، كتلة)."),
-        L("Pertuis d'air plaide (seal thoracique), exsufflation si pneumothorax suffocant.", "سداد الجروح المفتوحة (بضماد ثلاثي)، بزل صدر إذا استرواح ضاغط."),
+        L("Plaie thoracique ouverte : suivre le protocole trauma local ; si un pneumothorax sous tension nécessite une décompression, appliquer sans délai la filière locale.", "جرح صدري مفتوح: اتبع بروتوكول الرضوض المحلي؛ وإذا استلزم الاسترواح الضاغط إزالة الضغط، فاتبع المسار المحلي دون تأخير."),
         L("O₂ HDF 15 L/min masque à haute concentration (valve).", "أكسجين عالي التدفق 15 ل/د بقناع عالي التركيز."),
       ],
       next: "circulation",

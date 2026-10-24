@@ -24,7 +24,7 @@ const FLUIDS: { fr: string; ar: string; na: number; k: number; cl: number; tone:
 
 const SITUATIONS: { fr: string; ar: string; sev: string; txt: { fr: string; ar: string } }[] = [
   { fr: "Choc septique", ar: "الصدمة الإنتانية", sev: "sev-critical",
-    txt: { fr: "Cristalloïde équilibré 30 mL/kg, puis noradrénaline précoce; éviter l'excès de NaCl 0,9 % (hyperchlorémie).", ar: "بلورات متوازنة ٣٠ مل/كغ ثم نورأدرينالين مبكراً؛ تجنّب إفراط الملح ٠٫٩٪ (فرط الكلور)." } },
+    txt: { fr: "Adulte avec hypoperfusion liée au sepsis/choc : au moins 30 mL/kg de cristalloïdes IV dans les 3 premières heures, avec poids adapté (réel ou ajusté/idéal si IMC >30) et réévaluation fréquente. Préférer les cristalloïdes équilibrés au NaCl 0,9 % (sauf TCC) ; débuter la noradrénaline par voie périphérique si nécessaire sans attendre un accès central (SSC 2026).", ar: "بالغ لديه نقص تروية ناجم عن الإنتان/الصدمة: ما لا يقل عن 30 مل/كغ من البلّوريات وريدياً خلال أول 3 ساعات، مع اختيار الوزن المناسب (فعلي أو معدل/مثالي إذا IMC >30) وإعادة تقييم متكررة. يُفضّل المحلول المتوازن على NaCl 0.9% (ما عدا إصابة الرأس)؛ ويمكن بدء النورأدرينالين طرفياً دون انتظار خط مركزي (SSC 2026)." } },
   { fr: "Acido-cétose diabétique", ar: "الحماض الكيتوني السكري", sev: "sev-urgent",
     txt: { fr: "NaCl 0,9 % 15-20 mL/kg la 1re heure, puis selon sodium corrigé (0,45 % si Na élevé) + insuline et potassium.", ar: "ملح ٠٫٩٪ ١٥-٢٠ مل/كغ الساعة الأولى ثم حسب الصوديوم المصحح (٠٫٤٥٪ إذا مرتفع) + أنسولين وبوتاسيوم." } },
   { fr: "Hypertension intracrânienne / TCC", ar: "فرط الضغط داخل القحف/رأس الرضح", sev: "sev-critical",

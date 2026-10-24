@@ -199,7 +199,7 @@ export const medicationsPhase10: Medication[] = [
       ar: "عند مريض القلب أو ناقص البوتاسيوم: تخطيط وشوارد قبله. جرعة واحدة تكفي غالباً بالتهاب المعدة-الأمعاء عند الطفل — لا وصفة مطولة منهجية.",
     },
     storage: { fr: "T° ambiante.", ar: "حرارة الغرفة." },
-    alternatives: ["metoclopramide"],
+    alternatives: [],
     weightDose: { mgPerKg: 0.15, maxMg: 8, note: { fr: "0,15 mg/kg/dose, max 8 mg.", ar: "‏0.15 ملغ/كغ/جرعة، أقصى 8 ملغ." } },
     meta: { sources: ["AAP gastro-entérite 2014", "Résumé des caractéristiques produit"], lastReviewed: "2026-09" },
   },

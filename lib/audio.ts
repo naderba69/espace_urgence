@@ -16,11 +16,16 @@ function getCtx(): AudioContext | null {
       if (!AC) return null;
       audioCtx = new AC();
     }
-    if (audioCtx.state === "suspended") void audioCtx.resume();
+    if (audioCtx.state === "suspended") void audioCtx.resume().catch(() => {});
     return audioCtx;
   } catch {
     return null;
   }
+}
+
+/** Initialise/réveille le moteur audio pendant un geste utilisateur sans émettre de son. */
+export function unlockAudio() {
+  void getCtx();
 }
 
 /** Bip synthétisé. freq en Hz, dur en secondes. */

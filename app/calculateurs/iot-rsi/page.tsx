@@ -1,5 +1,5 @@
 "use client";
-// v4.0 — مساعد التنبيب الفردي: موقّت لكل خطوة، محاولات لارنجوسكوب ≤ 30 ث، سجل مؤرّخ.
+// Aide-mémoire de suivi RSI : chronologie et journal, sans seuil universel de tentative.
 import { useEffect, useState } from "react";
 import { fmtMMSS } from "@/lib/calc";
 import { fmtJournal } from "@/lib/journal";
@@ -8,11 +8,9 @@ import { useRegisterRecent } from "@/components/SearchBar";
 import { useApp } from "@/components/Providers";
 import T from "@/components/T";
 
-const TIMES_FALLBACK: number[] = [];
 const PROC = getProcedure("iot-rsi")!;
-const TIMES = PROC.stepTimes ?? TIMES_FALLBACK;
 const ATTEMPT_FR = "Tentative de laryngoscopie";
-const ATTEMPT_AR = "محاولة لارنجوسكوب";
+const ATTEMPT_AR = "محاولة تنظير الحنجرة";
 
 export default function IotRsiPage() {
   useRegisterRecent("calculateur:iot-rsi");
@@ -30,11 +28,8 @@ export default function IotRsiPage() {
   }, [chrono]);
 
   const current = PROC.steps.findIndex((_, i) => done[i] === undefined);
-  const curStart = current <= 0 ? 0 : done[current - 1];
-  const late = current >= 0 && now > 0 && now - curStart >= TIMES[current];
   const lastAttempt = attempts[0] ?? null;
   const attemptSince = lastAttempt === null ? null : now - lastAttempt;
-  const attemptLate = attemptSince !== null && attemptSince >= 30;
   const nLogged = Object.keys(done).length + attempts.length;
 
   const copy = () => {
@@ -52,10 +47,11 @@ export default function IotRsiPage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-extrabold"><T fr="Assistant intubation individuel (RSI)" ar="مساعد التنبيب الفردي (تسلسل سريع)" /></h1>
+      <h1 className="text-2xl font-extrabold"><T fr="Assistant de suivi de l'intubation (RSI)" ar="مساعد متابعة التنبيب بالتسلسل السريع" /></h1>
+      <p className="text-sm opacity-70"><T fr="Le chronomètre journalise les événements ; il n'impose pas de durée maximale universelle pour une tentative. Utiliser l'algorithme local des voies aériennes difficiles." ar="يسجل المؤقت الأحداث؛ ولا يفرض حداً زمنياً عاماً للمحاولة. اتبع خوارزمية مجرى الهواء الصعب المعتمدة محلياً." /></p>
 
       <div className="card flex items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-4">
-        <p className="text-4xl font-black tabular-nums" dir="ltr">{fmtMMSS(now)}</p>
+        <p className="text-4xl font-black tabular-nums" dir="ltr" role="timer">{fmtMMSS(now)}</p>
         <div className="flex gap-2">
           <button onClick={() => setChrono((c) => {
             if (c.start) { const acc = c.acc + (Date.now() - c.start) / 1000; setNow(acc); return { start: null, acc }; }
@@ -72,29 +68,27 @@ export default function IotRsiPage() {
       </div>
 
       <button onClick={() => setAttempts((a) => [now, ...a])}
-        className={`touch flex items-center justify-between gap-2 rounded-2xl border p-4 font-black ${attemptLate ? "border-red-600 bg-red-600/15 text-red-500" : "border-line bg-surface"}`}>
-        <span><T fr={ATTEMPT_FR} ar={ATTEMPT_AR} /> <span className="text-xs font-bold opacity-70">(<T fr="max 30 s" ar="≤ 30 ث" />)</span></span>
+        className="touch flex items-center justify-between gap-2 rounded-2xl border border-line bg-surface p-4 font-black">
+        <span><T fr={ATTEMPT_FR} ar={ATTEMPT_AR} /></span>
         <span className="tabular-nums text-sm" dir="ltr">{attemptSince === null ? "—" : fmtMMSS(attemptSince)}</span>
       </button>
 
       <ol className="flex flex-col gap-2">
         {PROC.steps.map((s, i) => {
           const at = done[i];
-          const isCur = i === current;
+          const isCurrent = i === current;
           const cls = at !== undefined
             ? "border-green-600 bg-green-600/10"
-            : isCur && late
-              ? "border-red-600 bg-red-600/15"
-              : isCur
-                ? "border-blue-600 bg-blue-600/10"
-                : "border-line bg-surface opacity-60";
+            : isCurrent
+              ? "border-blue-600 bg-blue-600/10"
+              : "border-line bg-surface opacity-60";
           return (
             <li key={i}>
               <button onClick={() => setDone((d) => (d[i] === undefined ? { ...d, [i]: now } : d))}
                 className={`touch flex w-full items-center justify-between gap-2 rounded-2xl border p-3 text-start ${cls}`}>
                 <span className="block text-sm font-bold">{i + 1}. {lang === "ar" ? s.ar : s.fr}</span>
-                <span className={`shrink-0 rounded-full px-2 py-1 text-xs font-black tabular-nums ${at !== undefined ? "bg-green-600/15 text-green-500" : isCur && late ? "bg-red-600/15 text-red-500" : "bg-surface2 opacity-70"}`} dir="ltr">
-                  {at !== undefined ? fmtMMSS(at) : `≤ ${TIMES[i]} s`}
+                <span className={`shrink-0 rounded-full px-2 py-1 text-xs font-black tabular-nums ${at !== undefined ? "bg-green-600/15 text-green-500" : "bg-surface2 opacity-70"}`} dir="ltr">
+                  {at !== undefined ? fmtMMSS(at) : isCurrent ? (lang === "ar" ? "الآن" : "À faire") : "—"}
                 </span>
               </button>
             </li>
@@ -127,7 +121,7 @@ export default function IotRsiPage() {
         </button>
       )}
 
-      <p className="text-xs opacity-60"><T fr="Sources: SFAR RSI/DAS 2023, ERC airway 2021. Capnographie continue obligatoire après intubation." ar="المصادر: SFAR 2023، ERC 2021. الكابنوغرافيا المستمرة إلزامية بعد التنبيب." /></p>
+      <p className="text-xs opacity-60"><T fr="Source : RFE SFAR/SFMU 2025, intubation d'urgence de l'adulte hors bloc et hors soins critiques. Cette aide ne remplace pas la formation ni le protocole adopté." ar="المصدر: توصيات SFAR/SFMU 2025 للتنبيب الإسعافي للبالغين خارج غرفة العمليات والعناية الحرجة. هذه الأداة لا تعوض التدريب أو البروتوكول المعتمد." /></p>
     </div>
   );
 }

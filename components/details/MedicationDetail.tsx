@@ -12,7 +12,7 @@ import { AbbrText } from "@/components/AbbrTooltip";
 import BackLink from "@/components/BackLink";
 import MedTools from "@/components/MedTools";
 import { trackEvent } from "@/lib/analytics";
-import { clampDose } from "@/lib/calc";
+import { weightDoseForWeight } from "@/lib/calc";
 import { ShieldAlert, Syringe, BookOpen, Info, AlertOctagon, Warehouse } from "lucide-react";
 
 function Section({ title, children, id }: { title: React.ReactNode; children: React.ReactNode; id?: string }) {
@@ -64,10 +64,13 @@ export default function MedicationDetail({ medication: m, alternatives, psePreps
     return out.slice(0, 8);
   })();
 
-  const computed =
-    m.weightDose && Number(weight) > 0
-      ? clampDose(m.weightDose.mgPerKg, Number(weight), m.weightDose.maxMg)
-      : null;
+  // Certains traitements ont une fiche `weightDose` factice à zéro (paliers/PSE) :
+  // ne pas présenter un résultat « 0 mg » comme s'il s'agissait d'une dose calculée.
+  const hasWeightDose = Boolean(m.weightDose && weightDoseForWeight(m.weightDose, 1));
+  const computedDose = hasWeightDose && m.weightDose
+    ? weightDoseForWeight(m.weightDose, Number(weight))
+    : null;
+  const fmtDose = (n: number) => Math.round(n * 100) / 100;
 
 
   return (
@@ -100,7 +103,7 @@ export default function MedicationDetail({ medication: m, alternatives, psePreps
         {[
           { id: "ind", fr: "Indications", ar: "استطبابات" },
           { id: "doses", fr: "Doses", ar: "جرعات" },
-          ...(m.weightDose ? [{ id: "weight", fr: "Calcul poids", ar: "حساب وزن" }] : []),
+          ...(hasWeightDose ? [{ id: "weight", fr: "Calcul poids", ar: "حساب وزن" }] : []),
           { id: "dil", fr: "Dilution", ar: "تمديد" },
           { id: "ci", fr: "Contre-ind.", ar: "موانع" },
           { id: "nurs", fr: "Surveillance", ar: "مراقبة" },
@@ -155,7 +158,7 @@ export default function MedicationDetail({ medication: m, alternatives, psePreps
       </div>
 
       {/* Mini-calculateur selon le poids */}
-      {m.weightDose && (
+      {hasWeightDose && m.weightDose && (
         <section id="weight" className="card scroll-mt-14 rounded-2xl border border-blue-600/40 bg-blue-600/10 p-4">
           <h2 className="mb-2 flex items-center gap-2 font-bold text-blue-500">
             <Syringe className="h-5 w-5" aria-hidden /> {lang === "ar" ? "حساب بالوزن" : "Calcul selon le poids"}
@@ -173,9 +176,11 @@ export default function MedicationDetail({ medication: m, alternatives, psePreps
                 className="w-24 rounded-xl border border-line bg-surface px-3 py-2 text-center text-lg tabular-nums outline-none focus:ring-2 focus:ring-blue-600"
               />
             </label>
-            {computed !== null && (
-              <p className="rounded-xl bg-blue-600 px-4 py-2 text-lg font-black text-white tabular-nums">
-                {Math.round(computed * 100) / 100} mg
+            {computedDose !== null && (
+              <p className="rounded-xl bg-blue-600 px-4 py-2 text-lg font-black text-white tabular-nums" aria-live="polite">
+                {computedDose.isRange && computedDose.minMg !== computedDose.maxMg
+                  ? `${fmtDose(computedDose.minMg)}–${fmtDose(computedDose.maxMg)} mg`
+                  : `${fmtDose(computedDose.maxMg)} mg`}
               </p>
             )}
           </div>
@@ -229,7 +234,7 @@ export default function MedicationDetail({ medication: m, alternatives, psePreps
       )}
 
       {/* v1.9 — centre de commande : pompe 3 modes, dose, liens, protocoles liés */}
-      <div id="tools" className="scroll-mt-14"><MedTools medId={m.id} hasNativeDose={Boolean(m.weightDose)} linkedProtos={linkedProtos} /></div>
+      <div id="tools" className="scroll-mt-14"><MedTools medId={m.id} hasNativeDose={hasWeightDose} linkedProtos={linkedProtos} /></div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Section title={<span className="inline-flex items-center gap-2"><Warehouse className="h-4 w-4" />{lang === "ar" ? "التخزين" : "Conservation"}</span>}>

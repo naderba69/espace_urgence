@@ -208,12 +208,12 @@ export const medicationsPhase2: Medication[] = [
     klass: { fr: "Corticoïde rapide", ar: "كورتيكويد سريع" },
     highRisk: false,
     indications: {
-      fr: "Insuffisance surrénalienne aiguë ; choc septique réfractaire ; asthme/BPCO grave ; anaphylaxie (adjuvant — jamais 1ère ligne).",
-      ar: "قصور كظري حاد؛ صدمة إنتانية مقاومة؛ ربو/انسداد شديد؛ الأنفيلاكسي (إضافي — ليس خطاً أول أبداً).",
+      fr: "Insuffisance surrénalienne aiguë ; corticostéroïdes IV à considérer dans le choc septique adulte selon SSC 2026 ; asthme/BPCO grave ; anaphylaxie (adjuvant — jamais 1re ligne).",
+      ar: "قصور كظري حاد؛ تُبحث الكورتيكوستيرويدات الوريدية في الصدمة الإنتانية عند البالغ وفق SSC 2026؛ ربو/انسداد شديد؛ التأق (علاج مساعد — ليس خطاً أولاً).",
     },
     doseAdult: {
-      fr: "100 mg IV/IM. Choc septique réfractaire : 200 mg/j (50 mg ×4 ou PSE).",
-      ar: "100 ملغ وريد/عضلي. صدمة إنتانية مقاومة: 200 ملغ/ي (50 ملغ ×4).",
+      fr: "Insuffisance surrénalienne aiguë : suivre le protocole correspondant. Choc septique : 200 mg/j (50 mg ×4 ou PSE) est le repère SSC 2021 ; SSC 2026 suggère les corticostéroïdes IV sans fixer ici de dose — vérifier le protocole local.",
+      ar: "القصور الكظري الحاد: اتبع بروتوكوله. الصدمة الإنتانية: 200 ملغ/ي (50 ملغ ×4 أو مضخة) هو مرجع SSC 2021؛ وتقترح SSC 2026 الكورتيكوستيرويدات الوريدية دون تحديد جرعة هنا — تحقق من البروتوكول المحلي.",
     },
     dosePediatric: { fr: "2-4 mg/kg IV/IM (max 100 mg).", ar: "2-4 ملغ/كغ (أقصى 100 ملغ)." },
     dilution: { fr: "Reconstituer avec le solvant joint ; IV directe lente ou perfusion courte.", ar: "أذب بالمذيب المرفق؛ وريد بطيء أو محلول قصير." },
@@ -222,7 +222,7 @@ export const medicationsPhase2: Medication[] = [
     nursing: { fr: "Ne pas arrêter brutalement après traitement prolongé ; glycémies de contrôle.", ar: "لا توقف فجأة بعد علاج ممتد؛ راقب السكر." },
     storage: { fr: "Poudre température ambiante ; reconstituée : usage rapide.", ar: "مسحوق بحرارة الغرفة؛ المذاب سريع الاستعمال." },
     alternatives: [],
-    meta: { sources: ["SSC 2021", "GINA 2024", "RCUK"], lastReviewed: "2026-08" },
+    meta: { sources: ["Surviving Sepsis Campaign 2021 (dose reference)", "Surviving Sepsis Campaign 2026 (IV steroid recommendation)", "GINA 2024", "RCUK"], lastReviewed: "2026-10" },
   },
   {
     id: "diazepam",

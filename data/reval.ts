@@ -2,7 +2,7 @@
 // Pour chaque protocole : cadence de réévaluation, critères objectifs,
 // amélioration / stagnation / aggravation → conduite, et pivots diagnostiques
 // (signe nouveau ⇒ autre hypothèse ⇒ protocole cible).
-// Sources : ERC/AHA 2021-2025, GINA 2024, Surviving Sepsis 2021, directives OMS/FIGO,
+// Sources : ERC/AHA 2021-2025, GINA 2024, SSC 2026 (adult sepsis), directives OMS/FIGO,
 // recommandations SFMU — revues 2026-09.
 import type { Localized } from "./types";
 
@@ -192,7 +192,7 @@ export const revals: Record<string, Reval> = {
         { fr: "Abdomen qui se tend, FC ↑", ar: "بطن يتصلب، نبض يرتفع" },
       ],
       actions: [
-        { txt: { fr: "Re-ABCDE immédiat : décompression thoracique si suspicion", ar: "أعد ABCDE فوراً: تفريغ صدري عند الشك" }, go: { href: "/protocoles/pneumothorax-suffocant", fr: "Pneumothorax", ar: "استرواح" } },
+        { txt: { fr: "Re-ABCDE immédiat ; si pneumothorax sous tension suspecté et décompression indiquée, suivre sans délai la filière locale.", ar: "أعد ABCDE فوراً؛ وعند الاشتباه باسترواح ضاغط واستطباب إزالة الضغط، اتبع المسار المحلي دون تأخير." }, go: { href: "/protocoles/pneumothorax-suffocant", fr: "Pneumothorax", ar: "استرواح" } },
         { txt: { fr: "Hémorragie interne ⇒ échographie FAST + bloc", ar: "نزف داخلي ⇒ إيكو FAST + عمليات" } },
       ],
     },
@@ -393,31 +393,33 @@ export const revals: Record<string, Reval> = {
   "choc-septique": {
     intervalMin: 15,
     criteria: [
-      { fr: "PAM ≥ 65 mmHg ?", ar: "PAM ≥ 65؟" },
-      { fr: "Diurèse horaire", ar: "إدرار البول الساعي" },
-      { fr: "Marbrures, lactate, température", ar: "تبرقش، لاكتات، حرارة" },
+      { fr: "PAM dans la cible initiale : environ 65 mmHg ; plage 60–65 à considérer si âge ≥65 ans", ar: "PAM ضمن الهدف الابتدائي: نحو 65؛ ويُنظر في نطاق 60–65 عند عمر 65 سنة فأكثر" },
+      { fr: "Diurèse et signes cliniques de perfusion", ar: "إدرار البول والعلامات السريرية للتروية" },
+      { fr: "Marbrures, lactate et évolution clinique", ar: "التبقع واللاكتات والتطور السريري" },
     ],
     improve: {
-      signs: [{ fr: "PAM stable sans noradrénaline, diurèse reprise, marbrures ↓", ar: "PAM ثابت دون نورأدرينالين، إدرار عاد، تبرقش يقل" }],
+      signs: [{ fr: "PAM dans la cible, perfusion et état clinique en amélioration", ar: "PAM ضمن الهدف وتحسن التروية والحالة السريرية" }],
       actions: [
-        { txt: { fr: "Poursuivre antibiothérapie (faite < 1 h) + contrôle de la source", ar: "واصل المضاد (< 1 س) + السيطرة على المصدر" } },
+        { txt: { fr: "Poursuivre/réévaluer l'antibiothérapie selon cultures et évolution ; contrôle précoce de la source si indiqué", ar: "واصل/أعد تقييم المضاد حسب الزرع والتطور؛ واضبط البؤرة مبكراً عند الاستطباب" } },
         MONITOR,
       ],
     },
     stall: {
-      signs: [{ fr: "Hypotension persistante après 30 mL/kg de cristalloïdes", ar: "هبوط مستمر بعد 30 مل/كغ بلورات" }],
+      signs: [{ fr: "Hypotension ou hypoperfusion persistante pendant/après la réanimation initiale", ar: "استمرار هبوط الضغط أو نقص التروية أثناء/بعد الإنعاش الأولي" }],
       actions: [
-        { txt: { fr: "Noradrénaline sans tarder — voie centrale si possible", ar: "نورأدرينالين دون تأخير — قسطرة مركزية إن أمكن" }, go: { href: "/medicaments/noradrenaline", fr: "Noradrénaline", ar: "نورأدرينالين" } },
-        { txt: { fr: "Réévaluer le foyer : échographie, drain, chirurgie ?", ar: "أعد تقييم البؤرة: إيكو، تصريف، جراحة؟" } },
+        { txt: { fr: "Réévaluer perfusion et réponse aux fluides ; si hypotension persistante, débuter un vasopresseur sans attendre un abord central", ar: "أعد تقييم التروية والاستجابة للسوائل؛ وإذا استمر هبوط الضغط فابدأ مقبضاً وعائياً دون انتظار خط مركزي" }, go: { href: "/medicaments/noradrenaline", fr: "Noradrénaline", ar: "نورأدرينالين" } },
+        { txt: { fr: "Commencer la noradrénaline par voie périphérique si nécessaire pour ne pas retarder le traitement ; surveiller l'abord selon le protocole local", ar: "ابدأ النورأدرينالين عبر وريد طرفي عند الحاجة كيلا يتأخر العلاج؛ وراقب الخط وفق البروتوكول المحلي" } },
+        { txt: { fr: "Réévaluer le foyer et la nécessité d'un contrôle de source", ar: "أعد تقييم البؤرة والحاجة إلى ضبطها" } },
       ],
     },
     worsen: {
       signs: [
-        { fr: "Choc réfractaire : doses croissantes de noradrénaline", ar: "صدمة مستعصية: جرعات نورأدرينالين تتصاعد" },
+        { fr: "Choc avec besoin croissant de vasopresseurs", ar: "صدمة مع تزايد الحاجة إلى المقبضات الوعائية" },
         { fr: "Purpura fulminans, CIVD", ar: "فرفرية صاعقة، تخثر منتشر" },
       ],
       actions: [
-        { txt: { fr: "Hydrocortisone 200 mg/j + réanimation", ar: "هيدروكورتيزون 200 ملغ/ي + إنعاش" } },
+        { txt: { fr: "Réévaluation immédiate en soins critiques ; vasopressine si noradrénaline en escalade, puis adrénaline si PAM insuffisante malgré les deux, selon le contexte", ar: "إعادة تقييم فورية في الرعاية الحرجة؛ فازوبريسين عند تصاعد النورأدرينالين، ثم أدرينالين إذا بقيت PAM غير كافية رغم الاثنين حسب السياق" } },
+        { txt: { fr: "Corticostéroïdes IV à considérer dans le choc septique ; dose selon protocole local", ar: "يُنظر في الكورتيكوستيرويدات الوريدية بالصدمة الإنتانية؛ الجرعة حسب البروتوكول المحلي" } },
         SAMU,
       ],
     },
@@ -987,21 +989,21 @@ export const revals: Record<string, Reval> = {
     improve: {
       signs: [{ fr: "SpO₂ ↑ immédiate, murmure revenu", ar: "SpO₂ ارتفع فوراً، صوت عاد" }],
       actions: [
-        { txt: { fr: "Drain thoracique + contrôle radiologique", ar: "أنبوبة صدرية + تصوير مراقبة" } },
+        { txt: { fr: "Organiser le drainage définitif selon l'indication clinique, le protocole local et le dispositif ; contrôle selon la filière.", ar: "نظّم التصريف النهائي بحسب الاستطباب السريري والبروتوكول المحلي والجهاز؛ والمتابعة وفق المسار المعتمد." } },
         SAMU,
       ],
     },
     stall: {
       signs: [{ fr: "Hypoxémie persistante malgré exsufflation", ar: "نقص أكسجة مستمر رغم التنفيس" }],
       actions: [
-        { txt: { fr: "Vérifier le point de ponction, drain bouché ? autre lésion ?", ar: "تحقق من موضع الوخز، أنبوبة مسدودة؟ إصابة أخرى؟" } },
+        { txt: { fr: "Aggravation persistante : vérifier le dispositif selon sa notice, rechercher une autre cause et appliquer la filière locale de sauvetage.", ar: "استمرار التدهور: تحقق من الجهاز وفق تعليماته، وابحث عن سبب آخر، واتبع مسار الإنقاذ المحلي." } },
         { txt: { fr: "Échographie thoracique au lit", ar: "إيكو صدري بالسرير" } },
       ],
     },
     worsen: {
       signs: [{ fr: "Arrêt cardiaque (PEA)", ar: "توقف قلبي (PEA)" }],
       actions: [
-        { txt: { fr: "Décompression bilatérale + RCP — cause à lever avant tout", ar: "تفريغ ثنائي + إنعاش — أزل السبب أولاً" } },
+        { txt: { fr: "Arrêt cardiaque avec cause thoracique suspectée : appliquer l'algorithme local d'ACR traumatique ; décompression par une équipe formée si indiquée.", ar: "عند توقف القلب مع الاشتباه بسبب صدري: اتبع خوارزمية التوقف الرضي المحلية؛ ويزيل فريق مدرّب الضغط إذا كان مستطباً." } },
         SAMU,
       ],
     },

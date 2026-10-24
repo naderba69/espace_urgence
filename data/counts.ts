@@ -11,7 +11,7 @@ export const COUNTS = {
   medications: 73,
   calculators: 131,
   checklists: 3,
-  procedures: 9,
+  procedures: 10,
   ecg: 11,
   trees: 9,
   guidage: 41,

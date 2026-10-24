@@ -2,7 +2,7 @@
 
 Références & outils pour les urgences et le SAMU en Tunisie. Bilingue **français / العربية** (RTL), sombre par défaut, **hors-ligne (PWA)**, sans backend.
 
-> ⚠️ **Avertissement** : le contenu médical est rédigé à partir de référentiels internationaux (ERC 2021, AHA ACLS/PALS 2025, RCUK, ATLS 10e, ESC…) et comporte pour chaque fiche `sources` + `lastReviewed`. **Il doit être relu et validé par un médecin tunisien** avant tout usage clinique. Toujours vérifier les doses.
+> ⚠️ **Avertissement clinique** : les fiches ne sont pas toutes reliées à une référence et à une date de relecture propres à chaque entrée ; les métadonnées présentes sont déclaratives et ne prouvent pas une validation indépendante. L'ensemble doit être revu et validé par des médecins/pharmaciens tunisiens avant tout usage clinique. Toujours vérifier les doses et les protocoles dans les référentiels locaux à jour.
 
 ---
 
@@ -14,12 +14,12 @@ Références & outils pour les urgences et le SAMU en Tunisie. Bilingue **franç
 | Médicaments | **73** | `data/medications*.ts` |
 | Calculateurs | **131** | `data/calculators.ts` |
 | Arbres décisionnels | **9** | `data/trees.ts` |
-| Procédures (checklists) | **9** | `data/procedures.ts` |
+| Procédures (checklists) | **10** | `data/procedures.ts` |
 | Rythmes ECG | **11** | `data/ecg.ts` |
 | Guidage téléphonique | **41** | `data/guidage.ts` |
 | Situations de triage | **22** | `data/triage.ts` |
 | Quiz de révision | **42** | `data/quiz.ts` |
-| Tests | **651** | `npm test` |
+| Tests | **711** | `npm test` |
 
 > Les compteurs affichés sur l'accueil proviennent de `data/counts.ts`. Un test garde-fou
 > (`__tests__/v17-perf.test.tsx`) échoue si ces valeurs divergent des bases réelles —
@@ -41,7 +41,7 @@ npm install
 npm run dev      # développement (le service worker est inactif en dev)
 npm run build    # export statique + précache -> dossier out/
 npx serve out    # tester la version exportée (ou déployer telle quelle)
-npm test         # 651 tests (vitest)
+npm test         # 659 tests (vitest)
 npm run lint     # eslint (0 erreur, 0 avertissement)
 ```
 
@@ -60,7 +60,7 @@ Guide pas à pas : **[docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md)**.
 app/                     pages (accueil, protocoles, médicaments, calculateurs, réa, mémo, checklists…)
 components/              Providers (langue/thème/favoris/récents/patient actif), Header, Nav, SearchBar…
   └ CommandPalette.tsx   enveloppe légère (montée partout) + CommandPaletteBody.tsx (chargé à la demande)
-data/                    contenu médical bilingue + sources + date de revue par fiche
+data/                    contenu médical bilingue ; traçabilité des sources/revues incomplète selon les jeux
   └ counts.ts            compteurs d'affichage (sans importer les bases complètes)
 lib/                     i18n, text (normalisation), search (+ noyau/données), calc, audio, analytics…
   └ search-data.ts       index de recherche complet — CHARGÉ UNIQUEMENT PAR import() DYNAMIQUE
@@ -92,8 +92,9 @@ Trois règles, vérifiées automatiquement par `__tests__/v17-perf.test.tsx` :
 - **Arbres décisionnels** (`/arbres`) — décisions OUI/NON tactiles, minuteries avec alarme
   Web Audio, journal horodaté imprimable (ACR, anaphylaxie, état de mal, sepsis, SCA, HPP,
   hyperkaliémie, polytraumatisme, triage préhospitalier).
-- **Réseau de détection de la détérioration** (`/reevaluation`) — 9 règles ESC 2021 / SSC 2021 /
-  ERC 2021, tendance ↑→↓, alarme après deux aggravations consécutives.
+- **Réseau de détection de la détérioration** (`/reevaluation`) — règles cliniques avec limites affichées
+  (qSOFA adulte uniquement, non diagnostique ; références selon la règle : ESC 2021 / SSC 2026 /
+  ERC 2021), tendance ↑→↓, alarme après deux aggravations consécutives.
 - **Résumé de cas** (`/resume`) — patient + constantes + complications + chronologie, en un
   texte prêt à transmettre (copie, partage natif, impression).
 - **Patient actif** — poids / âge / créatinine / sexe saisis une fois, réinjectés dans tous
@@ -107,12 +108,12 @@ Trois règles, vérifiées automatiquement par `__tests__/v17-perf.test.tsx` :
 ## Hors-ligne
 
 Après la **première visite de l'accueil**, `scripts/gen-precache.mjs` met en cache
-**430 fichiers (≈ 12,0 Mo)** : shell, **les 34 pages de premier niveau** (accueil, protocoles,
+**1 096 fichiers (≈ 16,8 Mo, build du 2026-10-23)** : shell, **les 34 pages de premier niveau** (accueil, protocoles,
 médicaments, calculateurs, recherche, arbres, triage, ECG, guidage, paramètres…), leurs charges
 RSC, les chunks JS/CSS, les polices et les icônes.
 
 Résultat mesuré : **20/20 routes testées s'ouvrent hors-ligne** après une seule visite, sans
-jamais afficher la page de repli. Les pages de détail (98 protocoles, 130 calculateurs) ne sont
+jamais afficher la page de repli. Les pages de détail (98 protocoles, 131 calculateurs) ne sont
 pas précachées (+22,6 Mo) : elles se mettent en cache dès leur première consultation.
 
 Stratégie : réseau d'abord pour la navigation, cache d'abord pour les assets, page `/offline`
@@ -139,8 +140,8 @@ node scripts/crawl-audit.mjs       # 343 pages : erreurs console, hydratation, H
 - **Phase 6 ✅** — couverture « maladie + évolution + complications » : champ `trajectory` sur chaque fiche ; **98 protocoles**, **73 médicaments** ; envenimation scorpionique (grades I–III tunisiens), intoxications, noyade, hypothermie, HDH, BPCO, pré-éclampsie…
 - **Phase 7 ✅ (v16.x)** — moteur de détection de la détérioration + boucle de réévaluation + résumé de cas unifié.
 - **Phase 8 ✅ (v17.0)** — **performance** (premier chargement −50 %), **hors-ligne renforcé** (34 pages précachées au lieu de 6), **qualité** (lint 0/0, 572 tests), **documentation** (CHANGELOG.md, docs/ARCHITECTURE.md), correction de la recherche arabe (hamza) et de la barre d'onglets mobile.
-- **Phase 14 ✅ (v18.1)** — **fonction rénale affinée + plan a → b** : CKD-EPI 2021, CKID U25 (enfant), poids ajusté, critères KDIGO, escalade prudente GPR avec exception « molécules vitales » ; chaque molécule peut être **retenue ou abandonnée** (motif + note) puis **réévaluée en tours successifs** avec export texte imprimable (27 tests).
-- **Phase 13 ✅ (v18.0)** — **antibiotiques & fonction rénale** : les 12 pages du tableau OMEDIT V2.3 deviennent calculables (`/calculateurs/antibio-renal`) — 93 molécules × 5 stades, posologies mot pour mot, **dose absolue au poids** et **DFG de Cockcroft-Gault** avec sélection du stade ; alertes contre-indication / « aucune donnée » ; 32 tests et jeu de données archivé (`data/issues/`, `docs/ANTIBIO-IR.md`).
+- **Phase 14 (v18.1, corrections en cours)** — **fonction rénale et plan a → b** : CKD-EPI 2021 seul pour la colonne DFG adulte, CKID U25 informatif sans dose adulte, Cockcroft–Gault (ClCr) affiché séparément, repérage/stadification KDIGO. En AKI, le tableau de fonction stable et tout choix manuel sont bloqués ; dialyse et pédiatrie sont hors du tableau adulte. La règle d'escalade GPR « +2 stades » non traçable a été retirée ; le preset Panpharma amikacine exige âge adulte, ClCr ≥50 et contrôle d'IMC, sans calcul en obésité faute de poids corrigé saisi. Chaque molécule peut être **retenue ou abandonnée** puis réévaluée avec export imprimable.
+- **Phase 13 ✅ (v18.0)** — **antibiotiques & fonction rénale** : les 12 pages du tableau OMEDIT V2.3 sont consultables (`/calculateurs/antibio-renal`) — 93 molécules × 5 stades, texte FR issu de l'extraction avec corrections structurelles documentées (fidélité cellule par cellule non certifiée), **calcul pondéral** et sélection de colonne par DFG CKD-EPI ; Cockcroft–Gault (ClCr) reste séparé et ne choisit pas la colonne. Alertes « contre-indiqué » / « aucune donnée » ; source archivée et limites détaillées dans `docs/ANTIBIO-IR.md`.
 - **Phase 12 ✅ (v17.4)** — **guidage + réévaluation par fichier** : `GET /reval/<id>` (98 fichiers, ~1,7 Ko gzip) et champ `g` dans `ref-index.json` ⇒ la fiche n'embarque plus `data/guidage.ts` ni `data/reval.ts` (données de page 17,1 Ko gzip après premier écran) ; **hors-ligne réparé** : les payloads RSC des pages de détail sont précachés (1110 entrées) et `sw.js` cache les navigations internes + essaie les variantes de chemin (`/x`, `/x/`, `/x.html`, `/x/index.html`) ⇒ n'importe quelle fiche s'ouvre hors-ligne depuis une liste déjà visitée.
 - **Phase 11 ✅ (v17.3)** — **fichier de références généralisé** : `/protocoles` 335 → 163 Ko et `/quiz-ia` 333 → 161 Ko ; **cache HTTP déclaré** (`vercel.json`, `public/_headers`) ; **gouvernance du contenu** (garde-fou de fraîcheur documenté + test de cohérence projection ↔ données).
 - **Phase 10 ✅ (v17.2)** — **résolution des données croisées au build** : fiches protocole 426 → 178 Ko, fiches médicament 426 → 192 Ko, pages de liens (revue, triage, spécialités, ECG) 344–420 → 160–179 Ko. Principe : un composant client n'importe une base que s'il en affiche l'intégralité.

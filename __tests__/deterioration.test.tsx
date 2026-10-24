@@ -36,14 +36,16 @@ describe("v16.0 — محرّك القواعد", () => {
     expect(evaluateVitals({ spo2: 96, fr: 28 }).map((a) => a.rule.id)).toContain("oap");
     expect(evaluateVitals({ spo2: 96, fr: 18, pas: 120 }).map((a) => a.rule.id)).not.toContain("oap");
   });
-  it("سيناريو المالك: SCA تدهورت — SpO₂ 88 + PAS 85 + FC 115 ⇒ OAP + صدمة معًا", () => {
-    const ids = evaluateVitals({ spo2: 88, pas: 85, fc: 115 }).map((a) => a.rule.id);
+  it("سيناريو بالغ: SCA تدهورت — SpO₂ 88 + PAS 85 + FC 115 ⇒ OAP + صدمة معًا", () => {
+    const ids = evaluateVitals({ age: 54, spo2: 88, pas: 85, fc: 115 }).map((a) => a.rule.id);
     expect(ids).toContain("oap");
     expect(ids).toContain("choc");
   });
-  it("qSOFA: مؤشران يكفيان، ومؤشر واحد لا يكفي", () => {
-    expect(evaluateVitals({ fr: 24, pas: 95, gcs: 15 }).map((a) => a.rule.id)).toContain("sepsis");
-    expect(evaluateVitals({ fr: 16, pas: 130, gcs: 15 }).map((a) => a.rule.id)).not.toContain("sepsis");
+  it("qSOFA بالغ فقط: مؤشران يطلقان تنبيهاً لا تشخيصاً، ولا تنبيه طفل أو عمر غير مدخل", () => {
+    expect(evaluateVitals({ age: 54, fr: 24, pas: 95, gcs: 15 }).map((a) => a.rule.id)).toContain("sepsis");
+    expect(evaluateVitals({ fr: 24, pas: 95, gcs: 15 }).map((a) => a.rule.id)).not.toContain("sepsis");
+    expect(evaluateVitals({ age: 17, fr: 24, pas: 95, gcs: 15 }).map((a) => a.rule.id)).not.toContain("sepsis");
+    expect(evaluateVitals({ age: 54, fr: 16, pas: 130, gcs: 15 }).map((a) => a.rule.id)).not.toContain("sepsis");
   });
   it("نقص السكر / غلاسكو ≤8 / بطء القلب: نوافذها مضبوطة", () => {
     expect(evaluateVitals({ gly: 55 }).map((a) => a.rule.id)).toContain("hypoglycemie");
@@ -76,7 +78,19 @@ describe("v16.0 — تدفق الصفحة", () => {
   it("تفريغ التقييم ⇒ رسالة لا مؤشر", () => {
     render(<ReevaluationPage />);
     fireEvent.click(screen.getByRole("button", { name: "تقييم" }));
-    expect(screen.getByText(/لا مؤشر تدهور/)).toBeTruthy();
+    expect(screen.getByText(/عدم ظهور إنذار محسوب لا ينفي/)).toBeTruthy();
+  });
+  it("تنبيه qSOFA لا يظهر قبل إدخال عمر بالغ، ويظل إنذاراً لا تشخيصاً بعد ذلك", () => {
+    render(<ReevaluationPage />);
+    const inputs = screen.getAllByRole("spinbutton");
+    fireEvent.change(inputs[1], { target: { value: "95" } }); // PAS
+    fireEvent.change(inputs[2], { target: { value: "24" } }); // FR
+    fireEvent.click(screen.getByRole("button", { name: "تقييم" }));
+    expect(screen.queryByText(/إنتان محتمل — إشارة qSOFA/)).toBeNull();
+    fireEvent.change(inputs[7], { target: { value: "18" } }); // age adulte
+    fireEvent.click(screen.getByRole("button", { name: "تقييم" }));
+    expect(screen.getByText(/إنتان محتمل — إشارة qSOFA/)).toBeTruthy();
+    expect(screen.getAllByText(/الدرجة المنخفضة لا تنفي الإنتان/).length).toBeGreaterThan(1);
   });
   it("SpO₂ 85 + PAS 85 + FC 115 ⇒ إنذارا OAP وصدمة؛ التأكيد يضيف للمشيخة مع الـconduite والمرجع؛ الاستبعاد يُخفي", () => {
     render(<ReevaluationPage />);
@@ -84,9 +98,10 @@ describe("v16.0 — تدفق الصفحة", () => {
     fireEvent.change(inputs[0], { target: { value: "115" } }); // FC
     fireEvent.change(inputs[1], { target: { value: "85" } });  // PAS
     fireEvent.change(inputs[3], { target: { value: "88" } });  // SpO₂
+    fireEvent.change(inputs[7], { target: { value: "54" } });  // âge adulte
     fireEvent.click(screen.getByRole("button", { name: "تقييم" }));
     expect(screen.getByText(/وذمة رئوية حادة/)).toBeTruthy();
-    expect(screen.getByText(/صدمة — نقص ترويج أنسجة/)).toBeTruthy();
+    expect(screen.getByText(/صدمة — إنذار وفق عتبات البالغين/)).toBeTruthy();
     // معايير التأكيد ظاهرة قبل التأكيد
     expect(screen.getByText("خخاخات في قاعدتي الرئة")).toBeTruthy();
     // تأكيد OAP ⇒ conduite + مشيخة
@@ -99,7 +114,7 @@ describe("v16.0 — تدفق الصفحة", () => {
     // استبعاد صدمة ⇒ تختفي بطاقتها وتبقى OAP
     const before = screen.getAllByRole("button", { name: "مستبعد" });
     fireEvent.click(before[0]);
-    expect(screen.queryByText(/صدمة — نقص ترويج أنسجة/)).not.toBeTruthy();
+    expect(screen.queryByText(/صدمة — إنذار وفق عتبات البالغين/)).not.toBeTruthy();
     expect(screen.getAllByText(/وذمة رئوية حادة/).length).toBeGreaterThanOrEqual(2); // البطاقة + سطر المشيخة
   });
 });
@@ -164,9 +179,11 @@ describe("v16.1 — القواعد الثلاث الجديدة", () => {
     }
     expect(DETER_RULES).toHaveLength(9);
   });
-  it("حقل K⁺ الاختياري ظاهر في النموذج (7 حقولاً)", () => {
+  it("العمر مطلوب لعتبات البالغين، وحقل K⁺ يبقى اختيارياً", () => {
     render(<ReevaluationPage />);
-    expect(screen.getAllByRole("spinbutton")).toHaveLength(7);
+    expect(screen.getAllByRole("spinbutton")).toHaveLength(8);
+    expect(screen.getByLabelText("العمر (سنة) — مطلوب للتنبيهات الخاصة بالبالغين")).toBeTruthy();
     expect(screen.getByLabelText("البوتاسيوم (إن توفر)")).toBeTruthy();
+    expect(screen.getByText(/لا يظهر إنذار qSOFA للإنتان إلا بعد إدخال عمر بالغ/)).toBeTruthy();
   });
 });

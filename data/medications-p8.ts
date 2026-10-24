@@ -32,7 +32,7 @@ export const medicationsPhase8: Medication[] = [
     },
     sideEffects: {
       fr: "Diarrhée, rash (distinguer allergie vraie), candidose, exceptionnellement anaphylaxie, cytopenies (cures longues).",
-      ar: "إسهال، طفح (ميّزه عن الحساسية الحقيقية)، кандиادا، نادراً تأق، نقص خلايا (العلاج الطويل).",
+      ar: "إسهال، طفح (ميّزه عن الحساسية الحقيقية)، داء المبيضات، نادراً تأق، نقص خلايا (العلاج الطويل).",
     },
     nursing: {
       fr: "Interroger systématiquement sur l'allergie aux pénicillines AVANT la 1re dose. Surveiller le rash des 48 premières heures.",

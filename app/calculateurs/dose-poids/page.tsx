@@ -6,14 +6,14 @@ import { useApp } from "@/components/Providers";
 import { useRegisterRecent } from "@/components/SearchBar";
 import { trackEvent } from "@/lib/analytics";
 import { readJSON, writeJSON } from "@/lib/storage";
-import { clampDose, weightResusPanel } from "@/lib/calc";
+import { weightDoseForWeight, weightResusPanel } from "@/lib/calc";
 import T from "@/components/T";
 
 const STORE = "eutn:calc:dose-poids";
 
 export default function DosePoidsPage() {
   const { t, lang, hydrated } = useApp();
-  const eligible = medications.filter((m) => m.weightDose);
+  const eligible = medications.filter((m) => m.weightDose && weightDoseForWeight(m.weightDose, 1));
   const [medId, setMedId] = useState(eligible[0]?.id ?? "");
   const [weight, setWeight] = useState("10");
   useRegisterRecent("calculateur:dose-poids");
@@ -34,9 +34,8 @@ export default function DosePoidsPage() {
 
   const med = eligible.find((m) => m.id === medId);
   const w = Number(weight);
-  const raw = med?.weightDose && w > 0 ? med.weightDose.mgPerKg * w : 0;
-  const capped = med?.weightDose ? clampDose(med.weightDose.mgPerKg, w, med.weightDose.maxMg) : 0;
-  const isCapped = raw > capped;
+  const calculatedDose = med?.weightDose ? weightDoseForWeight(med.weightDose, w) : null;
+  const fmtDose = (n: number) => Math.round(n * 100) / 100;
 
   return (
     <div className="flex max-w-2xl flex-col gap-5">
@@ -68,13 +67,17 @@ export default function DosePoidsPage() {
           />
         </label>
 
-        {med?.weightDose && w > 0 && (
+        {med?.weightDose && calculatedDose && (
           <div className="rounded-2xl bg-blue-600 p-5 text-center text-white">
             <p className="text-sm font-semibold opacity-90">{t("common.result")}</p>
-            <p className="text-4xl font-black tabular-nums">{Math.round(capped * 100) / 100} mg</p>
-            {isCapped && (
+            <p className="text-4xl font-black tabular-nums">
+              {calculatedDose.isRange && calculatedDose.minMg !== calculatedDose.maxMg
+                ? `${fmtDose(calculatedDose.minMg)}–${fmtDose(calculatedDose.maxMg)} mg`
+                : `${fmtDose(calculatedDose.maxMg)} mg`}
+            </p>
+            {calculatedDose.capped && calculatedDose.absoluteMaxMg !== undefined && (
               <p className="mt-1 rounded-lg bg-black/25 px-2 py-1 text-xs font-bold">
-                {lang === "ar" ? `جرعة مُسقوفة عند ${med.weightDose.maxMg} ملغ (الحد الأقصى)` : `Dose plafonnée à ${med.weightDose.maxMg} mg (maximum)`}
+                {lang === "ar" ? `جرعة مُسقوفة عند ${calculatedDose.absoluteMaxMg} ملغ (الحد الأقصى)` : `Dose plafonnée à ${calculatedDose.absoluteMaxMg} mg (maximum)`}
               </p>
             )}
             <p className="mt-2 text-xs opacity-90"><T fr={med.weightDose.note.fr} ar={med.weightDose.note.ar} /></p>

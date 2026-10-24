@@ -107,7 +107,12 @@ function GuidageInner() {
               {gf.map((f) => (
                 <div key={f.id} className={f.kind === "choice" ? "col-span-2 flex flex-col gap-1 sm:col-span-3" : "flex flex-col gap-1"}>
                   <p className="text-xs font-black opacity-70">{lang === "ar" ? f.ar : f.fr}{f.unit ? ` (${f.unit})` : ""}</p>
-                  {f.kind === "num" ? (
+                  {f.kind === "num" ? f.id === "w" && c.id === "choc" ? (
+                    <input type="number" inputMode="decimal" min={f.min ?? 0} max={f.max ?? 250} step="0.1"
+                      aria-label={lang === "ar" ? f.ar : f.fr} value={String(vals[f.id])}
+                      onChange={(e) => set(f.id, e.target.value)}
+                      className="rounded-xl border border-line bg-[color:var(--surface-2)] px-3 py-2 text-center text-lg font-black tabular-nums outline-none focus:ring-2 focus:ring-blue-600" />
+                  ) : (
                     <div className="flex items-center gap-1" dir="ltr">
                       <button onClick={() => set(f.id, Math.max(f.min ?? 0, Number(vals[f.id]) - (f.step ?? 1)))} aria-label="moins"
                         className="touch h-10 w-10 rounded-lg border border-line bg-surface2 text-lg font-black">−</button>
@@ -116,7 +121,11 @@ function GuidageInner() {
                         className="touch h-10 w-10 rounded-lg border border-line bg-surface2 text-lg font-black">+</button>
                     </div>
                   ) : f.kind === "bool" ? (
-                    <button onClick={() => set(f.id, !vals[f.id])} aria-pressed={Boolean(vals[f.id])}
+                    <button onClick={() => set(f.id, !vals[f.id])}
+                      aria-label={["adult", "sepsisHypoperfusion", "age65Plus", "persistentHypotension"].includes(f.id)
+                        ? `${lang === "ar" ? f.ar : f.fr}: ${vals[f.id] ? (lang === "ar" ? "نعم" : "Oui") : (lang === "ar" ? "لا" : "Non")}`
+                        : undefined}
+                      aria-pressed={Boolean(vals[f.id])}
                       className={`touch rounded-lg border px-3 py-2 text-sm font-black ${vals[f.id] ? "border-red-600 bg-red-600/15 text-red-500" : "border-line bg-surface2"}`}>
                       {vals[f.id] ? <T fr="Oui" ar="نعم" /> : <T fr="Non" ar="لا" />}
                     </button>

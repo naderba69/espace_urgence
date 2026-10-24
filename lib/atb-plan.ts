@@ -23,11 +23,13 @@ export interface PlanEntry {
 }
 
 export interface PlanState {
-  version: 1;
+  version: 2;
   entries: PlanEntry[];
 }
 
-export const PLAN_KEY = "eutn:atb-plan-v1";
+// Version 2 invalide les snapshots créés avec l'ancien mappage des cellules OMEDIT.
+export const PLAN_KEY = "eutn:atb-plan-v2";
+export const LEGACY_PLAN_KEY = "eutn:atb-plan-v1";
 
 export const planReasonLabel: Record<PlanReason, Localized> = {
   "fonction-renale": { fr: "Fonction rénale / stade", ar: "الوظيفة الكلوية / المرحلة" },
@@ -38,7 +40,7 @@ export const planReasonLabel: Record<PlanReason, Localized> = {
 };
 
 export function emptyPlan(): PlanState {
-  return { version: 1, entries: [] };
+  return { version: 2, entries: [] };
 }
 
 /** آخر قرار لكل تركيبة (الجولة الأعلى) — الحالة الحالية للخطّة. */
@@ -61,12 +63,12 @@ export function nextRound(plan: PlanState, id: string): number {
 export function addDecision(plan: PlanState, entry: Omit<PlanEntry, "round" | "at"> & { at?: string }): PlanState {
   const round = nextRound(plan, entry.id);
   const at = entry.at ?? new Date().toISOString();
-  return { version: 1, entries: [...plan.entries, { ...entry, round, at }] };
+  return { version: 2, entries: [...plan.entries, { ...entry, round, at }] };
 }
 
 /** حذف كل أثر تركيبة (رجوع عن الإدراج في الخطّة). */
 export function removeMolecule(plan: PlanState, id: string): PlanState {
-  return { version: 1, entries: plan.entries.filter((e) => e.id !== id) };
+  return { version: 2, entries: plan.entries.filter((e) => e.id !== id) };
 }
 
 export function resetPlan(): PlanState {
@@ -77,12 +79,12 @@ export function resetPlan(): PlanState {
 export function parsePlan(raw: unknown): PlanState {
   if (!raw || typeof raw !== "object") return emptyPlan();
   const o = raw as { version?: unknown; entries?: unknown };
-  if (o.version !== 1 || !Array.isArray(o.entries)) return emptyPlan();
+  if (o.version !== 2 || !Array.isArray(o.entries)) return emptyPlan();
   const entries = o.entries.filter((e): e is PlanEntry => {
     const x = e as Partial<PlanEntry>;
     return typeof x.id === "string" && typeof x.round === "number" && (x.decision === "retenue" || x.decision === "abandonnee");
   });
-  return { version: 1, entries };
+  return { version: 2, entries };
 }
 
 /** تصدير الخطّة نصًّا (يُلصق في الملاحظات أو الملف الطبي). */
@@ -100,6 +102,7 @@ export function planToText(plan: PlanState, opts: { lang: "fr" | "ar"; name: (id
   for (const e of keep) {
     const bits = [
       `- ${name(e.id)}`,
+      e.snapshot?.stageLabel ? `  ${ar ? "المرحلة" : "stade"} : ${e.snapshot.stageLabel}` : "",
       e.snapshot?.dose ? `  ${ar ? "الجرعة" : "dose"} : ${e.snapshot.dose}` : "",
       e.snapshot?.weightKg ? `  ${ar ? "الوزن" : "poids"} : ${e.snapshot.weightKg} kg` : "",
       e.note ? `  ${ar ? "ملاحظة" : "note"} : ${e.note}` : "",
@@ -112,8 +115,8 @@ export function planToText(plan: PlanState, opts: { lang: "fr" | "ar"; name: (id
   for (const e of drop) {
     L.push(
       `- ${name(e.id)} — ${e.reason ? planReasonLabel[e.reason][lang] : ar ? "بدون سبب" : "sans motif"}${
-        e.note ? ` · ${e.note}` : ""
-      } (${ar ? "الجولة" : "tour"} ${e.round})`,
+        e.snapshot?.stageLabel ? ` · ${ar ? "المرحلة" : "stade"} : ${e.snapshot.stageLabel}` : ""
+      }${e.note ? ` · ${e.note}` : ""} (${ar ? "الجولة" : "tour"} ${e.round})`,
     );
   }
   L.push("");

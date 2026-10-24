@@ -5,6 +5,8 @@ export type Verdict = "improve" | "stall" | "worsen";
 export interface RevalEntry {
   at: number;        // epoch ms
   verdict: Verdict;
+  /** Scores adultes saisis uniquement avec âge connu ≥18 ans. */
+  adultScores?: boolean;
   mews?: number;
   qsofa?: number;
 }

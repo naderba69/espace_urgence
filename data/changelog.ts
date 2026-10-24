@@ -14,12 +14,16 @@ export const CHANGELOG: Release[] = [
     // v18.1 — الطابق 2 و3: تقدير كلوي مزمن/حادّ/أطفال + خطّة علاج بحلقة إعادة تقييم a → b.
     notes: [
       {
-        fr: "Fonction rénale affinée : CKD-EPI 2021 (adulte), CKID U25 (enfant, taille obligatoire), poids ajusté si obésité, critères KDIGO d'agression aiguë — le stade le plus prudent est retenu et expliqué.",
-        ar: "تقدير أدقّ للوظيفة الكلوية: CKD-EPI 2021 (البالغ)، CKID U25 (الطفل، الطول إلزامي)، وزن معدّل عند السمنة، ومعايير KDIGO للقصور الحادّ — تُعتمد المرحلة الأكثر حذرًا مع تفسيرها.",
+        fr: "Correction rénale : seul le DFG CKD-EPI 2021 sélectionne la colonne adulte ; CKID U25 reste informatif chez l'enfant, sans dose du tableau adulte. Cockcroft–Gault (ClCr) est affiché séparément et ne choisit jamais de colonne. En AKI, le tableau de fonction rénale stable et tout choix manuel sont bloqués ; suivre une conduite adaptée avec un avis professionnel.",
+        ar: "تصحيح الحساب الكلوي: DFG بمعادلة CKD-EPI 2021 وحده يختار عمود البالغ؛ CKID U25 معلومة للطفل ولا يفتح جرعة جدول البالغين. تُعرض ClCr بمعادلة Cockcroft–Gault منفصلة ولا تختار أي عمود. في AKI يُحجب جدول الوظيفة المستقرة والاختيار اليدوي؛ اتبع تدبيراً مناسباً مع رأي مهني."
       },
       {
-        fr: "Escalade prudente (GPR) : DFG 30–90 dégradé ⇒ deux stades plus sévères, sauf molécules vitales quand le DFG est < 30 (badge explicite sur chaque carte).",
-        ar: "تصعيد حذر (GPR): تصفية ٣٠–٩٠ مع تدهور ⇒ التعامل كمرحلتين أشدّ، باستثناء الأدوية الحيوية إذا كانت التصفية أقلّ من ٣٠ (شارة ظاهرة على كل بطاقة).",
+        fr: "Garde-fous : dialyse/épuration extrarénale hors tableau et bloquée ; critères urinaires KDIGO distingués par stade. La règle automatique GPR « +2 stades » et son exception « molécules vitales » ont été retirées, faute de référence vérifiable pour cette transformation précise.",
+        ar: "حواجز أمان: الغسيل/الإحلال الكلوي خارج الجدول ومحجوب؛ ومعايير البول في KDIGO مفصولة حسب المرحلة. أُزيلت قاعدة GPR الآلية «مرحلتان أشد» واستثناء «الأدوية الحيوية» لعدم العثور على مرجع قابل للتحقق لهذه القاعدة المحددة.",
+      },
+      {
+        fr: "Dose sûre — amikacine Panpharma : calcul affiché uniquement pour l'adulte avec ClCr ≥50 mL/min et IMC vérifiable <30. En obésité, le poids corrigé indiqué par le RCP n'est pas calculé automatiquement ; la dose au poids réel est bloquée.",
+        ar: "الجرعة الآمنة — أميكاسين Panpharma: لا يظهر الحساب إلا للبالغ مع ClCr ≥50 مل/د وإمكانية التحقق من BMI <30. عند البدانة لا يحسب النظام الوزن المصحح المذكور في النشرة؛ حُجب حساب الوزن الفعلي.",
       },
       {
         fr: "Plan antibiotique par patient (boucle a → b) : retenir ou abandonner chaque molécule avec motif, réévaluer en tours successifs, puis copier/imprimer la conduite — conservé localement, rien ne sort de l'appareil.",
@@ -30,13 +34,12 @@ export const CHANGELOG: Release[] = [
   {
     v: "18.0",
     date: "2026-09-21",
-    // v18.0 — حساب كامل لجدول «المضادات الحيوية والقصور الكلوي» (OMEDIT، 12 صفحة):
-    // 93 تركيبة × 5 مراحل، نقل حرفي للنصّ الفرنسي + حساب الجرعة المطلقة حسب الوزن
-    // وCockcroft-Gault لاختيار المرحلة. الصفحة: /calculateurs/antibio-renal
+    // v18.0 — جدول OMEDIT (93 تركيبة × 5 مراحل)؛ DFG لا ClCr لاختيار العمود.
+    // تصحيح توثيقي: Cockcroft–Gault يُعرض منفصلاً ولا يختار مرحلة DFG.
     notes: [
       {
-        fr: "Nouveau calculateur « Antibiotiques & fonction rénale » : les 93 lignes du tableau OMEDIT V2.3 sur les 5 stades de DFG, posologies reprises mot pour mot + dose absolue calculée au poids (mg/kg) et DFG de Cockcroft-Gault.",
-        ar: "حاسبة جديدة «المضادات الحيوية والوظيفة الكلوية»: 93 سطرًا من جدول OMEDIT النسخة 2.3 على 5 مراحل للتصفية، الجرعات منقولة حرفيًا + حساب الجرعة المطلقة حسب الوزن وCockcroft-Gault لاختيار المرحلة.",
+        fr: "Calculateur « Antibiotiques & fonction rénale » : les 93 lignes du tableau OMEDIT V2.3 sur 5 stades DFG, textes source affichés et dose absolue calculée au poids lorsque la cellule est calculable. Le DFG CKD-EPI choisit le stade ; Cockcroft–Gault (ClCr) est distinct et ne choisit pas la colonne.",
+        ar: "حاسبة «المضادات الحيوية والوظيفة الكلوية»: 93 سطراً من جدول OMEDIT النسخة 2.3 على 5 مراحل DFG، مع عرض نص المصدر وحساب الجرعة بالوزن حين تكون الخلية قابلة للحساب. يختار DFG بمعادلة CKD-EPI المرحلة؛ وتبقى ClCr بمعادلة Cockcroft–Gault منفصلة ولا تختار العمود.",
       },
       {
         fr: "Signalements automatiques : contre-indication, « déconseillé », « aucune donnée » (à vérifier dans la source) et mention explicite du caractère NON dialysé.",

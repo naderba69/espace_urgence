@@ -29,6 +29,10 @@ vi.mock("@/components/Providers", () => ({
 
 import PumpTool from "@/components/tools/PumpTool";
 import MedTools from "@/components/MedTools";
+import PerfusionsPage from "@/app/calculateurs/perfusions/page";
+import AntibiotiquesPage from "@/app/calculateurs/antibiotiques/page";
+import SafeDosePage from "@/app/calculateurs/safe-dose/page";
+import { PERFUSIONS } from "@/data/perfusions";
 import AbgVent from "@/components/tools/AbgVent";
 import UpdateBanner from "@/components/UpdateBanner";
 import { MED_TOOLS } from "@/data/med-tools";
@@ -40,6 +44,74 @@ describe("PumpTool", () => {
     const dose = screen.getAllByRole("spinbutton").find((i) => (i as HTMLInputElement).value === "0.05");
     fireEvent.change(dose!, { target: { value: "0.1" } });
     expect(screen.getAllByText(/1\.31/).length).toBeGreaterThan(0);
+  });
+});
+
+describe("PerfusionsPage", () => {
+  it("affiche et calcule la même dose effective, bornée au preset", async () => {
+    window.localStorage.removeItem("eutn:calc:perfusions");
+    const index = PERFUSIONS.findIndex((preset) => preset.drugId === "dobutamine");
+    window.localStorage.setItem("eutn:calc:perfusions", JSON.stringify({ idx: index, weight: "70", dose: 0 }));
+    render(<PerfusionsPage />);
+
+    const dose = await screen.findByRole("spinbutton", { name: "dose" });
+    await waitFor(() => expect((dose as HTMLInputElement).value).toBe("2.5"));
+    expect(screen.getByText("10.5 mL/h")).toBeTruthy();
+
+    fireEvent.change(dose, { target: { value: "1000" } });
+    await waitFor(() => expect((dose as HTMLInputElement).value).toBe("10"));
+    expect(screen.getByText("42 mL/h")).toBeTruthy();
+  });
+});
+
+describe("AntibiotiquesPage", () => {
+  it("n'autorise le preset amikacine que dans son contexte adulte explicite et sous ClCr 60", () => {
+    const { container } = render(<AntibiotiquesPage />);
+    fireEvent.change(screen.getByRole("combobox"), { target: { value: "amik" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "w" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "80" } });
+    expect(container.textContent).toContain("أُوقف الحساب");
+
+    fireEvent.click(screen.getByRole("checkbox"));
+    expect(container.textContent).toContain("1750–2100 mg");
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "150" } });
+    expect(container.textContent).toContain("ClCr أقل من 60 مل/د");
+    expect(container.querySelector(".sev-strip > div > p")?.textContent).not.toContain("1750");
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "17" } });
+    expect(container.textContent).toContain("هذا المجال للبالغين فقط");
+    expect(container.querySelector(".sev-strip > div > p")?.textContent).not.toContain("1750");
+  });
+});
+
+describe("SafeDosePage", () => {
+  it("bloque le preset amikacine sans âge adulte, ClCr suffisante et contrôle d'IMC", () => {
+    const { container } = render(<SafeDosePage />);
+    fireEvent.change(screen.getByRole("combobox"), { target: { value: "amik" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "w" }), { target: { value: "70" } });
+    expect(container.querySelector(".sev-strip")).toBeNull();
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "clcr" }), { target: { value: "60" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "height" }), { target: { value: "175" } });
+    expect(container.querySelector(".sev-strip")).not.toBeNull();
+    expect(container.querySelector(".sev-strip")?.textContent).toContain("1050 mg");
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "height" }), { target: { value: "150" } });
+    expect(container.querySelector(".sev-strip")).toBeNull();
+    expect(container.textContent).toContain("BMI ≥ 30: تطلب نشرة Panpharma وزناً مصححاً");
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "height" }), { target: { value: "175" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "clcr" }), { target: { value: "49" } });
+    expect(container.querySelector(".sev-strip")).toBeNull();
+    expect(container.textContent).toContain("ClCr ≥ 50 مل/د");
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "clcr" }), { target: { value: "60" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "17" } });
+    expect(container.querySelector(".sev-strip")).toBeNull();
+    expect(container.textContent).toContain("مخصص للبالغين (≥ 18 سنة)");
   });
 });
 
@@ -75,6 +147,14 @@ describe("MedTools", () => {
     render(<MedTools medId="noradrenaline" hasNativeDose />);
     const tab = screen.getByRole("tab", { name: /المضخة/ });
     expect(tab.getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("يوجّه الأميكاسين إلى حاسباته السياقية ولا يقدّم جرعة بالوزن وحده", () => {
+    render(<MedTools medId="amikacine" hasNativeDose />);
+    const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
+    expect(hrefs).toContain("/calculateurs/antibiotiques");
+    expect(hrefs).toContain("/calculateurs/antibio-renal?q=Amikacine");
+    expect(screen.getByText("جدول كلوي منفصل (DFG)")).toBeTruthy();
   });
 });
 
@@ -155,13 +235,23 @@ describe("Sevrage ventilateur", () => {
 });
 
 describe("Scores + MgSO4 UI", () => {
-  it("qSOFA يتحدث مع التردد", async () => {
+  it("qSOFA adulte seulement ; signal non diagnostique, non utilisé seul", async () => {
     const ScoresPage = (await import("@/app/calculateurs/scores/page")).default;
     render(<ScoresPage />);
-    expect(screen.getAllByText(/0 \/ 3/).length).toBeGreaterThan(0);
-    const rr = screen.getAllByRole("spinbutton")[0];
+    const section = screen.getByText("qSOFA").closest("section")!;
+    expect(within(section).queryByLabelText("qSOFA score")).toBeNull();
+    expect(within(section).getByText(/أدخل عمر بالغ/)).toBeTruthy();
+    expect(within(section).getByText(/NEWS\/NEWS2 أو MEWS أو SIRS/)).toBeTruthy();
+    const age = within(section).getByRole("spinbutton", { name: /العمر/ });
+    const rr = within(section).getByRole("spinbutton", { name: /التردد/ });
     fireEvent.change(rr, { target: { value: "26" } });
-    expect(screen.getAllByText(/1 \/ 3/).length).toBeGreaterThan(0);
+    expect(within(section).queryByLabelText("qSOFA score")).toBeNull();
+    fireEvent.change(age, { target: { value: "17" } });
+    expect(within(section).queryByLabelText("qSOFA score")).toBeNull();
+    expect(within(section).getByText(/لا يُطبّق qSOFA البالغين/)).toBeTruthy();
+    fireEvent.change(age, { target: { value: "18" } });
+    expect(within(section).getByLabelText("qSOFA score").textContent).toContain("1 / 3");
+    expect(within(section).getAllByText(/الدرجة المنخفضة لا تنفي الإنتان/).length).toBeGreaterThan(0);
   });
   it("أداة المغنزيوم تعرض 40 مل لأمبولة 10%", async () => {
     const ObstetriquePage = (await import("@/app/obstetrique/page")).default;
@@ -222,12 +312,12 @@ describe("ReviewAlert", () => {
   });
 });
 
-describe("stepTimes + stats", () => {
-  it("خطوات التنبيب تحمل أهدافاً زمنية", async () => {
+describe("procedure timing + stats", () => {
+  it("لا يعرض هدفاً زمنياً غير مسند لمحاولات التنبيب", async () => {
     const ProcedureDetail = (await import("@/components/details/ProcedureDetail")).default;
     const { procedures } = await import("@/data/procedures");
     render(<ProcedureDetail procedure={procedures.find((p) => p.id === "iot-rsi")!} />);
-    expect(screen.getAllByText(/≤ 03:00/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/≤ 03:00|30 ث|30 s/)).toBeNull();
   });
   it("الإحصاءات تعدّ الاستخدام وتُصفَّر", async () => {
     const { bumpLocal, resetLocalStats } = await import("@/lib/analytics");
@@ -276,7 +366,7 @@ describe("Quiz catégories + néonat", () => {
     const ProcedureDetail = (await import("@/components/details/ProcedureDetail")).default;
     const { procedures } = await import("@/data/procedures");
     render(<ProcedureDetail procedure={procedures.find((p) => p.id === "neonat-ran")!} />);
-    expect(screen.getByText(/الدقيقة الذهبية/)).toBeTruthy();
+    expect(screen.getByText(/إذا كانت التهوية بالضغط الإيجابي مستطبة، فابدأها خلال 60 ثانية/)).toBeTruthy();
   });
 });
 
@@ -291,10 +381,31 @@ describe("Commandement RCP", () => {
 });
 
 describe("Sepsis commandement", () => {
-  it("يحسب هدف التوسيع 30 مل/كغ", async () => {
+  it("لا يعرض حجم السوائل قبل تحديد بالغ ونقص تروية ووزن", async () => {
     const SepsisCmdPage = (await import("@/app/calculateurs/sepsis-commandement/page")).default;
     render(<SepsisCmdPage />);
-    expect(screen.getAllByText(/2100 mL/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/2100 mL/)).toBeNull();
+    fireEvent.click(screen.getByRole("checkbox", { name: /المريض بالغ|Patient adulte/ }));
+    expect(screen.queryByText(/2100 mL/)).toBeNull();
+    fireEvent.click(screen.getByRole("checkbox", { name: /نقص تروية ناجم عن الإنتان|Hypoperfusion induite/ }));
+    expect(screen.queryByText(/2100 mL/)).toBeNull();
+    fireEvent.change(screen.getByLabelText(/الوزن المستخدم في الحساب|Poids à utiliser pour le calcul/), { target: { value: "70" } });
+    expect(screen.getByText(/2100 mL/)).toBeTruthy();
+    expect(screen.getByText(/3 h/)).toBeTruthy();
+  });
+
+  it("يفرّق توقيت المضاد حسب الصدمة واحتمال الإنتان", async () => {
+    const SepsisCmdPage = (await import("@/app/calculateurs/sepsis-commandement/page")).default;
+    render(<SepsisCmdPage />);
+    const banner = screen.getByRole("status");
+    expect(banner.textContent).toMatch(/قيّم سريعاً/);
+    const context = screen.getByLabelText("Contexte antibiotique");
+    fireEvent.change(context, { target: { value: "shock-or-high" } });
+    expect(banner.textContent).toMatch(/المضاد فوراً/);
+    fireEvent.change(context, { target: { value: "possible-no-shock" } });
+    expect(banner.textContent).toMatch(/خلال 3 ساعات/);
+    fireEvent.change(context, { target: { value: "low-no-shock" } });
+    expect(banner.textContent).toMatch(/يمكن تأجيل المضاد/);
   });
 });
 
@@ -302,8 +413,8 @@ describe("Assistant minute d'or néonatale", () => {
   it("تسجيل خطوة يؤرّخها في السجل", async () => {
     const NeonatRanPage = (await import("@/app/calculateurs/neonat-ran/page")).default;
     render(<NeonatRanPage />);
-    fireEvent.click(screen.getByRole("button", { name: /تجفيف/ }));
-    expect(screen.getAllByText(/تجفيف/).length).toBeGreaterThanOrEqual(2);
+    fireEvent.click(screen.getByRole("button", { name: /عند الولادة/ }));
+    expect(screen.getAllByText(/عند الولادة/).length).toBeGreaterThanOrEqual(2);
   });
 });
 
@@ -311,8 +422,8 @@ describe("Assistant intubation individuel", () => {
   it("محاولة اللارنجوسكوب تدخل السجل", async () => {
     const IotRsiPage = (await import("@/app/calculateurs/iot-rsi/page")).default;
     render(<IotRsiPage />);
-    fireEvent.click(screen.getByRole("button", { name: /محاولة لارنجوسكوب/ }));
-    expect(screen.getAllByText(/محاولة لارنجوسكوب/).length).toBeGreaterThanOrEqual(2);
+    fireEvent.click(screen.getByRole("button", { name: /محاولة تنظير الحنجرة/ }));
+    expect(screen.getAllByText(/محاولة تنظير الحنجرة/).length).toBeGreaterThanOrEqual(2);
   });
 });
 
@@ -655,6 +766,17 @@ describe("Mode terrain", () => {
     expect(screen.getAllByText(/75 mL/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/2\.5 mg/).length).toBeGreaterThan(0);
   });
+  it("لا يعمم مؤقت إنعاش الوليد أو تقنية إدخال إبرة الصدر", async () => {
+    const Page = (await import("@/app/terrain/page")).default;
+    render(<Page />);
+    const cards = screen.getAllByRole("listitem");
+    const neonatal = cards.find((card) => /Nouveau-né|وليد/.test(card.textContent ?? ""));
+    const pneumothorax = cards.find((card) => /PNO suffocant|استرواح خانق/.test(card.textContent ?? ""));
+    expect(neonatal?.textContent).toMatch(/Si VPP indiquée|إذا كانت التهوية بالضغط الإيجابي مستطبة/);
+    expect(neonatal?.textContent).not.toMatch(/VPP efficace dans les 60 s|تهوية فعالة خلال 60 ث/);
+    expect(pneumothorax?.textContent).toMatch(/protocole local et notice|البروتوكول المحلي وتعليمات الجهاز/);
+    expect(pneumothorax?.textContent).not.toMatch(/14[-–]16\s*G|4ᵉ\s*EIC|المسافة الرابعة|ligne axillaire/i);
+  });
   it("ست حالات ميدانية إضافية بجرعات فورية", async () => {
     const Page = (await import("@/app/terrain/page")).default;
     render(<Page />);
@@ -681,10 +803,12 @@ describe("Mode terrain", () => {
     fireEvent.click(screen.getAllByRole("button", { name: /نسخ|copier/ })[0]);
     expect(screen.getAllByText("✓").length).toBeGreaterThan(0);
   });
-  it("شارة «الآن» القيادية في المساعدين الزمنيين", async () => {
+  it("شارة «الآن» تراعي سياق الإنتان في المساعدات الزمنية", async () => {
     const Sep = (await import("@/app/calculateurs/sepsis-commandement/page")).default;
     const r1 = render(<Sep />);
-    expect(screen.getAllByText(/مضاد واسع الآن|Antibiotique large maintenant/).length).toBeGreaterThan(0);
+    expect(screen.getByRole("status").textContent).toMatch(/قيّم سريعاً/);
+    fireEvent.change(screen.getByLabelText("Contexte antibiotique"), { target: { value: "shock-or-high" } });
+    expect(screen.getByRole("status").textContent).toMatch(/المضاد فوراً/);
     r1.unmount();
     const Bru = (await import("@/app/calculateurs/brulures/page")).default;
     render(<Bru />);
@@ -706,16 +830,22 @@ describe("Mode terrain", () => {
 });
 
 describe("التدخل الموجّه", () => {
-  it("يكشف التعكر ويكيف الخطوات والجرعات", async () => {
+  it("يكشف التعكر ولا يحسب سوائل الإنتان قبل استيفاء الشروط والوزن", async () => {
     const Page = (await import("@/app/guidage/page")).default;
     render(<Page />);
-    // الافتراضي: صدمة/إنتان بقيم سليمة → لا توسيع
+    // الافتراضي: لا تعكر ولا هدف سوائل تلقائي
     expect(screen.queryByText(/هبط|Hypotension/)).toBeNull();
-    // خفض الضغط إلى 80
+    expect(screen.queryByText(/2100 mL/)).toBeNull();
+    // خفض الضغط الانقباضي إلى 80
     const moins = screen.getAllByRole("button", { name: "moins" })[0];
     for (let i = 0; i < 8; i++) fireEvent.click(moins);
-    expect(screen.getAllByText(/هبوط ضغط|Hypotension/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/2100 mL/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/ضغط انقباضي منخفض|PAS basse/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/2100 mL/)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /المريض بالغ: لا/ }));
+    fireEvent.click(screen.getByRole("button", { name: /نقص تروية ناجم عن الإنتان.*لا/ }));
+    expect(screen.queryByText(/2100 mL/)).toBeNull();
+    fireEvent.change(screen.getByRole("spinbutton", { name: /الوزن المستخدم في الحساب/ }), { target: { value: "70" } });
+    expect(screen.getByText(/2100 mL/)).toBeTruthy();
     //切换到呼吸 case
     fireEvent.click(screen.getByRole("button", { name: /ضيق تنفس|Détresse respiratoire/ }));
     const moinsSpo2 = screen.getAllByRole("button", { name: "moins" })[0];
@@ -786,7 +916,7 @@ describe("التدخل الموجّه", () => {
     fireEvent.click(screen.getByRole("button", { name: /وليد|Nouveau-né/ }));
     const moinsFc = screen.getAllByRole("button", { name: "moins" })[1];
     for (let i = 0; i < 9; i++) fireEvent.click(moinsFc);
-    expect(screen.getAllByText(/تهوية خلال 60|VPP dans les 60/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/ابدأ VPP|débuter la VPP/).length).toBeGreaterThan(0);
   });
   it("سحايا بفرفرية: مضاد فوري ميدانياً؛ وانصمام بصدمة: نقل لا إذابة ميدانياً", async () => {
     const Page = (await import("@/app/guidage/page")).default;
@@ -892,8 +1022,10 @@ describe("التدخل الموجّه", () => {
     const Page = (await import("@/app/terrain/page")).default;
     render(<Page />);
     expect(screen.getAllByText(/Furosémide 40 mg/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/2100 mL/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/4ᵉ EIC/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/2100 mL|Ceftriaxone 2 g/)).toBeNull();
+    expect(screen.getAllByText(/حسب السياق والبروتوكول المحلي|selon le contexte et le protocole local/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/وفق البروتوكول المحلي وتعليمات الجهاز|selon protocole local et notice/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/4ᵉ EIC|14-16 G|الفضاء الرابع/)).toBeNull();
     expect(screen.getAllByText(/Parkland/).length).toBeGreaterThan(0);
   });
   it("نوبة قان: حماض ⇒ تهوية غير باضعة بالمستشفى وإعلان مسبق ميدانياً", async () => {
@@ -964,6 +1096,26 @@ describe("التدخل الموجّه", () => {
     render(<Detail {...medicationDetailProps(adr)} />);
     expect(screen.getAllByRole("button", { name: /جرعات|Doses/ }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("button", { name: /أدوات وروابط|Outils/ }).length).toBeGreaterThan(0);
+  });
+  it("les placeholders de dose pondérale à zéro ne rendent ni section ni résultat 0 mg", async () => {
+    const { getMedication } = await import("@/data/medications");
+    const Detail = (await import("@/components/details/MedicationDetail")).default;
+    const medication = getMedication("amoxicilline")!;
+    const { container } = render(<Detail {...medicationDetailProps(medication)} />);
+    const weightDose = medication.weightDose;
+    expect(weightDose && weightDose.kind !== "range" ? weightDose.mgPerKg : null).toBe(0);
+    expect(container.querySelector("#weight")).toBeNull();
+    expect(screen.queryByRole("button", { name: /Calcul poids|حساب وزن/ })).toBeNull();
+  });
+  it("l'amikacine ne déclenche pas un calcul de dose avec le seul poids", async () => {
+    const { getMedication } = await import("@/data/medications");
+    const Detail = (await import("@/components/details/MedicationDetail")).default;
+    const medication = getMedication("amikacine")!;
+    const { container } = render(<Detail {...medicationDetailProps(medication)} />);
+    expect(medication.weightDose).toMatchObject({ kind: "range", minMgPerKg: 25, maxMgPerKg: 30, requiresContext: true });
+    expect(container.querySelector("#weight")).toBeNull();
+    const hrefs = Array.from(container.querySelectorAll("a")).map((link) => link.getAttribute("href"));
+    expect(hrefs).toContain("/calculateurs/antibiotiques");
   });
   it("v17.4 : la réévaluation et le guidage arrivent par fichiers dédiés", async () => {
     await stubStaticFiles();
@@ -1085,8 +1237,23 @@ describe("v7.8 réévaluation complète", () => {
     expect(mews({ rr: 16, hr: 80, sbp: 120, temp: 37, avpu: 0 }).score).toBe(1);
     expect(mews({ rr: 32, hr: 135, sbp: 70, temp: 39, avpu: 3 }).score).toBe(14);
     expect(mews({ rr: 32, hr: 135, sbp: 70, temp: 39, avpu: 3 }).risk).toBe("high");
-    expect(qsofa({ rr: 24, sbp: 95, altered: true })).toEqual({ score: 3, risk: "high" });
-    expect(qsofa({ rr: 16, sbp: 120, altered: false })).toEqual({ score: 0, risk: "low" });
+    expect(qsofa({ age: 54, rr: 24, sbp: 95, altered: true })).toEqual({ score: 3, risk: "high" });
+    expect(qsofa({ age: 18, rr: 16, sbp: 120, altered: false })).toEqual({ score: 0, risk: "low" });
+    expect(qsofa({ age: 17, rr: 24, sbp: 95, altered: true })).toBeNull();
+  });
+  it("لوحة إعادة التقييم لا تعرض MEWS/qSOFA البالغين دون عمر بالغ", async () => {
+    const Panel = (await import("@/components/details/RevalPanel")).default;
+    const { revals } = await import("@/data/reval");
+    render(<Panel reval={revals["oap"]} protocolId="oap-age-gate" />);
+    expect(screen.queryByLabelText("MEWS")).toBeNull();
+    expect(screen.queryByLabelText("qSOFA")).toBeNull();
+    const age = screen.getByRole("spinbutton", { name: "العمر بالسنوات" });
+    fireEvent.change(age, { target: { value: "17" } });
+    expect(screen.queryByLabelText("MEWS")).toBeNull();
+    expect(screen.queryByLabelText("qSOFA")).toBeNull();
+    fireEvent.change(age, { target: { value: "18" } });
+    expect(screen.getByLabelText("MEWS")).toBeTruthy();
+    expect(screen.getByLabelText("qSOFA")).toBeTruthy();
   });
   it("سجل الدورات: تعكّران متتاليان ⇒ إنذار التحويل", async () => {
     if (!Element.prototype.scrollIntoView) Element.prototype.scrollIntoView = function () {};
@@ -1396,12 +1563,18 @@ describe("v8.4 uro / cardio / métabolique / pédiatrie / digestif / toxico", ()
     expect(p?.medications).toContain("tamsulosine");
     expect(p?.calculators).toContain("colique");
   });
-  it("v8.4 pyélonéphrite : ECBU avant ATB, BLSE tunisienne → carbapénème", async () => {
+  it("pyélonéphrite adulte : doses STPI datées, résistance sans prévalence supposée, timing SSC 2026", async () => {
     const { getProtocol } = await import("@/data/protocols");
     const p = getProtocol("pyelonephrite-aigue");
-    const txt = JSON.stringify(p?.steps);
-    expect(txt).toContain("ECBU puis ANTIBIOTHÉRAPIE PROBABILISTE immédiate");
-    expect(txt).toContain("BLSE");
+    const txt = JSON.stringify(p);
+    expect(p?.title.fr).toContain("adulte");
+    expect(txt).toContain("ECBU + antibiogramme avant la première dose");
+    expect(txt).toContain("céfotaxime 1 g IM/IV × 3/j");
+    expect(txt).toContain("céfotaxime 2 g IV × 3/j");
+    expect(txt).toContain("≤3 h si le soupçon persiste");
+    expect(txt).toContain("STPI 2018");
+    expect(txt).toContain("ne prouve pas une prévalence actuelle uniforme");
+    expect(txt).not.toContain("forte prévalence de BLSE");
     expect(p?.medications).toContain("ciprofloxacine");
   });
   it("v8.4 RAU : décompression progressive, queue de cheval = IRM", async () => {
@@ -1497,7 +1670,8 @@ describe("v9.0 redesign — نظام التصميم", () => {
     const layout = fs.readFileSync("app/layout.tsx", "utf8");
     expect(layout).toContain('p.theme||"auto"');
     expect(layout).toContain("prefers-color-scheme: dark");
-    expect(layout).toContain("IBM_Plex_Sans_Arabic");
+    expect(layout).toContain("IBM Plex Sans Arabic local");
+    expect(layout).toContain("@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2");
   });
   it("v9.0 : Badge sémantique rend les tons de gravité", async () => {
     const Badge = (await import("@/components/ui/Badge")).default;
@@ -1954,11 +2128,13 @@ describe("القسم أ-٤ — حروق/سوائل/نقل/KDIGO/إغماء", () 
     expect(src).toContain("ratio >= 3");
     expect(src).toContain("Metformine");
   });
-  it("أ-٤ : سوائل الطفل بدفعات الإنعاش", async () => {
+  it("أ-٤ : سوائل الطفل ومرتكز الإنتان للبالغين مشروط بثلاث ساعات", async () => {
     const fs = await import("node:fs");
     const src = fs.readFileSync("app/calculateurs/fluids-enfant/page.tsx", "utf8");
     expect(src).toContain("20 mL/kg");
     expect(src).toContain("30 mL/kg");
+    expect(src).toContain("3 premières heures");
+    expect(src).toContain("SSC 2026");
   });
 });
 
@@ -2082,10 +2258,12 @@ describe("القسم ب ٣١–٣٥ — قراءات مخبرية", () => {
     expect(src).toContain("Néphrite glomérulaire");
     expect(src).toContain("acanthocytes");
   });
-  it("٣٤ : اللاكتات بعتباته ومعدل التصفية", async () => {
+  it("٣٤ : اللاكتات غير نوعي ولا يطلق السوائل أو المضادات وحده", async () => {
     const fs = await import("node:fs");
     const src = fs.readFileSync("app/calculateurs/lactate/page.tsx", "utf8");
     expect(src).toContain("30 mL/kg");
+    expect(src).toContain("3 premières heures");
+    expect(src).toContain("ce chiffre de lactate seul ne déclenche ni fluides ni antibiotiques");
     expect(src).toContain("clairance");
     expect(src).toContain("((init - B) / init) * 100");
   });
@@ -2167,7 +2345,7 @@ describe("القسم ج ٤١–٤٥ — أمان الدواء", () => {
     expect(src).toContain("dixFois");
     expect(src).toContain("Paracétamol IV");
   });
-  it("٤٢ : جسر الصيدلة بـ Cockcroft-Gault و١٦ دواءً", async () => {
+  it("٤٢ : جسر الصيدلة بـ Cockcroft-Gault و١٧ دواءً", async () => {
     const fs = await import("node:fs");
     const src = fs.readFileSync("app/calculateurs/renal-dose/page.tsx", "utf8");
     expect(src).toContain("ibwKg");
@@ -2209,12 +2387,70 @@ describe("القسم ج ٤١–٤٥ — أمان الدواء", () => {
 });
 
 describe("حارس وحدة الكرياتينين (جسر كلوي)", () => {
-  it("يكشف mg/dL > 20 ويحوّل تلقائياً", async () => {
-    const fs = await import("node:fs");
-    const src = fs.readFileSync("app/calculateurs/renal-dose/page.tsx", "utf8");
-    expect(src).toContain("suspectUnit");
-    expect(src).toContain("S > 20");
-    expect(src).toContain("الوحدة على الأرجح");
+  it("لا يحوّل mg/dL > 20 تلقائياً ويحجب النتيجة إلى حين تأكيد الوحدة", async () => {
+    const RenalDosePage = (await import("@/app/calculateurs/renal-dose/page")).default;
+    render(<RenalDosePage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "wt" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "30" } });
+
+    expect(screen.getByRole("alert").textContent).toContain("لن تظهر نتيجة");
+    expect(screen.queryByText(/mL\/min/)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /أؤكد أن القيمة فعلًا/ }));
+    expect(screen.getByText(/mL\/min/)).toBeTruthy();
+  });
+
+  it("لا يعرض نطاق جرعات البالغين لعمر أقل من 18 سنة", async () => {
+    const RenalDosePage = (await import("@/app/calculateurs/renal-dose/page")).default;
+    render(<RenalDosePage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "17" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "wt" }), { target: { value: "60" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "1" } });
+
+    expect(screen.getByRole("alert").textContent).toContain("للبالغين");
+    expect(screen.queryByText(/mL\/min/)).toBeNull();
+  });
+
+  it("يرسل اختصارات المضادات إلى الجدول المستند إلى PDF مع البحث المسبق", async () => {
+    const RenalDosePage = (await import("@/app/calculateurs/renal-dose/page")).default;
+    render(<RenalDosePage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "wt" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "1" } });
+
+    const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
+    expect(hrefs).toContain("/calculateurs/antibio-renal?q=Vancomycine");
+    expect(hrefs).toContain("/calculateurs/antibio-renal?q=Gentamicine");
+    expect(hrefs).toContain("/calculateurs/antibio-renal?q=Amikacine");
+  });
+
+  it("يستخدم عتبات RCP الفردية ويعرض مصدري Gabapentine وPrégabaline", async () => {
+    const RenalDosePage = (await import("@/app/calculateurs/renal-dose/page")).default;
+    render(<RenalDosePage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "wt" }), { target: { value: "70" } });
+    // CrCl ≈ 62: ضمن 50–79 للغابابنتين، لكنه ضمن ≥60 للبريغابالين.
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "1.1" } });
+
+    expect(screen.getByText(/CrCl ٥٠–٧٩ مل\/د/)).toBeTruthy();
+    expect(screen.getByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeTruthy();
+    expect(screen.getByText(/البداية: ١٥٠ مغ\/ي/)).toBeTruthy();
+    const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
+    expect(hrefs).toContain("https://base-donnees-publique.medicaments.gouv.fr/medicament/67350239/extrait");
+    expect(hrefs).toContain("https://base-donnees-publique.medicaments.gouv.fr/medicament/63754960/extrait");
+  });
+
+  it("يقرأ بحث الدواء من رابط جدول المضادات", async () => {
+    const previousUrl = window.location.href;
+    window.history.replaceState({}, "", "/?q=Vancomycine");
+    try {
+      const AntibioRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+      render(<AntibioRenalPage />);
+      const input = screen.getByRole("textbox", { name: "بحث" }) as HTMLInputElement;
+      await waitFor(() => expect(input.value).toBe("Vancomycine"));
+    } finally {
+      window.history.replaceState({}, "", previousUrl);
+    }
   });
 });
 
@@ -2235,12 +2471,14 @@ describe("القسم ج ٤٦–٥٠ — أمان الدواء", () => {
     expect(src).toContain("NaCl 0,9 % (cristaux dans le glucose)");
     expect(src).toContain("gant violet");
   });
-  it("٤٨ : مكافئات الكورتيزون وجرعة الإجهاد", async () => {
+  it("٤٨ : مكافئات الكورتيزون ومرجع PAM للصدمة الإنتانية", async () => {
     const fs = await import("node:fs");
     const src = fs.readFileSync("app/calculateurs/corticoids/page.tsx", "utf8");
     expect(src).toContain("Dexaméthasone");
     expect(src).toContain("Hydrocortisone 100 mg IV puis 200 mg/24 h");
     expect(src).toContain("minéralo");
+    expect(src).toContain("PAM (pression artérielle moyenne)");
+    expect(src).not.toContain("PAS < 65");
   });
   it("٤٩ : الصرع والحمل — الفالبروات ممنوع والفولات", async () => {
     const fs = await import("node:fs");
@@ -2249,10 +2487,12 @@ describe("القسم ج ٤٦–٥٠ — أمان الدواء", () => {
     expect(src).toContain("Acide folique 5 mg/j");
     expect(src).toContain("MgSO4 4 g IV");
   });
-  it("٥٠ : السوائل — الصيانة والمحتوى الأيوني والاستراتيجية", async () => {
+  it("٥٠ : السوائل — شرط الإنتان البالغ وثلاث ساعات ونوع البلّورات", async () => {
     const fs = await import("node:fs");
     const src = fs.readFileSync("app/calculateurs/fluides-sodium/page.tsx", "utf8");
     expect(src).toContain("30 mL/kg");
+    expect(src).toContain("3 premières heures");
+    expect(src).toContain("SSC 2026");
     expect(src).toContain("NaCl 3 %");
     expect(src).toContain("mmol/j");
   });
@@ -2674,5 +2914,157 @@ describe("v14.5 — شرح الاختصارات دائماً داخل الشاش
     const css = fs.readFileSync("app/globals.css", "utf8");
     expect(css).toContain("@keyframes eutn-sheet-up");
     expect(css).toContain("prefers-reduced-motion");
+  });
+});
+
+describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
+  it("يمنع المرحلة والجرعة الآليتين إلى أن تُؤكّد مراجعة المصدر ويُختَر طور يدوي", async () => {
+    const fs = await import("node:fs");
+    const page = fs.readFileSync("app/calculateurs/antibio-renal/page.tsx", "utf8");
+    expect(page).toContain('const requiresReview = ren?.refusal === "boundary" && !akiBlocked;');
+    expect(page).toContain("disabled={pediatricAge || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue || (requiresReview && !reviewAcknowledged)}");
+    expect(page).toContain("const akiBlocked = akiAssessment.stage >= 1;");
+    expect(page).toContain("const akiAssessment = useMemo(() =>");
+    expect(page).toContain("onRenalReplacementTherapy");
+    expect(page).toContain("urine-stage-3");
+    expect(page).not.toContain("escalade GPR");
+    expect(page).toContain("setReviewAcknowledgedFor(reviewKey)");
+    expect(page).toContain("reviewAcknowledged && manualReviewFor === reviewKey");
+    expect(page).toContain("CKD-EPI 2021 (DFG, stade du tableau)");
+    expect(page).toContain("Cockcroft–Gault (ClCr séparée)");
+    expect(page).toContain("isMergedSourceCell");
+    expect(page).toContain("isAmbiguousSourceCells");
+    expect(page).toContain("mergedSourceCell || ambiguousSourceStage ? undefined");
+    expect(page).toContain("disabled={!rowStage || mergedSourceCell || ambiguousSourceStage}");
+    expect(page).toContain("Cellule fusionnée dans la source : voir la note commune");
+    expect(page).toContain("Plusieurs cellules source distinctes recouvrent ce stade");
+    expect(page).toContain("tranches recoupant plusieurs cellules signalées");
+    expect(page).toContain("LEGACY_PLAN_KEY");
+    expect(page).toContain("n'a pas été importé après la correction du mappage");
+    expect(page).not.toContain("Posologies reprises mot pour mot");
+  });
+
+  it("يحجب الجرعات والاختيار اليدوي من جدول الوظيفة المستقرة عند رصد AKI", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "1.4" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "كرياتينين ٤٨ سا" }), { target: { value: "1.0" } });
+
+    expect(container.textContent).toContain("CKD-EPI (DFG)");
+    expect(container.textContent).toContain("Cockcroft–Gault (ClCr séparée)");
+    expect(container.textContent).toContain("أُوقف الحساب الآلي والاختيار اليدوي");
+    expect(container.textContent).toContain("معايير KDIGO المكتشفة");
+    const normalStage = screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement;
+    expect(normalStage.disabled).toBe(true);
+    expect(screen.queryByRole("button", { name: /راجعت الحالة الكلوية الحادة/ })).toBeNull();
+    fireEvent.click(normalStage);
+    expect(normalStage.disabled).toBe(true);
+    expect(screen.queryByText("أميكاسين وريدي")).toBeNull();
+  });
+
+  it("يحجب الاختيار اليدوي عند تحقق معيار قلة البول حتى دون إدخال الكرياتينين", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الدُّرْيَة" }), { target: { value: "0.4" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "مدّة المراقبة" }), { target: { value: "12" } });
+
+    expect(container.textContent).toContain("رُصدت معايير إصابة كلوية حادة وفق KDIGO");
+    expect(container.textContent).toContain("KDIGO 2");
+    expect((screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.queryByText("أميكاسين وريدي")).toBeNull();
+  });
+
+  it("لا يسمح باختيار يدوي إذا كانت قيمة الكرياتينين المدخلة غير صالحة", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "25" } });
+
+    expect(container.textContent).toContain("أُوقف حساب الكلى واختيار المرحلة والجرعة");
+    expect((screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.queryByText("أميكاسين وريدي")).toBeNull();
+  });
+
+  it("يحجب جدول الجرعات عند تأكيد الديلزة حتى لو كانت بيانات DFG مدخلة", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "1.0" } });
+    fireEvent.click(screen.getByRole("checkbox"));
+
+    expect(container.textContent).toContain("خارج نطاق جدول OMEDIT");
+    expect(screen.queryByText("أميكاسين وريدي")).toBeNull();
+    expect((screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("لا يعرض أي جرعة من جدول البالغين لطفل، حتى مع اختيار يدوي", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "12" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "40" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الطول" }), { target: { value: "145" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "0.8" } });
+    expect(container.textContent).toContain("CKID U25");
+    expect(container.textContent).toContain("لا يوفّر هنا مرحلة ولا جرعة");
+    expect(screen.queryByText("Amikacine IV")).toBeNull();
+    expect((screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("يوقف حساب أميكاسين المطلق إذا كان الطول مجهولاً أو IMC ≥30", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "120" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "0.8" } });
+    fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Amikacine" } });
+    expect(container.textContent).toContain("أدخل الطول للتحقق من مؤشر كتلة الجسم");
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الطول" }), { target: { value: "160" } });
+    expect(container.textContent).toContain("IMC ≥30 أو اختير الوزن المثالي");
+    expect(container.textContent).not.toContain("٣,٦ g/24 سا");
+  });
+
+  it("يعرض الملاحظة المشتركة للأمينوغليكوزيدات في مراحل القصور فقط", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Amikacine" } });
+    expect(screen.queryByText(/إذا استدعى الوضع السريري/)).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: /قصور كلوي خفيف/ }));
+    expect(screen.getByText(/إذا استدعى الوضع السريري/)).toBeTruthy();
+  });
+
+  it("يعرض بدائل خلايا المصدر ويمنع اعتماد جرعة مفردة للمرحلة الملتبسة", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /قصور كلوي متوسط/ }));
+    fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Benzylpenicilline sodique" } });
+
+    expect(screen.getByText(/تتقاطع هذه الشريحة مع خلايا مصدر مختلفة/)).toBeTruthy();
+    expect(screen.getByText(/توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط/)).toBeTruthy();
+    expect((screen.getByRole("button", { name: /اعتماد/ }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("يقصر تكرار ملاحظة Céfidérocol على عمود الوظيفة الطبيعية", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Céfidérocol" } });
+    expect(screen.getByText(/إذا كان الترشيح الكلوي ≥ 120/)).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: /قصور كلوي خفيف/ }));
+    expect(screen.queryByText(/إذا كان الترشيح الكلوي ≥ 120/)).toBeNull();
+  });
+
+  it("يشرح حساب الجرعة وزنيًا ويفصل بين الوزن والحساب الكلوي", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    render(<AtbRenalPage />);
+    expect(screen.getByText(/تُضرب المقاطع المكتوبة صراحةً بوحدة mg\/kg فقط/)).toBeTruthy();
+    expect(screen.getByText(/زر «الوزن المثالي» يغيّر تقدير وظيفة الكلى لا الوزن المستعمل/)).toBeTruthy();
+    expect(screen.getByText(/الحدود القصوى الرقمية في النص نفسه/)).toBeTruthy();
+    expect(screen.getByText(/هذا الـPDF جدول مُلخّص/)).toBeTruthy();
   });
 });

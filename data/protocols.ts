@@ -64,7 +64,7 @@ const protocolsCore: Protocol[] = [
       {
         when: { fr: "Complication péri-ACR : fracture costale, pneumothorax, hémothorax", ar: "تعقيد حول التوقف: كسر ضلعي، استرواح، دم صدري" },
         do: [
-          { fr: "Si détresse respiratoire post-choc : auscultation, SpO2 — rechercher pneumothorax (drain si tension).", ar: "إذا ضائقة تنفسية بعد الصدمة: إصغاء، تشبع — اشك في استرواح (بزل إن ضاغط)." },
+          { fr: "Si détresse respiratoire post-choc : auscultation, SpO₂ et recherche de pneumothorax sous tension ; prise en charge selon la filière locale.", ar: "عند ضائقة تنفسية بعد الصدمة: افحص التنفس والتشبع وابحث عن استرواح ضاغط؛ واتبع مسار التدبير المحلي." },
           { fr: "Surveiller saignement interne (hématome, TA) ; bilans d'imagerie à l'arrivée.", ar: "راقب النزف الداخلي؛ فحوص تصوير عند الوصول." },
         ],
       },
@@ -190,7 +190,7 @@ const protocolsCore: Protocol[] = [
     steps: [
       { title: { fr: "X (Catastrophic bleeding) : comprimer/tourniquet toute hémorragie externe massive d'abord", ar: "X (نزف كارثي): اكبس/ضع عاصبة لأي نزف خارجي هائل أولاً" } },
       { title: { fr: "A (Airway) : libérer + stabilisation manuelle du rachis cervical", ar: "A: حرّر المجرى + تثبيت يدوي للرقبة" } },
-      { title: { fr: "B (Breathing) : FR, SpO2, ausculter ; pneumothorax compressif → exsufflation immédiate ; pansement 3 côtés si plaie soufflante", ar: "B: تواتر وتشبع وإصغاء؛ استرواح ضاغط → تفريغ إبرة فوري؛ ضماد ثلاثي الأضلع للجرح النافخ" } },
+      { title: { fr: "B (Breathing) : FR, SpO₂, ausculter ; si pneumothorax sous tension suspecté et décompression indiquée, suivre sans délai la filière locale ; plaie thoracique ouverte : appliquer le protocole local et la notice du dispositif choisi", ar: "B: قيّم التنفس والتشبع وأصغِ؛ عند الاشتباه باسترواح ضاغط واستطباب إزالة الضغط، اتبع المسار المحلي دون تأخير؛ وفي الجرح الصدري المفتوح اتبع البروتوكول المحلي وتعليمات الجهاز المختار." } },
       { title: { fr: "C (Circulation) : 2 VVP gros calibre, bilan artère/fémur/bassin, remplissage prudent (hypotension contrôlée hors THM), chaud", ar: "C: خطان وريديان عريضان، افحص الحوض والفخذين، توسيع حذر (ضغط منخفض مسيطر خارج الرض الدماغي)، دفّئ" }, detail: { fr: "Acide tranexamique 1 g IV si < 3 h du traumatisme + hémorragie.", ar: "حمض ترانيكساميك 1غ وريد إذا أقل من 3س من الإصابة + نزف." } },
       { title: { fr: "D (Disability) : GCS, pupilles, glycémie", ar: "D: غلاسكو، حدقتان، سكر" } },
       { title: { fr: "E (Exposure) : déshabiller, examiner complètement, éviter l'hypothermie (couverture)", ar: "E: جرّد وأكمل الفحص وتجنّب نقص الحرارة" } },
@@ -202,7 +202,7 @@ const protocolsCore: Protocol[] = [
     ],
     trajectory: [
       { when: { fr: "Détresse respiratoire après stabilisation", ar: "ضيق تنفس بعد التثبيت" }, do: [
-        { fr: "Penser pneumothorax (exsufflation/drainage) et hémothorax ; réévaluer ABCDE complet + FAST.", ar: "فكّر في استرواح (شفط/تصريف) وتبثم؛ أعد تقييم ABCDE كاملاً + FAST." },
+        { fr: "Rechercher pneumothorax ou hémothorax ; traiter toute urgence thoracique selon la gravité et le protocole local, puis réévaluer ABCDE complet + FAST.", ar: "ابحث عن استرواح أو دم صدري؛ عالج الطارئ الصدري وفق شدته والبروتوكول المحلي، ثم أعد تقييم ABCDE كاملاً وFAST." },
       ]},
       { when: { fr: "Choc persistant malgré 1 L de cristalloïdes", ar: "صدمة مستمرة رغم لتر من المحلول" }, do: [
         { fr: "Hémorragie occulte (thorax/abdomen/bassin/rétro-péritoine) : FAST, ceinture pelvienne ; transfusion massive (CGR:PFC ≈ 1:1) ; acide tranexamique < 3 h.", ar: "نزف خفي (صدر/بطن/حوض): FAST، حزام حوضي؛ نقل دم واسع (كريات:بلازما ≈ 1:1)؛ حمض ترانيكساميك أقل من 3 س." },

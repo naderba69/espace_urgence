@@ -251,7 +251,7 @@ export const protocolsPhase10: Protocol[] = [
     ],
     trajectory: [
       { when: { fr: "Choc septique (hypotension, lactate ↑)", ar: "صدمة إنتانية (هبوط، لاكتات ↑)" }, do: [
-        { fr: "Réanimation septique maximale : remplissage 30 mL/kg, noradrénaline, élargissement ATB (double couverture Pseudomonas ± amikacine).", ar: "إنعاش إنتاني أقصى: تعبئة 30 مل/كغ، نورأدرينالين، توسيع المضاد (تغطية مزدوجة للزائفة ± أميكاسين)." },
+        { fr: "Adulte avec hypoperfusion induite par le sepsis ou choc septique : cristalloïdes IV ≥30 mL/kg dans les 3 premières heures, poids réel ou ajusté/idéal si IMC >30, réévaluation fréquente ; vasopresseur si hypotension persistante. Élargissement ATB seulement selon le risque microbiologique/local.", ar: "بالغ لديه نقص تروية ناجم عن الإنتان أو صدمة إنتانية: بلّوريات وريدية ≥30 مل/كغ خلال أول 3 ساعات، الوزن الفعلي أو المعدل/المثالي إذا IMC >30، وإعادة تقييم متكررة؛ مقبض وعائي إذا استمر انخفاض الضغط. توسيع المضاد حسب خطر الجراثيم والسياسة المحلية فقط." },
         { fr: "Basculer sur le protocole choc septique : remplissage, vasopresseurs, source control.", ar: "انتقل إلى بروتوكول الصدمة الإنتانية: تعبئة، مقويات أوعية، ضبط البؤرة." },
       ]},
       { when: { fr: "Fièvre persistante à J4-J7 malgré ATB", ar: "حمى مستمرة باليوم 4-7 رغم المضاد" }, do: [
@@ -260,7 +260,7 @@ export const protocolsPhase10: Protocol[] = [
     ],
     medications: ["piperacilline-tazobactam", "amikacine", "cefotaxime", "vancomycine"],
     calculators: ["qsofa", "curb65"],
-    meta: { sources: ["IDSA neutropenic fever 2010", "ESMO 2016", "MASCC"], lastReviewed: "2026-09" },
+    meta: { sources: ["IDSA neutropenic fever 2010", "ESMO 2016", "MASCC", "Surviving Sepsis Campaign 2026 (adult shock fluids)"], lastReviewed: "2026-10" },
   },
   {
     id: "serotoninergique-snm",

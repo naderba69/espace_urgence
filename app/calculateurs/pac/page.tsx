@@ -1,5 +1,5 @@
 "use client";
-// v4.7 — مساعد ذات الرئة المكتسبة الفردي: CURB-65 توجيهي + تذكير مضاد حيوي خلال الساعة + سجل.
+// CURB-65 pour l'orientation ; horodatage de l'antibiothérapie sans délai universel imposé.
 import { useEffect, useState } from "react";
 import { fmtMMSS, curb65Outcome } from "@/lib/calc";
 import { fmtJournal } from "@/lib/journal";
@@ -32,7 +32,6 @@ export default function PacPage() {
 
   const score = CRITERIA.filter((c) => marks[c.id]).length;
   const out = curb65Outcome(score);
-  const abxLate = abxAt === null && now >= 3600;
 
   const ORIENT = [
     { fr: "Score 0-1: ambulatoire possible.", ar: "نقاط 0-1: علاج خارجي ممكن." },
@@ -77,16 +76,10 @@ export default function PacPage() {
       </div>
 
       <button onClick={() => setAbxAt(now)} disabled={abxAt !== null}
-        className={`touch flex items-center justify-between gap-2 rounded-2xl border p-4 font-black ${abxAt !== null ? "border-green-600 bg-green-600/10" : abxLate ? "border-red-600 bg-red-600/15 text-red-500" : "border-line bg-surface"}`}>
+        className={`touch flex items-center justify-between gap-2 rounded-2xl border p-4 font-black ${abxAt !== null ? "border-green-600 bg-green-600/10" : "border-line bg-surface"}`}>
         <span><T fr="Antibiothérapie administrée" ar="أُعطي المضاد الحيوي" /></span>
         <span className="tabular-nums text-sm" dir="ltr">{abxAt !== null ? fmtMMSS(abxAt) : fmtMMSS(now)}</span>
       </button>
-
-      {abxLate && (
-        <p className="rounded-xl bg-red-600/15 p-3 font-black text-red-500">
-          <T fr="≥ 1 h sans antibiotique: administrer sans retard (heure-1)." ar="≥ 1 س دون مضاد: أعطِه دون تأخير (الساعة الأولى)." />
-        </p>
-      )}
 
       {abxAt !== null && (
         <section className="card rounded-2xl border border-line bg-surface p-4">
@@ -111,7 +104,7 @@ export default function PacPage() {
         </button>
       )}
 
-      <p className="text-xs opacity-60"><T fr="SpO2 + radio/échographie; choix de l'antibiotique selon protocoles locaux validés. Source: BTS 2019." ar="تشبع + تصوير؛ اختيار المضاد وفق بروتوكولات محلية معتمدة. المصدر: BTS 2019." /></p>
+      <p className="text-xs opacity-60"><T fr="Le chronomètre sert à consigner les horaires ; CURB-65 ne fixe pas un délai antibiotique d'une heure pour toutes les PAC. Choix et timing selon gravité, éventuel sepsis et protocole local. Source CURB-65 : BTS 2019 ; sepsis adulte : SSC 2026." ar="المؤقت لتسجيل الأوقات؛ ولا يفرض CURB-65 مهلة ساعة للمضاد في كل حالات ذات الرئة. الاختيار والتوقيت حسب الشدة واحتمال الإنتان والبروتوكول المحلي. مصدر CURB-65: BTS 2019؛ إنتان البالغ: SSC 2026." /></p>
     </div>
   );
 }

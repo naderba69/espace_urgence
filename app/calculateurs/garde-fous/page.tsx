@@ -68,11 +68,11 @@ const GUARDS: Guard[] = [
     links: [{ href: "/calculateurs/electrolytes", fr: "Correction électrolytique", ar: "تصحيح الشوارد" }, { href: "/calculateurs/jumeaux", fr: "Mémo KCl", ar: "تذكير KCl" }] },
   { id: "sepsis-ab", sev: 2, fr: "Avant le 1er antibiotique du sepsis", ar: "قبل أول مضاد في الإنتان",
     items: [
-      { fr: "Hémocultures ×2 AVANT, sans retarder l'antibiotique > 45-60 min.", ar: "دم ×٢ قبل، دون تأخير المضاد > ٤٥-٦٠ د." },
+      { fr: "Prélever les hémocultures avant si réalisable sans retarder l'antibiothérapie ; SSC 2026 ne fixe pas ici de délai maximal universel.", ar: "خذ زراعات الدم قبل المضاد إذا أمكن دون تأخيره؛ ولا تحدد SSC 2026 هنا حداً زمنياً أقصى عاماً." },
       { fr: "Poids et clairance pris en compte (dose de charge adaptée).", ar: "الوزن والتصفية محسوبان (جرعة تحميل مناسبة)." },
       { fr: "Allergie bêta-lactamine interrogée/étiquetée.", ar: "حساسية البيتا-لاكتام مُسألة/موسومة." },
     ],
-    links: [{ href: "/calculateurs/sepsis-commandement", fr: "Bundle heure-1", ar: "حزمة الساعة ١" }, { href: "/calculateurs/antibiotiques", fr: "Doses et rein", ar: "الجرعة والكلى" }] },
+    links: [{ href: "/calculateurs/sepsis-commandement", fr: "Assistant sepsis", ar: "مساعد الإنتان" }, { href: "/calculateurs/antibiotiques", fr: "Doses et rein", ar: "الجرعة والكلى" }] },
   { id: "noac-saign", sev: 2, fr: "NOAC chez le patient qui saigne", ar: "مضاد مباشر عند المريض النازف",
     items: [
       { fr: "Heure exacte de la dernière prise (< 2-4 h: charbon si conscient).", ar: "توقيت آخر جرعة (< ٢-٤ س: فحم إذا واعٍ)." },

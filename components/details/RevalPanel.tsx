@@ -51,7 +51,8 @@ export default function RevalPanel({ reval, protocolId, protocolTitle }: { reval
   const [roscDone, setRoscDone] = useState<number[]>([]);
   const [sbar, setSbar] = useState("");
   const [copied, setCopied] = useState(false);
-  // Vitales pour MEWS/qSOFA
+  // Les scores adultes ne sont calculés qu'après saisie d'un âge révolu ≥18 ans.
+  const [age, setAge] = useState("");
   const [rr, setRr] = useState(16);
   const [hr, setHr] = useState(80);
   const [sbp, setSbp] = useState(120);
@@ -66,8 +67,17 @@ export default function RevalPanel({ reval, protocolId, protocolTitle }: { reval
     return () => clearInterval(t);
   }, [running, left]);
 
-  const m = useMemo(() => mews({ rr, hr, sbp, temp, avpu }), [rr, hr, sbp, temp, avpu]);
-  const q = useMemo(() => qsofa({ rr, sbp, altered: avpu > 0 }), [rr, sbp, avpu]);
+  const ageYears = age.trim() === "" ? Number.NaN : Number(age);
+  const ageIsAdult = Number.isInteger(ageYears) && ageYears >= 18;
+  const m = useMemo(() => ageIsAdult ? mews({ rr, hr, sbp, temp, avpu }) : null, [ageIsAdult, rr, hr, sbp, temp, avpu]);
+  const q = useMemo(() => qsofa({ age: ageYears, rr, sbp, altered: avpu > 0 }), [ageYears, rr, sbp, avpu]);
+  const scoreSummary = m && q
+    ? `MEWS ${m.score} · qSOFA ${q.score}`
+    : age.trim() === ""
+      ? lang === "ar" ? "أدخل عمراً بالغاً (18 سنة فأكثر) لإظهار درجات البالغين." : "Saisir un âge adulte (≥18 ans) pour afficher les scores adultes."
+      : Number.isInteger(ageYears) && ageYears >= 0 && ageYears < 18
+        ? lang === "ar" ? "درجات البالغين غير مطبقة على الأطفال؛ استخدم أداة أطفال مناسبة." : "Scores adultes non applicables à l'enfant ; utiliser un outil pédiatrique adapté."
+        : lang === "ar" ? "أدخل العمر بالسنوات الكاملة." : "Saisir l'âge en années révolues.";
   const tr = trend(log);
   const alarm = doubleWorsen(log);
 
@@ -82,7 +92,13 @@ export default function RevalPanel({ reval, protocolId, protocolTitle }: { reval
   const pick = (v: Verdict) => {
     setRunning(false);
     setVerdict(v);
-    setLog(appendLog(protocolId, { at: Date.now(), verdict: v, mews: m.score, qsofa: q.score }));
+    const entry: RevalEntry = { at: Date.now(), verdict: v };
+    if (m && q) {
+      entry.adultScores = true;
+      entry.mews = m.score;
+      entry.qsofa = q.score;
+    }
+    setLog(appendLog(protocolId, entry));
     trackEvent("reval_verdict", { id: protocolId, verdict: v });
     requestAnimationFrame(() => verdictRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
@@ -92,16 +108,16 @@ export default function RevalPanel({ reval, protocolId, protocolTitle }: { reval
     const vWord = (v: Verdict) =>
       v === "improve" ? (lang === "ar" ? "تحسّن" : "amélioration") : v === "stall" ? (lang === "ar" ? "ركود" : "stagnation") : (lang === "ar" ? "تعكّر" : "aggravation");
     const hist = log.length
-      ? log.map((e) => `${hhmm(e.at)} ${vWord(e.verdict)}${e.mews !== undefined ? ` (MEWS ${e.mews}/qSOFA ${e.qsofa})` : ""}`).join(" ← ")
+      ? log.map((e) => `${hhmm(e.at)} ${vWord(e.verdict)}${e.adultScores && e.mews !== undefined && e.qsofa !== undefined ? ` (MEWS ${e.mews}/qSOFA ${e.qsofa})` : ""}`).join(" ← ")
       : lang === "ar" ? "أول دورة" : "premier cycle";
     const text =
       lang === "ar"
         ? `S — الوضع: ${title} — إعادة تقييم جارية (دورة كل ${reval.intervalMin} د).
-B — الخلفية: FR ${rr} · TAS ${sbp} · FC ${hr} · T° ${temp} · conscience ${["A", "V", "P", "U"][avpu]} — MEWS ${m.score} · qSOFA ${q.score}.
+B — الخلفية: FR ${rr} · TAS ${sbp} · FC ${hr} · T° ${temp} · conscience ${["A", "V", "P", "U"][avpu]} — ${scoreSummary}.
 A — التقييم: ${hist} — الاتجاه: ${tr === "up" ? "تحسّن ↑" : tr === "down" ? "تعكّر ↓" : "استقرار →"}.${alarm ? " تعكّران متتاليان !" : ""}
 R — التوصية: ${verdict ? reval[verdict].actions.map((a) => a.txt.ar).join(" · ") : "أعد التقييم الآن واحسم."}${alarm ? " — تحويل عاجل (SAMU)." : ""}`
         : `S — Situation : ${title} — réévaluation en cours (cycle ${reval.intervalMin} min).
-B — Background : FR ${rr} · PAS ${sbp} · FC ${hr} · T° ${temp} · conscience ${["A", "V", "P", "U"][avpu]} — MEWS ${m.score} · qSOFA ${q.score}.
+B — Background : FR ${rr} · PAS ${sbp} · FC ${hr} · T° ${temp} · conscience ${["A", "V", "P", "U"][avpu]} — ${scoreSummary}.
 A — Assessment : ${hist} — tendance : ${tr === "up" ? "amélioration ↑" : tr === "down" ? "aggravation ↓" : "stable →"}.${alarm ? " Deux aggravations consécutives !" : ""}
 R — Recommendation : ${verdict ? reval[verdict].actions.map((a) => a.txt.fr).join(" · ") : "réévaluer maintenant et trancher."}${alarm ? " — transfert urgent (SAMU)." : ""}`;
     setSbar(text);
@@ -184,7 +200,7 @@ R — Recommendation : ${verdict ? reval[verdict].actions.map((a) => a.txt.fr).j
             {log.map((e, i) => (
               <li key={i}
                 className={`rounded-lg border px-2 py-1 text-[11px] font-black ${e.verdict === "improve" ? "border-sky-600/50 bg-sky-600/10 text-sky-500" : e.verdict === "worsen" ? "border-red-600/50 bg-red-600/10 text-red-500" : "border-amber-500/50 bg-amber-500/10 text-amber-500"}`}>
-                {hhmm(e.at)} {e.verdict === "improve" ? "✓" : e.verdict === "worsen" ? "⚠" : "•"} {e.mews !== undefined ? `M${e.mews}` : ""}
+                {hhmm(e.at)} {e.verdict === "improve" ? "✓" : e.verdict === "worsen" ? "⚠" : "•"} {e.adultScores && e.mews !== undefined ? `M${e.mews}` : ""}
               </li>
             ))}
           </ul>
@@ -196,7 +212,12 @@ R — Recommendation : ${verdict ? reval[verdict].actions.map((a) => a.txt.fr).j
         <p className="mb-2 text-xs font-black uppercase tracking-wide opacity-60">
           <T fr="Constantes → scores d'alerte en direct" ar="الحيوية ⇒ مؤشرات الإنذار مباشرة" />
         </p>
-        <div className="mb-2 grid grid-cols-2 gap-2 sm:grid-cols-5">
+        <div className="mb-2 grid grid-cols-2 gap-2 sm:grid-cols-6">
+          <label className="flex flex-col gap-1">
+            <span className="text-[10px] font-black opacity-70"><T fr="Âge (années)" ar="العمر (سنوات)" /></span>
+            <input aria-label={lang === "ar" ? "العمر بالسنوات" : "Âge en années"} type="number" min={0} step={1} inputMode="numeric" value={age}
+              onChange={(e) => setAge(e.target.value)} className="h-9 rounded-lg border border-line bg-surface2 px-2 text-center text-sm font-black tabular-nums" />
+          </label>
           <Stepper label={lang === "ar" ? "تنفس/د" : "FR/min"} value={rr} set={setRr} min={4} max={60} />
           <Stepper label={lang === "ar" ? "نبض/د" : "FC/min"} value={hr} set={setHr} min={20} max={220} step={2} />
           <Stepper label={lang === "ar" ? "ضغط انقباضي" : "TAS mmHg"} value={sbp} set={setSbp} min={40} max={260} step={5} />
@@ -216,13 +237,25 @@ R — Recommendation : ${verdict ? reval[verdict].actions.map((a) => a.txt.fr).j
             </p>
           </div>
         </div>
+        <p role="note" className="mb-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-2 text-xs font-bold">
+          <T fr="MEWS et qSOFA ne sont calculés qu'à partir de 18 ans. qSOFA est un signal non diagnostique ; un score bas n'exclut pas le sepsis. Pour l'enfant, utiliser un outil pédiatrique adapté."
+            ar="لا تُحسب MEWS وqSOFA إلا لعمر 18 سنة فأكثر. qSOFA إشارة لا تشخّص المرض؛ والدرجة المنخفضة لا تنفي الإنتان. استخدم للأطفال أداة مناسبة لأعمارهم." />
+        </p>
         <div className="flex flex-wrap gap-2">
-          <p className={`rounded-lg border px-3 py-1.5 text-sm font-black ${RISK_CLS[m.risk]}`} aria-label="MEWS">
-            MEWS {m.score} · {m.risk === "high" ? <T fr="risque élevé" ar="خطر عالٍ" /> : m.risk === "medium" ? <T fr="risque moyen" ar="خطر متوسط" /> : <T fr="risque bas" ar="خطر منخفض" />}
-          </p>
-          <p className={`rounded-lg border px-3 py-1.5 text-sm font-black ${RISK_CLS[q.risk]}`} aria-label="qSOFA">
-            qSOFA {q.score}/3{q.risk === "high" ? ` · ${lang === "ar" ? "إنذار إنتان" : "alerte sepsis"}` : ""}
-          </p>
+          {m && q ? (
+            <>
+              <p className={`rounded-lg border px-3 py-1.5 text-sm font-black ${RISK_CLS[m.risk]}`} aria-label="MEWS">
+                MEWS {m.score} · {m.risk === "high" ? <T fr="risque élevé" ar="خطر عالٍ" /> : m.risk === "medium" ? <T fr="risque moyen" ar="خطر متوسط" /> : <T fr="risque bas" ar="خطر منخفض" />}
+              </p>
+              <p className={`rounded-lg border px-3 py-1.5 text-sm font-black ${RISK_CLS[q.risk]}`} aria-label="qSOFA">
+                qSOFA {q.score}/3 — {q.score >= 2
+                  ? <T fr="signal de risque, non diagnostique" ar="إشارة خطورة وليست تشخيصاً" />
+                  : <T fr="un score bas n'exclut pas le sepsis" ar="الدرجة المنخفضة لا تنفي الإنتان" />}
+              </p>
+            </>
+          ) : (
+            <p role="status" className="rounded-lg border border-line px-3 py-1.5 text-sm font-bold opacity-80">{scoreSummary}</p>
+          )}
         </div>
       </div>
 

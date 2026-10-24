@@ -57,6 +57,7 @@ const ddmm = (t: number) => {
 };
 
 const VITAL_LABEL: Record<keyof Vitals, { fr: string; ar: string }> = {
+  age: { fr: "Âge", ar: "العمر" },
   fc: { fr: "FC", ar: "نبض" },
   pas: { fr: "PAS", ar: "انقباضي" },
   fr: { fr: "FR", ar: "تنفس" },

@@ -1,14 +1,28 @@
 # -*- coding: utf-8 -*-
-"""توليد data/atb-renal.ts من الاستخراج المُتحقَّق منه (tools/atb_rows.py + مراجعة بصرية للصفحات 12).
-Génère data/atb-renal.ts à partir de l'extraction vérifiée cellule par cellule.
-Les corrections manuelles (patchs) sont listées ci-dessous : ce sont les seules lignes où le PDF
-source est mal aligné (les boîtes ne suivent pas les colonnes) — elles ont été relues sur l'image.
+"""توليد data/atb-renal.ts من بيانات استخراج خلايا PDF وقواعد التصحيح المعلنة.
+Génère data/atb-renal.ts à partir de l'extraction des cellules du PDF et de corrections explicites.
+Les patchs documentent les ajustements de structure connus ; la reproduction du générateur vérifie
+la cohérence technique, pas la justesse clinique ni la relecture visuelle de chaque cellule.
 """
-import json, re, unicodedata
+import json, re, sys, unicodedata
+from pathlib import Path
 
-ROWS = json.load(open("/home/user/atb_rows.json"))
-CELLS = json.load(open("/home/user/atb_cells.json"))
+ROOT = Path(__file__).resolve().parents[2]
+ISSUES_DIR = Path(__file__).resolve().parent
+ROWS_PATH = Path(sys.argv[1]) if len(sys.argv) > 1 else ISSUES_DIR / "OMEDIT-ATB-IR-V2.3.rows.json"
+PDF_PATH = Path(sys.argv[2]) if len(sys.argv) > 2 else ISSUES_DIR / "OMEDIT-ATB-IR-V2.3-avril2026.pdf"
+OUT_PATH = Path(sys.argv[3]) if len(sys.argv) > 3 else ROOT / "data" / "atb-renal.ts"
+AUDIT_JSON_PATH = Path(sys.argv[4]) if len(sys.argv) > 4 else None
+ROWS = json.loads(ROWS_PATH.read_text(encoding="utf-8"))
 KEY = ["normorenal", "legere", "moderee", "severe", "terminale"]
+STAGE_LABELS = {
+    "normorenal": ("normorénale (DFG ≥ 90)", "وظيفة كلوية طبيعية (DFG ≥ 90)"),
+    "legere": ("IRC légère (DFG 89 → 60)", "قصور كلوي خفيف (DFG 89 → 60)"),
+    "moderee": ("IRC modérée (DFG 59 → 30)", "قصور كلوي متوسط (DFG 59 → 30)"),
+    "severe": ("IRC sévère (DFG 30 → 15)", "قصور كلوي شديد (DFG 30 → 15)"),
+    "terminale": ("IRC terminale (DFG < 15)", "قصور كلوي نهائي (DFG < 15)"),
+}
+AMBIGUOUS_SOURCE_CELL = "Cellules source multiples — consulter la note; aucune dose unique retenue"
 
 # ── 1. الأقسام / Sections ────────────────────────────────────────────────────────────────
 SECTIONS_AR = {
@@ -46,7 +60,7 @@ def section_headers():
     """En-têtes de section : repérés sur les spans de taille 12 (indépendant des bordures,
     car deux bandeaux du PDF n'ont pas de cadre complet)."""
     import pymupdf
-    doc = pymupdf.open("/home/user/uploads/20260427_ATB-et-IR_version-ETS_V23_260921_083056.pdf")
+    doc = pymupdf.open(str(PDF_PATH))
     out = []
     for page in doc:
         for blk in page.get_text("dict")["blocks"]:
@@ -64,20 +78,47 @@ def section_headers():
 HEADERS = sorted(section_headers(), key=lambda h: (h["page"], h["y"]))
 
 # ── 2. patchs manuels / Corrections manuelles ────────────────────────────────────────────
+MERGED_CELL_MARKER = "Cellule fusionnée — voir la note commune du tableau"
+
+# Note éditoriale d'attribution, extérieure au PDF OMEDIT ; ne pas l'ajouter aux cellules de dose.
+AMIKACINE_EDITORIAL_NOTE = {
+    "fr": (
+        "Cette entrée reproduit le tableau OMEDIT V2.3, dont les références sont arrêtées au 10/01/2024 ; "
+        "elle ne doit pas être confondue avec la recommandation CA-SFM/SPILF/SFPT 2025 de 25–30 mg/kg/j "
+        "chez l'adulte non obèse à fonction rénale normale, affichée séparément. Les colonnes sont en DFG "
+        "(mL/min/1,73 m²), pas en ClCr Cockcroft–Gault. Vérifier le RCP du produit, l'indication, le TDM "
+        "et le protocole local."
+    ),
+    "ar": (
+        "هذا السطر من جدول OMEDIT V2.3 ذي المراجع المتوقفة عند 10/01/2024؛ لا تخلطه مع توصية "
+        "CA-SFM/SPILF/SFPT لعام 2025 بجرعة 25–30 ملغ/كغ/يوم للبالغ غير البدين ذي الوظيفة الكلوية "
+        "الطبيعية، المعروضة بشكل منفصل. أعمدة الجدول هي DFG (مل/د/1.73 م²) وليست ClCr بمعادلة "
+        "Cockcroft–Gault. تحقّق من نشرة المنتج والاستطباب وقياس مستويات الدواء والبروتوكول المحلي."
+    ),
+}
+
 PATCH = {
-    # source : la colonne « normorénal » contient deux consignes (dont une répétition) ;
-    # valeur retenue = 2 g/8h avec majoration si DFG ≥ 120.
+    # La colonne normorénale porte la posologie et deux mentions de la condition ≥120 ;
+    # conserver la seconde en note propre à cette étape, sans créer une seconde ligne de dose.
     "Céfidérocol IV": {
         "lines": [["2 g/8h si fonction rénale ≥ 120 mL/min : 2 g/6h", "2 g/8h", "1,5 g/8h", "1 g/8h", "0,75 g/12h"]],
+        "extra_notes": [{"fr": "Si fonction rénale ≥ 120 mL/min : 2 g/6h", "stages": ["normorenal"]}],
     },
-    # le bandeau « aminosides » couvre les trois molécules : la dose unitaire ne change pas,
-    # seuls les dosages/intervalle s'adaptent (texte du PDF déplacé en note).
-    "Amikacine IV": {"lines": [["15 à 30 mg/kg/j"] * 5], "group": "aminosides"},
-    "Gentamicine IM IV": {"lines": [["3 à 8 mg/kg/j"] * 5], "group": "aminosides"},
-    "Tobramycine IM IV": {"lines": [["3 à 8 mg/kg/j"] * 5], "group": "aminosides"},
-    # deux bandes fusionnées par le PDF (la case « sévère/terminale » couvre les deux lignes)
+    # Relecture visuelle p.7 : le chiffre n'apparaît que dans la colonne normorénale ;
+    # les quatre colonnes d'IRC forment une cellule fusionnée avec la note commune. Cette note
+    # ne doit donc pas apparaître dans le stade normorénal. Ne pas propager mg/kg/j ni inventer
+    # une fréquence en IRC ; baliser les cellules et borner la note aux quatre stades d'IRC.
+    "Amikacine IV": {
+        "lines": [["15 à 30 mg/kg/j", *([MERGED_CELL_MARKER] * 4)]],
+        "group": "aminosides",
+        "editorial_notes": [AMIKACINE_EDITORIAL_NOTE],
+    },
+    "Gentamicine IM IV": {"lines": [["3 à 8 mg/kg/j", *([MERGED_CELL_MARKER] * 4)]], "group": "aminosides"},
+    "Tobramycine IM IV": {"lines": [["3 à 8 mg/kg/j", *([MERGED_CELL_MARKER] * 4)]], "group": "aminosides"},
+    # La première cellule est fusionnée sur les cinq stades ; seule la seconde ligne porte
+    # ½ dose en sévère et ¼ dose en terminale. Ne pas propager cette réduction à la cystite.
     "Aztréonam IM": {"lines": [
-        ["Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "½ dose", "¼ dose"],
+        ["Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"] * 5,
         ["Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "½ dose", "¼ dose"],
     ]},
     "Aztréonam IV": {"lines": [
@@ -89,8 +130,22 @@ PATCH = {
         ["Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "1 g/8h", "500 mg/8h", "DC 1500 mg puis 8h plus tard 300 mg/8h"],
     ]},
     # la cellule couvre tous les stades : c'est une consigne, pas une dose par stade
-    "Ceftriaxone IM IV": {"info": [["Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; « Aucune donnée chez l'insuffisant rénal »"]]},
-    "Méropénem IV": {"drop_lines_containing": ["monitorage pharmacologique"]},
+    "Ceftriaxone IM IV": {"info": [["Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l'insuffisant rénal"]]},
+    # La surveillance des fortes doses est une consigne clinique (pas une posologie) :
+    # la déplacer dans notes, sans la supprimer.
+    "Méropénem IV": {"move_lines_containing_to_notes": ["monitorage pharmacologique"]},
+    # L'extraction des exposants « 2ème/3ème » sur la p.12 désordonne les spans ;
+    # recopier ici le texte lu dans la cellule (sans altérer la consigne de prise).
+    "Rifampicine IV PO": {"source_text_correction": True, "lines": [
+        ["Tuberculose : 8 à 12 mg/kg/24h"] * 5,
+        [
+            "Infection à germes gram + ou - : 20 à 30 mg/kg/24h",
+            "Infection à germes gram + ou - : 20 à 30 mg/kg/24h",
+            "espacer les prises si besoin selon rifampicémie du 2ᵉ ou 3ᵉ jour du traitement",
+            "espacement des prises indispensable",
+            "espacement des prises indispensable",
+        ],
+    ]},
 }
 
 SUPERSCRIPT = {"2me": "2ᵉ", "3me": "3ᵉ"}
@@ -158,6 +213,7 @@ AR_NAMES = {
 }
 
 NOTES_AR = {
+ "Si fonction rénale ≥ 120 mL/min : 2 g/6h": "إذا كان الترشيح الكلوي ≥ 120 مل/دقيقة: 2 غ كل 6 ساعات",
  "Posologies exprimées en g d'amoxicilline": "الجرعات معبَّر عنها بغرامات الأموكسيسيلين",
  "Posologies exprimées en g d'amoxicilline ; /!\\ acide clavulanique : dose max 200 mg/injection et 1200 mg/24h": "الجرعات معبَّر عنها بغرامات الأموكسيسيلين؛ تنبيه: حدّ حمض الكلافولانيك 200 مغ/حقنة و1200 مغ/24 سا",
  "Posologies exprimées en g d'ampicilline": "الجرعات معبَّر عنها بغرامات الأمبيسيلين",
@@ -166,11 +222,12 @@ NOTES_AR = {
  "Posologies exprimées en g de ceftazidime": "الجرعات معبَّر عنها بغرامات السيفتازيديم",
  "Posologies exprimées en g de ceftolozane": "الجرعات معبَّر عنها بغرامات السيفتولوزان",
  "Posologies exprimées en g de meropenem": "الجرعات معبَّر عنها بغرامات الميروبينيم",
+ "Si posologie élevée (> 6 g/24h) : monitorage pharmacologique": "عند الجرعات العالية (> 6 غ/24 سا): تُجرى مراقبة علاجية لتركيز الدواء.",
 }
 AMINOSIDES_NOTE = ("En cas de situation clinique justifiant l'administration, la posologie unitaire ne doit pas être diminuée. "
                    "Dans la majorité des cas, une injection unique suffit. Si plusieurs injections sont nécessaires, il est "
                    "indispensable de réaliser des dosages du résiduel et d'espacer les doses.")
-AMINOSIDES_NOTE_AR = ("إذا استدعى الوضع السريري الإعطاء فلا تُخفَّض الجرعة الواحدية. في معظم الحالات تكفي حقنة واحدة يوميًا؛ "
+AMINOSIDES_NOTE_AR = ("إذا استدعى الوضع السريري الإعطاء فلا تُخفَّض الجرعة الواحدية. في معظم الحالات تكفي حقنة واحدة؛ "
                       "وإذا تكرّرت الحقن فلا بدّ من معايرة المستوى المتبقّي وتباعد الجرعات.")
 
 # ── 3. بناء الصفوف ───────────────────────────────────────────────────────────────────────
@@ -195,22 +252,87 @@ for r in ROWS:
     else:
         for l in r["lines"]:
             vals = [clean(l["values"].get(k, "")) for k in KEY]
+            for stage in l.get("ambiguous_stages", []):
+                vals[KEY.index(stage)] = AMBIGUOUS_SOURCE_CELL
             if not all(vals):
                 continue
             if any("monitorage pharmacologique" in v for v in vals) or (len(set(vals)) == 1 and re.match(r"^(Si |En cas |Dans la majorité|Traitement|Selon indication)", vals[0])):
                 lines.append({"kind": "info", "d": [vals[0]] * 5})
             else:
                 lines.append({"kind": "dose", "d": vals})
-    for dl in patch.get("drop_lines_containing", []):
-        lines = [l for l in lines if dl not in l["d"][0]]
+    # Une grande tranche de DFG peut recouvrir plusieurs cellules avec des textes distincts.
+    # Garder toutes les chaînes source, mais ne sélectionner aucune dose unique dans cette tranche.
+    ambiguity_by_stage = {}
+    unselected_source_phrases = []
+    for source_line in r.get("lines", []):
+        cells_by_id = {cell["id"]: cell["text"] for cell in source_line.get("source_cells", [])}
+        for stage in source_line.get("ambiguous_stages", []):
+            bucket = ambiguity_by_stage.setdefault(stage, [])
+            for cell_id in source_line.get("stage_cells", {}).get(stage, []):
+                phrase = clean(cells_by_id.get(cell_id, ""))
+                if phrase and phrase not in bucket:
+                    bucket.append(phrase)
+        for cell_id in source_line.get("unselected_cell_ids", []):
+            phrase = clean(cells_by_id.get(cell_id, ""))
+            already_in_stage_note = any(phrase in phrases for phrases in ambiguity_by_stage.values())
+            if phrase and not already_in_stage_note and phrase not in unselected_source_phrases:
+                unselected_source_phrases.append(phrase)
+    unselected_source_phrases = [
+        phrase for phrase in unselected_source_phrases
+        if not any(phrase in phrases for phrases in ambiguity_by_stage.values())
+    ]
+    notes = []
+    for marker in patch.get("move_lines_containing_to_notes", []):
+        moved = [line for line in lines if marker in line["d"][0]]
+        lines = [line for line in lines if marker not in line["d"][0]]
+        for line in moved:
+            phrase = line["d"][0]
+            notes.append({"fr": phrase, "ar": NOTES_AR.get(phrase, "")})
     if not lines:
         continue
-    notes = []
     for n in r["notes"]:
         n = clean(n)
         notes.append({"fr": n, "ar": NOTES_AR.get(n, "")})
+    for stage in KEY:
+        source_phrases = ambiguity_by_stage.get(stage, [])
+        if not source_phrases:
+            continue
+        stage_index = KEY.index(stage)
+        stage_fr, stage_ar = STAGE_LABELS[stage]
+        for line in lines:
+            if line["kind"] == "dose":
+                line["d"][stage_index] = AMBIGUOUS_SOURCE_CELL
+        notes.append({
+            "fr": f"Plusieurs cellules distinctes du tableau source dans {stage_fr} : {' | '.join(source_phrases)}. Aucune posologie unique n'a été sélectionnée.",
+            "ar": f"توجد خلايا مختلفة في الجدول المصدر ضمن {stage_ar}: {' | '.join(source_phrases)}. لم تُختَر جرعة واحدة آليًا.",
+            "stages": [stage],
+        })
+    if unselected_source_phrases:
+        phrases = " | ".join(unselected_source_phrases)
+        notes.append({
+            "fr": f"Texte(s) de cellule(s) source non retenu(s) par la projection géométrique (p.{r['page']}) : {phrases}. Aucun stade DFG n'est attribué automatiquement à ce texte; vérifier le PDF.",
+            "ar": f"نص خلية مصدرية لم يختره الإسقاط الهندسي (ص.{r['page']}): {phrases}. لم يُنسب تلقائيًا إلى مرحلة DFG؛ راجع ملف PDF.",
+        })
+    for extra in patch.get("extra_notes", []):
+        if isinstance(extra, str):
+            extra = {"fr": extra}
+        phrase = clean(extra["fr"])
+        item = {"fr": phrase, "ar": NOTES_AR.get(phrase, "")}
+        if extra.get("stages"):
+            item["stages"] = extra["stages"]
+        notes.append(item)
     if patch.get("group") == "aminosides":
-        notes.append({"fr": AMINOSIDES_NOTE, "ar": AMINOSIDES_NOTE_AR})
+        notes.append({
+            "fr": AMINOSIDES_NOTE,
+            "ar": AMINOSIDES_NOTE_AR,
+            "stages": ["legere", "moderee", "severe", "terminale"],
+        })
+    for editorial in patch.get("editorial_notes", []):
+        phrase = clean(editorial["fr"])
+        item = {"fr": phrase, "ar": editorial["ar"]}
+        if editorial.get("stages"):
+            item["stages"] = editorial["stages"]
+        notes.append(item)
     ar = AR_NAMES.get(label, "")
     assert ar, f"nom arabe manquant : {label}"
     sid = slug(label)
@@ -218,22 +340,34 @@ for r in ROWS:
     if seen_ids[sid] > 1:
         sid = f"{sid}-{seen_ids[sid]}"
     out_rows.append({"id": sid, "fr": label, "ar": ar, "section": SECTION_IDS[sec_fr], "page": r["page"],
-                     "lines": lines, "notes": [n for n in notes if n.get("fr")]})
+                     "lines": lines, "notes": [n for n in notes if n.get("fr")],
+                     "audit": {
+                         "source_review": bool(r.get("review")),
+                         "source_line_review": [i for i, line in enumerate(r.get("lines", []), 1) if line.get("review")],
+                         "source_y": [line.get("y") for line in r.get("lines", [])],
+                         "source_ambiguous_stages": [stage for stage in KEY if any(stage in line.get("ambiguous_stages", []) for line in r.get("lines", []))],
+                         "source_unselected_cells": [
+                             {"line": i, "cells": line.get("unselected_cell_ids", [])}
+                             for i, line in enumerate(r.get("lines", []), 1)
+                             if line.get("unselected_cell_ids")
+                         ],
+                         "patch_keys": sorted(patch.keys()),
+                     }})
 
 # ── 4. كتابة الملف / Écriture du fichier TS ──────────────────────────────────────────────
 def ts_lines():
-    yield '// ⚕️ تكييف المضادات الحيوية مع الوظيفة الكلوية — بيانات مستخرجة حرفيًا من الجدول المرجعي.'
-    yield '// Antibiotiques et insuffisance rénale — données extraites à l\'identique du tableau de référence :'
+    yield '// ⚕️ تكييف المضادات الحيوية مع الوظيفة الكلوية — بيانات مستندة إلى الجدول مع توثيق التعديلات البنيوية.'
+    yield '// Antibiotiques et insuffisance rénale — données dérivées de l\'extraction du tableau de référence :'
     yield '//   « Adaptation des antibiotiques à la fonction rénale », OMEDIT Pays de la Loire, V2.3 (avril 2026),'
     yield '//   données sources RCP / GPR (SPILF–SFPT–CA-SFM juin 2023) / ePOPI, arrêtées au 10/01/2024.'
     yield '//'
-    yield '// ⚠️ Adultes NON dialysés, selon le DFG (mL/min/1,73 m²). Le contenu français est reproduit mot pour mot'
-    yield '//    (jamais paraphrasé : une dose se recopie, elle ne se traduit pas) ; l\'interface est bilingue.'
-    yield '//    ⚠️ À faire valider par un médecin/pharmacien tunisien avant usage clinique.'
+    yield '// ⚠️ Adultes NON dialysés, selon le DFG (mL/min/1,73 m²). Les chaînes FR proviennent du PDF ; les'
+    yield '//    corrections de structure/notes sont listées dans PATCH. Les noms et notes AR sont des traductions éditoriales.'
+    yield '//    ⚠️ La génération ne prouve ni fidélité cellule par cellule ni validation clinique indépendante.'
     yield '//'
-    yield '// طريقة الاستخراج: قُرئت حدود الخلايا المتجهية من ملف PDF ثم رُتّبت القيم في أعمدة المراحل الخمس،'
-    yield '// ثم راجعنا الصفحات الاثنتي عشرة بصريًا سطرًا سطرًا. البنود التي كان فيها الجدول المصدر غير محاذٍ'
-    yield '// هندسيًا صُحّحت يدويًا (انظر tools/gen_atb_ts.py) ولا تحمل أي قيمة مُخمَّنة.'
+    yield '// منهج النقل: حُفظت خلايا PDF وإحداثياتها؛ إذا تقاطعت المرحلة مع نصوص خلايا مختلفة فلا تُختار جرعة، وتُعرض النصوص في ملاحظة مقيّدة بالمرحلة.'
+    yield '// الصفوف المستكملة هندسياً والخلايا غير المختارة موسومة للمراجعة؛ الاستثناءات النصية/البنيوية موثقة في PATCH.'
+    yield '// لا يستنتج الإسقاط حدود DFG سريرية، ولا يثبت التوليد أو الفحص البنيوي صحة الجرعات.'
     yield ''
     yield 'export type AtbStageId = "normorenal" | "legere" | "moderee" | "severe" | "terminale";'
     yield ''
@@ -275,7 +409,7 @@ def ts_lines():
     yield '  /** رقم الصفحة في الملف المصدر (للتحقق اليدوي السريع). */'
     yield '  page: number;'
     yield '  lines: AtbRenalLine[];'
-    yield '  notes: { fr: string; ar: string }[];'
+    yield '  notes: { fr: string; ar: string; stages?: AtbStageId[] }[];'
     yield '}'
     yield ''
     yield '/** 93 سطرًا: كل تركيبة (جزيئة × طريق إعطاء) كما في الجدول المصدر. */'
@@ -295,7 +429,8 @@ def ts_lines():
         if row["notes"]:
             yield '    notes: ['
             for n in row["notes"]:
-                yield f'      {{ fr: {json.dumps(n["fr"], ensure_ascii=False)}, ar: {json.dumps(n["ar"], ensure_ascii=False)} }},'
+                stages = f', stages: {json.dumps(n["stages"], ensure_ascii=False)}' if n.get("stages") else ""
+                yield f'      {{ fr: {json.dumps(n["fr"], ensure_ascii=False)}, ar: {json.dumps(n["ar"], ensure_ascii=False)}{stages} }},'
             yield '    ],'
         else:
             yield '    notes: [],'
@@ -308,7 +443,11 @@ def ts_lines():
     yield ');'
 
 src = "\n".join(ts_lines()) + "\n"
-open("/home/user/espace_urgence/data/atb-renal.ts", "w", encoding="utf-8").write(src)
+OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+OUT_PATH.write_text(src, encoding="utf-8")
+if AUDIT_JSON_PATH:
+    AUDIT_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
+    AUDIT_JSON_PATH.write_text(json.dumps(out_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 print(f"data/atb-renal.ts : {len(out_rows)} molécules, {sum(len(r['lines']) for r in out_rows)} lignes de schéma")
 print(f"sections utilisées : {sorted({r['section'] for r in out_rows})}")
 print(f"notes : {sum(len(r['notes']) for r in out_rows)}")

@@ -7,7 +7,7 @@ const LEGEND: { a: string; fr: string; ar: string }[] = [
   { a: "AVPU", fr: "Échelle de conscience : A = Alerte (éveillé) ; V = répond à la Voix ; P = répond à la Douleur ; U = Unresponsive (aucune réponse).", ar: "مقياس الوعي: A يقظ؛ V يستجيب للصوت؛ P يستجيب للألم؛ U لا يستجيب إطلاقاً." },
   { a: "GCS", fr: "Glasgow Coma Scale (3-15) : yeux + verbal + moteur ; ≤ 8 = intubation.", ar: "مقياس غلاسكو للغيبوبة (٣-١٥): عين + كلام + حركة؛ ≤ ٨ = تنبيب." },
   { a: "MEWS", fr: "Modified Early Warning Score : score d'alerte précoce (FC, PA, FR, T°, conscience).", ar: "مؤشر الإنذار المبكر: نبض، ضغط، تنفس، حرارة، وعي." },
-  { a: "qSOFA", fr: "quick SOFA : FR ≥ 22, altération conscience, PAS ≤ 100 → suspicion d'infection grave.", ar: "كو-سوفا: تنفس ≥ ٢٢، وعي متأثر، انقباضي ≤ ١٠٠ ← اشتباه عدوى شديدة." },
+  { a: "qSOFA", fr: "Signal de risque chez l'adulte (≥ 18 ans) : FR ≥ 22, PAS ≤ 100, conscience altérée. Non diagnostique ; un score bas n'exclut pas le sepsis et qSOFA seul ne suffit pas au dépistage.", ar: "إشارة خطورة للبالغ (18 سنة فأكثر): تنفس ≥22، انقباضي ≤100، أو اضطراب وعي. ليست تشخيصاً؛ الدرجة المنخفضة لا تنفي الإنتان ولا تكفي وحدها للتحري." },
   { a: "SpO2", fr: "Saturation pulsée en oxygène (%).", ar: "نسبة تشبع الأكسجين النبضي (٪)." },
   { a: "EtCO2", fr: "CO2 de fin d\u2019expiration (capnographie) ; < 10 mmHg = RCP inefficace.", ar: "ثاني أكسيد الكربون نهاية الزفير (الكابنوغرافيا)؛ < ١٠ ملم زئبق = إنعاش غير فعال." },
   { a: "LASA", fr: "Look-Alike / Sound-Alike : médicaments qui se ressemblent (erreur de confusion).", ar: "أدوية متشابهة في الشكل أو النطق (خطر الخلط)." },

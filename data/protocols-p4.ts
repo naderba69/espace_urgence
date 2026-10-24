@@ -271,39 +271,41 @@ export const protocolsP4: Protocol[] = [
     title: { fr: "Pneumothorax suffocant (tension)", ar: "استرواح صدر ضاغط" },
     category: "traumatologie",
     severity: "critical",
-    summary: { fr: "Détresse + asymétrie après trauma : décompression à l'aiguille sans attendre la radio.", ar: "ضائقة + تناظر بعد رض: بزل إبرة فوري دون انتظار التصوير." },
+    summary: { fr: "Détresse respiratoire ou circulatoire aiguë après traumatisme thoracique : évoquer un pneumothorax sous tension ; ne pas retarder la décompression urgente pour l'imagerie si elle est indiquée.", ar: "ضائقة تنفسية أو دورانية حادة بعد رض صدري: اشتبه باسترواح ضاغط؛ ولا تؤخر إزالة الضغط المستطبة من أجل التصوير." },
   exams: {
     img: [{ fr: "Diagnostic CLINIQUE : ne pas retarder la décompression ; écho/radio si stabilisé", ar: "تشخيص سريري: لا تأخير للسحب؛ إيكو/صورة إن مستقر" }],
   },
     steps: [
-      { title: { fr: "Traumatisme thoracique + dyspnée brutale + MV abolies + hyperclarté ± hypotonie/détresse", ar: "رض صدري + ضيق تنفس حاد + كتم تهوية + نفخ مفرط" } },
+      { title: { fr: "Contexte compatible + détresse respiratoire ou circulatoire aiguë avec diminution/abolition unilatérale des bruits respiratoires ; les signes ne doivent pas être tous présents.", ar: "سياق ملائم مع ضائقة تنفسية أو دورانية حادة ونقص/غياب أصوات التنفس في جهة واحدة؛ ولا يلزم اجتماع كل العلامات." } },
       { title: { fr: "Pas de radio AVANT traitement — diagnostic clinique", ar: "لا تصوير قبل العلاج — التشخيص سريري" } },
-      { title: { fr: "Décompression immédiate : aiguille 14-16 G 4ᵉespace intercostal, ligne axillaire antérieure (ou 2ᵉ EIC hémithorax, ligne médioclaviculaire)", ar: "بزل فوري: إبرة 14-16 في المسافة الرابعة بالخط الإبطي الأمامي" } },
-      { title: { fr: "Passage en valve (gant troué ou valve de Heimlich) ou tube thoracique si disponible", ar: "صمام (قفاز مثقوب/هايمليخ) أو أنبوب صدري إن أمكن" } },
-      { title: { fr: "Réévaluer auscultation, SpO2, TA ; transport médicalisé URGENT", ar: "أعد الإصغاء والتشبع والضغط؛ نقل طبي عاجل" } },
+      { title: { fr: "Si une décompression est indiquée, le site, le dispositif et sa longueur doivent suivre le protocole trauma local à jour et la notice du dispositif ; geste par un opérateur formé.", ar: "إذا استُطبت إزالة الضغط، فيحدد بروتوكول الرضوض المحلي المحدث وتعليمات الجهاز الموضع والجهاز وطوله؛ وينفذها ممارس مدرّب." } },
+      { title: { fr: "Suivre la filière locale de sauvetage et de drainage définitif ; cette fiche ne fournit pas à elle seule une technique d'insertion.", ar: "اتبع مسار الإنقاذ والتصريف النهائي المحلي؛ ولا تقدم هذه البطاقة وحدها تقنية إدخال." } },
+      { title: { fr: "Réévaluer immédiatement respiration, circulation, SpO₂ et réponse clinique ; organiser un transport médicalisé urgent.", ar: "أعِد فوراً تقييم التنفس والدورة الدموية والتشبع والاستجابة السريرية؛ ونظّم نقلاً طبياً عاجلاً." } },
     ],
     keyPoints: [
-      { fr: "Aiguille seule = traitement TEMPORAIRE — le thorax peut se refermer.", ar: "الإبرة علاج مؤقت — قد يُعاد الاسترواح." },
-      { fr: "Le 4ᵉ EIC est préféré (plus sûr) ; le 2ᵉ possible mais risque vasculaire.", ar: "المسافة 4 أسلم؛ الثانية ممكنة لكن خطر وعائي." },
+      { fr: "La décompression ne dispense pas du traitement définitif et de la surveillance ; appliquer la filière locale de drainage.", ar: "إزالة الضغط لا تغني عن العلاج النهائي والمراقبة؛ اتبع مسار التصريف المحلي." },
+      { fr: "Ne pas déduire un site ou une longueur universels : les données publiées diffèrent, et le choix doit correspondre au protocole et au dispositif disponibles.", ar: "لا تستنتج موضعاً أو طولاً موحداً؛ تختلف الأدلة المنشورة، ويجب أن يوافق الاختيار البروتوكول والجهاز المتاحين." },
     ],
+
     trajectory: [
       {
-        when: { fr: "Si la décompression n'améliore pas la SpO2/TA", ar: "إذا لم يُحسّن البزل التشبع/الضغط" },
+        when: { fr: "Absence d'amélioration ou aggravation après la décompression", ar: "عدم التحسن أو التدهور بعد إزالة الضغط" },
         do: [
-          { fr: "Re-décompresser à l'autre espace ou vérifier l'obstruction (pli de l'aiguille, caillot).", ar: "بزل مجدداً بمسافة أخرى أو افحص انسداد الإبرة." },
-          { fr: "Préparer le drain thoracique (24-28 F) dès possible.", ar: "جهّز أنبوباً صدرياً (24-28) فوراً." },
+          { fr: "Réévaluer immédiatement le patient et le dispositif utilisé ; suivre sans délai l'algorithme local de sauvetage par un opérateur compétent.", ar: "أعِد فوراً تقييم المريض والجهاز المستخدم؛ واتبع دون تأخير خوارزمية الإنقاذ المحلية بواسطة ممارس كفء." },
+          { fr: "Organiser le drainage définitif selon le protocole local et les compétences disponibles.", ar: "نظّم التصريف النهائي وفق البروتوكول المحلي والمهارات المتاحة." },
         ],
       },
       {
-        when: { fr: "Après drain, pendant le transport", ar: "بعد الأنبوب أثناء النقل" },
+        when: { fr: "Après drainage thoracique, pendant le transport", ar: "بعد التصريف الصدري أثناء النقل" },
         do: [
-          { fr: "Fixer, vidanger (water seal) ; ne jamais fermer (risque de tension).", ar: "ثبّت ولا تقفل الأنبوب (خطر ضغط)." },
-          { fr: "En cas de détérioration : rechercher déplacement/obstruction du drain.", ar: "عند التدهور: افحص انزياح/انسداد الأنبوب." },
+          { fr: "Sécuriser et surveiller le drain conformément à sa notice et au protocole local.", ar: "أمّن الأنبوب وراقبه وفق تعليماته والبروتوكول المحلي." },
+          { fr: "En cas de détérioration : rechercher une complication et appliquer la filière locale de prise en charge.", ar: "عند التدهور: ابحث عن مضاعفة واتبع مسار التدبير المحلي." },
         ],
       },
     ],
+
     medications: [],
     calculators: [],
-    meta: { sources: ["ATLS 10ᵉ édition", "BTS/ERC"], lastReviewed: "2026-09" },
+    meta: { sources: ["Protocole trauma local à préciser avant utilisation comme guide technique", "Ahmad et al., WJES 2025, DOI 10.1186/s13017-025-00613-7 (hétérogénéité site/longueur ; ne fixe pas de technique locale)"], lastReviewed: "2026-10" },
   },
 ];
