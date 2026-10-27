@@ -13,12 +13,14 @@ import { useRegisterRecent } from "@/components/SearchBar";
 import PageHeader from "@/components/ui/PageHeader";
 import Badge from "@/components/ui/Badge";
 import T from "@/components/T";
+import CalculationExplainer from "@/components/ai/CalculationExplainer";
 import AtbPlanPanel from "@/components/atb/AtbPlanPanel";
+import RenalCourseSelector from "@/components/renal/RenalCourseSelector";
 import { normalize } from "@/lib/text";
 import { readJSON, writeJSON } from "@/lib/storage";
-import { calculateWeightDose, isAmbiguousSourceCells, isContraindicated, isDiscouraged, isMergedSourceCell, isNoData, requiresSourceCheck } from "@/lib/atb-dose";
-import { akiKdigo, chooseStage, scrToMgDl, type AkiResult, type StageInput } from "@/lib/renal-clearance";
-import { addDecision, emptyPlan, parsePlan, PLAN_KEY, LEGACY_PLAN_KEY, planReasonLabel, removeMolecule, resetPlan, currentDecisions, type PlanReason } from "@/lib/atb-plan";
+import { calculateWeightDose, isAmbiguousSourceCells, isContraindicated, isDiscouraged, isMergedSourceCell, isNoData, isUnassignedSourceContext, requiresSourceCheck } from "@/lib/atb-dose";
+import { akiKdigo, chooseStage, scrToMgDl, type AkiResult, type RenalCourse, type StageInput } from "@/lib/renal-clearance";
+import { addDecision, emptyPlan, parsePlan, PLAN_KEY, PREVIOUS_PLAN_KEY, LEGACY_PLAN_KEY, planReasonLabel, removeMolecule, resetPlan, currentDecisions, type PlanReason } from "@/lib/atb-plan";
 import { ATB_RENAL_ROWS, ATB_RENAL_SECTIONS, ATB_RENAL_STAGES, ATB_RENAL_BY_ID, type AtbStageId } from "@/data/atb-renal";
 import { Pill, Filter, Info, AlertTriangle } from "lucide-react";
 
@@ -29,12 +31,12 @@ const AKI_LABEL: Record<AkiResult["criteria"][number], { fr: string; ar: string 
   "scr-up-48h": { fr: "+0,3 mg/dL en 48 h", ar: "+٠٫٣ مغ/دل في ٤٨ سا" },
   "scr-ratio-48h": { fr: "×1,5 en 48 h", ar: "×١٫٥ في ٤٨ سا" },
   "scr-ratio-7d": { fr: "×1,5 en 7 j", ar: "×١٫٥ في ٧ أيام" },
-  "scr-4mg": { fr: "créatinine ≥4 mg/dL avec hausse documentée", ar: "كرياتينين ≥4 مغ/دل مع ارتفاع موثّق" },
+  "scr-4mg": { fr: "créatinine ≥4 mg/dL avec hausse aiguë ≥0,5 mg/dL", ar: "كرياتينين ≥4 مغ/دل مع ارتفاع حاد ≥0.5 مغ/دل" },
   "urine-stage-1": { fr: "diurèse <0,5 mL/kg/h pendant 6 à <12 h", ar: "إدرار <0.5 مل/كغ/سا لمدة من 6 إلى أقل من 12 ساعة" },
   "urine-stage-2": { fr: "diurèse <0,5 mL/kg/h pendant ≥12 h", ar: "إدرار <0.5 مل/كغ/سا لمدة ≥12 ساعة" },
   "urine-stage-3": { fr: "diurèse <0,3 mL/kg/h pendant ≥24 h", ar: "إدرار <0.3 مل/كغ/سا لمدة ≥24 ساعة" },
   "anuria-stage-3": { fr: "anurie pendant ≥12 h", ar: "انقطاع البول لمدة ≥12 ساعة" },
-  "renal-replacement": { fr: "épuration extrarénale (critère KDIGO 3)", ar: "الإحلال الكلوي (معيار KDIGO 3)" },
+  "renal-replacement": { fr: "initiation d'une épuration extrarénale (critère KDIGO 3)", ar: "بدء الإحلال الكلوي (معيار KDIGO 3)" },
 };
 
 export default function AntibioRenalPage() {
@@ -55,9 +57,24 @@ export default function AntibioRenalPage() {
   const [urineH, setUrineH] = useState("");
   const [useIbw, setUseIbw] = useState(false);
   const [onRenalReplacementTherapy, setOnRenalReplacementTherapy] = useState(false);
+  const [rrtInitiated, setRrtInitiated] = useState(false);
+  const [renalCourse, setRenalCourse] = useState<RenalCourse>("unknown");
   const [manual, setManual] = useState<AtbStageId | null>(null);
   const [manualReviewFor, setManualReviewFor] = useState<string | null>(null);
   const [reviewAcknowledgedFor, setReviewAcknowledgedFor] = useState<string | null>(null);
+  const clearManualStage = () => {
+    setManual(null);
+    setManualReviewFor(null);
+    setReviewAcknowledgedFor(null);
+  };
+  const updateTextField = (setter: (value: string) => void) => (value: string) => {
+    setter(value);
+    clearManualStage();
+  };
+  const updateRenalCourse = (course: RenalCourse) => {
+    setRenalCourse(course);
+    clearManualStage();
+  };
 
   usePrefillPatient((p) => {
     if (!wt && p.w) setWt(p.w);
@@ -93,10 +110,12 @@ export default function AntibioRenalPage() {
       urineMlKgH: num(urine),
       urineHours: num(urineH),
       onRenalReplacementTherapy,
+      renalReplacementTherapyInitiated: rrtInitiated,
+      renalCourse,
       useIdealWeight: useIbw,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [age, wt, ht, scr, scr48, scr7d, urine, urineH, sexe, unit, useIbw, onRenalReplacementTherapy]);
+  }, [age, wt, ht, scr, scr48, scr7d, urine, urineH, sexe, unit, useIbw, onRenalReplacementTherapy, rrtInitiated, renalCourse]);
   const creatinineInputIssue = [scr, scr48, scr7d].some((value) => {
     if (!value.trim()) return false;
     const converted = convertScr(value);
@@ -112,10 +131,10 @@ export default function AntibioRenalPage() {
       scr7d: at7d.mgDl,
       urineMlKgH: num(urine),
       urineHours: num(urineH),
-      renalReplacementTherapy: onRenalReplacementTherapy,
+      renalReplacementTherapyInitiated: rrtInitiated,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scr, scr48, scr7d, urine, urineH, unit, onRenalReplacementTherapy]);
+  }, [scr, scr48, scr7d, urine, urineH, unit, rrtInitiated]);
 
   /** DFG (CKD-EPI) sélectionne le stade ; Cockcroft–Gault reste informatif et séparé. */
   const ren = useMemo(() => (renalInput ? chooseStage(renalInput) : null), [renalInput]);
@@ -123,28 +142,30 @@ export default function AntibioRenalPage() {
   const dialysisRefusal = ren?.refusal === "dialysis";
   // Une AKI connue bloque toute utilisation de ce tableau, y compris un choix manuel.
   const akiBlocked = akiAssessment.stage >= 1;
-  const requiresReview = ren?.refusal === "boundary" && !akiBlocked;
+  const renalCourseBlocksDose = renalCourse !== "stable";
+  const requiresReview = ren?.refusal === "boundary" && !akiBlocked && renalCourse === "stable";
   const reviewKey = requiresReview
-    ? JSON.stringify({ age, wt, ht, sexe, unit, scr, scr48, scr7d, urine, urineH, useIbw, onRenalReplacementTherapy })
+    ? JSON.stringify({ age, wt, ht, sexe, unit, scr, scr48, scr7d, urine, urineH, useIbw, onRenalReplacementTherapy, renalCourse })
     : null;
   const reviewAcknowledged = reviewKey !== null && reviewAcknowledgedFor === reviewKey;
   const manualStage = manualReviewFor === null
     ? manual
     : reviewAcknowledged && manualReviewFor === reviewKey ? manual : null;
-  const stage: AtbStageId | null = pediatricAge || pediatricRefusal || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue
+  const stage: AtbStageId | null = renalCourseBlocksDose || pediatricAge || pediatricRefusal || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue
     ? null
     : requiresReview
       ? reviewAcknowledged && manualReviewFor === reviewKey ? manualStage : null
       : manualStage ?? (ren && !ren.refusal ? ren.stage : null);
   const stageIdx = stage ? STAGE_IDS.indexOf(stage) : -1;
   const stageMeta = stageIdx >= 0 ? ATB_RENAL_STAGES[stageIdx] : null;
+  const estimatedStageMeta = ren?.baseStage ? ATB_RENAL_STAGES.find((item) => item.id === ren.baseStage) ?? null : null;
   const stageLabel = stageMeta
     ? `${ar ? stageMeta.ar : stageMeta.fr} · ${stageMeta.dgf}`
     : ar ? "مرحلة غير محددة" : "stade non déterminé";
   const stageForMolecule = () => {
     const result = renalInput ? chooseStage(renalInput) : null;
     const moleculeRequiresReview = result?.refusal === "boundary" && !akiBlocked;
-    const value = pediatricAge || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue || result?.refusal === "pediatric"
+    const value = renalCourseBlocksDose || pediatricAge || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue || result?.refusal === "pediatric"
       ? null
       : moleculeRequiresReview
         ? reviewAcknowledged && manualReviewFor === reviewKey ? manualStage : null
@@ -178,14 +199,18 @@ export default function AntibioRenalPage() {
 
   // ── الخطّة (حلقة a → b) / Plan antibiotique ────────────────────────────────────────
   const [plan, setPlan] = useState(() => emptyPlan());
-  const [legacyPlanDetected, setLegacyPlanDetected] = useState(false);
+  const [previousPlanDetected, setPreviousPlanDetected] = useState(false);
   useEffect(() => {
-    const oldPlan = readJSON<unknown>(LEGACY_PLAN_KEY, null);
-    const oldEntries = oldPlan && typeof oldPlan === "object"
-      ? (oldPlan as { entries?: unknown }).entries
-      : undefined;
+    const hasEntries = (key: string) => {
+      const oldPlan = readJSON<unknown>(key, null);
+      const oldEntries = oldPlan && typeof oldPlan === "object"
+        ? (oldPlan as { entries?: unknown }).entries
+        : undefined;
+      return Array.isArray(oldEntries) && oldEntries.length > 0;
+    };
+    // Les anciennes versions sont conservées sur l'appareil, mais leurs snapshots ne sont pas fiables après les corrections source.
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hydratation locale après mise à jour source
-    setLegacyPlanDetected(Array.isArray(oldEntries) && oldEntries.length > 0);
+    setPreviousPlanDetected(hasEntries(PREVIOUS_PLAN_KEY) || hasEntries(LEGACY_PLAN_KEY));
     setPlan(parsePlan(readJSON<unknown>(PLAN_KEY, null)));
   }, []);
   const save = (p: typeof plan) => {
@@ -279,11 +304,11 @@ export default function AntibioRenalPage() {
         </ul>
       </section>
 
-      {legacyPlanDetected && (
+      {previousPlanDetected && (
         <p role="alert" className="rounded-2xl border border-line p-3 text-sm font-bold" style={{ color: "var(--sev-urgent)" }}>
           <T
-            fr="Un plan local de la version précédente a été détecté mais n'a pas été importé après la correction du mappage des cellules source. Reconstituer les décisions depuis le PDF et les revalider ; ne pas réutiliser les anciens snapshots de dose."
-            ar="تم العثور على خطة محلية من الإصدار السابق، لكن لم تُستورد بعد تصحيح مطابقة الخلايا المصدرية. أعد بناء القرارات من ملف PDF وراجعها؛ لا تستخدم لقطات الجرعات القديمة."
+            fr="Un plan local v1 ou v2 a été détecté, mais n'est pas importé après les corrections du tableau et des contextes (dont Ceftobiprole). L'ancien plan reste conservé sur cet appareil. Reconstituer et revérifier les décisions depuis le PDF/RCP ; ne pas réutiliser ses anciens snapshots de dose."
+            ar="عُثر على خطة محلية من الإصدار ١ أو ٢، لكن لم تُستورد بعد تصحيحات الجدول والسياقات (ومنها سيفتوبيبرول). تبقى الخطة القديمة محفوظة على هذا الجهاز. أعد بناء القرارات وراجعها من PDF/RCP؛ لا تستخدم لقطات الجرعات القديمة."
           />
         </p>
       )}
@@ -305,22 +330,22 @@ export default function AntibioRenalPage() {
       <section className="grid grid-cols-2 gap-2">
         <label className={cell}>
           <span className="text-xs font-black opacity-70"><T fr="Âge (ans)" ar="العمر (سنة)" /></span>
-          <NumStepper value={age} onValue={setAge} className="field" label={ar ? "العمر" : "age"} />
+          <NumStepper value={age} onValue={updateTextField(setAge)} className="field" label={ar ? "العمر" : "age"} />
         </label>
         <label className={cell}>
           <span className="text-xs font-black opacity-70"><T fr="Poids (kg)" ar="الوزن (كغ)" /></span>
-          <NumStepper value={wt} onValue={setWt} className="field" label={ar ? "الوزن" : "wt"} />
+          <NumStepper value={wt} onValue={updateTextField(setWt)} className="field" label={ar ? "الوزن" : "wt"} />
         </label>
         <label className={cell}>
           <span className="text-xs font-black opacity-70"><T fr="Taille (cm)" ar="الطول (سم)" /></span>
-          <NumStepper value={ht} onValue={setHt} className="field" label={ar ? "الطول" : "ht"} />
+          <NumStepper value={ht} onValue={updateTextField(setHt)} className="field" label={ar ? "الطول" : "ht"} />
         </label>
         <label className={cell}>
           <span className="text-xs font-black opacity-70"><T fr="Créatinine (actuelle)" ar="الكرياتينين (الحالي)" /></span>
           <div className="flex items-center gap-2">
-            <NumStepper value={scr} onValue={setScr} className="field" label={ar ? "الكرياتينين" : "scr"} />
+            <NumStepper value={scr} onValue={updateTextField(setScr)} className="field" label={ar ? "الكرياتينين" : "scr"} />
             <button
-              onClick={() => setUnit((u) => (u === "mg" ? "umol" : "mg"))}
+              onClick={() => { setUnit((u) => (u === "mg" ? "umol" : "mg")); clearManualStage(); }}
               className="shrink-0 rounded-lg border border-line px-2 py-1 text-xs font-black"
               dir="ltr"
             >
@@ -330,33 +355,34 @@ export default function AntibioRenalPage() {
         </label>
         <label className={cell}>
           <span className="text-xs font-black opacity-70"><T fr="Créatinine à 48 h (option)" ar="الكرياتينين قبل ٤٨ سا (اختياري)" /></span>
-          <NumStepper value={scr48} onValue={setScr48} className="field" label={ar ? "كرياتينين ٤٨ سا" : "scr48"} />
+          <NumStepper value={scr48} onValue={updateTextField(setScr48)} className="field" label={ar ? "كرياتينين ٤٨ سا" : "scr48"} />
         </label>
         <label className={cell}>
           <span className="text-xs font-black opacity-70"><T fr="Créatinine à 7 j (option)" ar="الكرياتينين قبل ٧ أيام (اختياري)" /></span>
-          <NumStepper value={scr7d} onValue={setScr7d} className="field" label={ar ? "كرياتينين ٧ أيام" : "scr7d"} />
+          <NumStepper value={scr7d} onValue={updateTextField(setScr7d)} className="field" label={ar ? "كرياتينين ٧ أيام" : "scr7d"} />
         </label>
         <label className={cell}>
           <span className="text-xs font-black opacity-70"><T fr="Diurèse (mL/kg/h)" ar="الدُّرْيَة (مل/كغ/سا)" /></span>
-          <NumStepper value={urine} onValue={setUrine} step={0.1} className="field" label={ar ? "الدُّرْيَة" : "urine"} />
+          <NumStepper value={urine} onValue={updateTextField(setUrine)} step={0.1} className="field" label={ar ? "الدُّرْيَة" : "urine"} />
         </label>
         <label className={cell}>
           <span className="text-xs font-black opacity-70"><T fr="Durée d'observation (h)" ar="مدّة المراقبة (سا)" /></span>
-          <NumStepper value={urineH} onValue={setUrineH} className="field" label={ar ? "مدّة المراقبة" : "urineH"} />
+          <NumStepper value={urineH} onValue={updateTextField(setUrineH)} className="field" label={ar ? "مدّة المراقبة" : "urineH"} />
         </label>
       </section>
       <p className="px-1 text-[11px] font-bold opacity-60">
         <T fr="L'unité sélectionnée s'applique à la créatinine actuelle et aux deux valeurs historiques." ar="تُطبَّق الوحدة المختارة على الكرياتينين الحالي والقيمتين التاريخيتين." />
       </p>
+      <RenalCourseSelector value={renalCourse} onChange={updateRenalCourse} />
 
       <div className="flex flex-wrap gap-2">
-        <button onClick={() => setSexe("m")} aria-pressed={sexe === "m"} className={chip(sexe === "m")} style={chipStyle(sexe === "m")}>
+        <button onClick={() => { setSexe("m"); clearManualStage(); }} aria-pressed={sexe === "m"} className={chip(sexe === "m")} style={chipStyle(sexe === "m")}>
           <T fr="Homme" ar="رجل" />
         </button>
-        <button onClick={() => setSexe("f")} aria-pressed={sexe === "f"} className={chip(sexe === "f")} style={chipStyle(sexe === "f")}>
+        <button onClick={() => { setSexe("f"); clearManualStage(); }} aria-pressed={sexe === "f"} className={chip(sexe === "f")} style={chipStyle(sexe === "f")}>
           <T fr="Femme (×0,85)" ar="امرأة (×٠٫٨٥)" />
         </button>
-        <button onClick={() => setUseIbw((v) => !v)} aria-pressed={useIbw} className={chip(useIbw)} style={chipStyle(useIbw, "var(--sev-urgent)")}>
+        <button onClick={() => { setUseIbw((v) => !v); clearManualStage(); }} aria-pressed={useIbw} className={chip(useIbw)} style={chipStyle(useIbw, "var(--sev-urgent)")}>
           <T fr="Poids idéal (obésité)" ar="الوزن المثالي (سمنة)" />
         </button>
       </div>
@@ -365,15 +391,21 @@ export default function AntibioRenalPage() {
           type="checkbox"
           checked={onRenalReplacementTherapy}
           onChange={(event) => {
-            setOnRenalReplacementTherapy(event.target.checked);
-            setManual(null);
-            setManualReviewFor(null);
-            setReviewAcknowledgedFor(null);
+            const checked = event.target.checked;
+            setOnRenalReplacementTherapy(checked);
+            if (!checked) setRrtInitiated(false);
+            clearManualStage();
           }}
           className="mt-0.5"
         />
         <T fr="Dialyse / épuration extrarénale en cours : le tableau OMEDIT est hors périmètre ; bloquer toute sélection de stade et dose." ar="غسيل أو إحلال كلوي جارٍ: جدول OMEDIT خارج النطاق؛ يُحجب اختيار المرحلة والجرعة." />
       </label>
+      {onRenalReplacementTherapy && (
+        <label className="flex items-start gap-2 rounded-xl border border-red-500/40 bg-red-500/5 p-3 text-sm font-bold">
+          <input type="checkbox" checked={rrtInitiated} onChange={(event) => setRrtInitiated(event.target.checked)} className="mt-0.5" />
+          <T fr="L’épuration a été initiée pendant l’épisode aigu actuel (critère KDIGO 3) ; ne cochez pas une dialyse chronique déjà en cours." ar="بدأ الإحلال الكلوي خلال النوبة الحادة الحالية (معيار KDIGO 3)؛ لا تحدد غسيلاً مزمناً كان قائماً من قبل." />
+        </label>
+      )}
 
       {/* التصفية والمرحلة / DFG & stade */}
       <section className={`card sev-strip rounded-2xl border border-line bg-surface p-4 ${stageIdx === 4 ? "sev-critical" : stageIdx === 3 ? "sev-urgent" : stageIdx === 2 ? "sev-standard" : ""}`}>
@@ -390,7 +422,7 @@ export default function AntibioRenalPage() {
             <p className="text-sm font-black">⚠ <T fr="Dialyse / épuration extrarénale : hors périmètre du tableau OMEDIT. Aucun stade ni dosage n'est proposé ici ; vérifier le RCP et un protocole spécialisé." ar="غسيل/إحلال كلوي: خارج نطاق جدول OMEDIT. لا تُعرض هنا مرحلة أو جرعة؛ راجع نشرة المنتج وبروتوكولاً اختصاصياً." /></p>
             {akiAssessment.criteria.includes("renal-replacement") && (
               <p className="mt-2 text-xs font-bold">
-                <T fr="L'épuration extrarénale est également un critère KDIGO de stade 3." ar="الإحلال الكلوي أيضاً معيار KDIGO للمرحلة 3." />
+                <T fr="L’initiation de l’épuration pendant cet épisode aigu est un critère KDIGO de stade 3 ; la dialyse chronique à elle seule ne classe pas une AKI." ar="بدء الإحلال خلال هذه النوبة الحادة معيار KDIGO للمرحلة 3؛ أما الغسيل المزمن وحده فلا يصنّف إصابة حادة." />
               </p>
             )}
           </div>
@@ -426,7 +458,7 @@ export default function AntibioRenalPage() {
                   />
                 </p>
                 {manual && (
-                  <button onClick={() => { setManual(null); setManualReviewFor(null); }} className="mt-2 text-xs font-black underline">
+                  <button onClick={clearManualStage} className="mt-2 text-xs font-black underline">
                     <T fr="Effacer le stade manuel" ar="امسح المرحلة اليدوية" />
                   </button>
                 )}
@@ -436,8 +468,7 @@ export default function AntibioRenalPage() {
                 type="button"
                 onClick={() => {
                   if (!reviewKey) return;
-                  setManual(null);
-                  setManualReviewFor(null);
+                  clearManualStage();
                   setReviewAcknowledgedFor(reviewKey);
                 }}
                 className="mt-3 rounded-full border border-current px-3 py-2 text-xs font-black"
@@ -454,6 +485,35 @@ export default function AntibioRenalPage() {
             <p className="text-sm font-black"><T fr="Patient pédiatrique : CKID U25 est une information séparée ; le tableau adulte ne fournit ici aucune colonne ni dose." ar="مريض طفل: CKID U25 معلومة منفصلة؛ جدول البالغين لا يوفّر هنا مرحلة ولا جرعة." /></p>
             {ren?.egfrCkid !== null && ren?.egfrCkid !== undefined && (
               <p className="mt-1 text-xs font-bold" dir="ltr">CKID U25 (DFG) : {ren.egfrCkid.toFixed(0)} mL/min/1,73 m²</p>
+            )}
+          </div>
+        ) : renalCourse === "acute" ? (
+          <div className="rounded-xl p-3" style={{ background: "var(--sev-critical-bg)", color: "var(--sev-critical)" }} role="alert">
+            {ren?.warnings.length ? ren.warnings.map((warning, i) => (
+              <p key={i} className="text-sm font-black">⚠ {ar ? warning.ar : warning.fr}</p>
+            )) : (
+              <p className="text-sm font-black"><T fr="Parcours aigu/variable déclaré : aucun stade ni dosage du tableau de fonction stable n'est proposé, même si les données actuelles ne démontrent pas un critère KDIGO." ar="تم تحديد المسار على أنه حاد/متغير: لا تُعرض مرحلة أو جرعة من جدول الوظيفة المستقرة، حتى إن لم تُظهر البيانات الحالية معيار KDIGO." /></p>
+            )}
+            {ren?.egfrCkd !== null && ren?.egfrCkd !== undefined && (
+              <p className="mt-2 text-xs font-bold" dir="ltr">DFG CKD-EPI estimatif : {ren.egfrCkd.toFixed(0)} mL/min/1,73 m² · ClCr Cockcroft–Gault : {ren.crclCg?.toFixed(0) ?? "—"} mL/min (informatifs, non utilisés pour la dose)</p>
+            )}
+          </div>
+        ) : renalCourse === "unknown" ? (
+          <div className="rounded-xl p-3" style={{ background: "var(--sev-urgent-bg)", color: "var(--sev-urgent)" }} role="status">
+            {ren?.warnings.length ? ren.warnings.map((warning, i) => (
+              <p key={i} className="text-sm font-black">⚠ {ar ? warning.ar : warning.fr}</p>
+            )) : (
+              <p className="text-sm font-black"><T fr="Une mesure isolée ne permet pas de savoir si la fonction rénale est stable, chronique ou aiguë. Le DFG estimé reste informatif ; aucune dose n'est sélectionnée." ar="لا تكفي قراءة منفردة لمعرفة ما إذا كانت الوظيفة مستقرة أو مزمنة أو حادة. يبقى DFG المقدّر للمعلومة ولا تُختار جرعة." /></p>
+            )}
+            {ren?.egfrCkd !== null && ren?.egfrCkd !== undefined && (
+              <p className="mt-2 text-xs font-bold" dir="ltr">
+                CKD-EPI 2021 (DFG estimatif, pas un diagnostic de chronicité) : {ren.egfrCkd.toFixed(0)} mL/min/1,73 m²
+                {estimatedStageMeta ? ` · catégorie estimée uniquement : ${ar ? estimatedStageMeta.ar : estimatedStageMeta.fr}` : ""}
+                · Cockcroft–Gault (ClCr séparée) : {ren.crclCg?.toFixed(0) ?? "—"} mL/min
+              </p>
+            )}
+            {ren?.egfrCkid !== null && ren?.egfrCkid !== undefined && (
+              <p className="mt-2 text-xs font-bold" dir="ltr">CKID U25 (DFG informatif) : {ren.egfrCkid.toFixed(0)} mL/min/1,73 m²</p>
             )}
           </div>
         ) : ren && !ren.refusal ? (
@@ -483,7 +543,7 @@ export default function AntibioRenalPage() {
               <p key={i} className="mt-1.5 text-xs font-bold opacity-80">⚠ {ar ? w.ar : w.fr}</p>
             ))}
             {manual && (
-              <button onClick={() => { setManual(null); setManualReviewFor(null); }} className="mt-2 text-xs font-black underline" style={{ color: "var(--accent)" }}>
+              <button onClick={clearManualStage} className="mt-2 text-xs font-black underline" style={{ color: "var(--accent)" }}>
                 <T fr="Revenir au stade calculé" ar="العودة إلى المرحلة المحسوبة" />
               </button>
             )}
@@ -512,7 +572,7 @@ export default function AntibioRenalPage() {
                 setManual(s.id);
                 setManualReviewFor(requiresReview ? reviewKey : null);
               }}
-              disabled={pediatricAge || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue || (requiresReview && !reviewAcknowledged)}
+              disabled={renalCourseBlocksDose || pediatricAge || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue || (requiresReview && !reviewAcknowledged)}
               aria-pressed={stage === s.id}
               className={`${chip(stage === s.id)} disabled:cursor-not-allowed disabled:opacity-40`}
               style={chipStyle(stage === s.id, i === 4 ? "var(--sev-critical)" : i === 3 ? "var(--sev-urgent)" : i === 2 ? "var(--sev-standard)" : "var(--accent)")}
@@ -563,6 +623,7 @@ export default function AntibioRenalPage() {
           const secMeta = ATB_RENAL_SECTIONS.find((s) => s.id === r.section);
           const { stage: rowStage, label: rowStageLabel } = stageForMolecule();
           const rowStageIdx = rowStage ? STAGE_IDS.indexOf(rowStage) : -1;
+          const hasLineContexts = r.lines.some((l) => Boolean(l.context));
           const value = rowStageIdx >= 0 ? r.lines.map((l) => l.d[rowStageIdx]) : [];
           const infoOnly = r.lines.every((l) => l.kind === "info");
           const bad = value.some((v) => isContraindicated(v));
@@ -590,6 +651,14 @@ export default function AntibioRenalPage() {
               <p className="mt-1 text-xs font-black" style={{ color: rowStageIdx === 4 ? "var(--sev-critical)" : rowStageIdx === 3 ? "var(--sev-urgent)" : "var(--accent)" }}>
                 {ar ? "مرحلة هذا الدواء: " : "Stade pour cette molécule : "}{rowStageLabel}
               </p>
+              {r.contextReviewRequired && (
+                <p className="mt-2 rounded-xl border border-line bg-surface2 p-2 text-xs font-bold" style={{ color: "var(--sev-urgent)" }} role="note">
+                  <T
+                    fr="Le tableau présente des lignes, indications ou schémas alternatifs dont le choix requis n'est pas recueilli par cette interface. Les textes restent visibles, mais « Retenir » est bloqué."
+                    ar="يعرض الجدول أسطرًا أو استطبابات أو أنظمة بديلة لا تجمع هذه الواجهة الاختيار المطلوب. تبقى النصوص ظاهرة، لكن خيار «اعتماد» معطّل."
+                  />
+                </p>
+              )}
 
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {bad && <Badge tone="critical"><T fr="Contre-indiqué" ar="ممنوع" /></Badge>}
@@ -615,11 +684,67 @@ export default function AntibioRenalPage() {
                   const check = l.kind === "dose" && requiresSourceCheck(v);
                   return (
                     <li key={i} className="rounded-xl border border-line bg-surface2 px-2.5 py-2">
+                      {l.context && (
+                        <span className="mb-1 block text-[11px] font-black opacity-70" dir={ar ? "rtl" : "ltr"}>
+                          {ar && l.context.ar ? l.context.ar : l.context.fr}
+                        </span>
+                      )}
                       <span className="block text-sm font-bold" dir="ltr">{v}</span>
                       {calc && (
-                        <span className="mt-1 block text-sm font-black" style={{ color: "var(--accent)" }}>
-                          {calc}
-                        </span>
+                        <>
+                          <span className="mt-1 block text-sm font-black" style={{ color: "var(--accent)" }}>
+                            {calc}
+                          </span>
+                          {!check && !unsupportedWeightMaximum && !bad && !warn && !r.contextReviewRequired && (
+                            <CalculationExplainer
+                              context={{
+                                title: ar ? `${r.ar} — شرح الحساب الوزني` : `${r.fr} — explication du calcul pondéral`,
+                                method: ar
+                                  ? `${manualStage === rowStage
+                                      ? "المرحلة المعروضة اختيرت يدوياً؛ الذكاء الاصطناعي لا يراجع هذا الاختيار."
+                                      : "تستخدم الصفحة CKD-EPI 2021 لاختيار مرحلة DFG في الجدول؛ Cockcroft–Gault قيمة منفصلة ولا تختار هذه المرحلة."} تضرب الصفحة فقط مقطع mg/kg الصريح في نص المصدر في الوزن الفعلي المدخل، وتطبّق السقف فقط إن كان واضحاً في النص. هذا حساب رياضي لما تعرضه الصفحة، وليس وصفة.`
+                                  : `${manualStage === rowStage
+                                      ? "La colonne affichée a été choisie manuellement ; l’IA ne valide pas ce choix."
+                                      : "La page utilise CKD-EPI 2021 pour choisir la catégorie DFG du tableau ; Cockcroft–Gault reste séparé et ne choisit pas cette colonne."} La page multiplie uniquement le segment mg/kg explicite de la source par le poids réel saisi et n’applique un plafond que s’il est explicite. C’est l’explication d’un calcul arithmétique affiché, pas une prescription.`,
+                                inputs: [
+                                  {
+                                    label: ar ? "مرحلة DFG المعروضة لهذا الدواء" : "Catégorie DFG affichée pour cette molécule",
+                                    value: rowStageLabel,
+                                  },
+                                  ...(ren?.egfrCkd !== null && ren?.egfrCkd !== undefined ? [{
+                                    label: ar ? "قيمة CKD-EPI 2021 المحسوبة" : "DFG CKD-EPI 2021 calculé",
+                                    value: `${ren.egfrCkd.toFixed(4)} mL/min/1,73 m²`,
+                                  }] : []),
+                                  {
+                                    label: ar ? "الوزن الذي استعمله الحساب الوزني" : "Poids utilisé par le calcul pondéral",
+                                    value: `${weight} kg`,
+                                  },
+                                  {
+                                    label: ar ? "نص الجرعة الأصلي في الخلية" : "Texte posologique original de la cellule",
+                                    value: v,
+                                  },
+                                  ...(l.context ? [{
+                                    label: ar ? "سياق السطر في المصدر" : "Contexte de la ligne source",
+                                    value: ar && l.context.ar ? l.context.ar : l.context.fr,
+                                  }] : []),
+                                ],
+                                result: calc,
+                                source: `OMEDIT V2.3, p.${r.page} — ${ar ? "النص المستخرج المعروض في التطبيق" : "texte extrait affiché par l’application"}`,
+                                limitations: ar
+                                  ? [
+                                      "الذكاء الاصطناعي يشرح النص والنتيجة المعروضة فقط، ولا يعيد الحساب أو يقترح جرعة أو نظاماً علاجياً.",
+                                      "المصدر مقتطف من جدول OMEDIT؛ لا يثبت صحة سريرية مستقلة أو اعتماداً محلياً في تونس.",
+                                      "إذا كان السياق أو الخلية ملتبساً، لا يجوز استنتاج جرعة؛ راجع الأصل والنشرة المحلية مع مختص.",
+                                    ]
+                                  : [
+                                      "L’IA explique uniquement le texte et le résultat affichés ; elle ne recalcule pas et ne propose ni dose ni schéma thérapeutique.",
+                                      "La source est un extrait du tableau OMEDIT ; cela ne prouve ni validation clinique indépendante ni adoption locale en Tunisie.",
+                                      "Si le contexte ou la cellule est ambigu, aucune dose ne doit être inférée ; vérifier l’original et le RCP local avec un professionnel.",
+                                    ],
+                              }}
+                            />
+                          )}
+                        </>
                       )}
                       {amikDoseGuarded && (
                         <span className="mt-1 block text-xs font-black" style={{ color: "var(--sev-urgent)" }} role="note">
@@ -647,11 +772,15 @@ export default function AntibioRenalPage() {
                               ? ar
                                 ? "⚠ تتقاطع هذه الشريحة مع خلايا مصدر مختلفة؛ لم تُعتمد جرعة واحدة. راجع النصوص والمصدر الأصلي."
                                 : "⚠ Plusieurs cellules source distinctes recouvrent ce stade : aucune dose unique retenue. Vérifier les textes et le PDF original."
-                              : isNoData(v)
+                              : isUnassignedSourceContext(v)
                               ? ar
-                                ? "⚠ لا بيانات لهذه المرحلة — تحقّق من المصدر (PDF OMEDIT) ومن كون المريض غير خاضع للغسيل."
-                                : "⚠ Aucune donnée pour ce stade — vérifier la source (PDF OMEDIT) et le caractère non dialysé du patient."
-                              : ar
+                                ? "⚠ لا تربط خلية المصدر هذه الجرعة بهذا السياق؛ لم تُحدَّد جرعة واحدة. راجع PDF وRCP."
+                                : "⚠ La source ne rattache pas cette valeur à ce contexte : aucune dose unique n'est retenue. Vérifier le PDF et le RCP."
+                              : isNoData(v)
+                                ? ar
+                                  ? "⚠ لا بيانات لهذه المرحلة — تحقّق من المصدر (PDF OMEDIT) ومن كون المريض غير خاضع للغسيل."
+                                  : "⚠ Aucune donnée pour ce stade — vérifier la source (PDF OMEDIT) et le caractère non dialysé du patient."
+                                : ar
                                 ? "⚠ المصدر لا يُرقّم هذه الجرعة: انقلها كما هي وتحقّق من الجدول الأصلي."
                                 : "⚠ La source ne chiffre pas cette conduite : reprise telle quelle, à vérifier dans le tableau original."}
                         </span>
@@ -671,7 +800,7 @@ export default function AntibioRenalPage() {
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <button
                     onClick={() => decide(r.id, "retenue", value[0], rowStage, rowStageLabel)}
-                    disabled={!rowStage || mergedSourceCell || ambiguousSourceStage}
+                    disabled={!rowStage || mergedSourceCell || ambiguousSourceStage || r.contextReviewRequired}
                     className="rounded-full border px-3 py-1.5 text-xs font-black disabled:cursor-not-allowed disabled:opacity-40"
                     style={{ borderColor: "var(--sev-standard)", color: "var(--sev-standard)" }}
                   >
@@ -720,6 +849,11 @@ export default function AntibioRenalPage() {
                     <table className="w-full min-w-[34rem] border-collapse text-xs">
                       <thead>
                         <tr>
+                          {hasLineContexts && (
+                            <th scope="col" className="border border-line p-1.5 text-start font-black">
+                              <T fr="Contexte" ar="السياق" />
+                            </th>
+                          )}
                           {ATB_RENAL_STAGES.map((s) => (
                             <th key={s.id} scope="col" className={`border border-line p-1.5 text-start font-black ${s.id === rowStage ? "bg-surface2" : ""}`}>
                               {ar ? s.ar : s.fr}
@@ -731,6 +865,11 @@ export default function AntibioRenalPage() {
                       <tbody>
                         {r.lines.map((l, i) => (
                           <tr key={i}>
+                            {hasLineContexts && (
+                              <th scope="row" className="border border-line p-1.5 text-start font-black" dir={ar ? "rtl" : "ltr"}>
+                                {l.context ? (ar && l.context.ar ? l.context.ar : l.context.fr) : ""}
+                              </th>
+                            )}
                             {l.d.map((v, j) => (
                               <td key={j} className={`border border-line p-1.5 align-top ${j === rowStageIdx ? "bg-surface2 font-bold" : ""} ${isContraindicated(v) ? "sev-critical" : ""}`} dir="ltr">
                                 {v}

@@ -4,9 +4,9 @@
 
 Le PDF d'OMEDIT fourni ne concerne que les antibiotiques. Pour compléter prudemment le pont `/calculateurs/renal-dose`, deux médicaments non antibiotiques ont été renseignés à partir de leur RCP individuel publié dans la Base de Données Publique des Médicaments (ANSM) : gabapentine et prégabaline.
 
-Ces références sont françaises, pas des RCP tunisiens. Elles ne constituent pas une validation clinique locale. Vérifier la spécialité, la forme et le RCP tunisien effectivement disponibles avant une décision thérapeutique. Le calculateur affiche un Cockcroft–Gault adulte non indexé ; les seuils ci-dessous sont ceux de clairance de la créatinine (ClCr) des tableaux RCP. Les situations de dialyse ne sont pas calculées par les quatre bandes ordinaires.
+Ces références sont françaises, pas des RCP tunisiens. Elles ne constituent pas une validation clinique locale. Vérifier la spécialité, la forme et le RCP tunisien effectivement disponibles avant une décision thérapeutique. Le calculateur affiche un Cockcroft–Gault adulte non indexé ; les seuils ci-dessous sont ceux de clairance de la créatinine (ClCr) des tableaux RCP. Les situations de dialyse ne sont pas calculées par les quatre bandes ordinaires. La page exige une déclaration de fonction stable/chronique connue ; le défaut est « inconnu ». Un seul résultat ne prouve pas la stabilité, et une situation aiguë déclarée ou détectée par les critères KDIGO suspend les doses. La dialyse est également bloquée. L'option manuelle de poids idéal donne une estimation, mais ne sélectionne pas de dose car la règle de poids spécifique à chaque produit n'a pas été revue ici.
 
-Les autres lignes non antibiotiques déjà présentes dans l'ancienne liste n'ont pas reçu de nouvelle validation ni de nouveau dosage dans cette mise à jour.
+Les lignes non antibiotiques déjà présentes dans l'ancienne liste (hors gabapentine et prégabaline) n'ont pas reçu de validation actuelle. Leurs anciennes posologies ont été retirées du calculateur ; les noms restent visibles sans dose tant qu'un RCP individuel et une règle de population ne sont pas revus.
 
 ## Gabapentine
 
@@ -42,6 +42,7 @@ Le RCP précise que la dose quotidienne totale doit être divisée selon le nomb
 ## Mise en œuvre et contrôles
 
 - Les seuils RCP propres à chaque médicament sont appliqués séparément : ceux de la gabapentine ne sont pas remplacés par les bandes génériques 60/30/15 mL/min.
-- La ligne active affiche sa plage exacte de ClCr, le texte des doses et un lien vers le RCP utilisé.
-- Les valeurs présentées sont des plages RCP, pas une sélection automatique de dose individuelle. L'indication, la dose initiale déjà prescrite, la tolérance, la forme disponible et la dialyse restent à vérifier avec le RCP et un professionnel.
-- Le tableau ne transforme pas les anciennes lignes non sourcées en recommandations validées.
+- La ligne active n'affiche sa plage exacte de ClCr et le texte des doses qu'après déclaration d'un parcours stable, adulte non dialysé, en l'absence de critère KDIGO et sans remplacement manuel non validé du poids ; le lien du RCP utilisé reste visible.
+- Les valeurs présentées sont des plages RCP, pas une sélection automatique de dose individuelle. L'indication, la dose initiale déjà prescrite, la tolérance, la forme disponible et les situations particulières restent à vérifier avec le RCP et un professionnel.
+- Les valeurs historiques à 48 h/7 j et la diurèse sont utilisées uniquement pour le repérage KDIGO ; ce repérage n'est pas un diagnostic.
+- Le tableau ne transforme pas les anciennes lignes non sourcées en recommandations validées ; leurs anciens textes de dose ont été supprimés de l'interface et de ses données.

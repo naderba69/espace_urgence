@@ -53,6 +53,9 @@ export function weightsForCg(weightKg: number, heightCm: number | null | undefin
   return { bmi, ibw: ibw > 0 ? ibw : null, abw: abw > 0 ? abw : null, cgWeight: usedAbw ? abw : weightKg, usedAbw };
 }
 
+// المسار السريري لا يُستنتج من تحليل كرياتينين منفرد؛ يجب التصريح به قبل اختيار جرعة ثابتة.
+export type RenalCourse = "stable" | "acute" | "unknown";
+
 // ── KDIGO : كشف القصور الكلوي الحادّ ────────────────────────────────────────────────────────
 export type AkiStage = 0 | 1 | 2 | 3;
 
@@ -65,8 +68,8 @@ export interface AkiInput {
   /** diurèse horaire (mL/kg/h) et durée d'observation (h). */
   urineMlKgH?: number | null;
   urineHours?: number | null;
-  /** RRT initiation is a KDIGO stage 3 criterion. */
-  renalReplacementTherapy?: boolean;
+  /** Initiation de l'épuration pendant l'épisode aigu : critère KDIGO de stade 3. */
+  renalReplacementTherapyInitiated?: boolean;
 }
 
 export interface AkiResult {
@@ -102,15 +105,15 @@ export function akiKdigo(input: AkiInput): AkiResult {
     : null;
   const acuteCreatinineRise = input.scr48h != null && Number.isFinite(input.scr48h) && input.scr48h > 0
     && Number.isFinite(now) && now - input.scr48h >= 0.3;
-  const documentedCreatinineIncrease =
-    (input.scr48h != null && Number.isFinite(input.scr48h) && input.scr48h > 0 && Number.isFinite(now) && now > input.scr48h)
-    || (input.scr7d != null && Number.isFinite(input.scr7d) && input.scr7d > 0 && Number.isFinite(now) && now > input.scr7d);
-  const scr4Criterion = Number.isFinite(now) && now >= 4 && documentedCreatinineIncrease;
+  const acuteRiseAtLeastHalfMgDl =
+    (input.scr48h != null && Number.isFinite(input.scr48h) && input.scr48h > 0 && Number.isFinite(now) && now - input.scr48h >= 0.5)
+    || (input.scr7d != null && Number.isFinite(input.scr7d) && input.scr7d > 0 && Number.isFinite(now) && now - input.scr7d >= 0.5);
+  const scr4Criterion = Number.isFinite(now) && now >= 4 && acuteRiseAtLeastHalfMgDl;
   if (acuteCreatinineRise) criteria.push("scr-up-48h");
   if (r48 !== null && r48 >= 1.5) criteria.push("scr-ratio-48h");
   if (r7 !== null && r7 >= 1.5) criteria.push("scr-ratio-7d");
   if (scr4Criterion) criteria.push("scr-4mg");
-  if (input.renalReplacementTherapy) criteria.push("renal-replacement");
+  if (input.renalReplacementTherapyInitiated) criteria.push("renal-replacement");
 
   let urineStage: AkiStage = 0;
   const urineRate = input.urineMlKgH;
@@ -133,7 +136,7 @@ export function akiKdigo(input: AkiInput): AkiResult {
   }
 
   const ratioMax = Math.max(r48 ?? 0, r7 ?? 0);
-  const creatinineStage: AkiStage = input.renalReplacementTherapy || ratioMax >= 3 || scr4Criterion
+  const creatinineStage: AkiStage = input.renalReplacementTherapyInitiated || ratioMax >= 3 || scr4Criterion
     ? 3
     : ratioMax >= 2
       ? 2
@@ -155,13 +158,17 @@ export interface StageInput {
   scr7d?: number | null;
   urineMlKgH?: number | null;
   urineHours?: number | null;
-  /** Patient sous épuration extrarénale : hors périmètre du tableau OMEDIT non dialysé. */
+  /** Patient actuellement sous épuration extrarénale : hors périmètre du tableau, sans conclure à une AKI. */
   onRenalReplacementTherapy?: boolean;
+  /** Épuration nouvellement initiée pendant l'épisode aigu : critère KDIGO 3 distinct de la dialyse chronique. */
+  renalReplacementTherapyInitiated?: boolean;
+  /** الحالة السريرية المصرّح بها؛ تحليل منفرد لا يكفي لاستنتاج الاستقرار. */
+  renalCourse: RenalCourse;
   /** poids idéal coché : force l'usage du poids idéal dans Cockcroft-Gault. */
   useIdealWeight?: boolean;
 }
 
-export type StageRefusal = "inputs" | "height" | "boundary" | "aki" | "pediatric" | "dialysis";
+export type StageRefusal = "inputs" | "height" | "boundary" | "aki" | "declared-acute" | "course-unknown" | "pediatric" | "dialysis";
 
 export interface StageResult {
   /** المرحلة المعتمدة للعرض (بعد كل القواعد)، أو null إذا لم يمكن حسابها بأمان. */
@@ -187,8 +194,16 @@ const W = {
     ar: "يعطي CKD-EPI قيمة DFG مفهرسة (مل/د/1.73 م²). عند انخفاض الوزن كثيراً، فسّرها بحذر وافحص ClCr بمعادلة Cockcroft–Gault بشكل منفصل فقط إذا كانت نشرة المنتج تعتمدها؛ لا تختار ClCr عموداً من جدول DFG.",
   },
   aki: {
-    fr: "Critères KDIGO d'agression rénale aiguë présents : la créatinine n'est pas à l'état stable. Ni le DFG estimé ni la ClCr Cockcroft–Gault ne sélectionnent automatiquement une colonne du tableau ; aucun stade/dose automatique. Revue clinique et choix manuel validé requis.",
-    ar: "معايير KDIGO للقصور الكلوي الحاد متحققة: الكرياتينين غير مستقر. لا يختار DFG المقدّر ولا ClCr بمعادلة Cockcroft–Gault عموداً آلياً من الجدول؛ لا تُعرض مرحلة أو جرعة آلية. تلزم مراجعة سريرية واختيار يدوي معتمد.",
+    fr: "Critères KDIGO d'atteinte rénale aiguë présents : la créatinine n'est pas à l'état stable. Ni le DFG estimé ni la ClCr Cockcroft–Gault ne sélectionnent une colonne de ce tableau stable ; aucune dose n'est proposée. Revue clinique et protocole adapté à l'AKI requis.",
+    ar: "معايير KDIGO للقصور الكلوي الحاد متحققة: الكرياتينين غير مستقر. لا يختار DFG المقدّر ولا ClCr بمعادلة Cockcroft–Gault عموداً من هذا الجدول المستقر؛ لا تُعرض جرعة. تلزم مراجعة سريرية وبروتوكول خاص بالقصور الحاد.",
+  },
+  declaredAcute: {
+    fr: "Le parcours aigu/variable a été déclaré ou suspecté. L'absence de critère KDIGO dans les données saisies ne suffit pas à rendre la fonction stable ; aucun stade ni dosage du tableau stable n'est proposé.",
+    ar: "تم تحديد المسار الكلوي على أنه حاد أو متغير/مشتبه به. عدم ظهور معيار KDIGO في البيانات المدخلة لا يثبت استقرار الوظيفة؛ لذلك لا تُعرض مرحلة أو جرعة من جدول الوظيفة المستقرة.",
+  },
+  courseUnknown: {
+    fr: "Une créatinine isolée permet d'estimer le DFG, mais ne permet pas à elle seule de distinguer une fonction stable/chronique d'une atteinte aiguë. La stabilité n'étant pas connue, aucun stade ni dosage du tableau rénal stable n'est sélectionné.",
+    ar: "تحليل كرياتينين واحد يسمح بتقدير DFG، لكنه لا يميّز وحده بين وظيفة مستقرة/مزمنة وقصور حاد. ما دامت استقرارية الوظيفة غير معروفة، لا تُختار مرحلة أو جرعة من جدول الوظيفة المستقرة.",
   },
   dialysis: {
     fr: "Patient sous dialyse/épuration extrarénale : hors du périmètre adulte non dialysé du tableau OMEDIT. Aucun stade ni dosage n'est proposé ici ; vérifier le protocole de dialyse, le RCP et un avis spécialisé.",
@@ -205,9 +220,9 @@ const W = {
 };
 
 /**
- * يختار الأعمدة المزمنة من DFG فقط (CKD-EPI 2021 للبالغ؛ CKID U25 للمعلومة عند الطفل).
- * لا يُحوَّل Cockcroft–Gault إلى DFG ولا يحدد عموداً. عند KDIGO-AKI أو العمر <18
- * يُحجب اختيار عمود/جرعة البالغ تلقائياً؛ الحالات الحدّية تطلب مراجعة يدوية.
+ * لا يختار الجدول المزمن إلا من DFG (CKD-EPI 2021 للبالغ) وبعد تصريح سريري بأن المسار مستقر.
+ * تحليل منفرد بمسار مجهول يعطي تقديراً بلا جرعة؛ المسار الحاد وKDIGO-AKI والغسيل والأطفال محجوبة.
+ * لا يُحوَّل Cockcroft–Gault إلى DFG ولا يحدد عموداً؛ الحالات الحدّية تطلب مراجعة يدوية.
  */
 export function chooseStage(input: StageInput): StageResult {
   const aki = akiKdigo({
@@ -216,7 +231,7 @@ export function chooseStage(input: StageInput): StageResult {
     scr7d: input.scr7d,
     urineMlKgH: input.urineMlKgH,
     urineHours: input.urineHours,
-    renalReplacementTherapy: input.onRenalReplacementTherapy,
+    renalReplacementTherapyInitiated: input.renalReplacementTherapyInitiated,
   });
   const warnings: Localized[] = [];
   const empty: StageResult = {
@@ -274,24 +289,9 @@ export function chooseStage(input: StageInput): StageResult {
 
   // Les colonnes DFG sont sélectionnées uniquement depuis le DFG (CKD-EPI ici), jamais depuis ClCr.
   const ambiguousBoundary = isAmbiguousAtbDfgBoundary(primaryDfg);
-  if (ambiguousBoundary) {
-    return {
-      ...empty,
-      primary,
-      egfrCkd,
-      egfrCkid,
-      crclCg,
-      cgWeight,
-      usedAbw: w.usedAbw,
-      refusal: "boundary",
-      warnings: aki.stage >= 1 ? [W.boundary, W.aki] : [W.boundary],
-    };
-  }
-
   const baseStage = stageFromDfg(primaryDfg ?? NaN);
-  if (baseStage === null) return { ...empty, refusal: "inputs", warnings };
 
-  // Creatinine non stable : les équations DFG et Cockcroft ne déterminent pas seules une dose.
+  // Une AKI détectée par KDIGO prime sur tout stade estimé ou déclaré.
   if (aki.stage >= 1) {
     return {
       ...empty,
@@ -302,9 +302,58 @@ export function chooseStage(input: StageInput): StageResult {
       cgWeight,
       usedAbw: w.usedAbw,
       refusal: "aki",
-      warnings: [W.aki],
+      warnings: [W.aki, ...(ambiguousBoundary ? [W.boundary] : [])],
     };
   }
+
+  // Une déclaration clinique de parcours aigu/variable bloque même si les mesures saisies
+  // ne suffisent pas à déclencher un critère KDIGO.
+  if (input.renalCourse === "acute") {
+    return {
+      ...empty,
+      baseStage: ambiguousBoundary ? null : baseStage,
+      primary,
+      egfrCkd,
+      egfrCkid,
+      crclCg,
+      cgWeight,
+      usedAbw: w.usedAbw,
+      refusal: "declared-acute",
+      warnings: [W.declaredAcute, ...(ambiguousBoundary ? [W.boundary] : [])],
+    };
+  }
+
+  // Une valeur isolée donne un DFG estimatif, pas la preuve d'une maladie stable/chronique.
+  if (input.renalCourse === "unknown") {
+    return {
+      ...empty,
+      baseStage: ambiguousBoundary ? null : baseStage,
+      primary,
+      egfrCkd,
+      egfrCkid,
+      crclCg,
+      cgWeight,
+      usedAbw: w.usedAbw,
+      refusal: ambiguousBoundary ? "boundary" : "course-unknown",
+      warnings: ambiguousBoundary ? [W.courseUnknown, W.boundary] : [W.courseUnknown],
+    };
+  }
+
+  if (ambiguousBoundary) {
+    return {
+      ...empty,
+      primary,
+      egfrCkd,
+      egfrCkid,
+      crclCg,
+      cgWeight,
+      usedAbw: w.usedAbw,
+      refusal: "boundary",
+      warnings: [W.boundary],
+    };
+  }
+
+  if (baseStage === null) return { ...empty, refusal: "inputs", warnings };
 
   // CKD-EPI est indexé : avertissement si le poids < 0,8 × le poids idéal.
   let warningKey: StageResult["warningKey"] = null;

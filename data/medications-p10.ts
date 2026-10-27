@@ -6,7 +6,7 @@ export const medicationsPhase10: Medication[] = [
   {
     id: "thiamine",
     name: { fr: "Thiamine (vitamine B1)", ar: "ثيامين (فيتامين B1)" },
-    brands: "Bévitaline® 250 mg/2 mL inj ; Vitamine B1® cp 250 mg",
+    brands: "Bévitaline® 250 mg/2 mL inj ; VITAMINE B1® (SIPHAT) 100 mg/2 mL injectable (B/4, AMM DPM ST9000371 ; B/50, ST9000372H) ; Vitamine B1® cp 250 mg",
     synonyms: ["thiamine", "vitamine b1", "bévitaline", "thiaminum", "ثيامين"],
     klass: { fr: "Vitamine hydrosoluble — prévention/traitement de l'encéphalopathie de Wernicke", ar: "فيتامين ذواب بالماء — وقاية/علاج اعتلال فرنكه الدماغي" },
     highRisk: false,
@@ -46,8 +46,8 @@ export const medicationsPhase10: Medication[] = [
   {
     id: "haloperidol",
     name: { fr: "Halopéridol", ar: "هالوبيريدول" },
-    brands: "Haldol® 5 mg/mL inj ; sol. buvable 2 mg/mL ; cp 5 mg",
-    synonyms: ["haloperidol", "haldol", "neuroleptique", "هالوبيريدول"],
+    brands: "Haldol® 5 mg/mL inj ; sol. buvable 2 mg/mL ; cp 5 mg ; NEURODOL® (OPALIA) 0,2% (2 mg/mL) gouttes buvables, flacons 30/100 mL (AMM DPM 9023211/9023213H)",
+    synonyms: ["haloperidol", "haldol", "neurodol", "neuroleptique", "هالوبيريدول"],
     klass: { fr: "Neuroleptique butyrophénone — agitation sévère, hallucinations, vomissements réfractaires", ar: "مضاد ذهاني بيوتيريفينون — هياج شديد، هلاوس، تقيؤ مقاوم" },
     highRisk: true,
     indications: {
@@ -86,8 +86,9 @@ export const medicationsPhase10: Medication[] = [
   {
     id: "phenobarbital",
     name: { fr: "Phénobarbital", ar: "فينوباربيتال" },
-    brands: "Gardénal® 200 mg/2 mL inj ; cp 100 mg",
-    synonyms: ["phenobarbital", "gardénal", "barbiturique", "فينوباربيتال"],
+    brands: "",
+    synonyms: ["phenobarbital", "barbiturique", "فينوباربيتال"],
+    searchExclusions: ["gardenal", "phenobarbital 50", "phenobarbital siphat"],
     klass: { fr: "Barbiturique longue durée — état de mal épileptique, sevrage alcoolique réfractaire", ar: "باربيتوري طويل المفعول — الحالة الصرعية، الانسحاب الكحولي المقاوم" },
     highRisk: true,
     indications: {
@@ -126,8 +127,9 @@ export const medicationsPhase10: Medication[] = [
   {
     id: "metronidazole",
     name: { fr: "Métronidazole", ar: "مترونيدازول" },
-    brands: "Flagyl® 500 mg/100 mL inj ; cp 500 mg ; gel",
-    synonyms: ["metronidazole", "flagyl", "imidazole", "مترونيدازول"],
+    brands: "Flagyl® 500 mg/100 mL inj ; cp 500 mg ; gel ; METROGYL® (SIPHAT) 0,5% solution injectable pour perfusion B/25 flacons/100 mL (AMM DPM 9003773H) ; METROJECT® (UNIMED) 0,5% solution injectable pour perfusion B/25 poches/100 mL (AMM DPM 9094031H) ; METRONIDAZOLE INFOMED® 0,5% solution injectable pour perfusion P/100 mL (AMM DPM 9193161H) ; NIDAZOL® (PHARMACARE) 500 mg comprimé (B/14, AMM DPM 9343372) — forme orale ; TAMIZOL® (GALPHARMA) 4% suspension buvable 125 mL, 250 mg cp B/20, 500 mg cp B/14 (AMM DPM 9223271/9223272/9223273) — formes orales, pas la perfusion IV",
+    searchExclusions: ["rodogyl", "ogyl", "birodogyl", "spirogyl", "spiramizole", "spirazol", "bi spirazol", "bi spirogyl", "biogyl", "spiramycine", "spiramycin", "metronidazole baxter", "metronidazole biosedra", "metronidazole braun", "metrogyl 250", "metronidazole opalia", "protogyl", "pylera", "tergynan"],
+    synonyms: ["metronidazole", "flagyl", "nidazol", "tamizol", "imidazole", "مترونيدازول"],
     klass: { fr: "Antibiotique/antiparasitaire — anaérobies et protozoaires", ar: "مضاد حيوي/طفيليات — اللاهوائيات والأوليات" },
     highRisk: false,
     indications: {
@@ -166,8 +168,9 @@ export const medicationsPhase10: Medication[] = [
   {
     id: "ondansetron",
     name: { fr: "Ondansétron", ar: "أوندانسيترون" },
-    brands: "Zophren® 4 mg/2 mL inj ; lyoc 4-8 mg",
-    synonyms: ["ondansetron", "zophren", "setron", "أوندانسيترون"],
+    brands: "Zophren® 4 mg/2 mL inj ; lyoc 4-8 mg ; ONDANSETRON MEDIS 4 mg/8 mg comprimés pelliculés B/10 (AMM DPM 9233333/9233334) ; ZEMITRON® (ADVANCED PHARMACEUTICAL IND.) 8 mg comprimé enrobé B/10 (AMM DPM 4213031H) ; PMS-ONDANSETRON 8 mg comprimé pelliculé flacon/30 (AMM DPM 2903032)",
+    synonyms: ["ondansetron", "zophren", "ondansetron medis", "zemitron", "pms-ondansetron", "setron", "أوندانسيترون"],
+    searchExclusions: ["ondansetron unimed", "ondofren", "ondansetron saiph", "ondansetron steripharm", "ondansetron renaudin", "ondansetron medis 8 mg/4 ml", "ondansetron medis 4 mg/2 ml"],
     klass: { fr: "Antiémétique — antagoniste 5-HT3", ar: "مضاد إقياء — مضاد 5-HT3" },
     highRisk: false,
     indications: {

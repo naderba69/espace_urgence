@@ -2345,13 +2345,14 @@ describe("القسم ج ٤١–٤٥ — أمان الدواء", () => {
     expect(src).toContain("dixFois");
     expect(src).toContain("Paracétamol IV");
   });
-  it("٤٢ : جسر الصيدلة بـ Cockcroft-Gault و١٧ دواءً", async () => {
+  it("٤٢ : جسر الصيدلة بـ Cockcroft-Gault والمراجعة حسب المصدر", async () => {
     const fs = await import("node:fs");
     const src = fs.readFileSync("app/calculateurs/renal-dose/page.tsx", "utf8");
     expect(src).toContain("ibwKg");
-    expect(src).toContain("72 * mg");
+    expect(src).toContain("(140 - A) * weightUsed");
     expect(src).toContain("Nitrofurantoïne");
-    expect(src).toContain("Contre-indiquée");
+    expect(src).toContain("Dose désactivée");
+    expect(src).not.toContain("Contre-indiquée");
   });
   it("٤٣ : التفاعلات ب١٦ زوج والبحث والفلترة", async () => {
     const fs = await import("node:fs");
@@ -2396,7 +2397,7 @@ describe("حارس وحدة الكرياتينين (جسر كلوي)", () => {
 
     expect(screen.getByRole("alert").textContent).toContain("لن تظهر نتيجة");
     expect(screen.queryByText(/mL\/min/)).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: /أؤكد أن القيمة فعلًا/ }));
+    fireEvent.click(screen.getByRole("button", { name: /أؤكد أن كل القيم المدخلة/ }));
     expect(screen.getByText(/mL\/min/)).toBeTruthy();
   });
 
@@ -2424,20 +2425,108 @@ describe("حارس وحدة الكرياتينين (جسر كلوي)", () => {
     expect(hrefs).toContain("/calculateurs/antibio-renal?q=Amikacine");
   });
 
-  it("يستخدم عتبات RCP الفردية ويعرض مصدري Gabapentine وPrégabaline", async () => {
+  it("يستخدم عتبات RCP الفردية بعد التصريح باستقرار الوظيفة ويعرض مصدري Gabapentine وPrégabaline", async () => {
     const RenalDosePage = (await import("@/app/calculateurs/renal-dose/page")).default;
-    render(<RenalDosePage />);
+    const { container } = render(<RenalDosePage />);
     fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
     fireEvent.change(screen.getByRole("spinbutton", { name: "wt" }), { target: { value: "70" } });
     // CrCl ≈ 62: ضمن 50–79 للغابابنتين، لكنه ضمن ≥60 للبريغابالين.
     fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "1.1" } });
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
 
     expect(screen.getByText(/CrCl ٥٠–٧٩ مل\/د/)).toBeTruthy();
     expect(screen.getByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeTruthy();
     expect(screen.getByText(/البداية: ١٥٠ مغ\/ي/)).toBeTruthy();
+    expect(screen.getAllByRole("button", { name: /اشرح هذه النتيجة بالذكاء الاصطناعي/ })).toHaveLength(2);
     const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
     expect(hrefs).toContain("https://base-donnees-publique.medicaments.gouv.fr/medicament/67350239/extrait");
     expect(hrefs).toContain("https://base-donnees-publique.medicaments.gouv.fr/medicament/63754960/extrait");
+
+    fireEvent.click(screen.getByRole("button", { name: /الوزن المثالي \(سمنة\)/ }));
+    expect(screen.queryByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeNull();
+    expect(screen.queryByRole("button", { name: /اشرح هذه النتيجة بالذكاء الاصطناعي/ })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /الوزن المثالي \(سمنة\)/ }));
+    fireEvent.click(screen.getByRole("checkbox"));
+    expect(container.textContent).toContain("تم التصريح بالغسيل/الإحلال الكلوي");
+    expect(screen.queryByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeNull();
+  });
+
+  it("يُظهر معيار KDIGO من إدرار البول حتى دون كرياتينين حالي أو نتيجة ClCr", async () => {
+    const RenalDosePage = (await import("@/app/calculateurs/renal-dose/page")).default;
+    const { container } = render(<RenalDosePage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "urine" }), { target: { value: "0.4" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "urineH" }), { target: { value: "12" } });
+
+    expect(container.textContent).toContain("تصنيف KDIGO 2");
+    expect(container.textContent).toContain("إدرار <0.5 مل/كغ/سا لمدة ≥12 ساعة");
+    expect(container.textContent).toContain("لا يُعرض جدول وظيفة مستقرة أو جرعة");
+    expect(screen.queryByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeNull();
+  });
+
+  it("تحليل واحد يبقى تقديرًا بلا جرعة، والتصريح بالاستقرار يفعّل فقط القواعد الموثقة", async () => {
+    const RenalDosePage = (await import("@/app/calculateurs/renal-dose/page")).default;
+    const { container } = render(<RenalDosePage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "wt" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "1.1" } });
+
+    expect(container.textContent).toContain("تقدير فقط — بلا جرعة");
+    expect(screen.queryByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    expect(screen.getByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeTruthy();
+    expect(container.textContent).toContain("نيتروفورانتوين");
+    expect(container.textContent).toContain("الجرعة معطّلة");
+    expect(container.textContent).not.toContain("ممنوع");
+  });
+
+  it("قيمة KDIGO أو التصريح بالمسار الحاد يحجب جرعات RCP المستقرة", async () => {
+    const RenalDosePage = (await import("@/app/calculateurs/renal-dose/page")).default;
+    const { container } = render(<RenalDosePage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "wt" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "1" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr48" }), { target: { value: "0.6" } });
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    expect(container.textContent).toContain("معايير KDIGO");
+    expect(screen.queryByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeNull();
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "scr48" }), { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: /حادّة \/ متغيرة \/ مشتبه بها/ }));
+    expect(container.textContent).toContain("تم تحديد المسار على أنه حاد/متغير");
+    expect(screen.queryByText(/٦٠٠–١٨٠٠ مغ\/ي/)).toBeNull();
+  });
+
+  it("لا يستورد قرارات v2 القديمة، ويُبقيها محفوظة محلياً مع تنبيه", async () => {
+    const { PLAN_KEY, PREVIOUS_PLAN_KEY, LEGACY_PLAN_KEY } = await import("@/lib/atb-plan");
+    const keys = [PLAN_KEY, PREVIOUS_PLAN_KEY, LEGACY_PLAN_KEY];
+    const previous = new Map(keys.map((key) => [key, window.localStorage.getItem(key)]));
+    for (const key of keys) window.localStorage.removeItem(key);
+    const oldPlan = JSON.stringify({
+      version: 2,
+      entries: [{
+        id: "ceftobiprole-iv",
+        round: 1,
+        decision: "retenue",
+        snapshot: { stage: "severe", stageLabel: "Ancien stade", dose: "OLD-V2-DOSE" },
+        at: "2026-10-24T10:00:00.000Z",
+      }],
+    });
+    try {
+      window.localStorage.setItem(PREVIOUS_PLAN_KEY, oldPlan);
+      const AntibioRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+      const { container } = render(<AntibioRenalPage />);
+      await waitFor(() => expect(container.textContent).toContain("عُثر على خطة محلية من الإصدار ١ أو ٢"));
+      expect(container.textContent).not.toContain("OLD-V2-DOSE");
+      expect(window.localStorage.getItem(PREVIOUS_PLAN_KEY)).toBe(oldPlan);
+      expect(window.localStorage.getItem(PLAN_KEY)).toBeNull();
+    } finally {
+      cleanup();
+      for (const key of keys) {
+        const value = previous.get(key);
+        if (value === null) window.localStorage.removeItem(key);
+        else if (value !== undefined) window.localStorage.setItem(key, value);
+      }
+    }
   });
 
   it("يقرأ بحث الدواء من رابط جدول المضادات", async () => {
@@ -2921,8 +3010,10 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
   it("يمنع المرحلة والجرعة الآليتين إلى أن تُؤكّد مراجعة المصدر ويُختَر طور يدوي", async () => {
     const fs = await import("node:fs");
     const page = fs.readFileSync("app/calculateurs/antibio-renal/page.tsx", "utf8");
-    expect(page).toContain('const requiresReview = ren?.refusal === "boundary" && !akiBlocked;');
-    expect(page).toContain("disabled={pediatricAge || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue || (requiresReview && !reviewAcknowledged)}");
+    expect(page).toContain('const renalCourseBlocksDose = renalCourse !== "stable";');
+    expect(page).toContain('const requiresReview = ren?.refusal === "boundary" && !akiBlocked && renalCourse === "stable";');
+    expect(page).toContain("disabled={renalCourseBlocksDose || pediatricAge || onRenalReplacementTherapy || dialysisRefusal || akiBlocked || creatinineInputIssue || (requiresReview && !reviewAcknowledged)}");
+    expect(page).toContain('<RenalCourseSelector value={renalCourse} onChange={updateRenalCourse} />');
     expect(page).toContain("const akiBlocked = akiAssessment.stage >= 1;");
     expect(page).toContain("const akiAssessment = useMemo(() =>");
     expect(page).toContain("onRenalReplacementTherapy");
@@ -2935,13 +3026,50 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
     expect(page).toContain("isMergedSourceCell");
     expect(page).toContain("isAmbiguousSourceCells");
     expect(page).toContain("mergedSourceCell || ambiguousSourceStage ? undefined");
-    expect(page).toContain("disabled={!rowStage || mergedSourceCell || ambiguousSourceStage}");
+    expect(page).toContain("disabled={!rowStage || mergedSourceCell || ambiguousSourceStage || r.contextReviewRequired}");
     expect(page).toContain("Cellule fusionnée dans la source : voir la note commune");
     expect(page).toContain("Plusieurs cellules source distinctes recouvrent ce stade");
     expect(page).toContain("tranches recoupant plusieurs cellules signalées");
-    expect(page).toContain("LEGACY_PLAN_KEY");
-    expect(page).toContain("n'a pas été importé après la correction du mappage");
+    expect(page).toContain("PREVIOUS_PLAN_KEY");
+    expect(page).toContain("hasEntries(PREVIOUS_PLAN_KEY) || hasEntries(LEGACY_PLAN_KEY)");
+    expect(page).toContain("parsePlan(readJSON<unknown>(PLAN_KEY, null))");
+    expect(page).toContain("previousPlanDetected");
+    expect(page).toContain("Un plan local v1 ou v2 a été détecté");
+    expect(page).toContain("L'ancien plan reste conservé sur cet appareil.");
     expect(page).not.toContain("Posologies reprises mot pour mot");
+  });
+
+  it("يعرض DFG تقديريًا من كرياتينين واحد لكنه يحجب المرحلة والجرعة حتى تصريح الاستقرار", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "1.0" } });
+
+    expect(container.textContent).toContain("تحليل كرياتينين واحد يسمح بتقدير DFG");
+    expect(container.textContent).toContain("CKD-EPI 2021 (DFG estimatif");
+    expect((screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.queryByText("أميكاسين وريدي")).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    expect((screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it("يمسح الاختيار اليدوي عند تغيير بيانات المريض حتى لا تبقى مرحلة قديمة", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "1.0" } });
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+
+    const terminalStage = screen.getByRole("button", { name: /قصور كلوي نهائي/ });
+    fireEvent.click(terminalStage);
+    expect(terminalStage.getAttribute("aria-pressed")).toBe("true");
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "0.4" } });
+    expect(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }).getAttribute("aria-pressed")).toBe("true");
+    expect(terminalStage.getAttribute("aria-pressed")).toBe("false");
   });
 
   it("يحجب الجرعات والاختيار اليدوي من جدول الوظيفة المستقرة عند رصد AKI", async () => {
@@ -2995,8 +3123,13 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
     fireEvent.click(screen.getByRole("checkbox"));
 
     expect(container.textContent).toContain("خارج نطاق جدول OMEDIT");
+    expect(container.textContent).not.toContain("بدأ الإحلال خلال هذه النوبة الحادة معيار KDIGO");
     expect(screen.queryByText("أميكاسين وريدي")).toBeNull();
     expect((screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement).disabled).toBe(true);
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /بدأ الإحلال الكلوي خلال النوبة الحادة الحالية/ }));
+    expect(container.textContent).toContain("بدء الإحلال خلال هذه النوبة الحادة معيار KDIGO للمرحلة 3");
+    expect(screen.queryByText("أميكاسين وريدي")).toBeNull();
   });
 
   it("لا يعرض أي جرعة من جدول البالغين لطفل، حتى مع اختيار يدوي", async () => {
@@ -3018,6 +3151,7 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
     fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "70" } });
     fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "120" } });
     fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "0.8" } });
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
     fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Amikacine" } });
     expect(container.textContent).toContain("أدخل الطول للتحقق من مؤشر كتلة الجسم");
 
@@ -3029,6 +3163,7 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
   it("يعرض الملاحظة المشتركة للأمينوغليكوزيدات في مراحل القصور فقط", async () => {
     const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
     render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
     fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
     fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Amikacine" } });
     expect(screen.queryByText(/إذا استدعى الوضع السريري/)).toBeNull();
@@ -3040,6 +3175,7 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
   it("يعرض بدائل خلايا المصدر ويمنع اعتماد جرعة مفردة للمرحلة الملتبسة", async () => {
     const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
     render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
     fireEvent.click(screen.getByRole("button", { name: /قصور كلوي متوسط/ }));
     fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Benzylpenicilline sodique" } });
 
@@ -3048,9 +3184,153 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
     expect((screen.getByRole("button", { name: /اعتماد/ }) as HTMLButtonElement).disabled).toBe(true);
   });
 
+  it("يعرض سياقي Ceftobiprole منفصلين ويحجب اعتماد جرعة دون تحديدها", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Ceftobiprole" } });
+
+    expect(container.textContent).toContain("الجرعة الأساسية");
+    expect(container.textContent).toContain("صيغة مشروطة: عدوى شديدة");
+    expect(container.textContent).toContain("500 mg /8h en perfusion de 2h");
+    expect(container.textContent).toContain("Si infection sévère : 1 g/8h en perfusion de 4h");
+    expect(container.textContent).toContain("يعرض الجدول أسطرًا أو استطبابات أو أنظمة بديلة لا تجمع هذه الواجهة الاختيار المطلوب.");
+    expect((screen.getByRole("button", { name: /اعتماد/ }) as HTMLButtonElement).disabled).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: /قصور كلوي شديد/ }));
+    expect(container.textContent).toContain("250 mg/12h");
+    expect(container.textContent).toContain("Contexte source non attribué");
+    expect(container.textContent).toContain("لا تربط خلية المصدر هذه الجرعة بهذا السياق");
+    expect((screen.getByRole("button", { name: /اعتماد/ }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("Ceftolozane + tazobactam : affiche deux contextes et bloque leur sélection sans indication", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Ceftolozane" } });
+
+    expect(container.textContent).toContain("Schéma standard");
+    expect(container.textContent).toContain("Pneumonie nosocomiale — contexte conditionnel");
+    const retainButtons = screen.getAllByRole("button", { name: /اعتماد/ }) as HTMLButtonElement[];
+    expect(retainButtons).toHaveLength(1);
+    expect(retainButtons[0].disabled).toBe(true);
+  });
+
+  it("bloque les autres contextes de la page 5 tant que l'interface ne les recueille pas", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    const search = screen.getByRole("textbox", { name: "بحث" });
+
+    for (const [term, expectedContext] of [
+      ["Céfoxitine", "Infection peu grave"],
+      ["Ceftazidime IM IV", "Administration discontinue"],
+      ["Ceftazidime + avibactam", "Administration continue"],
+    ]) {
+      fireEvent.change(search, { target: { value: term } });
+      expect(container.textContent).toContain(expectedContext);
+      const retainButtons = screen.getAllByRole("button", { name: /اعتماد/ }) as HTMLButtonElement[];
+      expect(retainButtons).toHaveLength(1);
+      expect(retainButtons[0].disabled).toBe(true);
+    }
+  });
+
+  it("bloque la sélection de l'imipénem quand le PDF fournit trois lignes sans contexte", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Imipénem + cilastatine IV" } });
+
+    expect(container.textContent).toContain("السطر المصدر 1 — السياق غير محدد");
+    expect(container.textContent).toContain("السطر المصدر 2 — السياق غير محدد");
+    expect(container.textContent).toContain("السطر المصدر 3 — السياق غير محدد");
+    const retain = screen.getAllByRole("button", { name: /اعتماد/ }) as HTMLButtonElement[];
+    expect(retain).toHaveLength(1);
+    expect(retain[0].disabled).toBe(true);
+  });
+
+  it("يحجب اعتماد سياقات الليفوفلوكساسين والأوفلوكساسين غير المختارة في الصفحة 7", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    const search = screen.getByRole("textbox", { name: "بحث" });
+
+    for (const [term, context] of [
+      ["Lévofloxacine", "التهاب مثانة غير معقد — السطر المصدر 2"],
+      ["Ofloxacine", "عدوى شديدة — السطر المصدر 2"],
+    ]) {
+      fireEvent.change(search, { target: { value: term } });
+      expect(container.textContent).toContain(context);
+      const rowLabel = term === "Lévofloxacine" ? "Lévofloxacine IV PO" : "Ofloxacine IV PO";
+      const row = Array.from(container.querySelectorAll("li.card")).find((candidate) => candidate.textContent?.includes(rowLabel));
+      expect(row).toBeTruthy();
+      const retain = within(row as HTMLElement).getByRole("button", { name: /اعتماد/ }) as HTMLButtonElement;
+      expect(retain.disabled).toBe(true);
+    }
+  });
+
+  it("يحجب اعتماد سياقات الصفحة 8 إلى أن يُجمع السياق أو اختيار النظام", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    const search = screen.getByRole("textbox", { name: "بحث" });
+    const cases = [
+      ["Dalbavancine IV", "Dalbavancine IV", "نظامان بديلان (أو) — لم يُسجّل الاختيار"],
+      ["Teicoplanine IM IV", "Teicoplanine IM IV", "عدوى غير شديدة"],
+      ["Teicoplanine PO", "Teicoplanine PO", "إسهال/التهاب قولون مرتبط بالمطثية العسيرة"],
+      ["Métronidazole PO", "Métronidazole PO", "السطر المصدر 3 — السياق غير محدد"],
+      ["Métronidazole IV", "Métronidazole IV", "السطر المصدر 2 — السياق غير محدد"],
+      ["Ornidazole IV PO", "Ornidazole IV PO", "عدوى بجراثيم لاهوائية"],
+    ];
+
+    for (const [term, rowLabel, context] of cases) {
+      fireEvent.change(search, { target: { value: term } });
+      expect(container.textContent).toContain(context);
+      const row = Array.from(container.querySelectorAll("li.card")).find((candidate) => candidate.textContent?.includes(rowLabel));
+      expect(row).toBeTruthy();
+      const retain = within(row as HTMLElement).getByRole("button", { name: /اعتماد/ }) as HTMLButtonElement;
+      expect(retain.disabled).toBe(true);
+    }
+  });
+
+  it("يحجب الاعتماد حتى جمع السياق في الصفحات 1–4 و9–12", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    const { container } = render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
+    const search = screen.getByRole("textbox", { name: "بحث" });
+    const cases = [
+      ["Amoxicilline PO", "Amoxicilline PO", "السطر المصدر 1 — السياق غير محدد"],
+      ["Ampicilline + Sulbactam IV", "Ampicilline + Sulbactam IV", "عدوى Acinetobacter spp"],
+      ["Aztréonam IM", "Aztréonam IM", "عدوى بولية علوية و/أو معقدة"],
+      ["Céfépime IV", "Céfépime IV (*IM possible)", "عدوى شديدة"],
+      ["Spiramycine IV PO", "Spiramycine IV PO", "عن طريق الوريد"],
+      ["Lymecycline PO", "Lymecycline PO", "حب الشباب"],
+      ["Daptomycine IV", "Daptomycine IV", "عدوى شديدة"],
+      ["Rifabutine PO", "Rifabutine PO", "وقاية من عدوى Mycobacterium avium لدى المصابين بفيروس VIH"],
+    ];
+
+    for (const [term, rowLabel, context] of cases) {
+      fireEvent.change(search, { target: { value: term } });
+      expect(container.textContent).toContain(context);
+      const row = Array.from(container.querySelectorAll("li.card")).find((candidate) => candidate.textContent?.includes(rowLabel));
+      expect(row).toBeTruthy();
+      const retain = within(row as HTMLElement).getByRole("button", { name: /اعتماد/ }) as HTMLButtonElement;
+      expect(retain.disabled).toBe(true);
+    }
+  });
+
   it("يقصر تكرار ملاحظة Céfidérocol على عمود الوظيفة الطبيعية", async () => {
     const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
     render(<AtbRenalPage />);
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
     fireEvent.click(screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }));
     fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Céfidérocol" } });
     expect(screen.getByText(/إذا كان الترشيح الكلوي ≥ 120/)).toBeTruthy();
@@ -3062,9 +3342,19 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
   it("يشرح حساب الجرعة وزنيًا ويفصل بين الوزن والحساب الكلوي", async () => {
     const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
     render(<AtbRenalPage />);
+    const explainName = /اشرح هذه النتيجة بالذكاء الاصطناعي/;
     expect(screen.getByText(/تُضرب المقاطع المكتوبة صراحةً بوحدة mg\/kg فقط/)).toBeTruthy();
     expect(screen.getByText(/زر «الوزن المثالي» يغيّر تقدير وظيفة الكلى لا الوزن المستعمل/)).toBeTruthy();
     expect(screen.getByText(/الحدود القصوى الرقمية في النص نفسه/)).toBeTruthy();
     expect(screen.getByText(/هذا الـPDF جدول مُلخّص/)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: explainName })).toBeNull();
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "1.0" } });
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+    fireEvent.change(screen.getByRole("textbox", { name: "بحث" }), { target: { value: "Cloxacilline PO" } });
+
+    expect(screen.getAllByRole("button", { name: explainName }).length).toBeGreaterThan(0);
   });
 });

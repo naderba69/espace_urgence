@@ -8,7 +8,7 @@ import {
   schwartzCkidU25,
   weightsForCg,
 } from "@/lib/renal-clearance";
-import { addDecision, currentDecisions, emptyPlan, LEGACY_PLAN_KEY, nextRound, parsePlan, PLAN_KEY, planToText, removeMolecule } from "@/lib/atb-plan";
+import { addDecision, currentDecisions, emptyPlan, LEGACY_PLAN_KEY, PREVIOUS_PLAN_KEY, nextRound, parsePlan, PLAN_KEY, planToText, removeMolecule } from "@/lib/atb-plan";
 
 describe("CKD-EPI 2021 (adulte, sans ethnie)", () => {
   it("homme 70 ans, 1,2 mg/dL ≈ 65 mL/min/1,73 m²", () => {
@@ -84,11 +84,14 @@ describe("KDIGO — repérage de l'agression aiguë", () => {
     expect(akiKdigo({ scrNow: 3.0, scr7d: 1.0 }).stage).toBe(3);
   });
 
-  it("créatinine ≥4 mg/dL : exige une hausse documentée pour la classer AKI", () => {
+  it("créatinine ≥4 mg/dL : exige une hausse aiguë d'au moins 0,5 mg/dL pour le stade 3", () => {
     expect(akiKdigo({ scrNow: 4.2 }).stage).toBe(0);
-    const raised = akiKdigo({ scrNow: 4.2, scr48h: 4.0 });
-    expect(raised.stage).toBe(3);
-    expect(raised.criteria).toContain("scr-4mg");
+    const smallRise = akiKdigo({ scrNow: 4.2, scr48h: 4.0 });
+    expect(smallRise.stage).toBe(0);
+    expect(smallRise.criteria).not.toContain("scr-4mg");
+    const halfMgRise = akiKdigo({ scrNow: 4.5, scr48h: 4.0 });
+    expect(halfMgRise.stage).toBe(3);
+    expect(halfMgRise.criteria).toContain("scr-4mg");
   });
 
   it("diurèse <0,5 mL/kg/h pendant 6 à <12 h → KDIGO 1", () => {
@@ -119,8 +122,8 @@ describe("KDIGO — repérage de l'agression aiguë", () => {
     expect(akiKdigo({ scrNow: 1.0, urineMlKgH: 0.3, urineHours: 3 }).criteria).toHaveLength(0);
   });
 
-  it("l'épuration extrarénale est un critère KDIGO 3", () => {
-    const r = akiKdigo({ scrNow: 1.0, renalReplacementTherapy: true });
+  it("l'initiation d'une épuration extrarénale pendant l'épisode est un critère KDIGO 3", () => {
+    const r = akiKdigo({ scrNow: 1.0, renalReplacementTherapyInitiated: true });
     expect(r.criteria).toContain("renal-replacement");
     expect(r.stage).toBe(3);
   });
@@ -134,15 +137,33 @@ describe("KDIGO — repérage de l'agression aiguë", () => {
 
 describe("stade DFG — CKD-EPI, Cockcroft séparé, enfant, AKI et dialyse", () => {
   it("adulte stable : CKD-EPI décide (homme 40 ans, 1,0 mg/dL → normorénal)", () => {
-    const r = chooseStage({ ageYears: 40, sexe: "m", weightKg: 75, heightCm: 178, scrMgDl: 1.0 });
+    const r = chooseStage({ ageYears: 40, sexe: "m", weightKg: 75, heightCm: 178, scrMgDl: 1.0, renalCourse: "stable" });
     expect(r.primary).toBe("ckd-epi");
     expect(r.stage).toBe("normorenal");
     expect(r.refusal).toBeUndefined();
     expect(r.crclCg).not.toBeNull();
   });
 
+  it("une créatinine isolée avec évolution inconnue donne une estimation, jamais un stade de dose", () => {
+    const r = chooseStage({ ageYears: 40, sexe: "m", weightKg: 75, heightCm: 178, scrMgDl: 1.0, renalCourse: "unknown" });
+    expect(r.primary).toBe("ckd-epi");
+    expect(r.egfrCkd).not.toBeNull();
+    expect(r.baseStage).toBe("normorenal");
+    expect(r.stage).toBeNull();
+    expect(r.refusal).toBe("course-unknown");
+    expect(r.warnings.some((warning) => warning.fr.includes("créatinine isolée"))).toBe(true);
+  });
+
+  it("un parcours aigu déclaré bloque même sans critère KDIGO détecté dans les valeurs saisies", () => {
+    const r = chooseStage({ ageYears: 40, sexe: "m", weightKg: 75, heightCm: 178, scrMgDl: 1.0, renalCourse: "acute" });
+    expect(r.aki.stage).toBe(0);
+    expect(r.stage).toBeNull();
+    expect(r.refusal).toBe("declared-acute");
+    expect(r.warnings.some((warning) => warning.fr.includes("parcours aigu"))).toBe(true);
+  });
+
   it("agression aiguë : bloque l'auto-sélection et garde DFG/ClCr séparés", () => {
-    const pt = { ageYears: 85, sexe: "f" as const, weightKg: 42, heightCm: 158 };
+    const pt = { ageYears: 85, sexe: "f" as const, weightKg: 42, heightCm: 158, renalCourse: "stable" as const };
     const stable = chooseStage({ ...pt, scrMgDl: 1.4 });
     const aigu = chooseStage({ ...pt, scrMgDl: 1.4, scr48h: 1.0 });
     expect(stable.stage).toBe("moderee");
@@ -157,32 +178,40 @@ describe("stade DFG — CKD-EPI, Cockcroft séparé, enfant, AKI et dialyse", ()
   });
 
   it("enfant : CKID U25 reste informatif et n'ouvre pas le tableau adulte ; refuse sans taille", () => {
-    const ok = chooseStage({ ageYears: 8, sexe: "m", weightKg: 25, heightCm: 120, scrMgDl: 0.5 });
+    const ok = chooseStage({ ageYears: 8, sexe: "m", weightKg: 25, heightCm: 120, scrMgDl: 0.5, renalCourse: "stable" });
     expect(ok.primary).toBe("ckid");
     expect(ok.egfrCkid!).toBeCloseTo(99.1, 1);
     expect(ok.stage).toBeNull();
     expect(ok.refusal).toBe("pediatric");
     expect(ok.warnings.some((w) => w.fr.includes("réservé aux adultes"))).toBe(true);
 
-    const refus = chooseStage({ ageYears: 8, sexe: "m", weightKg: 25, scrMgDl: 0.5 });
+    const refus = chooseStage({ ageYears: 8, sexe: "m", weightKg: 25, scrMgDl: 0.5, renalCourse: "stable" });
     expect(refus.refusal).toBe("height");
   });
 
   it("dialyse/épuration extrarénale : hors périmètre, aucun stade du tableau même sans bilans", () => {
     const r = chooseStage({
-      ageYears: 70, sexe: "m", weightKg: 70, scrMgDl: 1.0, onRenalReplacementTherapy: true,
+      ageYears: 70, sexe: "m", weightKg: 70, scrMgDl: 1.0, renalCourse: "stable", onRenalReplacementTherapy: true,
     });
     expect(r.refusal).toBe("dialysis");
     expect(r.stage).toBeNull();
-    expect(r.aki.stage).toBe(3);
-    expect(r.aki.criteria).toContain("renal-replacement");
+    expect(r.aki.stage).toBe(0);
+    expect(r.aki.criteria).not.toContain("renal-replacement");
     expect(r.warnings.some((warning) => warning.fr.includes("hors du périmètre"))).toBe(true);
+
+    const initiated = chooseStage({
+      ageYears: 70, sexe: "m", weightKg: 70, scrMgDl: 1.0, renalCourse: "acute",
+      onRenalReplacementTherapy: true, renalReplacementTherapyInitiated: true,
+    });
+    expect(initiated.refusal).toBe("dialysis");
+    expect(initiated.aki.stage).toBe(3);
+    expect(initiated.aki.criteria).toContain("renal-replacement");
   });
 
   it("entrées incomplètes ou non finies : refus explicite, aucun stade normal inventé", () => {
-    expect(chooseStage({ ageYears: 0, sexe: "m", weightKg: 70, scrMgDl: 1 }).refusal).toBe("inputs");
-    expect(chooseStage({ ageYears: 70, sexe: "m", weightKg: 70, scrMgDl: 0 }).refusal).toBe("inputs");
-    const invalid = chooseStage({ ageYears: 70, sexe: "m", weightKg: 70, scrMgDl: Number.NaN });
+    expect(chooseStage({ ageYears: 0, sexe: "m", weightKg: 70, scrMgDl: 1, renalCourse: "stable" }).refusal).toBe("inputs");
+    expect(chooseStage({ ageYears: 70, sexe: "m", weightKg: 70, scrMgDl: 0, renalCourse: "stable" }).refusal).toBe("inputs");
+    const invalid = chooseStage({ ageYears: 70, sexe: "m", weightKg: 70, scrMgDl: Number.NaN, renalCourse: "stable" });
     expect(invalid.refusal).toBe("inputs");
     expect(invalid.stage).toBeNull();
     expect(invalid.baseStage).toBeNull();
@@ -193,7 +222,7 @@ describe("stade DFG — CKD-EPI, Cockcroft séparé, enfant, AKI et dialyse", ()
     const scrMgDl = 0.9 * Math.pow((142 * Math.pow(0.9938, ageYears)) / 30, 1 / 1.2);
     expect(ckdEpi2021(ageYears, scrMgDl, "m")).toBeCloseTo(30, 8);
 
-    const result = chooseStage({ ageYears, sexe: "m", weightKg: 70, scrMgDl });
+    const result = chooseStage({ ageYears, sexe: "m", weightKg: 70, scrMgDl, renalCourse: "stable" });
     expect(result.refusal).toBe("boundary");
     expect(result.stage).toBeNull();
     expect(result.baseStage).toBeNull();
@@ -201,7 +230,7 @@ describe("stade DFG — CKD-EPI, Cockcroft séparé, enfant, AKI et dialyse", ()
   });
 
   it("la ClCr Cockcroft <30 reste séparée et ne change pas la classe DFG du tableau", () => {
-    const result = chooseStage({ ageYears: 85, sexe: "m", weightKg: 50, heightCm: 165, scrMgDl: 1.5 });
+    const result = chooseStage({ ageYears: 85, sexe: "m", weightKg: 50, heightCm: 165, scrMgDl: 1.5, renalCourse: "stable" });
     expect(result.baseStage).toBe("moderee");
     expect(result.stage).toBe("moderee");
     expect(result.egfrCkd).toBeGreaterThan(30);
@@ -210,14 +239,14 @@ describe("stade DFG — CKD-EPI, Cockcroft séparé, enfant, AKI et dialyse", ()
   });
 
   it("poids très bas : CKD-EPI est signalé comme indexé", () => {
-    const r = chooseStage({ ageYears: 75, sexe: "f", weightKg: 38, heightCm: 165, scrMgDl: 1.1 });
+    const r = chooseStage({ ageYears: 75, sexe: "f", weightKg: 38, heightCm: 165, scrMgDl: 1.1, renalCourse: "stable" });
     expect(r.warningKey).toBe("indexed-low-weight");
     expect(r.warnings.some((w) => w.ar.includes("مفهرسة"))).toBe(true);
   });
 
   it("poids idéal coché : Cockcroft-Gault plafonne au poids idéal", () => {
-    const libre = chooseStage({ ageYears: 60, sexe: "m", weightKg: 110, heightCm: 175, scrMgDl: 1.2 });
-    const ideal = chooseStage({ ageYears: 60, sexe: "m", weightKg: 110, heightCm: 175, scrMgDl: 1.2, useIdealWeight: true });
+    const libre = chooseStage({ ageYears: 60, sexe: "m", weightKg: 110, heightCm: 175, scrMgDl: 1.2, renalCourse: "stable" });
+    const ideal = chooseStage({ ageYears: 60, sexe: "m", weightKg: 110, heightCm: 175, scrMgDl: 1.2, renalCourse: "stable", useIdealWeight: true });
     expect(ideal.crclCg!).toBeLessThan(libre.crclCg!);
   });
 });
@@ -244,13 +273,15 @@ describe("plan a → b (décisions itératives)", () => {
     expect(plan.entries).toHaveLength(0);
   });
 
-  it("invalide les anciens snapshots : nouveau format v2, plan vide plutôt qu'erreur", () => {
+  it("invalide les snapshots v1/v2 après la revue des contextes et conserve un format v3", () => {
     const entry = { id: "a", round: 1, decision: "retenue" };
-    expect(PLAN_KEY).toBe("eutn:atb-plan-v2");
+    expect(PLAN_KEY).toBe("eutn:atb-plan-v3");
+    expect(PREVIOUS_PLAN_KEY).toBe("eutn:atb-plan-v2");
     expect(LEGACY_PLAN_KEY).toBe("eutn:atb-plan-v1");
-    expect(emptyPlan().version).toBe(2);
+    expect(emptyPlan().version).toBe(3);
     expect(parsePlan({ version: 1, entries: [entry] }).entries).toHaveLength(0);
-    expect(parsePlan({ version: 2, entries: [entry] }).entries).toHaveLength(1);
+    expect(parsePlan({ version: 2, entries: [entry] }).entries).toHaveLength(0);
+    expect(parsePlan({ version: 3, entries: [entry] }).entries).toHaveLength(1);
     expect(parsePlan("nope").entries).toHaveLength(0);
   });
 

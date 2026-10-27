@@ -23,6 +23,7 @@ STAGE_LABELS = {
     "terminale": ("IRC terminale (DFG < 15)", "قصور كلوي نهائي (DFG < 15)"),
 }
 AMBIGUOUS_SOURCE_CELL = "Cellules source multiples — consulter la note; aucune dose unique retenue"
+UNASSIGNED_CONTEXT_CELL = "Contexte source non attribué — vérifier; aucune dose unique retenue"
 
 # ── 1. الأقسام / Sections ────────────────────────────────────────────────────────────────
 SECTIONS_AR = {
@@ -115,20 +116,305 @@ PATCH = {
     },
     "Gentamicine IM IV": {"lines": [["3 à 8 mg/kg/j", *([MERGED_CELL_MARKER] * 4)]], "group": "aminosides"},
     "Tobramycine IM IV": {"lines": [["3 à 8 mg/kg/j", *([MERGED_CELL_MARKER] * 4)]], "group": "aminosides"},
+    # Les lignes de lévofloxacine et d'ofloxacine distinguent des contextes explicites,
+    # mais le sélecteur ne recueille pas l'indication : conserver les lignes et bloquer « Retenir ».
+    "Lévofloxacine IV PO": {
+        "line_contexts": [
+            {"fr": "Schéma général — ligne source 1", "ar": "النظام العام — السطر المصدر 1"},
+            {"fr": "Cystite non compliquée — ligne source 2", "ar": "التهاب مثانة غير معقد — السطر المصدر 2"},
+        ],
+        "context_review_required": True,
+    },
+    "Ofloxacine IV PO": {
+        "line_contexts": [
+            {"fr": "Dose usuelle — ligne source 1", "ar": "الجرعة المعتادة — السطر المصدر 1"},
+            {"fr": "Infection sévère — ligne source 2", "ar": "عدوى شديدة — السطر المصدر 2"},
+        ],
+        "context_review_required": True,
+    },
+    # p.8 : alternatives et indications explicites, mais l'interface ne recueille pas
+    # encore le schéma ou le contexte clinique correspondant.
+    "Dalbavancine IV": {
+        "line_contexts": [{"fr": "Deux schémas alternatifs (OU) — choix non recueilli", "ar": "نظامان بديلان (أو) — لم يُسجّل الاختيار"}],
+        "context_review_required": True,
+    },
+    "Teicoplanine IM IV": {
+        "line_contexts": [
+            {"fr": "Infection peu sévère", "ar": "عدوى غير شديدة"},
+            {"fr": "Infection sévère", "ar": "عدوى شديدة"},
+        ],
+        "context_review_required": True,
+    },
+    "Teicoplanine PO": {
+        "line_contexts": [{"fr": "Diarrhée/colite à Clostridium difficile", "ar": "إسهال/التهاب قولون مرتبط بالمطثية العسيرة"}],
+        "context_review_required": True,
+    },
+    "Ornidazole IV PO": {
+        "line_contexts": [{"fr": "Infection à germes anaérobies", "ar": "عدوى بجراثيم لاهوائية"}],
+        "context_review_required": True,
+    },
+    "Métronidazole PO": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"},
+            {"fr": "Ligne source 3 — contexte non précisé", "ar": "السطر المصدر 3 — السياق غير محدد"},
+        ],
+        "context_review_required": True,
+    },
+    "Métronidazole IV": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"},
+        ],
+        "context_review_required": True,
+    },
+    # p.1 : plusieurs lignes de posologie sans indication/contextualisation propre au PDF.
+    # Afficher leur numéro source, mais ne pas choisir arbitrairement la première.
+    "Amoxicilline PO": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"},
+        ],
+        "context_review_required": True,
+    },
+    "Amoxicilline IV": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"},
+        ],
+        "context_review_required": True,
+    },
+    "Amoxicilline + acide clavulanique IV": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"},
+        ],
+        "context_review_required": True,
+    },
+    # p.2 : distinguer l'indication explicitement écrite et les schémas sans contexte décrit.
+    "Ampicilline + Sulbactam IV": {
+        "line_contexts": [
+            {"fr": "Posologie usuelle", "ar": "الجرعة المعتادة"},
+            {"fr": "Infection à Acinetobacter spp", "ar": "عدوى Acinetobacter spp"},
+        ],
+        "context_review_required": True,
+    },
+    "Benzathine benzylpenicilline IM": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"},
+        ],
+        "context_review_required": True,
+    },
+    "Cloxacilline IV": {
+        "line_contexts": [{"fr": "Deux modalités alternatives (OU) — choix non recueilli", "ar": "طريقتان بديلتان (أو) — لم يُسجّل الاختيار"}],
+        "context_review_required": True,
+    },
+    "Oxacilline IV": {
+        "line_contexts": [{"fr": "Deux modalités alternatives (OU) — choix non recueilli", "ar": "طريقتان بديلتان (أو) — لم يُسجّل الاختيار"}],
+        "context_review_required": True,
+    },
+    # p.4 : choisir parmi les indications de ces lignes nécessite une donnée que l'interface ne demande pas.
+    "Céfazoline IM IV": {
+        "line_contexts": [
+            {"fr": "Infection peu sévère", "ar": "عدوى غير شديدة"},
+            {"fr": "Infection sévère", "ar": "عدوى شديدة"},
+        ],
+        "context_review_required": True,
+    },
+    "Céfépime IV (*IM possible)": {
+        "line_contexts": [
+            {"fr": "Infection respiratoire communautaire / pyélonéphrite non compliquée", "ar": "عدوى تنفسية مكتسبة من المجتمع / التهاب حويضة وكلية غير معقد"},
+            {"fr": "Infection sévère", "ar": "عدوى شديدة"},
+            {"fr": "Infection très sévère", "ar": "عدوى شديدة جدًا"},
+        ],
+        "context_review_required": True,
+    },
+    "Céfotaxime IM IV": {
+        "line_contexts": [
+            {"fr": "Posologie standard", "ar": "الجرعة المعتادة"},
+            {"fr": "Infection ostéo-articulaire", "ar": "عدوى العظام والمفاصل"},
+            {"fr": "Infection méningée", "ar": "عدوى سحائية"},
+        ],
+        "context_review_required": True,
+    },
     # La première cellule est fusionnée sur les cinq stades ; seule la seconde ligne porte
     # ½ dose en sévère et ¼ dose en terminale. Ne pas propager cette réduction à la cystite.
-    "Aztréonam IM": {"lines": [
-        ["Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"] * 5,
-        ["Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "½ dose", "¼ dose"],
-    ]},
-    "Aztréonam IV": {"lines": [
-        ["Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "DC de 2 g puis 500 mg à 1 g/8h", "DC de 2 g puis 250 à 500 mg/8h"],
-        ["Infection sévère : 2 g/6h ou 8 g/24h en continue", "Infection sévère : 2 g/6h ou 8 g/24h en continue", "Infection sévère : 2 g/6h ou 8 g/24h en continue", "DC de 2 g puis 1 g/6h ou 4 g/24h en continue", "DC de 2 g puis 500 mg/6h ou 2 g/24h en continue"],
-    ]},
-    "Ceftolozane + tazobactam IV": {"lines": [
-        ["1 g/8h en perfusion de 60 min", "1 g/8h en perfusion de 60 min", "500 mg/8h", "250 mg /8h", "DC de 500 mg puis 8h plus tard 100 mg/8h"],
-        ["Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "1 g/8h", "500 mg/8h", "DC 1500 mg puis 8h plus tard 300 mg/8h"],
-    ]},
+    "Aztréonam IM": {
+        "lines": [
+            ["Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"] * 5,
+            ["Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "½ dose", "¼ dose"],
+        ],
+        "line_contexts": [
+            {"fr": "Cystite aiguë ou infection gonococcique non compliquée", "ar": "التهاب مثانة حاد أو عدوى سيلانية غير معقدة"},
+            {"fr": "Infection urinaire haute et/ou compliquée", "ar": "عدوى بولية علوية و/أو معقدة"},
+        ],
+        "context_review_required": True,
+    },
+    "Aztréonam IV": {
+        "lines": [
+            ["Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "DC de 2 g puis 500 mg à 1 g/8h", "DC de 2 g puis 250 à 500 mg/8h"],
+            ["Infection sévère : 2 g/6h ou 8 g/24h en continue", "Infection sévère : 2 g/6h ou 8 g/24h en continue", "Infection sévère : 2 g/6h ou 8 g/24h en continue", "DC de 2 g puis 1 g/6h ou 4 g/24h en continue", "DC de 2 g puis 500 mg/6h ou 2 g/24h en continue"],
+        ],
+        "line_contexts": [
+            {"fr": "Infection peu sévère", "ar": "عدوى غير شديدة"},
+            {"fr": "Infection sévère", "ar": "عدوى شديدة"},
+        ],
+        "context_review_required": True,
+    },
+    # p.3 : administration continue et discontinue, ainsi que les infections urinaires,
+    # ont des contextes différents que l'interface ne recueille pas.
+    "Témocilline IV": {
+        "line_contexts": [
+            {"fr": "Administration intermittente — ligne source 1", "ar": "إعطاء متقطع — السطر المصدر 1"},
+            {"fr": "Administration continue — ligne source 2", "ar": "إعطاء مستمر — السطر المصدر 2"},
+        ],
+        "context_review_required": True,
+    },
+    # p.9 : indication, dosage PO alternatif ou voie d'administration à préciser.
+    "Azithromycine PO": {
+        "line_contexts": [{"fr": "Schémas selon l'indication — choix non recueilli", "ar": "أنظمة بحسب الاستطباب — لم يُسجّل الاختيار"}],
+        "context_review_required": True,
+    },
+    "Clarithromycine PO": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"},
+        ],
+        "context_review_required": True,
+    },
+    "Spiramycine IV PO": {
+        "line_contexts": [
+            {"fr": "Voie orale", "ar": "عن طريق الفم"},
+            {"fr": "Voie intraveineuse", "ar": "عن طريق الوريد"},
+        ],
+        "context_review_required": True,
+    },
+    # p.10 : ces posologies sont liées à l'indication, au poids ou à des lignes source distinctes.
+    "Sulfadiazine PO": {
+        "line_contexts": [{"fr": "Préventif / curatif — choix non recueilli", "ar": "وقائي / علاجي — لم يُسجّل الاختيار"}],
+        "context_review_required": True,
+    },
+    "Triméthoprime PO": {
+        "line_contexts": [{"fr": "Cystite aiguë non compliquée", "ar": "التهاب مثانة حاد غير معقد"}],
+        "context_review_required": True,
+    },
+    "Doxycycline IV PO": {
+        "line_contexts": [{"fr": "Tranche de poids et indication — choix non recueilli", "ar": "فئة الوزن والاستطباب — لم يُسجّل الاختيار"}],
+        "context_review_required": True,
+    },
+    "Lymecycline PO": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Acné", "ar": "حب الشباب"},
+        ],
+        "context_review_required": True,
+    },
+    "Tigécycline IV": {
+        "line_contexts": [
+            {"fr": "Infection non sévère", "ar": "عدوى غير شديدة"},
+            {"fr": "Infection sévère", "ar": "عدوى شديدة"},
+        ],
+        "context_review_required": True,
+    },
+    # p.11 : distinguer le niveau de sévérité et l'indication ciblée.
+    "Daptomycine IV": {
+        "line_contexts": [
+            {"fr": "Infection non sévère", "ar": "عدوى غير شديدة"},
+            {"fr": "Infection sévère", "ar": "عدوى شديدة"},
+        ],
+        "context_review_required": True,
+    },
+    "Fosfomycine trométamol PO": {
+        "line_contexts": [{"fr": "Cystite aiguë non compliquée — femme/adolescente de plus de 12 ans", "ar": "التهاب مثانة حاد غير معقد — امرأة/مراهقة فوق 12 سنة"}],
+        "context_review_required": True,
+    },
+    "Linezolide IV PO": {
+        "line_contexts": [
+            {"fr": "Schéma standard — ligne source 1", "ar": "النظام المعتاد — السطر المصدر 1"},
+            {"fr": "Infection grave de réanimation", "ar": "عدوى شديدة في الإنعاش"},
+        ],
+        "context_review_required": True,
+    },
+    # p.12 : indications curative/préventive et tuberculose/germes Gram sont explicites.
+    "Rifabutine PO": {
+        "line_contexts": [
+            {"fr": "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+", "ar": "علاج عدوى Mycobacterium avium لدى المصابين بفيروس VIH"},
+            {"fr": "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+", "ar": "وقاية من عدوى Mycobacterium avium لدى المصابين بفيروس VIH"},
+        ],
+        "context_review_required": True,
+    },
+    # Trois lignes source distinctes sans indication/contextualisation explicite dans le PDF.
+    # Les garder visibles mais bloquer l'enregistrement d'un régime unique.
+    "Imipénem + cilastatine IV": {
+        "line_contexts": [
+            {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"},
+            {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"},
+            {"fr": "Ligne source 3 — contexte non précisé", "ar": "السطر المصدر 3 — السياق غير محدد"},
+        ],
+        "context_review_required": True,
+    },
+    # Les deux lignes sont des indications distinctes ; l'interface ne recueille pas encore ce contexte.
+    "Céfoxitine IV": {
+        "line_contexts": [
+            {"fr": "Infection peu grave", "ar": "Infection peu grave"},
+            {"fr": "Infection grave et/ou CMI > 8 mg/L", "ar": "Infection grave et/ou CMI > 8 mg/L"},
+        ],
+        "context_review_required": True,
+        # Seule la première ligne est ambiguë en DFG modéré/terminal ; ne pas remplacer la
+        # cellule fusionnée « Aucune donnée » de la seconde ligne par un marqueur d'ambiguïté.
+        "ambiguous_output_lines_by_stage": {"moderee": [0], "terminale": [0]},
+    },
+    # Deux modes d'administration distincts : le sélecteur ne recueille pas lequel s'applique.
+    "Ceftazidime IM IV": {
+        "line_contexts": [
+            {"fr": "Administration discontinue", "ar": "Administration discontinue"},
+            {"fr": "Administration continue", "ar": "Administration continue"},
+        ],
+        "context_review_required": True,
+    },
+    "Ceftazidime + avibactam IV": {
+        "line_contexts": [
+            {"fr": "Administration discontinue", "ar": "Administration discontinue"},
+            {"fr": "Administration continue", "ar": "Administration continue"},
+        ],
+        "context_review_required": True,
+    },
+    "Ceftolozane + tazobactam IV": {
+        "lines": [
+            ["1 g/8h en perfusion de 60 min", "1 g/8h en perfusion de 60 min", "500 mg/8h", "250 mg /8h", "DC de 500 mg puis 8h plus tard 100 mg/8h"],
+            ["Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "1 g/8h", "500 mg/8h", "DC 1500 mg puis 8h plus tard 300 mg/8h"],
+        ],
+        "line_contexts": [
+            {"fr": "Schéma standard", "ar": "Schéma standard"},
+            {"fr": "Pneumonie nosocomiale — contexte conditionnel", "ar": "Pneumonie nosocomiale — contexte conditionnel"},
+        ],
+        "context_review_required": True,
+    },
+    "Cotrimoxazole IV PO": {
+        "extra_notes": [{
+            "fr": "Avertissement BACTRIM FORTE (notice tunisienne TERIAK, AMM 9253082) : la notice demande une adaptation en insuffisance rénale et prévoit un contrôle de la kaliémie chez certains patients à risque, sans préciser de seuils rénaux. Le RCP ANSM français de BACTRIM FORTE utilise la clairance de la créatinine, mais ne constitue pas le RCP tunisien : ne transposez pas ses seuils au DFG indexé ni à une autre spécialité ; vérifiez la notice/RCP exact. L'ANSM signale aussi une surestimation de la créatinine d'environ 10 % avec la méthode à l'acide picrique.",
+            "ar": "Avertissement BACTRIM FORTE (notice tunisienne TERIAK, AMM 9253082) : la notice demande une adaptation en insuffisance rénale et prévoit un contrôle de la kaliémie chez certains patients à risque, sans préciser de seuils rénaux. Le RCP ANSM français de BACTRIM FORTE utilise la clairance de la créatinine, mais ne constitue pas le RCP tunisien : ne transposez pas ses seuils au DFG indexé ni à une autre spécialité ; vérifiez la notice/RCP exact. L'ANSM signale aussi une surestimation de la créatinine d'environ 10 % avec la méthode à l'acide picrique."
+        }],
+    },
+    # p.5 : le PDF a une seule ligne tabulaire ; la cellule de référence juxtapose le schéma
+    # de base et la variante « infection sévère ». Les cellules rénales ne portent pas ce
+    # contexte sévère : ne pas leur attribuer ces valeurs par extrapolation.
+    "Ceftobiprole IV": {
+        "lines": [
+            ["500 mg /8h en perfusion de 2h", "500 mg /8h en perfusion de 2h", AMBIGUOUS_SOURCE_CELL, "250 mg/12h", "250 mg/24h"],
+            ["Si infection sévère : 1 g/8h en perfusion de 4h", "Si infection sévère : 1 g/8h en perfusion de 4h", UNASSIGNED_CONTEXT_CELL, UNASSIGNED_CONTEXT_CELL, UNASSIGNED_CONTEXT_CELL],
+        ],
+        "line_contexts": [
+            {"fr": "Schéma de base — lecture structurée", "ar": "الجرعة الأساسية — تنظيم بنيوي"},
+            {"fr": "Variante conditionnelle : infection sévère", "ar": "صيغة مشروطة: عدوى شديدة"},
+        ],
+        "context_review_required": True,
+        "extra_notes": [{
+            "fr": "Lecture structurée de la cellule source unique (p.5) : elle juxtapose 500 mg/8h en perfusion de 2h et « Si infection sévère : 1 g/8h en perfusion de 4h ». Les cellules rénales indiquent ensuite 500 mg/12h, 250 mg/12h et 250 mg/24h sans reprendre le libellé sévère ; aucune de ces valeurs rénales n'est attribuée à la variante sévère. Le schéma sévère n'a donc pas d'adaptation rénale sélectionnée automatiquement.",
+            "ar": "تنظيم بنيوي للخلية المصدرية الوحيدة (ص.5): تجمع 500 مغ كل 8 ساعات بتسريب ساعتين و«إذا كانت العدوى شديدة: 1 غ كل 8 ساعات بتسريب 4 ساعات». تذكر الخلايا الكلوية التالية 500 مغ كل 12 ساعة و250 مغ كل 12 ساعة و250 مغ كل 24 ساعة من دون تكرار وصف العدوى الشديدة؛ لذلك لم تُسنَد أي من هذه القيم الكلوية إلى الصيغة الشديدة. لم تُختَر آليًا أي ملاءمة كلوية للصيغة الشديدة.",
+        }],
+    },
     # la cellule couvre tous les stades : c'est une consigne, pas une dose par stade
     "Ceftriaxone IM IV": {"info": [["Infection modérée : 1 à 2 g/24h — Infection sévère : 2 à 4 g/24h — Si infection neuroméningée : 75 à 100 mg/kg/24h ; Aucune donnée chez l'insuffisant rénal"]]},
     # La surveillance des fortes doses est une consigne clinique (pas une posologie) :
@@ -136,16 +422,24 @@ PATCH = {
     "Méropénem IV": {"move_lines_containing_to_notes": ["monitorage pharmacologique"]},
     # L'extraction des exposants « 2ème/3ème » sur la p.12 désordonne les spans ;
     # recopier ici le texte lu dans la cellule (sans altérer la consigne de prise).
-    "Rifampicine IV PO": {"source_text_correction": True, "lines": [
-        ["Tuberculose : 8 à 12 mg/kg/24h"] * 5,
-        [
-            "Infection à germes gram + ou - : 20 à 30 mg/kg/24h",
-            "Infection à germes gram + ou - : 20 à 30 mg/kg/24h",
-            "espacer les prises si besoin selon rifampicémie du 2ᵉ ou 3ᵉ jour du traitement",
-            "espacement des prises indispensable",
-            "espacement des prises indispensable",
+    "Rifampicine IV PO": {
+        "source_text_correction": True,
+        "lines": [
+            ["Tuberculose : 8 à 12 mg/kg/24h"] * 5,
+            [
+                "Infection à germes gram + ou - : 20 à 30 mg/kg/24h",
+                "Infection à germes gram + ou - : 20 à 30 mg/kg/24h",
+                "espacer les prises si besoin selon rifampicémie du 2ᵉ ou 3ᵉ jour du traitement",
+                "espacement des prises indispensable",
+                "espacement des prises indispensable",
+            ],
         ],
-    ]},
+        "line_contexts": [
+            {"fr": "Tuberculose", "ar": "السل"},
+            {"fr": "Infection à germes Gram + ou -", "ar": "عدوى بجراثيم موجبة أو سالبة الغرام"},
+        ],
+        "context_review_required": True,
+    },
 }
 
 SUPERSCRIPT = {"2me": "2ᵉ", "3me": "3ᵉ"}
@@ -199,7 +493,7 @@ AR_NAMES = {
  "Pristinamycine PO": "بريستيناميسين فموي", "Roxithromycine PO": "روكسيثروميسين فموي",
  "Spiramycine IV PO": "سبيرامايسين وريدي/فموي",
  "Spiramycine + Métronidazole PO": "سبيرامايسين + ميترونيدازول فموي",
- "Cotrimoxazole IV PO": "كوتريموكسازول وريدي/فموي", "Sulfadiazine PO": "سلفاديازين فموي",
+ "Cotrimoxazole IV PO": "Cotrimoxazole IV PO", "Sulfadiazine PO": "سلفاديازين فموي",
  "Triméthoprime PO": "تريميثوبريم فموي", "Doxycycline IV PO": "دوكسيسيكلين وريدي/فموي",
  "Lymecycline PO": "لايميسيكلين فموي", "Minocycline PO": "مينوسيكلين فموي", "Tigécycline IV": "تيجيسيكلين وريدي",
  "Acide Fusidique IV PO": "حمض الفوسيديك وريدي/فموي",
@@ -260,6 +554,11 @@ for r in ROWS:
                 lines.append({"kind": "info", "d": [vals[0]] * 5})
             else:
                 lines.append({"kind": "dose", "d": vals})
+    line_contexts = patch.get("line_contexts", [])
+    if line_contexts and len(line_contexts) != len(lines):
+        raise ValueError(f"{label}: line_contexts must match the generated lines")
+    for line, context in zip(lines, line_contexts):
+        line["context"] = {"fr": clean(context["fr"]), "ar": context["ar"]}
     # Une grande tranche de DFG peut recouvrir plusieurs cellules avec des textes distincts.
     # Garder toutes les chaînes source, mais ne sélectionner aucune dose unique dans cette tranche.
     ambiguity_by_stage = {}
@@ -299,7 +598,13 @@ for r in ROWS:
             continue
         stage_index = KEY.index(stage)
         stage_fr, stage_ar = STAGE_LABELS[stage]
-        for line in lines:
+        output_line_indexes = patch.get("ambiguous_output_lines_by_stage", {}).get(stage)
+        if output_line_indexes is None:
+            output_line_indexes = range(len(lines))
+        if any(not isinstance(index, int) or index < 0 or index >= len(lines) for index in output_line_indexes):
+            raise ValueError(f"{label}: ambiguous output-line index is out of range for {stage}")
+        for output_line_index in output_line_indexes:
+            line = lines[output_line_index]
             if line["kind"] == "dose":
                 line["d"][stage_index] = AMBIGUOUS_SOURCE_CELL
         notes.append({
@@ -317,7 +622,7 @@ for r in ROWS:
         if isinstance(extra, str):
             extra = {"fr": extra}
         phrase = clean(extra["fr"])
-        item = {"fr": phrase, "ar": NOTES_AR.get(phrase, "")}
+        item = {"fr": phrase, "ar": extra.get("ar") or NOTES_AR.get(phrase, "")}
         if extra.get("stages"):
             item["stages"] = extra["stages"]
         notes.append(item)
@@ -341,6 +646,7 @@ for r in ROWS:
         sid = f"{sid}-{seen_ids[sid]}"
     out_rows.append({"id": sid, "fr": label, "ar": ar, "section": SECTION_IDS[sec_fr], "page": r["page"],
                      "lines": lines, "notes": [n for n in notes if n.get("fr")],
+                     "requires_context_review": bool(patch.get("context_review_required")),
                      "audit": {
                          "source_review": bool(r.get("review")),
                          "source_line_review": [i for i, line in enumerate(r.get("lines", []), 1) if line.get("review")],
@@ -397,6 +703,8 @@ def ts_lines():
     yield 'export interface AtbRenalLine {'
     yield '  /** "dose" = schéma posologique ; "info" = consigne/limite valable pour tous les stades. */'
     yield '  kind: "dose" | "info";'
+    yield '  /** Contexte explicitement séparé lors de la structuration de la cellule source. */'
+    yield '  context?: { fr: string; ar: string };'
     yield '  /** القيم بترتيب ATB_RENAL_STAGES — d[0] للمرحلة الطبيعية … d[4] للمرحلة النهائية. */'
     yield '  d: [string, string, string, string, string];'
     yield '}'
@@ -409,6 +717,8 @@ def ts_lines():
     yield '  /** رقم الصفحة في الملف المصدر (للتحقق اليدوي السريع). */'
     yield '  page: number;'
     yield '  lines: AtbRenalLine[];'
+    yield "  /** Contexte clinique à confirmer avant d'enregistrer une décision de dose. */"
+    yield '  contextReviewRequired?: boolean;'
     yield '  notes: { fr: string; ar: string; stages?: AtbStageId[] }[];'
     yield '}'
     yield ''
@@ -421,10 +731,13 @@ def ts_lines():
         yield f'    ar: "{row["ar"]}",'
         yield f'    section: "{row["section"]}",'
         yield f'    page: {row["page"]},'
+        if row.get("requires_context_review"):
+            yield '    contextReviewRequired: true,'
         yield '    lines: ['
         for l in row["lines"]:
             d = ", ".join(json.dumps(v, ensure_ascii=False) for v in l["d"])
-            yield f'      {{ kind: "{l["kind"]}", d: [{d}] }},'
+            context = f', context: {json.dumps(l["context"], ensure_ascii=False)}' if l.get("context") else ""
+            yield f'      {{ kind: "{l["kind"]}"{context}, d: [{d}] }},'
         yield '    ],'
         if row["notes"]:
             yield '    notes: ['

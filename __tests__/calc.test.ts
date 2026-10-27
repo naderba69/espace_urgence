@@ -8,6 +8,7 @@ import {
   doseLadder, sbtPassed, extubationOk, mgso4GPerMl, BROSELOW, weightDoseForWeight,
 } from "../lib/calc";
 import { searchItems, loadSearchIndex } from "../lib/search";
+import { getMedication } from "../data/medications";
 import { MED_TOOLS, pumpCfgFromPerfusion } from "../data/med-tools";
 
 describe("saisie décimale des poids", () => {
@@ -390,6 +391,367 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     await loadSearchIndex(); // v17.0 — index chargé à la demande
     const keys = searchItems("aguettant", 5).map((i) => i.key);
     expect(keys).toContain("medicament:adrenaline");
+
+    const xylocaineKeys = searchItems("xylocaine", 10).map((i) => i.key);
+    expect(xylocaineKeys).not.toContain("medicament:lidocaine");
+    expect(searchItems("lidocaine", 10).map((i) => i.key)).toContain("medicament:lidocaine");
+    expect(getMedication("lidocaine")?.brands).toBeFalsy();
+    expect(searchItems("lidoca", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("lidoject", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("docaine", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("unicaine", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+
+    const atroventKeys = searchItems("atrovent", 10).map((i) => i.key);
+    expect(atroventKeys).not.toContain("medicament:ipratropium");
+    for (const brand of ["atropine saiph", "atropine sulfate aguettant", "atropinum sulfuricum"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:atropine");
+    }
+    expect(searchItems("atropine unimed collyre", 10).map((i) => i.key)).not.toContain("medicament:atropine");
+    expect(searchItems("atropine", 10).map((i) => i.key)).toContain("medicament:atropine");
+    expect(getMedication("atropine")?.brands).toContain("10793011H");
+    expect(searchItems("neophrine", 10).map((i) => i.key)).not.toContain("medicament:phenylephrine");
+    expect(searchItems("panadol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("panadol extra", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("physiol", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("polyionique", 10).map((i) => i.key)).not.toContain("medicament:chlorure-potassium");
+    expect(searchItems("prizma", 10).map((i) => i.key)).not.toContain("medicament:piperacilline-tazobactam");
+    expect(searchItems("stragen", 10).map((i) => i.key)).not.toContain("medicament:piperacilline-tazobactam");
+    expect(searchItems("tazocilline", 10).map((i) => i.key)).not.toContain("medicament:piperacilline-tazobactam");
+    expect(searchItems("tazobact set de transfert", 10).map((i) => i.key)).not.toContain("medicament:piperacilline-tazobactam");
+    expect(searchItems("tazorex", 10).map((i) => i.key)).not.toContain("medicament:piperacilline-tazobactam");
+    for (const brand of ["gentalline", "gentadar", "unigenta collyre", "unigenta 0.3%", "unigenta 0,3% collyre"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).not.toContain("medicament:gentamicine");
+    }
+    for (const brand of ["genta 80", "gentainject 80", "unigenta 10", "unigenta 160", "cidomycine 20"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:gentamicine");
+    }
+    expect(searchItems("gentamicine", 10).map((i) => i.key)).toContain("medicament:gentamicine");
+    expect(getMedication("gentamicine")?.brands).toContain("9093536");
+    expect(searchItems("vaamox", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("amoclan", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("amoxi plus", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("amoxicilline clavulanique", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("amoxi clav", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("biclavor", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("clavepen", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("clavor", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("amoxicilline", 10).map((i) => i.key)).toContain("medicament:amoxicilline");
+    expect(searchItems("amoxicilline galamox", 10).map((i) => i.key)).toContain("medicament:amoxicilline");
+    expect(searchItems("paracetamol cetamol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol cetradol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("bi amdol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("chlorure de calcium", 10).map((i) => i.key)).not.toContain("medicament:gluconate-calcium");
+    expect(searchItems("calcium", 10).map((i) => i.key)).toContain("medicament:gluconate-calcium");
+    expect(searchItems("lidocaine 1%", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("lidocaine", 10).map((i) => i.key)).toContain("medicament:lidocaine");
+    expect(searchItems("potassium 7.46%", 10).map((i) => i.key)).not.toContain("medicament:chlorure-potassium");
+    expect(searchItems("potassium 500mg", 10).map((i) => i.key)).not.toContain("medicament:chlorure-potassium");
+    expect(searchItems("NaCl 0.9%", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("NaCl 9 p mille", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("NaCl 3%", 10).map((i) => i.key)).toContain("medicament:nacl-hypertonique");
+    expect(searchItems("bicarbonate monosodique 1.4%", 10).map((i) => i.key)).not.toContain("medicament:bicarbonate");
+    expect(searchItems("salamest", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("solution dpca formule 055", 10).map((i) => i.key)).not.toContain("medicament:glucose30");
+    expect(searchItems("solute isotonique glucose", 10).map((i) => i.key)).not.toContain("medicament:glucose30");
+    expect(searchItems("solution dpca formule 055", 10).map((i) => i.key)).not.toContain("medicament:gluconate-calcium");
+    expect(searchItems("solution dpca formule 055", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("smofkabiven e", 10).map((i) => i.key)).not.toContain("medicament:emulsion-lipidique");
+    expect(searchItems("vagilen", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("tergynan", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("tripylori", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("protogyl", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("pylera", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("bi spirazol", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("bi-spirogyl", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metronidazole biogyl", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metronidazole birodogyl", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metronidazole spiramycine", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metronidazole", 10).map((i) => i.key)).toContain("medicament:metronidazole");
+    expect(searchItems("betanyl", 10).map((i) => i.key)).not.toContain("medicament:terbutaline");
+    expect(searchItems("terbutaline bricanyl turbuhaler", 10).map((i) => i.key)).not.toContain("medicament:terbutaline");
+    expect(searchItems("terbutaline", 10).map((i) => i.key)).toContain("medicament:terbutaline");
+    expect(searchItems("salbutamol butalin", 10).map((i) => i.key)).not.toContain("medicament:salbutamol");
+    expect(searchItems("seretide diskus", 10).map((i) => i.key)).not.toContain("medicament:salbutamol");
+    expect(searchItems("spiolto respimat", 10).map((i) => i.key)).not.toContain("medicament:salbutamol");
+    expect(searchItems("symbicort turbuhaler", 10).map((i) => i.key)).not.toContain("medicament:salbutamol");
+    expect(searchItems("ipratropium bronchodual", 10).map((i) => i.key)).not.toContain("medicament:ipratropium");
+    expect(searchItems("seebri breezhaler", 10).map((i) => i.key)).not.toContain("medicament:ipratropium");
+    expect(searchItems("spiriva inhalation", 10).map((i) => i.key)).not.toContain("medicament:ipratropium");
+    expect(searchItems("spiolto respimat", 10).map((i) => i.key)).not.toContain("medicament:ipratropium");
+    expect(searchItems("aspirine cafenol", 10).map((i) => i.key)).not.toContain("medicament:aspirine");
+    expect(searchItems("aspirine cardiocine", 10).map((i) => i.key)).toContain("medicament:aspirine");
+    expect(searchItems("trifed plus", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("vigaspir", 10).map((i) => i.key)).not.toContain("medicament:aspirine");
+    expect(searchItems("windol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("titanoreine", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("rhutagel", 10).map((i) => i.key)).not.toContain("medicament:ketoprofene");
+    expect(searchItems("rhutasuppo", 10).map((i) => i.key)).not.toContain("medicament:ketoprofene");
+    expect(searchItems("ketoprofene ketoprog", 10).map((i) => i.key)).not.toContain("medicament:ketoprofene");
+    expect(searchItems("ketoprofene ketum gel", 10).map((i) => i.key)).not.toContain("medicament:ketoprofene");
+    expect(searchItems("rodogyl", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("rhuvex jour et nuit", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("salbumol", 10).map((i) => i.key)).not.toContain("medicament:salbutamol");
+    expect(searchItems("spasmag iv", 10).map((i) => i.key)).not.toContain("medicament:sulfate-magnesium");
+    expect(searchItems("talin lp", 10).map((i) => i.key)).not.toContain("medicament:terbutaline");
+    expect(searchItems("terbutaline simed", 10).map((i) => i.key)).not.toContain("medicament:terbutaline");
+    expect(searchItems("actrapid", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("actrapid penfill", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("insuline", 10).map((i) => i.key)).toContain("medicament:insuline-rapide");
+    expect(getMedication("insuline-rapide")?.brands).toBeFalsy();
+    expect(searchItems("apidra solostar", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("semglee", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("insuline analogue", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("aftagel", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("albutol", 10).map((i) => i.key)).not.toContain("medicament:salbutamol");
+    expect(searchItems("algesic", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("analgan 500", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("analgan codeine", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("analgan extra", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("analgan jeune enfant", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("analgan nourrissons", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("analgan suppositoire", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("analgan comprimé", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("anapen", 10).map((i) => i.key)).not.toContain("medicament:adrenaline");
+    expect(searchItems("septanest adrenalinee", 10).map((i) => i.key)).not.toContain("medicament:adrenaline");
+    expect(searchItems("atropine unimed", 10).map((i) => i.key)).not.toContain("medicament:atropine");
+    expect(searchItems("atropine collyre", 10).map((i) => i.key)).not.toContain("medicament:atropine");
+    expect(searchItems("ipratropium atroaldo", 10).map((i) => i.key)).not.toContain("medicament:ipratropium");
+    expect(searchItems("iprovent adulte", 10).map((i) => i.key)).toContain("medicament:ipratropium");
+    expect(searchItems("iprovent enfant", 10).map((i) => i.key)).toContain("medicament:ipratropium");
+    expect(searchItems("ketamine panpharma", 10).map((i) => i.key)).toContain("medicament:ketamine");
+    expect(searchItems("amoxicilline augmentin", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("amoxicilline ciblor", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("amoxicilline clavumox", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("co algesic", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("synalvic", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("co algidol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("stopalgic codeine", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("stopalgic extra", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("supradol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("dafalgan", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("dalacine t topic", 10).map((i) => i.key)).not.toContain("medicament:clindamycine");
+    expect(searchItems("dexacol", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    expect(searchItems("dexamex", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    expect(searchItems("ster-dex", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    expect(searchItems("dexamethasone collyre", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    expect(searchItems("medaxon dexamethasone", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    for (const brand of ["dectancyl", "soludecadron", "dexamethasone medis", "dexamedis fort", "dexone 4", "dexone 8", "unidex", "unidex fort"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).not.toContain("medicament:dexamethasone");
+    }
+    expect(getMedication("dexamethasone")?.brands).toBeFalsy();
+    expect(searchItems("natispray", 10).map((i) => i.key)).not.toContain("medicament:trinitrine");
+    expect(searchItems("ناتيسبراي", 10).map((i) => i.key)).not.toContain("medicament:trinitrine");
+    expect(searchItems("nakion g5", 10).map((i) => i.key)).not.toContain("medicament:glucose30");
+    expect(searchItems("nakion g5", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("nakion g5", 10).map((i) => i.key)).not.toContain("medicament:chlorure-potassium");
+    expect(searchItems("natecal d3", 10).map((i) => i.key)).not.toContain("medicament:gluconate-calcium");
+    expect(searchItems("moscontin", 10).map((i) => i.key)).not.toContain("medicament:morphine");
+    expect(searchItems("skenan lp", 10).map((i) => i.key)).not.toContain("medicament:morphine");
+    expect(searchItems("temgesic", 10).map((i) => i.key)).not.toContain("medicament:morphine");
+    expect(searchItems("tramadis", 10).map((i) => i.key)).not.toContain("medicament:morphine");
+    expect(searchItems("tramal", 10).map((i) => i.key)).not.toContain("medicament:morphine");
+    expect(searchItems("maxidrol", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    expect(searchItems("tobracort", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    expect(searchItems("tobradex", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    expect(searchItems("mediclav amoxicilline", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("metronidazole baxter", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metronidazole biosedra", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metronidazole braun", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metrogyl 250", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metronidazole opalia", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("tergynan", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("metrogyl 0.5% solution injectable pour perfusion", 10).map((i) => i.key)).toContain("medicament:metronidazole");
+    expect(searchItems("metroject perfusion", 10).map((i) => i.key)).toContain("medicament:metronidazole");
+    expect(searchItems("metronidazole infomed perfusion", 10).map((i) => i.key)).toContain("medicament:metronidazole");
+    expect(searchItems("adol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("doliprane", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol efferalgan", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("effadol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol fervex", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol fibrex", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol fortadol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol fortalgic", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol fresidol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol goldix", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol gripex", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol klipal codeine", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol lamaline", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol latifex plus", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("gluconate calcium frubiose", 10).map((i) => i.key)).not.toContain("medicament:gluconate-calcium");
+    expect(searchItems("phenobarbital gardenal", 10).map((i) => i.key)).not.toContain("medicament:phenobarbital");
+    expect(searchItems("phenobarbital 50 siphat", 10).map((i) => i.key)).not.toContain("medicament:phenobarbital");
+    expect(searchItems("insuline gensulin r", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("insuline insugen r", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("insuline jusline r", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("insuline jusline n", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("insuline lantus", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("mixtard 30", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("mixtard 30 penfill", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("tresiba flextouch", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("toujeo solostar", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("midazolam aguettant", 10).map((i) => i.key)).not.toContain("medicament:midazolam");
+    expect(searchItems("midazolam steripharm", 10).map((i) => i.key)).not.toContain("medicament:midazolam");
+    expect(searchItems("morphine medis", 10).map((i) => i.key)).not.toContain("medicament:morphine");
+    expect(searchItems("morphine renaudin", 10).map((i) => i.key)).not.toContain("medicament:morphine");
+    expect(searchItems("morphine aguettant", 10).map((i) => i.key)).not.toContain("medicament:morphine");
+    expect(searchItems("morphine", 10).map((i) => i.key)).toContain("medicament:morphine");
+    expect(searchItems("insuline levemir flexpen", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("hydrocortisone biocodex", 10).map((i) => i.key)).not.toContain("medicament:hydrocortisone");
+    expect(searchItems("suranil", 10).map((i) => i.key)).not.toContain("medicament:hydrocortisone");
+    expect(searchItems("hydrocortisone leurquin", 10).map((i) => i.key)).not.toContain("medicament:hydrocortisone");
+    expect(searchItems("heparine unimed", 10).map((i) => i.key)).not.toContain("medicament:heparine");
+    expect(searchItems("glucagen 1 mg", 10).map((i) => i.key)).toContain("medicament:glucagon");
+    expect(searchItems("glucose 5% infomed", 10).map((i) => i.key)).not.toContain("medicament:glucose30");
+    expect(searchItems("glucose 10% siphat", 10).map((i) => i.key)).not.toContain("medicament:glucose30");
+    expect(searchItems("glucosaline info sodium chloride", 10).map((i) => i.key)).not.toContain("medicament:glucose30");
+    expect(searchItems("glucosaline info sodium chloride", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("voluven", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("diluant physiologique phenole", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("glukanion 5", 10).map((i) => i.key)).not.toContain("medicament:glucose30");
+    expect(searchItems("glukanion 5", 10).map((i) => i.key)).not.toContain("medicament:chlorure-potassium");
+    expect(searchItems("gluconate de calcium buvable", 10).map((i) => i.key)).not.toContain("medicament:gluconate-calcium");
+    expect(searchItems("glucalcium calcium", 10).map((i) => i.key)).not.toContain("medicament:gluconate-calcium");
+    expect(searchItems("ketoprofene flexen", 10).map((i) => i.key)).not.toContain("medicament:ketoprofene");
+    expect(searchItems("lidocaine emla", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("dalacine 600 mg injectable", 10).map((i) => i.key)).not.toContain("medicament:clindamycine");
+    expect(searchItems("clindamycine kabi", 10).map((i) => i.key)).not.toContain("medicament:clindamycine");
+    expect(searchItems("dobutamine hikma", 10).map((i) => i.key)).toContain("medicament:dobutamine");
+    expect(searchItems("dobutamine viatris", 10).map((i) => i.key)).toContain("medicament:dobutamine");
+    expect(searchItems("dobuject", 10).map((i) => i.key)).not.toContain("medicament:dobutamine");
+    expect(searchItems("fentanyl", 10).map((i) => i.key)).toContain("medicament:fentanyl");
+    expect(searchItems("durogesic", 10).map((i) => i.key)).not.toContain("medicament:fentanyl");
+    expect(searchItems("fentanyl renaudin", 10).map((i) => i.key)).not.toContain("medicament:fentanyl");
+    expect(searchItems("rapifen", 10).map((i) => i.key)).not.toContain("medicament:fentanyl");
+    expect(searchItems("remifentanil", 10).map((i) => i.key)).not.toContain("medicament:fentanyl");
+    expect(searchItems("fentanyl medis", 10).map((i) => i.key)).not.toContain("medicament:fentanyl");
+    expect(searchItems("fentanyl mylan", 10).map((i) => i.key)).not.toContain("medicament:fentanyl");
+    expect(searchItems("fentanyl piramal", 10).map((i) => i.key)).not.toContain("medicament:fentanyl");
+    expect(searchItems("fentanyl panpharma", 10).map((i) => i.key)).not.toContain("medicament:fentanyl");
+    expect(searchItems("cipro collyre", 10).map((i) => i.key)).not.toContain("medicament:ciprofloxacine");
+    expect(searchItems("cortef", 10).map((i) => i.key)).not.toContain("medicament:hydrocortisone");
+    expect(searchItems("titanoreine lidocaine", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("teico", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("teicoplanine targoplanin", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("tegadis", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("vanco 500", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("vancolon", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("vancomed", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("vancomycine hikma", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("vancomycine kabi", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("vancomycine mylan", 10).map((i) => i.key)).not.toContain("medicament:vancomycine");
+    expect(searchItems("cipro ophtalmique", 10).map((i) => i.key)).not.toContain("medicament:ciprofloxacine");
+    expect(searchItems("ciloxan", 10).map((i) => i.key)).not.toContain("medicament:ciprofloxacine");
+    expect(searchItems("NaCl 10%", 10).map((i) => i.key)).not.toContain("medicament:nacl-hypertonique");
+    expect(searchItems("lidocaine auripax", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("dexamethasone auricularum", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
+    expect(searchItems("axen ketoprofene", 10).map((i) => i.key)).not.toContain("medicament:ketoprofene");
+    expect(searchItems("articaine adrenaline", 10).map((i) => i.key)).not.toContain("medicament:adrenaline");
+    expect(searchItems("primacaine", 10).map((i) => i.key)).not.toContain("medicament:adrenaline");
+    expect(searchItems("ubistesin adrenalinee", 10).map((i) => i.key)).not.toContain("medicament:adrenaline");
+    expect(searchItems("azyter", 10).map((i) => i.key)).not.toContain("medicament:azithromycine");
+    expect(searchItems("azithromycine collyre", 10).map((i) => i.key)).not.toContain("medicament:azithromycine");
+    expect(searchItems("apyrex pediatrique", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol suspension", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("paracetamol novadol", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("novadol extra", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("novex adulte", 10).map((i) => i.key)).not.toContain("medicament:paracetamol");
+    expect(searchItems("novaclav amoxicilline", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
+    expect(searchItems("novomix 30", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("ryzodeg flex touch", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("novorapid flexpen", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
+    expect(searchItems("ogyl metronidazole", 10).map((i) => i.key)).not.toContain("medicament:metronidazole");
+    expect(searchItems("octreotide neapolis", 10).map((i) => i.key)).not.toContain("medicament:octreotide");
+    expect(searchItems("sandostatine lar", 10).map((i) => i.key)).not.toContain("medicament:octreotide");
+    expect(searchItems("somatuline lp", 10).map((i) => i.key)).not.toContain("medicament:octreotide");
+    expect(searchItems("lidocaine orex spray", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("lidocaine otipax", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
+    expect(searchItems("ondofren 8", 10).map((i) => i.key)).not.toContain("medicament:ondansetron");
+    expect(searchItems("ondansetron unimed 8 mg/4 ml", 10).map((i) => i.key)).not.toContain("medicament:ondansetron");
+    expect(searchItems("ondansetron saiph 4 mg/2 ml", 10).map((i) => i.key)).not.toContain("medicament:ondansetron");
+    expect(searchItems("ondansetron medis 8 mg/4 ml", 10).map((i) => i.key)).not.toContain("medicament:ondansetron");
+
+    const brandMatches: Array<[string, string]> = [
+      ["ipnodis", "medicament:midazolam"],
+      ["intralipide", "medicament:emulsion-lipidique"],
+      ["nicardipine medis", "medicament:nicardipine"],
+      ["neurodol", "medicament:haloperidol"],
+      ["nidazol", "medicament:metronidazole"],
+      ["tamizol", "medicament:metronidazole"],
+      ["noraline", "medicament:noradrenaline"],
+      ["norenol", "medicament:noradrenaline"],
+      ["normocardil", "medicament:propranolol"],
+      ["novamox", "medicament:amoxicilline"],
+      ["penamox", "medicament:amoxicilline"],
+      ["pms ondansetron", "medicament:ondansetron"],
+      ["zemitron", "medicament:ondansetron"],
+      ["ondansetron medis comprimé", "medicament:ondansetron"],
+      ["oxytocin grindeks", "medicament:oxytocine"],
+      ["oxytocine panpharma", "medicament:oxytocine"],
+      ["paramed", "medicament:paracetamol"],
+      ["parac info", "medicament:paracetamol"],
+      ["paralgyl", "medicament:paracetamol"],
+      ["piperacilline/tazobactam kabi", "medicament:piperacilline-tazobactam"],
+      ["piperacilline/tazobactam viatris", "medicament:piperacilline-tazobactam"],
+      ["piperacilline-tazobactam sandoz", "medicament:piperacilline-tazobactam"],
+      ["profenid im", "medicament:ketoprofene"],
+      ["propofol fresenius", "medicament:propofol"],
+      ["quinolox", "medicament:ciprofloxacine"],
+      ["sifloks", "medicament:ciprofloxacine"],
+      ["siprodis", "medicament:ciprofloxacine"],
+      ["ufexil", "medicament:ciprofloxacine"],
+      ["prostam", "medicament:tamsulosine"],
+      ["cordarone", "medicament:amiodarone"],
+      ["ricardyl", "medicament:amiodarone"],
+      ["trombyl", "medicament:aspirine"],
+      ["sedacoron", "medicament:amiodarone"],
+      ["rucoron", "medicament:rocuronium"],
+      ["sandostatin", "medicament:octreotide"],
+      ["saifoxyl", "medicament:amoxicilline"],
+      ["sulfate de magnesium proamp", "medicament:sulfate-magnesium"],
+      ["sufentamed", "medicament:sufentanil"],
+      ["sufentanil viatris", "medicament:sufentanil"],
+      ["suxamethonium labesfal", "medicament:succinylcholine"],
+      ["talin", "medicament:terbutaline"],
+      ["ventol", "medicament:salbutamol"],
+      ["ventaxx", "medicament:salbutamol"],
+      ["vetira", "medicament:levetiracetam"],
+      ["vitamine b1", "medicament:thiamine"],
+      ["actilyse", "medicament:alteplase"],
+      ["actalgine", "medicament:aspirine"],
+      ["acetylsalicylate de lysine labesfal", "medicament:aspirine"],
+      ["adrenaline sopharma", "medicament:adrenaline"],
+      ["azithrocine", "medicament:azithromycine"],
+      ["azitral", "medicament:azithromycine"],
+      ["azitromin duo", "medicament:azithromycine"],
+      ["azix", "medicament:azithromycine"],
+      ["azomycine", "medicament:azithromycine"],
+      ["azro", "medicament:azithromycine"],
+      ["bactall", "medicament:ciprofloxacine"],
+      ["cipro 750", "medicament:ciprofloxacine"],
+      ["ciprofloxacine aguettant", "medicament:ciprofloxacine"],
+      ["ciproflex", "medicament:ciprofloxacine"],
+      ["cipromax", "medicament:ciprofloxacine"],
+      ["ciprocine", "medicament:ciprofloxacine"],
+      ["chlorure de sodium proamp", "medicament:nacl-hypertonique"],
+      ["buto asma", "medicament:salbutamol"],
+      ["bricanyl", "medicament:terbutaline"],
+      ["cardiocine", "medicament:aspirine"],
+      ["ansemid", "medicament:furosemide"],
+      ["antiomal", "medicament:levetiracetam"],
+      ["analgan iv", "medicament:paracetamol"],
+      ["analgan enfant et nourrisson", "medicament:paracetamol"],
+      ["adrenol 1", "medicament:adrenaline"],
+      ["zomax", "medicament:azithromycine"],
+      ["zitrocin", "medicament:azithromycine"],
+      ["zithromax", "medicament:azithromycine"],
+      ["zithromax uno", "medicament:azithromycine"],
+      ["zitromax", "medicament:azithromycine"],
+      ["zithrocare", "medicament:azithromycine"],
+      ["zitro", "medicament:azithromycine"],
+    ];
+    for (const [query, expectedKey] of brandMatches) {
+      expect(searchItems(query, 20).map((i) => i.key), query).toContain(expectedKey);
+    }
   });
 });
 

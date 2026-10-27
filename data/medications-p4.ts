@@ -7,6 +7,7 @@ export const medicationsPhase4: Medication[] = [
     id: "heparine",
     name: { fr: "Héparine sodique (HNF)", ar: "هيبارين صوديوم (غير مجزأ)" },
     brands: "Héparine Choay® 5000 UI/1 mL ; Calciparine® 2500 et 5000 UI (SC)",
+    searchExclusions: ["heparine medis", "heparine unimed"],
     synonyms: ["heparine", "hnf", "heparin", "هيبارين"],
     klass: { fr: "Anticoagulant (héparine non fractionnée)", ar: "مضاد تخثر (هيبارين غير مجزأ)" },
     highRisk: true,
@@ -24,7 +25,7 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "alteplase",
     name: { fr: "Altéplase (rt-PA)", ar: "ألتيبلاز" },
-    brands: "Actilyse® 50 mg (poudre + solvant)",
+    brands: "ACTILYSE® (Boehringer Ingelheim) poudre injectable + solvant : 10 mg (B/1 + flacon/10 mL ; AMM 5253111H), 20 mg (B/1 + flacon/20 mL ; AMM 5253112H), 50 mg (B/1 + flacon/50 mL ; AMM 5253113H)",
     synonyms: ["alteplase", "rt pa", "actilyse", "ألتيبلاز"],
     klass: { fr: "Thrombolytique (activateur tissulaire du plasminogène)", ar: "حالّ للخثرة" },
     highRisk: true,
@@ -43,7 +44,7 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "glucagon",
     name: { fr: "Glucagon", ar: "غلوكاغون" },
-    brands: "GlucaGen® HypoKit 1 mg",
+    brands: "GLUCAGEN® 1 mg lyophilisat injectable (B/10 flacons + 10 flacons de solvant, AMM DPM 5993033) ; GLUCAGEN HYPOKIT® 1 mg poudre pour solution injectable (flacon + seringue/1 mL, AMM DPM 5993031)",
     synonyms: ["glucagon", "glucagen", "غلوكاغون"],
     klass: { fr: "Hormone hyperglycémiante", ar: "هرمون رافع للسكر" },
     highRisk: false,
@@ -61,7 +62,7 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "cefotaxime",
     name: { fr: "Céfotaxime (C3G)", ar: "سيفوتاكسيم" },
-    brands: "Claforan® 1 g ; Céfotaxime Panpharma® 1 g (spécialités françaises ; disponibilité tunisienne à vérifier)",
+    brands: "Claforan® 1 g ; Céfotaxime Panpharma® 500 mg/1 g IM/IV ; Céfotim® (UNIMED) 500 mg/1 g IM/IV",
     synonyms: ["cefotaxime", "c3g", "cephalosporine", "سيفوتاكسيم", "كلافوران", "claforan"],
     klass: { fr: "Antibiotique β-lactamine (céphalosporine 3ᵉ gén.)", ar: "مضاد حيوي بيتا-لاكتام (سيفالوسبورين ج3)" },
     highRisk: false,
@@ -166,8 +167,8 @@ export const medicationsPhase4: Medication[] = [
   {
     id: "levetiracetam",
     name: { fr: "Lévétiracétam", ar: "ليفيتيراسيتام" },
-    brands: "Keppra® 500 mg/5 mL (IV) ; 500 et 1000 mg cp",
-    synonyms: ["levetiracetam", "keppra", "ليفيتيراسيتام", "كيبرا"],
+    brands: "Keppra® 500 mg/5 mL (IV) ; 500 et 1000 mg cp ; LEVET® (SIMED) solution buvable 100 mg/mL (flacon 300 mL) et (PHILADELPHIA PHARMA) cp 250/500/750 mg (B/30 ou B/60, formes orales) ; VETIRA® (TERIAK) comprimés pelliculés 250/500/750 mg B/60 (AMM DPM 9253941/9253942/9253943 ; formes orales) ; ANTIOMAL® (TAHA PHARMA) comprimés pelliculés 250 mg B/30 et B/60, 500 mg B/30 et B/60, 750 mg B/30 et B/60, 1000 mg sécable B/30 (AMM DPM 9373151/9373154/9373152/9373156/9373155/9373153/9373157 ; formes orales)",
+    synonyms: ["levetiracetam", "keppra", "vetira", "levet", "ليفيتيراسيتام", "كيبرا"],
     klass: { fr: "Antiépileptique", ar: "مضاد صرع" },
     highRisk: false,
     indications: { fr: "État de mal épileptique (2ᵉ ligne, après échec des benzodiazépines).", ar: "الحالة الصرعية المستمرة (الصف الثاني بعد فشل البنزوديازيبينات)." },

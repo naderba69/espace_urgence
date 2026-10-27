@@ -3,7 +3,7 @@
 //
 // نواة محرّك البحث: الأنواع والخوارزميات الصافية فقط، بلا أي بيانات طبية.
 import type { Localized } from "@/data/types";
-import { expand, normalize } from "./text";
+import { expand, hasExcludedSearchTerm, normalize } from "./text";
 
 export { normalize };
 
@@ -27,6 +27,8 @@ export interface SearchItem {
   hay: string;
   /** v7.9 — gravité (tri + badge « tueur potentiel »). */
   sev?: "critical" | "urgent" | "standard";
+  /** Termes exacts à ne pas rabattre sur cette fiche malgré une sous-chaîne DCI ambiguë. */
+  searchExclusions?: string[];
 }
 
 /** Poids de gravité pour départager deux scores égaux. */
@@ -54,7 +56,7 @@ export function rank(index: SearchItem[], query: string, limit: number): SearchI
   if (!nq || nq.length < 2) return [];
   return index
     .map((item) => ({ item, score: scoreItem(item, nq) }))
-    .filter((s) => s.score > 0)
+    .filter((s) => s.score > 0 && !hasExcludedSearchTerm(nq, s.item.searchExclusions))
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
       return sevWeight(b.item) - sevWeight(a.item);

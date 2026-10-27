@@ -6,8 +6,9 @@ export const medicationsPhase9: Medication[] = [
   {
     id: "piperacilline-tazobactam",
     name: { fr: "Pipéracilline-tazobactam", ar: "بيبيراسيلين-تازوباكتام" },
-    brands: "Tazocilline® 4 g/0,5 g inj",
-    synonyms: ["piperacilline", "tazobactam", "tazocilline", "pipé-tazo", "بيبيراسيلين"],
+    brands: "PIPERACILLINE/TAZOBACTAM KABI® 2 g/250 mg et 4 g/500 mg IV (AMM DPM 3153151H/3153152H) ; PIPERACILLINE/TAZOBACTAM VIATRIS® 2 g/250 mg et 4 g/500 mg pour perfusion (AMM DPM 4923331H/4923332H) ; PIPERACILLINE-TAZOBACTAM SANDOZ® 4 g/500 mg, flacons/100 mL (AMM DPM 11073051H)",
+    synonyms: ["piperacilline", "tazobactam", "pipé-tazo", "piperacilline/tazobactam kabi", "piperacilline/tazobactam viatris", "piperacilline-tazobactam sandoz", "بيبيراسيلين"],
+    searchExclusions: ["stragen", "prizma", "tazorex", "tazobact", "tazocilline"],
     klass: { fr: "Antibiotique — uréidopénicilline + inhibiteur de bêta-lactamase (large spectre dont Pseudomonas)", ar: "مضاد حيوي — يوريدوبنسلين + مثبط بيتا-لاكتاماز (واسع الطيف يشمل الزائفة)" },
     highRisk: false,
     indications: {
@@ -47,6 +48,7 @@ export const medicationsPhase9: Medication[] = [
     id: "vancomycine",
     name: { fr: "Vancomycine", ar: "فانكومايسين" },
     brands: "Vancocine® 500 mg inj",
+    searchExclusions: ["teicoplanine", "targoplanin", "tegadis", "teico", "vanco 500", "vanco 1 g", "vancolon", "vancomed", "vancomycine hikma", "vancomycine kabi", "vancomycine mylan"],
     synonyms: ["vancomycine", "vancocine", "glycopeptide", "فانكومايسين"],
     klass: { fr: "Antibiotique — glycopeptide (Gram positif : SARM, streptocoques, entérocoques)", ar: "مضاد حيوي — غليكوببتيد (إيجابية الغرام: MRSA، عقديات، معويات)" },
     highRisk: true,
@@ -86,7 +88,8 @@ export const medicationsPhase9: Medication[] = [
   {
     id: "clindamycine",
     name: { fr: "Clindamycine", ar: "كليندامايسين" },
-    brands: "Dalacine® 600 mg/4 mL inj ; gél. 300 mg",
+    brands: "",
+    searchExclusions: ["dalacine", "clindamycine kabi", "dalacine t topic"],
     synonyms: ["clindamycine", "dalacine", "lincosamide", "كليندامايسين"],
     klass: { fr: "Antibiotique — lincosamide (anti-toxinique : bloque la synthèse des exotoxines strepto/staphylo)", ar: "مضاد حيوي — لينكوزاميد (مضاد للذيفان: يثبط تصنيع الذيفانات الخارجية للعقديات/العنقوديات)" },
     highRisk: false,

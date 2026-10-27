@@ -50,6 +50,8 @@ export const ATB_RENAL_SECTIONS: AtbRenalSection[] = [
 export interface AtbRenalLine {
   /** "dose" = schéma posologique ; "info" = consigne/limite valable pour tous les stades. */
   kind: "dose" | "info";
+  /** Contexte explicitement séparé lors de la structuration de la cellule source. */
+  context?: { fr: string; ar: string };
   /** القيم بترتيب ATB_RENAL_STAGES — d[0] للمرحلة الطبيعية … d[4] للمرحلة النهائية. */
   d: [string, string, string, string, string];
 }
@@ -62,6 +64,8 @@ export interface AtbRenalRow {
   /** رقم الصفحة في الملف المصدر (للتحقق اليدوي السريع). */
   page: number;
   lines: AtbRenalLine[];
+  /** Contexte clinique à confirmer avant d'enregistrer une décision de dose. */
+  contextReviewRequired?: boolean;
   notes: { fr: string; ar: string; stages?: AtbStageId[] }[];
 }
 
@@ -73,9 +77,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أموكسيسيلين فموي",
     section: "penicillines",
     page: 1,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["1 g/8h", "1 g/8h", "1 g/8h", "DC de 1 g puis 500 mg/8h", "DC de 1 g puis 750 mg/24h"] },
-      { kind: "dose", d: ["1 g/12h", "1 g/12h", "1 g/12h", "DC de 1 g puis 500 mg/12h", "DC de 1 g puis 500 mg/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["1 g/8h", "1 g/8h", "1 g/8h", "DC de 1 g puis 500 mg/8h", "DC de 1 g puis 750 mg/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"}, d: ["1 g/12h", "1 g/12h", "1 g/12h", "DC de 1 g puis 500 mg/12h", "DC de 1 g puis 500 mg/24h"] },
     ],
     notes: [],
   },
@@ -85,9 +90,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أموكسيسيلين وريدي",
     section: "penicillines",
     page: 1,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["100 mg/kg/24h en 4 injections", "100 mg/kg/24h en 4 injections", "100 mg/kg/24h en 4 injections", "50 mg/kg/24h", "25 mg/kg/24h"] },
-      { kind: "dose", d: ["200 mg/kg/24h en 6 injections", "200 mg/kg/24h en 6 injections", "200 mg/kg/24h en 6 injections", "100 mg/kg/24h", "50 mg/kg/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["100 mg/kg/24h en 4 injections", "100 mg/kg/24h en 4 injections", "100 mg/kg/24h en 4 injections", "50 mg/kg/24h", "25 mg/kg/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"}, d: ["200 mg/kg/24h en 6 injections", "200 mg/kg/24h en 6 injections", "200 mg/kg/24h en 6 injections", "100 mg/kg/24h", "50 mg/kg/24h"] },
     ],
     notes: [],
   },
@@ -110,9 +116,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أموكسيسيلين + حمض الكلافولانيك وريدي",
     section: "penicillines",
     page: 1,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["1 g/8h", "1 g/8h", "1 g/8h", "DC de 1 g puis 500 mg/8h", "DC de 1 g puis 750 mg/24h"] },
-      { kind: "dose", d: ["2 g/8h", "2 g/8h", "2 g/8h", "3 g/24h", "1,5 g/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["1 g/8h", "1 g/8h", "1 g/8h", "DC de 1 g puis 500 mg/8h", "DC de 1 g puis 750 mg/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"}, d: ["2 g/8h", "2 g/8h", "2 g/8h", "3 g/24h", "1,5 g/24h"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g d'amoxicilline ; /!\\ acide clavulanique : dose max 200 mg/injection et 1200 mg/24h", ar: "الجرعات معبَّر عنها بغرامات الأموكسيسيلين؛ تنبيه: حدّ حمض الكلافولانيك 200 مغ/حقنة و1200 مغ/24 سا" },
@@ -124,9 +131,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أمبيسيلين + سولباكتام وريدي",
     section: "penicillines",
     page: 2,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Posologie usuelle : 1 à 2 g /6 à 12h", "Posologie usuelle : 1 à 2 g /6 à 12h", "Posologie usuelle : 1 à 2 g /6 à 12h", "DC de 1 g puis 500 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
-      { kind: "dose", d: ["Infection à Acinetobacter spp : 3 g /6 à 8h", "Infection à Acinetobacter spp : 3 g /6 à 8h", "Infection à Acinetobacter spp : 3 g /6 à 8h", "3 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", context: {"fr": "Posologie usuelle", "ar": "الجرعة المعتادة"}, d: ["Posologie usuelle : 1 à 2 g /6 à 12h", "Posologie usuelle : 1 à 2 g /6 à 12h", "Posologie usuelle : 1 à 2 g /6 à 12h", "DC de 1 g puis 500 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", context: {"fr": "Infection à Acinetobacter spp", "ar": "عدوى Acinetobacter spp"}, d: ["Infection à Acinetobacter spp : 3 g /6 à 8h", "Infection à Acinetobacter spp : 3 g /6 à 8h", "Infection à Acinetobacter spp : 3 g /6 à 8h", "3 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g d'ampicilline", ar: "الجرعات معبَّر عنها بغرامات الأمبيسيلين" },
@@ -152,9 +160,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "بنزاثين بنزيل بنسلين عضلي",
     section: "penicillines",
     page: 2,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["2,4 MUI tous les 8 jours", "2,4 MUI tous les 8 jours", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1,8 MUI tous les 8 jours", "Aucune donnée"] },
-      { kind: "dose", d: ["1,2 MUI toutes les 3 à 4 semaines", "1,2 MUI toutes les 3 à 4 semaines", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,9 MUI toutes les 3 à 4 semaines", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["2,4 MUI tous les 8 jours", "2,4 MUI tous les 8 jours", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1,8 MUI tous les 8 jours", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"}, d: ["1,2 MUI toutes les 3 à 4 semaines", "1,2 MUI toutes les 3 à 4 semaines", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,9 MUI toutes les 3 à 4 semaines", "Aucune donnée"] },
     ],
     notes: [
       { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 2,4 MUI tous les 8 jours | 1,8 MUI tous les 8 jours | 1,2 MUI toutes les 3 à 4 semaines | 0,9 MUI toutes les 3 à 4 semaines. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 2,4 MUI tous les 8 jours | 1,8 MUI tous les 8 jours | 1,2 MUI toutes les 3 à 4 semaines | 0,9 MUI toutes les 3 à 4 semaines. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
@@ -190,8 +199,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "كلوكساسيلين وريدي",
     section: "penicillines",
     page: 2,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "Aucune donnée", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Deux modalités alternatives (OU) — choix non recueilli", "ar": "طريقتان بديلتان (أو) — لم يُسجّل الاختيار"}, d: ["100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "Aucune donnée", "Aucune donnée"] },
     ],
     notes: [],
   },
@@ -201,8 +211,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أوكساسيلين وريدي",
     section: "penicillines",
     page: 2,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue"] },
+      { kind: "dose", context: {"fr": "Deux modalités alternatives (OU) — choix non recueilli", "ar": "طريقتان بديلتان (أو) — لم يُسجّل الاختيار"}, d: ["100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue", "100 à 200 mg/kg/24h en 6 perfusions de 30 à 60 min toutes les 4h OU DC de 2 g en perfusion de 60 min puis 100 à 200 mg/kg/24h en perfusion continue"] },
     ],
     notes: [],
   },
@@ -263,9 +274,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "تيموسيلين وريدي",
     section: "penicillines",
     page: 3,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["2 g/8 à 12h en perfusion de 30 min", "2 g/8 à 12h en perfusion de 30 min", "1 g/12h", "1 g/24h", "500 mg/24h"] },
-      { kind: "dose", d: ["DC de 2 g en perfusion de 30 min puis 6 g/24h en perfusion continue", "DC de 2 g en perfusion de 30 min puis 6 g/24h en perfusion continue", "Aucune donnée", "Aucune donnée", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Administration intermittente — ligne source 1", "ar": "إعطاء متقطع — السطر المصدر 1"}, d: ["2 g/8 à 12h en perfusion de 30 min", "2 g/8 à 12h en perfusion de 30 min", "1 g/12h", "1 g/24h", "500 mg/24h"] },
+      { kind: "dose", context: {"fr": "Administration continue — ligne source 2", "ar": "إعطاء مستمر — السطر المصدر 2"}, d: ["DC de 2 g en perfusion de 30 min puis 6 g/24h en perfusion continue", "DC de 2 g en perfusion de 30 min puis 6 g/24h en perfusion continue", "Aucune donnée", "Aucune donnée", "Aucune donnée"] },
     ],
     notes: [],
   },
@@ -275,9 +287,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أزتريونام عضلي",
     section: "monobactames",
     page: 3,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"] },
-      { kind: "dose", d: ["Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "½ dose", "¼ dose"] },
+      { kind: "dose", context: {"fr": "Cystite aiguë ou infection gonococcique non compliquée", "ar": "التهاب مثانة حاد أو عدوى سيلانية غير معقدة"}, d: ["Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique", "Cystite aiguë ou infection gonococcique non compliquée : 1 g dose unique"] },
+      { kind: "dose", context: {"fr": "Infection urinaire haute et/ou compliquée", "ar": "عدوى بولية علوية و/أو معقدة"}, d: ["Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "Infection urinaire haute et/ou compliquée : 1 g/12h", "½ dose", "¼ dose"] },
     ],
     notes: [],
   },
@@ -287,9 +300,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أزتريونام وريدي",
     section: "monobactames",
     page: 3,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "DC de 2 g puis 500 mg à 1 g/8h", "DC de 2 g puis 250 à 500 mg/8h"] },
-      { kind: "dose", d: ["Infection sévère : 2 g/6h ou 8 g/24h en continue", "Infection sévère : 2 g/6h ou 8 g/24h en continue", "Infection sévère : 2 g/6h ou 8 g/24h en continue", "DC de 2 g puis 1 g/6h ou 4 g/24h en continue", "DC de 2 g puis 500 mg/6h ou 2 g/24h en continue"] },
+      { kind: "dose", context: {"fr": "Infection peu sévère", "ar": "عدوى غير شديدة"}, d: ["Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "Infection peu sévère : DC de 2 g puis 1 à 2 g/8h", "DC de 2 g puis 500 mg à 1 g/8h", "DC de 2 g puis 250 à 500 mg/8h"] },
+      { kind: "dose", context: {"fr": "Infection sévère", "ar": "عدوى شديدة"}, d: ["Infection sévère : 2 g/6h ou 8 g/24h en continue", "Infection sévère : 2 g/6h ou 8 g/24h en continue", "Infection sévère : 2 g/6h ou 8 g/24h en continue", "DC de 2 g puis 1 g/6h ou 4 g/24h en continue", "DC de 2 g puis 500 mg/6h ou 2 g/24h en continue"] },
     ],
     notes: [],
   },
@@ -335,9 +349,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سيفازولين عضلي/وريدي",
     section: "cephalosporines",
     page: 4,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Infection peu sévère : 60 à 80 mg/kg/24h en 4 à 6 injections OU en continue avec DC = 1/4 ou 1/3 de la dose journalière", "Infection peu sévère : 60 à 80 mg/kg/24h en 4 à 6 injections OU en continue avec DC = 1/4 ou 1/3 de la dose journalière", "DC de 500 mg puis 125 à 250 mg/12h", "DC de 500 mg puis 125 à 250 mg/24h", "DC de 500 mg puis 125 à 250 mg/48h"] },
-      { kind: "dose", d: ["Infection sévère : 80 à 100 mg/kg/24h en 3 perfusions de 60 min toutes les 8h OU en continue avec DC de 2 g en perfusion de 60 min puis 80 à 100 mg/kg/j en 2 perfusions de 12h", "Infection sévère : 80 à 100 mg/kg/24h en 3 perfusions de 60 min toutes les 8h OU en continue avec DC de 2 g en perfusion de 60 min puis 80 à 100 mg/kg/j en 2 perfusions de 12h", "DC de 500 mg puis 250 mg/6h ou 500 mg/12h", "DC de 500 mg puis 250 mg/12h ou 500 mg/24h", "DC de 500 mg puis 500 mg/48 à 72h"] },
+      { kind: "dose", context: {"fr": "Infection peu sévère", "ar": "عدوى غير شديدة"}, d: ["Infection peu sévère : 60 à 80 mg/kg/24h en 4 à 6 injections OU en continue avec DC = 1/4 ou 1/3 de la dose journalière", "Infection peu sévère : 60 à 80 mg/kg/24h en 4 à 6 injections OU en continue avec DC = 1/4 ou 1/3 de la dose journalière", "DC de 500 mg puis 125 à 250 mg/12h", "DC de 500 mg puis 125 à 250 mg/24h", "DC de 500 mg puis 125 à 250 mg/48h"] },
+      { kind: "dose", context: {"fr": "Infection sévère", "ar": "عدوى شديدة"}, d: ["Infection sévère : 80 à 100 mg/kg/24h en 3 perfusions de 60 min toutes les 8h OU en continue avec DC de 2 g en perfusion de 60 min puis 80 à 100 mg/kg/j en 2 perfusions de 12h", "Infection sévère : 80 à 100 mg/kg/24h en 3 perfusions de 60 min toutes les 8h OU en continue avec DC de 2 g en perfusion de 60 min puis 80 à 100 mg/kg/j en 2 perfusions de 12h", "DC de 500 mg puis 250 mg/6h ou 500 mg/12h", "DC de 500 mg puis 250 mg/12h ou 500 mg/24h", "DC de 500 mg puis 500 mg/48 à 72h"] },
     ],
     notes: [],
   },
@@ -347,10 +362,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سيفيبيم وريدي",
     section: "cephalosporines",
     page: 4,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *", "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,5 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
-      { kind: "dose", d: ["Infection sévère : 2 g/12h", "Infection sévère : 2 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
-      { kind: "dose", d: ["Infection très sévère : 2 g/8h", "Infection très sévère : 2 g/8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", context: {"fr": "Infection respiratoire communautaire / pyélonéphrite non compliquée", "ar": "عدوى تنفسية مكتسبة من المجتمع / التهاب حويضة وكلية غير معقد"}, d: ["Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *", "Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h *", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,5 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", context: {"fr": "Infection sévère", "ar": "عدوى شديدة"}, d: ["Infection sévère : 2 g/12h", "Infection sévère : 2 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", context: {"fr": "Infection très sévère", "ar": "عدوى شديدة جدًا"}, d: ["Infection très sévère : 2 g/8h", "Infection très sévère : 2 g/8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 g/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
     ],
     notes: [
       { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h * | 1 g/24h | Infection sévère : 2 g/12h | 2 g/24h | Infection très sévère : 2 g/8h | 1 g/8h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Infection respiratoire communautaire, pyélonéphrite non compliquée : 1 g/12h * | 1 g/24h | Infection sévère : 2 g/12h | 2 g/24h | Infection très sévère : 2 g/8h | 1 g/8h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
@@ -389,10 +405,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سيفوتاكسيم عضلي/وريدي",
     section: "cephalosporines",
     page: 4,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Posologie standard : 1 à 2 g/8h", "Posologie standard : 1 à 2 g/8h", "1 à 2 g/12h", "750 à 1500 mg/12h", "750 à 1500 mg/24h"] },
-      { kind: "dose", d: ["Infection ostéo-articulaire : 100 à 150 mg/kg/24h en 4 à 6 injections ou en continue", "Infection ostéo-articulaire : 100 à 150 mg/kg/24h en 4 à 6 injections ou en continue", "75 à 112,5 mg/kg/24h", "50 à 75 mg/kg/24h", "25 à 37,5 mg/kg/24h"] },
-      { kind: "dose", d: ["Infection méningée : 200 à 300 mg/kg/24h en 4 à 6 injections ou en continue", "Infection méningée : 200 à 300 mg/kg/24h en 4 à 6 injections ou en continue", "150 à 225 mg/kg/24h", "100 à 150 mg/kg/24h", "50 à 75 mg/kg/24h"] },
+      { kind: "dose", context: {"fr": "Posologie standard", "ar": "الجرعة المعتادة"}, d: ["Posologie standard : 1 à 2 g/8h", "Posologie standard : 1 à 2 g/8h", "1 à 2 g/12h", "750 à 1500 mg/12h", "750 à 1500 mg/24h"] },
+      { kind: "dose", context: {"fr": "Infection ostéo-articulaire", "ar": "عدوى العظام والمفاصل"}, d: ["Infection ostéo-articulaire : 100 à 150 mg/kg/24h en 4 à 6 injections ou en continue", "Infection ostéo-articulaire : 100 à 150 mg/kg/24h en 4 à 6 injections ou en continue", "75 à 112,5 mg/kg/24h", "50 à 75 mg/kg/24h", "25 à 37,5 mg/kg/24h"] },
+      { kind: "dose", context: {"fr": "Infection méningée", "ar": "عدوى سحائية"}, d: ["Infection méningée : 200 à 300 mg/kg/24h en 4 à 6 injections ou en continue", "Infection méningée : 200 à 300 mg/kg/24h en 4 à 6 injections ou en continue", "150 à 225 mg/kg/24h", "100 à 150 mg/kg/24h", "50 à 75 mg/kg/24h"] },
     ],
     notes: [],
   },
@@ -402,9 +419,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سيفوكسيتين وريدي",
     section: "cephalosporines",
     page: 5,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Infection peu grave : 1 à 2 g/8h", "Infection peu grave : 1 à 2 g/8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 à 2 g/12 à 24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
-      { kind: "dose", d: ["Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue", "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Aucune donnée", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", context: {"fr": "Infection peu grave", "ar": "Infection peu grave"}, d: ["Infection peu grave : 1 à 2 g/8h", "Infection peu grave : 1 à 2 g/8h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "1 à 2 g/12 à 24h", "Cellules source multiples — consulter la note; aucune dose unique retenue"] },
+      { kind: "dose", context: {"fr": "Infection grave et/ou CMI > 8 mg/L", "ar": "Infection grave et/ou CMI > 8 mg/L"}, d: ["Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue", "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue", "Aucune donnée", "Aucune donnée", "Aucune donnée"] },
     ],
     notes: [
       { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Infection peu grave : 1 à 2 g/8h | 1 à 2 g/8 à 12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Infection peu grave : 1 à 2 g/8h | 1 à 2 g/8 à 12h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
@@ -441,9 +459,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سيفتازيديم عضلي/وريدي",
     section: "cephalosporines",
     page: 5,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Administration discontinue : 2 g/8h", "Administration discontinue : 2 g/8h", "2 g/12h", "2 g/24h", "1 g/24h"] },
-      { kind: "dose", d: ["Administration continue : DC de 2 g puis 6 g/24h", "Administration continue : DC de 2 g puis 6 g/24h", "DC de 2 g puis 3 g/24h", "DC de 2 g puis 1 g/24h", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Administration discontinue", "ar": "Administration discontinue"}, d: ["Administration discontinue : 2 g/8h", "Administration discontinue : 2 g/8h", "2 g/12h", "2 g/24h", "1 g/24h"] },
+      { kind: "dose", context: {"fr": "Administration continue", "ar": "Administration continue"}, d: ["Administration continue : DC de 2 g puis 6 g/24h", "Administration continue : DC de 2 g puis 6 g/24h", "DC de 2 g puis 3 g/24h", "DC de 2 g puis 1 g/24h", "Aucune donnée"] },
     ],
     notes: [],
   },
@@ -453,9 +472,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سيفتازيديم + أفباكتام وريدي",
     section: "cephalosporines",
     page: 5,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Administration discontinue : 2 g/8h en perfusion de 2h", "Administration discontinue : 2 g/8h en perfusion de 2h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,75 g/12h", "0,75 g/24h"] },
-      { kind: "dose", d: ["Administration en continue : DC de 2 g puis 6 g/24h", "Administration en continue : DC de 2 g puis 6 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Aucune donnée sur l'administration en continue", "Aucune donnée sur l'administration en continue"] },
+      { kind: "dose", context: {"fr": "Administration discontinue", "ar": "Administration discontinue"}, d: ["Administration discontinue : 2 g/8h en perfusion de 2h", "Administration discontinue : 2 g/8h en perfusion de 2h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "0,75 g/12h", "0,75 g/24h"] },
+      { kind: "dose", context: {"fr": "Administration continue", "ar": "Administration continue"}, d: ["Administration en continue : DC de 2 g puis 6 g/24h", "Administration en continue : DC de 2 g puis 6 g/24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Aucune donnée sur l'administration en continue", "Aucune donnée sur l'administration en continue"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g de ceftazidime", ar: "الجرعات معبَّر عنها بغرامات السيفتازيديم" },
@@ -468,11 +488,14 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سيفتوبيبرول وريدي",
     section: "cephalosporines",
     page: 5,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h", "500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg/12h", "250 mg/24h"] },
+      { kind: "dose", context: {"fr": "Schéma de base — lecture structurée", "ar": "الجرعة الأساسية — تنظيم بنيوي"}, d: ["500 mg /8h en perfusion de 2h", "500 mg /8h en perfusion de 2h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg/12h", "250 mg/24h"] },
+      { kind: "dose", context: {"fr": "Variante conditionnelle : infection sévère", "ar": "صيغة مشروطة: عدوى شديدة"}, d: ["Si infection sévère : 1 g/8h en perfusion de 4h", "Si infection sévère : 1 g/8h en perfusion de 4h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Contexte source non attribué — vérifier; aucune dose unique retenue", "Contexte source non attribué — vérifier; aucune dose unique retenue"] },
     ],
     notes: [
       { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : 500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h | 500 mg/12h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): 500 mg /8h en perfusion de 2h Si infection sévère : 1 g/8h en perfusion de 4h | 500 mg/12h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
+      { fr: "Lecture structurée de la cellule source unique (p.5) : elle juxtapose 500 mg/8h en perfusion de 2h et « Si infection sévère : 1 g/8h en perfusion de 4h ». Les cellules rénales indiquent ensuite 500 mg/12h, 250 mg/12h et 250 mg/24h sans reprendre le libellé sévère ; aucune de ces valeurs rénales n'est attribuée à la variante sévère. Le schéma sévère n'a donc pas d'adaptation rénale sélectionnée automatiquement.", ar: "تنظيم بنيوي للخلية المصدرية الوحيدة (ص.5): تجمع 500 مغ كل 8 ساعات بتسريب ساعتين و«إذا كانت العدوى شديدة: 1 غ كل 8 ساعات بتسريب 4 ساعات». تذكر الخلايا الكلوية التالية 500 مغ كل 12 ساعة و250 مغ كل 12 ساعة و250 مغ كل 24 ساعة من دون تكرار وصف العدوى الشديدة؛ لذلك لم تُسنَد أي من هذه القيم الكلوية إلى الصيغة الشديدة. لم تُختَر آليًا أي ملاءمة كلوية للصيغة الشديدة." },
     ],
   },
   {
@@ -481,9 +504,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سيفتولوزان + تازوباكتام وريدي",
     section: "cephalosporines",
     page: 5,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["1 g/8h en perfusion de 60 min", "1 g/8h en perfusion de 60 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg /8h", "DC de 500 mg puis 8h plus tard 100 mg/8h"] },
-      { kind: "dose", d: ["Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/8h", "DC 1500 mg puis 8h plus tard 300 mg/8h"] },
+      { kind: "dose", context: {"fr": "Schéma standard", "ar": "Schéma standard"}, d: ["1 g/8h en perfusion de 60 min", "1 g/8h en perfusion de 60 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg /8h", "DC de 500 mg puis 8h plus tard 100 mg/8h"] },
+      { kind: "dose", context: {"fr": "Pneumonie nosocomiale — contexte conditionnel", "ar": "Pneumonie nosocomiale — contexte conditionnel"}, d: ["Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Si pneumonie nosocomiale : 2 g/8h en perfusion de 60 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/8h", "DC 1500 mg puis 8h plus tard 300 mg/8h"] },
     ],
     notes: [
       { fr: "Posologies exprimées en g de ceftolozane", ar: "الجرعات معبَّر عنها بغرامات السيفتولوزان" },
@@ -540,10 +564,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "إيميبينيم + سيلاستاتين وريدي",
     section: "carbapenemes",
     page: 6,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["500 mg/6h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg/12h"] },
-      { kind: "dose", d: ["1000 mg/8h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/12h"] },
-      { kind: "dose", d: ["1000 mg/6h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/12h"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["500 mg/6h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "250 mg/12h"] },
+      { kind: "dose", context: {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"}, d: ["1000 mg/8h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/12h"] },
+      { kind: "dose", context: {"fr": "Ligne source 3 — contexte non précisé", "ar": "السطر المصدر 3 — السياق غير محدد"}, d: ["1000 mg/6h en perfusion de 30 min", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "500 mg/12h"] },
     ],
     notes: [
       { fr: "Posologies exprimées en mg d'Imipénem", ar: "الجرعات معبَّر عنها بمغ الإيميبينيم" },
@@ -686,9 +711,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "ليفوفلوكساسين وريدي/فموي",
     section: "fluoroquinolones",
     page: 7,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["500 mg/12 à 24h", "500 mg/12 à 24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 500 mg puis 125 à 250 mg/48h"] },
-      { kind: "dose", d: ["Cystite non compliquée : 250 mg /24h", "Cystite non compliquée : 250 mg /24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 250 mg puis 125 mg/48h"] },
+      { kind: "dose", context: {"fr": "Schéma général — ligne source 1", "ar": "النظام العام — السطر المصدر 1"}, d: ["500 mg/12 à 24h", "500 mg/12 à 24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 500 mg puis 125 à 250 mg/48h"] },
+      { kind: "dose", context: {"fr": "Cystite non compliquée — ligne source 2", "ar": "التهاب مثانة غير معقد — السطر المصدر 2"}, d: ["Cystite non compliquée : 250 mg /24h", "Cystite non compliquée : 250 mg /24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 250 mg puis 125 mg/48h"] },
     ],
     notes: [
       { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Cystite non compliquée : 250 mg /24h | DC de 250 mg puis 125 mg/24h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Cystite non compliquée : 250 mg /24h | DC de 250 mg puis 125 mg/24h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
@@ -723,9 +749,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أوفلوكساسين وريدي/فموي",
     section: "fluoroquinolones",
     page: 7,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Dose usuelle : 200 mg/12h", "Dose usuelle : 200 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/48h"] },
-      { kind: "dose", d: ["Infection sévère : 400 mg/12h", "Infection sévère : 400 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/24h OU 400 mg/48h"] },
+      { kind: "dose", context: {"fr": "Dose usuelle — ligne source 1", "ar": "الجرعة المعتادة — السطر المصدر 1"}, d: ["Dose usuelle : 200 mg/12h", "Dose usuelle : 200 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/48h"] },
+      { kind: "dose", context: {"fr": "Infection sévère — ligne source 2", "ar": "عدوى شديدة — السطر المصدر 2"}, d: ["Infection sévère : 400 mg/12h", "Infection sévère : 400 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/24h OU 400 mg/48h"] },
     ],
     notes: [
       { fr: "Plusieurs cellules distinctes du tableau source dans IRC modérée (DFG 59 → 30) : Dose usuelle : 200 mg/12h | 200 mg/24h | Infection sévère : 400 mg/12h | 400 mg/24h. Aucune posologie unique n'a été sélectionnée.", ar: "توجد خلايا مختلفة في الجدول المصدر ضمن قصور كلوي متوسط (DFG 59 → 30): Dose usuelle : 200 mg/12h | 200 mg/24h | Infection sévère : 400 mg/12h | 400 mg/24h. لم تُختَر جرعة واحدة آليًا.", stages: ["moderee"] },
@@ -738,8 +765,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "دالبافانسين وريدي",
     section: "glycopeptides",
     page: 8,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après", "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après"] },
+      { kind: "dose", context: {"fr": "Deux schémas alternatifs (OU) — choix non recueilli", "ar": "نظامان بديلان (أو) — لم يُسجّل الاختيار"}, d: ["1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après", "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après"] },
     ],
     notes: [],
   },
@@ -760,9 +788,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "تيكوبلانين عضلي/وريدي",
     section: "glycopeptides",
     page: 8,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h", "Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h", "DC de 6 mg/kg/12h les 3 premières injections puis 3 mg/kg/24h ou 6 mg/kg/48h", "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h", "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h"] },
-      { kind: "dose", d: ["Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h", "Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 6 mg/kg/24h ou 12 mg/kg/48h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h"] },
+      { kind: "dose", context: {"fr": "Infection peu sévère", "ar": "عدوى غير شديدة"}, d: ["Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h", "Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h", "DC de 6 mg/kg/12h les 3 premières injections puis 3 mg/kg/24h ou 6 mg/kg/48h", "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h", "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h"] },
+      { kind: "dose", context: {"fr": "Infection sévère", "ar": "عدوى شديدة"}, d: ["Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h", "Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 6 mg/kg/24h ou 12 mg/kg/48h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h"] },
     ],
     notes: [],
   },
@@ -772,8 +801,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "تيكوبلانين فموي",
     section: "glycopeptides",
     page: 8,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.", "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.", "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.", "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.", "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours."] },
+      { kind: "dose", context: {"fr": "Diarrhée/colite à Clostridium difficile", "ar": "إسهال/التهاب قولون مرتبط بالمطثية العسيرة"}, d: ["Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.", "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.", "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.", "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.", "Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours."] },
     ],
     notes: [],
   },
@@ -805,10 +835,11 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "ميترونيدازول فموي",
     section: "imidazoles",
     page: 8,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["250 mg/6h", "250 mg/6h", "250 mg/6h", "250 mg/6h", "250 mg/12h"] },
-      { kind: "dose", d: ["500 mg/8h", "500 mg/8h", "500 mg/8h", "500 mg/8h", "250 mg/8h"] },
-      { kind: "dose", d: ["500 mg/12h", "500 mg/12h", "500 mg/12h", "500 mg/12h", "500 mg/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["250 mg/6h", "250 mg/6h", "250 mg/6h", "250 mg/6h", "250 mg/12h"] },
+      { kind: "dose", context: {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"}, d: ["500 mg/8h", "500 mg/8h", "500 mg/8h", "500 mg/8h", "250 mg/8h"] },
+      { kind: "dose", context: {"fr": "Ligne source 3 — contexte non précisé", "ar": "السطر المصدر 3 — السياق غير محدد"}, d: ["500 mg/12h", "500 mg/12h", "500 mg/12h", "500 mg/12h", "500 mg/24h"] },
     ],
     notes: [],
   },
@@ -818,9 +849,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "ميترونيدازول وريدي",
     section: "imidazoles",
     page: 8,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["500 mg/8h", "500 mg/8h", "500 mg/8h", "500 mg/8h", "250 mg/8h"] },
-      { kind: "dose", d: ["750 mg/8h", "750 mg/8h", "750 mg/8h", "750 mg/8h", "375 mg/8h"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["500 mg/8h", "500 mg/8h", "500 mg/8h", "500 mg/8h", "250 mg/8h"] },
+      { kind: "dose", context: {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"}, d: ["750 mg/8h", "750 mg/8h", "750 mg/8h", "750 mg/8h", "375 mg/8h"] },
     ],
     notes: [],
   },
@@ -830,8 +862,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أورنيدازول وريدي/فموي",
     section: "imidazoles",
     page: 8,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Infection à germes anaérobies : 1 à 1,5g /24h", "Infection à germes anaérobies : 1 à 1,5g /24h", "Infection à germes anaérobies : 1 à 1,5g /24h", "Infection à germes anaérobies : 1 à 1,5g /24h", "Infection à germes anaérobies : 1 à 1,5g /24h"] },
+      { kind: "dose", context: {"fr": "Infection à germes anaérobies", "ar": "عدوى بجراثيم لاهوائية"}, d: ["Infection à germes anaérobies : 1 à 1,5g /24h", "Infection à germes anaérobies : 1 à 1,5g /24h", "Infection à germes anaérobies : 1 à 1,5g /24h", "Infection à germes anaérobies : 1 à 1,5g /24h", "Infection à germes anaérobies : 1 à 1,5g /24h"] },
     ],
     notes: [],
   },
@@ -841,8 +874,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "أزيثرومايسين فموي",
     section: "macrolides",
     page: 9,
+    contextReviewRequired: true,
     lines: [
-      { kind: "info", d: ["Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5", "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5", "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5", "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5", "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5"] },
+      { kind: "info", context: {"fr": "Schémas selon l'indication — choix non recueilli", "ar": "أنظمة بحسب الاستطباب — لم يُسجّل الاختيار"}, d: ["Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5", "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5", "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5", "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5", "Selon indication : 1 g en prise unique OU 500 mg de J1 à J3 OU 500 mg à J1 puis 250 mg de J2 à J5"] },
     ],
     notes: [],
   },
@@ -852,9 +886,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "كلاريثرومايسين فموي",
     section: "macrolides",
     page: 9,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["250 mg/12h", "250 mg/12h", "250 mg/12h", "250 mg/24h", "250 mg/24h"] },
-      { kind: "dose", d: ["500 mg/12h", "500 mg/12h", "500 mg/12h", "500 mg/24h", "500 mg/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["250 mg/12h", "250 mg/12h", "250 mg/12h", "250 mg/24h", "250 mg/24h"] },
+      { kind: "dose", context: {"fr": "Ligne source 2 — contexte non précisé", "ar": "السطر المصدر 2 — السياق غير محدد"}, d: ["500 mg/12h", "500 mg/12h", "500 mg/12h", "500 mg/24h", "500 mg/24h"] },
     ],
     notes: [],
   },
@@ -919,9 +954,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سبيرامايسين وريدي/فموي",
     section: "macrolides",
     page: 9,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Per os : 3 MUI/8 à 12h", "Per os : 3 MUI/8 à 12h", "Per os : 3 MUI/8 à 12h", "Per os : 3 MUI/8 à 12h", "Per os : 3 MUI/8 à 12h"] },
-      { kind: "dose", d: ["IV : 1,5 à 3 MUI/8h", "IV : 1,5 à 3 MUI/8h", "IV : 1,5 à 3 MUI/8h", "IV : 1,5 à 3 MUI/8h", "IV : 1,5 à 3 MUI/8h"] },
+      { kind: "dose", context: {"fr": "Voie orale", "ar": "عن طريق الفم"}, d: ["Per os : 3 MUI/8 à 12h", "Per os : 3 MUI/8 à 12h", "Per os : 3 MUI/8 à 12h", "Per os : 3 MUI/8 à 12h", "Per os : 3 MUI/8 à 12h"] },
+      { kind: "dose", context: {"fr": "Voie intraveineuse", "ar": "عن طريق الوريد"}, d: ["IV : 1,5 à 3 MUI/8h", "IV : 1,5 à 3 MUI/8h", "IV : 1,5 à 3 MUI/8h", "IV : 1,5 à 3 MUI/8h", "IV : 1,5 à 3 MUI/8h"] },
     ],
     notes: [],
   },
@@ -939,13 +975,15 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
   {
     id: "cotrimoxazole-iv-po",
     fr: "Cotrimoxazole IV PO",
-    ar: "كوتريموكسازول وريدي/فموي",
+    ar: "Cotrimoxazole IV PO",
     section: "sulfamides",
     page: 10,
     lines: [
       { kind: "dose", d: ["800 mg de sulfaméthoxazole + 160 mg de triméthoprime / 12h", "800 mg de sulfaméthoxazole + 160 mg de triméthoprime / 12h", "800 mg de sulfaméthoxazole + 160 mg de triméthoprime / 12h", "800 mg/160 mg/24h", "Contre-indiqué"] },
     ],
-    notes: [],
+    notes: [
+      { fr: "Avertissement BACTRIM FORTE (notice tunisienne TERIAK, AMM 9253082) : la notice demande une adaptation en insuffisance rénale et prévoit un contrôle de la kaliémie chez certains patients à risque, sans préciser de seuils rénaux. Le RCP ANSM français de BACTRIM FORTE utilise la clairance de la créatinine, mais ne constitue pas le RCP tunisien : ne transposez pas ses seuils au DFG indexé ni à une autre spécialité ; vérifiez la notice/RCP exact. L'ANSM signale aussi une surestimation de la créatinine d'environ 10 % avec la méthode à l'acide picrique.", ar: "Avertissement BACTRIM FORTE (notice tunisienne TERIAK, AMM 9253082) : la notice demande une adaptation en insuffisance rénale et prévoit un contrôle de la kaliémie chez certains patients à risque, sans préciser de seuils rénaux. Le RCP ANSM français de BACTRIM FORTE utilise la clairance de la créatinine, mais ne constitue pas le RCP tunisien : ne transposez pas ses seuils au DFG indexé ni à une autre spécialité ; vérifiez la notice/RCP exact. L'ANSM signale aussi une surestimation de la créatinine d'environ 10 % avec la méthode à l'acide picrique." },
+    ],
   },
   {
     id: "sulfadiazine-po",
@@ -953,8 +991,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "سلفاديازين فموي",
     section: "sulfamides",
     page: 10,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Préventif : 2 g/j Curatif : 4 à 6 g/j en 4 à 6 prises", "Réduction de la posologie", "Réduction de la posologie", "Aucune donnée", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Préventif / curatif — choix non recueilli", "ar": "وقائي / علاجي — لم يُسجّل الاختيار"}, d: ["Préventif : 2 g/j Curatif : 4 à 6 g/j en 4 à 6 prises", "Réduction de la posologie", "Réduction de la posologie", "Aucune donnée", "Aucune donnée"] },
     ],
     notes: [],
   },
@@ -964,8 +1003,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "تريميثوبريم فموي",
     section: "sulfamides",
     page: 10,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours", "Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours", "Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours", "Aucune donnée", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Cystite aiguë non compliquée", "ar": "التهاب مثانة حاد غير معقد"}, d: ["Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours", "Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours", "Cystite aiguë non compliquée : 300 mg/j en 1 prise, pendant 3 jours", "Aucune donnée", "Aucune donnée"] },
     ],
     notes: [],
   },
@@ -975,8 +1015,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "دوكسيسيكلين وريدي/فموي",
     section: "tetracyclines",
     page: 10,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …", "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …", "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …", "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …", "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …"] },
+      { kind: "dose", context: {"fr": "Tranche de poids et indication — choix non recueilli", "ar": "فئة الوزن والاستطباب — لم يُسجّل الاختيار"}, d: ["Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …", "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …", "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …", "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …", "Patient > 60 kg : 200 mg/24h en 1 prise Patient < 60 kg : 200 mg le 1er jour puis 100 mg/24h les jours suivants Autres posologies dans des cas particuliers : gonococcie aiguë, syphilis, urétrite non compliquée, endocervicite, …"] },
     ],
     notes: [],
   },
@@ -986,9 +1027,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "لايميسيكلين فموي",
     section: "tetracyclines",
     page: 10,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["300 mg/12h", "Aucune donnée", "Aucune donnée", "Aucune donnée", "Aucune donnée"] },
-      { kind: "dose", d: ["Acné : 300 mg/24h", "Aucune donnée", "Aucune donnée", "Aucune donnée", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Ligne source 1 — contexte non précisé", "ar": "السطر المصدر 1 — السياق غير محدد"}, d: ["300 mg/12h", "Aucune donnée", "Aucune donnée", "Aucune donnée", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Acné", "ar": "حب الشباب"}, d: ["Acné : 300 mg/24h", "Aucune donnée", "Aucune donnée", "Aucune donnée", "Aucune donnée"] },
     ],
     notes: [],
   },
@@ -1009,9 +1051,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "تيجيسيكلين وريدي",
     section: "tetracyclines",
     page: 10,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Infection non sévère : DC de 100 mg puis 50 mg/12h", "Infection non sévère : DC de 100 mg puis 50 mg/12h", "Infection non sévère : DC de 100 mg puis 50 mg/12h", "Infection non sévère : DC de 100 mg puis 50 mg/12h", "Infection non sévère : DC de 100 mg puis 50 mg/12h"] },
-      { kind: "dose", d: ["Infection sévère : DC de 200 mg puis 100 mg/12h", "Infection sévère : DC de 200 mg puis 100 mg/12h", "Infection sévère : DC de 200 mg puis 100 mg/12h", "Infection sévère : DC de 200 mg puis 100 mg/12h", "Infection sévère : DC de 200 mg puis 100 mg/12h"] },
+      { kind: "dose", context: {"fr": "Infection non sévère", "ar": "عدوى غير شديدة"}, d: ["Infection non sévère : DC de 100 mg puis 50 mg/12h", "Infection non sévère : DC de 100 mg puis 50 mg/12h", "Infection non sévère : DC de 100 mg puis 50 mg/12h", "Infection non sévère : DC de 100 mg puis 50 mg/12h", "Infection non sévère : DC de 100 mg puis 50 mg/12h"] },
+      { kind: "dose", context: {"fr": "Infection sévère", "ar": "عدوى شديدة"}, d: ["Infection sévère : DC de 200 mg puis 100 mg/12h", "Infection sévère : DC de 200 mg puis 100 mg/12h", "Infection sévère : DC de 200 mg puis 100 mg/12h", "Infection sévère : DC de 200 mg puis 100 mg/12h", "Infection sévère : DC de 200 mg puis 100 mg/12h"] },
     ],
     notes: [],
   },
@@ -1046,9 +1089,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "دابتوميسين وريدي",
     section: "autres",
     page: 11,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h", "Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h", "Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h", "6 à 8 mg/kg/48h", "6 à 8 mg/kg/48h"] },
-      { kind: "dose", d: ["Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h", "Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h", "Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h", "Aucune donnée au-delà de 10 mg/kg/48h", "Aucune donnée au-delà de 10 mg/kg/48h"] },
+      { kind: "dose", context: {"fr": "Infection non sévère", "ar": "عدوى غير شديدة"}, d: ["Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h", "Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h", "Infection non sévère : 6 à 8 mg/kg en perfusion de 30 min, 1 fois/24h", "6 à 8 mg/kg/48h", "6 à 8 mg/kg/48h"] },
+      { kind: "dose", context: {"fr": "Infection sévère", "ar": "عدوى شديدة"}, d: ["Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h", "Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h", "Infection sévère : 10 à 12 mg/kg en perfusion de 30 min, 1 fois/24h", "Aucune donnée au-delà de 10 mg/kg/48h", "Aucune donnée au-delà de 10 mg/kg/48h"] },
     ],
     notes: [],
   },
@@ -1069,8 +1113,9 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "فوسفوميسين ترويتمول فموي",
     section: "autres",
     page: 11,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique", "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique", "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique", "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique", "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique"] },
+      { kind: "dose", context: {"fr": "Cystite aiguë non compliquée — femme/adolescente de plus de 12 ans", "ar": "التهاب مثانة حاد غير معقد — امرأة/مراهقة فوق 12 سنة"}, d: ["Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique", "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique", "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique", "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique", "Cystite aiguë non compliquée de la femme et adolescente de + de 12 ans : 3 g en prise unique"] },
     ],
     notes: [],
   },
@@ -1091,9 +1136,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "لينيزوليد وريدي/فموي",
     section: "autres",
     page: 11,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["600 mg/12h", "600 mg/12h", "600 mg/12h", "600 mg/24h", "600 mg/24h"] },
-      { kind: "dose", d: ["Infections graves de réanimation : 600 mg/8h", "Infections graves de réanimation : 600 mg/8h", "Infections graves de réanimation : 600 mg/8h", "Aucune donnée", "Aucune donnée"] },
+      { kind: "dose", context: {"fr": "Schéma standard — ligne source 1", "ar": "النظام المعتاد — السطر المصدر 1"}, d: ["600 mg/12h", "600 mg/12h", "600 mg/12h", "600 mg/24h", "600 mg/24h"] },
+      { kind: "dose", context: {"fr": "Infection grave de réanimation", "ar": "عدوى شديدة في الإنعاش"}, d: ["Infections graves de réanimation : 600 mg/8h", "Infections graves de réanimation : 600 mg/8h", "Infections graves de réanimation : 600 mg/8h", "Aucune donnée", "Aucune donnée"] },
     ],
     notes: [],
   },
@@ -1182,9 +1228,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "ريفابوتين فموي",
     section: "antituberculeux",
     page: 12,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j", "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j", "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j", "Poids > 50 kg : 300 mg/24h Poids < 50 kg : 450 mg/48h Si association avec la Clarithromycine : 150 mg/j", "Poids > 50 kg : 300 mg/24h Poids < 50 kg : 450 mg/48h Si association avec la Clarithromycine : 150 mg/j"] },
-      { kind: "dose", d: ["Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j", "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j", "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j", "150 mg/24h Si association avec Indinavir ou Nelfinavir : 150 mg/48h", "150 mg/24h Si association avec Indinavir ou Nelfinavir : 150 mg/48h"] },
+      { kind: "dose", context: {"fr": "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+", "ar": "علاج عدوى Mycobacterium avium لدى المصابين بفيروس VIH"}, d: ["Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j", "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j", "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+ : poids > 50 kg : 600 mg/j poids < 50 kg : 450 mg/j Si association avec la Clarithromycine : 300 mg/j", "Poids > 50 kg : 300 mg/24h Poids < 50 kg : 450 mg/48h Si association avec la Clarithromycine : 150 mg/j", "Poids > 50 kg : 300 mg/24h Poids < 50 kg : 450 mg/48h Si association avec la Clarithromycine : 150 mg/j"] },
+      { kind: "dose", context: {"fr": "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+", "ar": "وقاية من عدوى Mycobacterium avium لدى المصابين بفيروس VIH"}, d: ["Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j", "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j", "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+ : 300 mg/j en une prise Si association avec Indinavir ou Nelfinavir : 150 mg/j", "150 mg/24h Si association avec Indinavir ou Nelfinavir : 150 mg/48h", "150 mg/24h Si association avec Indinavir ou Nelfinavir : 150 mg/48h"] },
     ],
     notes: [],
   },
@@ -1194,9 +1241,10 @@ export const ATB_RENAL_ROWS: AtbRenalRow[] = [
     ar: "ريفامبيسين وريدي/فموي",
     section: "antituberculeux",
     page: 12,
+    contextReviewRequired: true,
     lines: [
-      { kind: "dose", d: ["Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h"] },
-      { kind: "dose", d: ["Infection à germes gram + ou - : 20 à 30 mg/kg/24h", "Infection à germes gram + ou - : 20 à 30 mg/kg/24h", "espacer les prises si besoin selon rifampicémie du 2ᵉ ou 3ᵉ jour du traitement", "espacement des prises indispensable", "espacement des prises indispensable"] },
+      { kind: "dose", context: {"fr": "Tuberculose", "ar": "السل"}, d: ["Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h", "Tuberculose : 8 à 12 mg/kg/24h"] },
+      { kind: "dose", context: {"fr": "Infection à germes Gram + ou -", "ar": "عدوى بجراثيم موجبة أو سالبة الغرام"}, d: ["Infection à germes gram + ou - : 20 à 30 mg/kg/24h", "Infection à germes gram + ou - : 20 à 30 mg/kg/24h", "espacer les prises si besoin selon rifampicémie du 2ᵉ ou 3ᵉ jour du traitement", "espacement des prises indispensable", "espacement des prises indispensable"] },
     ],
     notes: [],
   },

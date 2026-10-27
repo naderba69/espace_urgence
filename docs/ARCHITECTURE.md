@@ -19,7 +19,7 @@ Navigateur
   └── IndexedDB     : miniatures des images ECG (30 max, FIFO)
 ```
 
-- **Aucune donnée patient ne quitte l'appareil** (hors appels IA explicites, avec clé utilisateur).
+- Les données patient restent locales par défaut. Une action IA explicite les envoie directement au fournisseur configuré, jamais à un serveur de l'application. Les explications contextuelles des deux calculateurs rénaux demandent un consentement à chaque envoi et transmettent uniquement le contexte minimal nécessaire (valeur rénale calculée, poids seulement pour un calcul mg/kg, texte source, résultat et limites ; sans nom ni identifiant ajouté par l'outil). Elles ne sont pas ajoutées à l'historique local ; elles restent néanmoins des données de santé soumises aux règles de l'établissement et du fournisseur.
 - **i18n** : contenu = `{ fr, ar }`, `dir`/`lang` posés sur `<html>` avant le premier rendu
   (script anti-FOUC dans `app/layout.tsx`), utilitaires **logiques** uniquement
   (`ms-`/`me-`/`ps-`/`pe-`/`start-`/`end-`) — jamais `ml-`/`mr-`/`left-`/`right-`.

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { medications } from "@/data/medications";
-import { normalize } from "@/lib/text"; // v17.0 — وحدة خفيفة: لا تسحب فهرس البحث
+import { hasExcludedSearchTerm, normalize } from "@/lib/text"; // v17.0 — وحدة خفيفة: لا تسحب فهرس البحث
 import { useApp } from "@/components/Providers";
 import MedicationCard from "@/components/cards/MedicationCard";
 import { Search, Pill } from "lucide-react";
@@ -23,6 +23,7 @@ export default function MedicationsPage() {
     const nq = normalize(q);
     return medications.filter((m) => {
       if (klass && m.klass.fr !== klass) return false;
+      if (hasExcludedSearchTerm(q, m.searchExclusions)) return false;
       if (!nq) return true;
       const hay = normalize(`${m.name.fr} ${m.name.ar} ${m.synonyms.join(" ")} ${m.brands ?? ""}`);
       return nq.split(/\s+/).every((tok) => hay.includes(tok));
