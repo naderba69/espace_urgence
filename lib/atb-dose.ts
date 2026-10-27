@@ -363,6 +363,11 @@ export function isAmbiguousSourceCells(text: string): boolean {
   return /Cellules source multiples/i.test(text);
 }
 
+/** Contexte clinique présent dans la source mais non attribué explicitement à cette cellule. */
+export function isUnassignedSourceContext(text: string): boolean {
+  return /Contexte source non attribué/i.test(text);
+}
+
 export function isDiscouraged(text: string): boolean {
   return /Déconseillé|Contre-indiqué/i.test(text);
 }
@@ -422,9 +427,9 @@ export function isFixedOnly(text: string): boolean {
 }
 
 /** يحتاج نصّ الجرعة مراجعة المصدر الأصلي (لا يُشتَقّ منه رقم) — راجع الجدول الورقي. */
-// Marqueurs pour lesquels la source ne donne PAS de valeur chiffrée exploitable :
-// « Aucune donnée », cellule fusionnée ou ambiguë, réduction non chiffrée, ½ / ¼ dose.
+// Marqueurs qui empêchent une sélection/calcul automatiques : absence de donnée,
+// cellule fusionnée ou ambiguë, contexte source non attribué, réduction non chiffrée, ½ / ¼ dose.
 export function requiresSourceCheck(text: string): boolean {
-  return isNoData(text) || isMergedSourceCell(text) || isAmbiguousSourceCells(text)
+  return isNoData(text) || isMergedSourceCell(text) || isAmbiguousSourceCells(text) || isUnassignedSourceContext(text)
     || /Réduction de la posologie|½\s*dose|¼\s*dose|1\/2 dose|1\/4 dose/i.test(text);
 }

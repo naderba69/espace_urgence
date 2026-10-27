@@ -7,8 +7,9 @@ export const medicationsPhase7: Medication[] = [
   {
     id: "emulsion-lipidique",
     name: { fr: "Émulsion lipidique 20 % (Intralipide®)", ar: "مستحلب دهني 20% (إنتراليبيد)" },
-    brands: "Intralipide® 20 % 100/250/500 mL",
+    brands: "INTRALIPIDE® 20 % (FRESENIUS KABI) — poche 500 mL (AMM DPM 3153061H) ; autres volumes non confirmés dans les extraits examinés.",
     synonyms: ["intralipide", "émulsion lipidique", "lipides", "lipid rescue", "مستحلب دهني"],
+    searchExclusions: ["smofkabiven", "smofkabiven e"],
     klass: { fr: "Antidote — « lipid sink » des toxiques lipophiles", ar: "ترياق — بالوعة شحمية للسموم شحمية المحبة" },
     highRisk: true,
     indications: {
@@ -34,7 +35,8 @@ export const medicationsPhase7: Medication[] = [
   {
     id: "nacl-hypertonique",
     name: { fr: "NaCl hypertonique 3 %", ar: "محلول ملحي مفرط التوتر 3%" },
-    brands: "NaCl 3 % poche 250/500 mL ; à défaut : ampoules NaCl 20 % diluées par la pharmacie",
+    brands: "NaCl 3 % poche 250/500 mL ; à défaut : ampoules NaCl 20 % diluées par la pharmacie ; CHLORURE DE SODIUM PROAMP® (AGUETTANT) 20%, ampoules/10 mL, B/50 (AMM DPM 7093213H)",
+    searchExclusions: ["0.9%", "0.9", "0,9%", "0,9", "09%", "9 p mille", "9 pour mille", "isotonique", "sérum physiologique", "chlorure de sodium 10%", "nacl 10%", "10%", "glucosaline", "glukanion", "nakion", "salamest", "voluven", "diluant physiologique phenole", "solution dpca", "dialyse peritoneale"],
     synonyms: ["sérum salé hypertonique", "nacl 3%", "hypertonique", "ملح مفرط التوتر"],
     klass: { fr: "Soluté hypertonique — correction urgente de l'hyponatrémie symptomatique", ar: "محلول مفرط التوتر — تصحيح عاجل لنقص الصوديوم العرضي" },
     highRisk: true,
@@ -97,8 +99,8 @@ export const medicationsPhase7: Medication[] = [
   {
     id: "propranolol",
     name: { fr: "Propranolol", ar: "بروبرانولول" },
-    brands: "Hémipralon®/Avlocardyl® 40 mg cp ; Propranolol injectable 1 mg/mL",
-    synonyms: ["propranolol", "avlocardyl", "hémipralon", "bêta-bloquant non sélectif", "بروبرانولول"],
+    brands: "Hémipralon®/Avlocardyl® 40 mg cp ; Avlocardyl® (ASTRA ZENECA) 5 mg/5 mL inj. (B/5 amp.) ; Propranolol injectable 1 mg/mL ; NORMOCARDIL® (DAR-ESSAYDALI) 40 mg comprimé quadrisécable B/45 et B/300 (AMM DPM 9213091/9213092H)",
+    synonyms: ["propranolol", "avlocardyl", "hémipralon", "normocardil", "bêta-bloquant non sélectif", "بروبرانولول"],
     klass: { fr: "Bêta-bloquant non sélectif — antiarythmique, anti-ischémique, bloque la conversion T4→T3", ar: "حاصر بيتا غير انتقائي — مضاد لانظم ومضاد إقفاري ويحصر تحويل T4→T3" },
     highRisk: true,
     indications: {
@@ -133,8 +135,9 @@ export const medicationsPhase7: Medication[] = [
   {
     id: "dexamethasone",
     name: { fr: "Dexaméthasone", ar: "ديكساميثازون" },
-    brands: "Dectancyl® / Soludécadron® 4 mg/1 mL ; 20 mg/2 mL",
-    synonyms: ["dexaméthasone", "dectancyl", "soludecadron", "corticoïde", "ديكساميثازون"],
+    brands: "",
+    searchExclusions: ["auricularum", "auricularum ear drops", "dexacol", "dexamex", "ster-dex", "tobracort", "tobradex", "maxidrol", "medaxon", "dectancyl", "soludecadron", "dexamethasone medis", "dexamedis fort", "dexone", "unidex", "collyre", "ophtalmique", "eye drops"],
+    synonyms: ["dexaméthasone", "corticoïde", "ديكساميثازون"],
     klass: { fr: "Corticoïde de synthèse longue durée — puissant anti-inflammatoire, sans interférence avec le dosage du cortisol", ar: "كورتيزون صناعي طويل الأمد — مضاد التهاب قوي دون تداخل مع قياس الكورتيزول" },
     highRisk: true,
     indications: {

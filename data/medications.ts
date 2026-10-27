@@ -16,8 +16,9 @@ const medicationsCore: Medication[] = [
   {
     id: "adrenaline",
     name: { fr: "Adrénaline (Épinéphrine)", ar: "أدرنالين (إبينفرين)" },
-    brands: "Adrénaline Aguettant® 1 mg/1 mL ; Adrénaline Medis® 1 mg/1 mL",
+    brands: "Adrénaline Aguettant® 1 mg/mL (amp. 5 mL, sans sulfites) ; MEDIS® sans conservateur 1 mg/1 mL et 5 mg/5 mL ; Renaudin® 1 mg/mL (amp. 1 mL) ; ADRENALINE SOPHARMA® 1 mg/mL (B/10 amp. 1 mL ; AMM 10793012H) ; ADRENOL 1® (DORCAS) 1 mg/mL sans sulfites (B/100 ; AMM 9313141H) et avec sulfite (B/100 ; AMM 9313142H)",
     synonyms: ["adrenaline", "epinephrine", "épinéphrine", "adrénaline", "adrenalina", "أدرنالين"],
+    searchExclusions: ["anapen", "articaine", "articaine adrenaline", "primacaine", "primacaine adrenaline", "septanest", "ubistesin"],
     klass: { fr: "Catécholamine — α et β-adrénomimétique", ar: "كاتيكولامين — منبّه ألفا وبيتا أدرينالي" },
     highRisk: true,
     indications: {
@@ -63,8 +64,8 @@ const medicationsCore: Medication[] = [
   {
     id: "amiodarone",
     name: { fr: "Amiodarone", ar: "أميودارون" },
-    brands: "Cordarone® 150 mg/3 mL (IV) ; 200 mg cp",
-    synonyms: ["amiodarone", "cordarone", "أميودارون", "كوردارون"],
+    brands: "Cordarone® (SANOFI-AVENTIS FRANCE) 150 mg/3 mL inj. (AMM DPM 6260032) ; 200 mg cp B/20 (SANOFI TUNISIE, AMM DPM ST9263071) ; SEDACORON® (EBEWE) 150 mg/3 mL inj. (B/5 ; AMM DPM 6943012) ; 200 mg cp ; AMIOCARD® 200 mg cp (ADWYA) ; RICARDYL® 200 mg cp (IBN AL BAYTAR ; B/20 ; AMM DPM 9073471)",
+    synonyms: ["amiodarone", "cordarone", "ricardyl", "أميودارون", "كوردارون"],
     klass: { fr: "Antiarythmique classe III", ar: "مضاد اضطراب نظم من الصنف الثالث" },
     highRisk: true,
     indications: {
@@ -106,7 +107,8 @@ const medicationsCore: Medication[] = [
   {
     id: "atropine",
     name: { fr: "Atropine", ar: "أتروبين" },
-    brands: "Atropine Aguettant® 1 mg/1 mL ; 0,5 mg/1 mL",
+    brands: "Présentations enregistrées au DPM (mise à jour de la liste : 07/10/2026 ; l'AMM n'atteste pas la disponibilité en pharmacie) : ATROPINE SAIPH® 0,25 mg/mL, solution injectable, B/10/1 mL (SAIPH ; AMM 9163801H) ; ATROPINE SULFATE AGUETTANT® 0,250 mg/1 mL, solution injectable, B/10/1 mL (LABORATOIRE AGUETTANT ; AMM 7093062H) ; ATROPINUM SULFURICUM® 1 mg/mL, solution injectable, B/10/1 mL (SOPHARMA SA ; AMM 10793011H). Les fiches DPM indiquent la forme injectable et des indications compatibles avec cette carte ; la voie exacte reste à vérifier au RCP du produit réellement utilisé.",
+    searchExclusions: ["atropine unimed", "unimed atropine", "collyre", "ophthalmic"],
     synonyms: ["atropine", "أتروبين", "اتروبين"],
     klass: { fr: "Anticholinergique (antimuscarinique)", ar: "مضاد كوليني (مضاد موسكاريني)" },
     highRisk: false,
@@ -140,8 +142,8 @@ const medicationsCore: Medication[] = [
   {
     id: "noradrenaline",
     name: { fr: "Noradrénaline", ar: "نورأدرنالين" },
-    brands: "Noradrénaline (tartrate) Aguettant® 8 mg/4 mL (à diluer)",
-    synonyms: ["noradrenaline", "norepinephrine", "norépinéphrine", "levantérénol", "نورأدرنالين"],
+    brands: "Noradrénaline (tartrate) Aguettant® 8 mg/4 mL (à diluer) ; DPM : NORADRENALINE MEDIS 2 mg/mL (B/10, AMM 9233851H), MYLAN 2 mg/mL (B/50, AMM 4923181H), RENAUDIN 2 mg/mL (B/10, AMM 7713081H), STERIPHARM 2 mg/mL (B/10, AMM 9443091H) ; NORALINE (UNIMED) 2 mg/mL (B/10, AMM 9093691H), NORENOL 8 (DORCAS) 8 mg/4 mL (B/10 ampoules, AMM 9313151H)",
+    synonyms: ["noradrenaline", "norepinephrine", "norépinéphrine", "levantérénol", "noradrenaline medis", "noradrenaline mylan", "noradrenaline renaudin", "noradrenaline steripharm", "noraline", "norenol", "نورأدرنالين"],
     klass: { fr: "Catécholamine — vasopresseur α prédominant", ar: "كاتيكولامين — قابض وعائي ألفا غالب" },
     highRisk: true,
     indications: {
@@ -182,8 +184,9 @@ const medicationsCore: Medication[] = [
   {
     id: "midazolam",
     name: { fr: "Midazolam", ar: "ميدازولام" },
-    brands: "Hypnovel® 5 mg/5 mL ; Midazolam Mylan® 5 mg/5 mL",
-    synonyms: ["midazolam", "hypnovel", "ميدازولام", "هيبنوفيل"],
+    brands: "Hypnovel® 5 mg/5 mL ; Midazolam Mylan® 5 mg/5 mL ; HIKMA Midazolam® 5 mg/mL (amp. 1 mL) ; IPNODIS MEDIS® (MEDIS) 1 mg/mL (2 mg/2 mL, B/10) et 5 mg/mL (5 mg/1 mL, B/10 ; 25 mg/5 mL, B/5) ; IPNODIS® 50 mg/10 mL (B/6) ; ZOLAM 5® (DORCAS) 5 mg/mL (B/50 amp. 1 mL, AMM DPM 9313211H) et ZOLAM 25® 25 mg/5 mL (B/50 amp. 5 mL, 9313212H)",
+    searchExclusions: ["midazolam aguettant", "midazolam steripharm"],
+    synonyms: ["midazolam", "hypnovel", "ipnodis", "ميدازولام", "هيبنوفيل"],
     klass: { fr: "Benzodiazépine — anticonvulsivant/sédatif", ar: "بنزوديازيبين — مضاد اختلاج/مهدئ" },
     highRisk: true,
     indications: {
@@ -247,7 +250,8 @@ const medicationsCore: Medication[] = [
   {
     id: "glucose30",
     name: { fr: "Glucose 30 % (G30)", ar: "غلوكوز 30% (G30)" },
-    brands: "Glucose 30 % Aguettant® (ampoules) ; G30®",
+    brands: "GLUCOSE A 30% (SIPHAT) — flacon 500 mL pour perfusion ; GLUCOSE A 30% INFOMED — poche 500 mL pour perfusion ; GLUCOSE 30% PROAMP® (Aguettant) — B/50 amp. 10 mL. Présentations distinctes ; ne pas confondre les poches de 500 mL avec les ampoules.",
+    searchExclusions: ["glucose 5", "glucose 10", "5%", "5 %", "10%", "10 %", "glucosaline", "glukanion", "nakion", "solute isotonique glucose", "solution dpca", "dialyse peritoneale"],
     synonyms: ["glucose", "g30", "dextrose", "sucre", "غلوكوز", "سكر"],
     klass: { fr: "Glucide hypertonique — antidote hypoglycémie", ar: "سكر مفرط التوتر — ترياق نقص السكر" },
     highRisk: false,
@@ -277,7 +281,7 @@ const medicationsCore: Medication[] = [
   {
     id: "furosemide",
     name: { fr: "Furosémide", ar: "فوروسيميد" },
-    brands: "Lasilix® 20 mg/2 mL (IV) ; 40 mg cp",
+    brands: "Lasilix® 40 mg cp (SANOFI / WINTHROP) ; Lasilix Retard® 60 mg gél. LP ; Lasilix Special® 250 mg/25 mL inj. et 500 mg cp ; Lasicare® 40 mg cp (B/20, B/600) et 500 mg cp (B/50) ; Furosémide (SIPHAT) 40 mg cp (B/20, B/600) ; Furans 20® 20 mg/2 mL inj. (B/2, B/50) ; Furilan® 40 mg cp et 20 mg/2 mL inj. (B/5) ; Furolix® 20 mg/2 mL inj. (B/2, B/50) ; Furolix Special® 250 mg/25 mL inj. (B/5) ; Furoxem® 20 mg/2 mL inj. ; Furosemide Steripharm® 20 mg/2 mL inj. ; Furosemide Renaudin® 20 mg/2 mL inj. ; ANSEMID® (WEST PHARMA) 40 mg cp B/30, B/40, B/500 et 500 mg cp B/36 (AMM DPM 9293101/9293103/9293102H/9293191)",
     synonyms: ["furosemide", "lasilix", "diurétique", "فوروسيميد", "لازيليكس"],
     klass: { fr: "Diurétique de l'anse", ar: "مدرّ عروي" },
     highRisk: false,

@@ -33,6 +33,17 @@ export function normalize(s: string): string {
   );
 }
 
+/** True when a query contains an excluded whole token or explicit multiword alias. */
+export function hasExcludedSearchTerm(query: string, exclusions: readonly string[] = []): boolean {
+  if (exclusions.length === 0) return false;
+  const normalizedQuery = normalize(query);
+  const queryTokens = normalizedQuery.split(/\s+/).filter(Boolean);
+  return exclusions.some((term) => {
+    const normalizedTerm = normalize(term);
+    return queryTokens.includes(normalizedTerm) || ` ${normalizedQuery} `.includes(` ${normalizedTerm} `);
+  });
+}
+
 /**
  * Synonymes bidirectionnels courants (clés et valeurs déjà normalisées).
  * مرادفات ثنائية الاتجاه: تجاري ↔ علمي ↔ عربي (كل المفاتيح مطبَّعة).

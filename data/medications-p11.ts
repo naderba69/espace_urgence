@@ -6,8 +6,9 @@ export const medicationsPhase11: Medication[] = [
   {
     id: "ketoprofene",
     name: { fr: "Kétoprofène", ar: "كيتوبروفين" },
-    brands: "Profénid® 100 mg/2 mL inj ; cp 100 mg ; gel",
+    brands: "PROFENID® 100 mg cp oral (B/15, B/30 ; AMM DPM ST9263391/ST9263392 [SANOFI], 9103521/9103524 [WINTHROP]) ; PROFENID IM® 100 mg/2 mL injectable (B/5, B/2 ; AMM DPM ST9263431 [SANOFI], ST9103523/ST9103525 [WINTHROP] ; DPM l'intitule IM, ne pas en déduire une présentation IV) ; KETOPROF 100® (DORCAS) 100 mg/2 mL inj. (B/2 ou B/5) ; KETOMED IM® (UNIMED) 100 mg/2 mL inj. (B/2 ou B/5)",
     synonyms: ["ketoprofene", "profenid", "AINS", "كيتوبروفين"],
+    searchExclusions: ["axen", "flexen", "ketoprog", "ketum gel"],
     klass: { fr: "AINS — anti-inflammatoire non stéroïdien (colique néphrétique 1re ligne)", ar: "مضاد التهاب غير ستيرويدي — الخط الأول بالمغص الكلوي" },
     highRisk: false,
     indications: {
@@ -46,7 +47,7 @@ export const medicationsPhase11: Medication[] = [
   {
     id: "tamsulosine",
     name: { fr: "Tamsulosine", ar: "تامسولوسين" },
-    brands: "Josir® LP 0,4 mg ; Omexel® LP 0,4 mg",
+    brands: "Josir® LP 0,4 mg ; Omexel® LP 0,4 mg ; PROSTAM L.P.® (ADWYA) 0,4 mg gélule LP orale (B/30 AMM DPM 9043851 ; B/90 AMM DPM 9043852)",
     synonyms: ["tamsulosine", "josir", "omexel", "alpha-bloquant", "تامسولوسين"],
     klass: { fr: "Alpha-1-bloquant urosélectif — traitement expulsif du calcul, RAU/HBP", ar: "حاصر ألفا-1 انتقائي مسالكياً — علاج طارد للحصاة، الاحتباس/تضخم البروستات" },
     highRisk: false,
@@ -86,8 +87,9 @@ export const medicationsPhase11: Medication[] = [
   {
     id: "ciprofloxacine",
     name: { fr: "Ciprofloxacine", ar: "سيبروفلوكساسين" },
-    brands: "Ciflox® 200 mg/100 mL inj ; cp 250-500 mg",
-    synonyms: ["ciprofloxacine", "ciflox", "cipro", "fluoroquinolone", "سيبروفلوكساسين"],
+    brands: "Ciflox® 200 mg/100 mL inj ; CIPRO® (MEDIS) 200 mg/100 mL perf. et cp 500/750 mg B/14 (AMM DPM 9233291/9233295H/9233293/9233294) ; CIPROJECT® 200/400 mg perf. ; CIPROFLOXACINE KABI® 200 mg/100 mL et 400 mg/200 mL perf. ; CIFLOXET® 200 mg/100 mL perf. ; CIPROFLO INFO® (INFOMED) 2 mg/mL perf., poches 100/200 mL (AMM DPM 9193171H/9193172H) ; CIPROFLOXACINE AGUETTANT® 200 mg/100 mL perf., B/20 poches (AMM DPM 7093271H) ; UFEXIL® (DEMO SA) 200 mg/100 mL solution injectable pour perfusion, B/10 flacons/100 mL (AMM DPM 6855101H) ; QUINOLOX® (ACT PHARMA) cp 500 mg et 750 mg (B/14 ; AMM DPM 9363091/9363092) ; SIFLOKS® (TERIAK) cp 500 mg (B/14, B/28, B/70) et 750 mg (B/14, B/28 ; AMM DPM 9253031/9253032/9253032H/9253034/9253035) ; SIPRODIS® (GALPHARMA) cp 500/750 mg B/14 (AMM DPM 9223621/9223622) ; CIFLOXIN® (TERIAK) 500 mg cp B/14 (AMM DPM 9253421) ; CIPROCINE® (DAR-ESSAYDALI) cp 500/750 mg B/14 (AMM DPM 9213441/9213442) ; CIPRODAR® (SAIPH) 500 mg cp B/70 (AMM DPM 9163302H) ; CIPROFLEX® (TAHA PHARMA) cp 500 mg B/14/B/28 et 750 mg B/15 (AMM DPM 9373211/9373213/9373212) ; CIPROLON® (IBN AL BAYTAR) cp 500/750 mg (AMM DPM 9073211/9073212/9073213/9073214) ; CIPROMAX® (PHARMACARE) cp 500/750 mg B/14 (AMM DPM 9343441/9343442) ; CIPROSAIPH® (SAIPH) 500 mg cp B/14 (AMM DPM 9163681) ; BACTALL® (SAIPH) 500 mg cp B/10 et B/70 (AMM DPM ST9163682/9163683H) ; cp 250-500 mg",
+    searchExclusions: ["ciloxan", "cipro collyre", "collyre", "ophtalmique"],
+    synonyms: ["ciprofloxacine", "ciflox", "cipro", "quinolox", "ufexil", "sifloks", "siprodis", "fluoroquinolone", "سيبروفلوكساسين"],
     klass: { fr: "Antibiotique — fluoroquinolone (Gram négatifs dont Pseudomonas, diffusion prostatique)", ar: "مضاد حيوي — فلوروكينولون (سلبيات الغرام منها الزائفة، نفوذ بروستاتي)" },
     highRisk: false,
     indications: {
@@ -126,8 +128,9 @@ export const medicationsPhase11: Medication[] = [
   {
     id: "gentamicine",
     name: { fr: "Gentamicine", ar: "جنتامايسين" },
-    brands: "Gentalline® 80 mg/2 mL inj",
-    synonyms: ["gentamicine", "gentalline", "aminoside", "جنتامايسين"],
+    brands: "Présentations enregistrées au DPM (mise à jour de la liste : 07/10/2026 ; l'AMM n'atteste pas la disponibilité en pharmacie) : GENTA 80® (MEDIS), 80 mg/2 mL, solution injectable — B/50 (AMM 9233052H), B/5 (9233051), B/1 (9233054) ; GENTAINJECT 80® (STERIPHARM), 80 mg/2 mL, solution injectable — B/100 (AMM 9443054H), B/5 (9443053) ; CIDOMYCINE 20® (SAIPH), 20 mg/2 mL, solution injectable — B/5 (AMM 9163491) ; UNIGENTA® (UNIMED), solution injectable — 10 mg, B/2/1 mL (AMM 9093531), 20 mg, B/2/2 mL (9093532), 40 mg, B/2/2 mL (9093533), 80 mg, B/2/2 mL (9093534), 160 mg, B/2/2 mL (9093535) et 160 mg, B/1/2 mL (9093536). Les fiches DPM classent ces présentations comme gentamicine systémique et décrivent des infections sévères, notamment endocardites et infections avec bactériémie ; elles ne donnent pas une voie IV/IM explicite. L'association à cette carte suit la règle de revue documentée « forme injectable + indication systémique compatible » ; vérifier la voie exacte au RCP du produit utilisé. UNIGENTA 0,3 % (AMM 9093141) est un collyre et reste exclu.",
+    searchExclusions: ["gentalline", "gentadar", "unigenta collyre", "unigenta 0.3%", "unigenta 0.3% collyre", "collyre", "ophtalmique", "ophthalmic"],
+    synonyms: ["gentamicine", "aminoside", "جنتامايسين"],
     klass: { fr: "Antibiotique — aminoside (synergie endocardite, sepsis néonatal, couverture Gram négatif sévère)", ar: "مضاد حيوي — أمينوغليكوزيد (تآزر بالشغاف، إنتان حديثي الولادة، تغطية سلبيات الغرام الشديدة)" },
     highRisk: true,
     indications: {
@@ -206,7 +209,8 @@ export const medicationsPhase11: Medication[] = [
   {
     id: "chlorure-potassium",
     name: { fr: "Chlorure de potassium (KCl)", ar: "كلوريد البوتاسيوم" },
-    brands: "KCl 10 % — ampoule 10 mL (1 g = 13,4 mmol)",
+    brands: "Chlorure de potassium 10 % UNIMED® — ampoule 10 mL (B/100; 1 g = 13,4 mmol)",
+    searchExclusions: ["7.46%", "7.46", "chlorure de potassium 7.46%", "chlorure de potassium 500 mg", "chlorure de potassium 500mg", "potassium 500 mg", "potassium 500mg", "500mg", "comprimé", "osmomed", "polyionique", "glukanion", "nakion"],
     synonyms: ["chlorure de potassium", "KCl", "potassium", "كلوريد البوتاسيوم"],
     klass: { fr: "Électrolyte — correction de l'hypokaliémie (toujours dilué, jamais en bolus)", ar: "شوارد — تصحيح نقص البوتاسيوم (مخفف دائماً، أبداً دفعة)" },
     highRisk: true,

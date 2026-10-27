@@ -6,8 +6,9 @@ export const medicationsPhase8: Medication[] = [
   {
     id: "amoxicilline",
     name: { fr: "Amoxicilline", ar: "أموكسيسيلين" },
-    brands: "Clamoxyl® 500 mg/1 g cp ; 1 g/5 mL inj ; sirop 125-250 mg/5 mL ; Amoxil®",
-    synonyms: ["amoxicilline", "clamoxyl", "amoxil", "aminopénicilline", "أموكسيسيلين"],
+    brands: "GALAMOX® (GALPHARMA) 250/500 mg/5 mL suspensions orales (fl. 60 mL), 500 mg gélules B/12, 500 mg comprimés dispersibles B/12 et B/24, 1 g comprimés dispersibles B/14 (AMM DPM 9223661/9223662/9223665/9223664/9223663/9223666) ; Clamoxyl® (ADWYA) 500 mg gélule, suspensions 125/250/500 mg (fl. 60 mL), cp dispersibles 500 mg/1 g ; SAIFOXYL® (SAIPH) formes orales 125/250/500 mg/5 mL suspensions, gélules 250/500 mg, comprimés 500 mg/1 g et comprimés dispersibles 500 mg/1 g (AMM DPM listées dans le rapport) ; Amoxil® IM/IV (UNIMED) 0,5/1 g ; AMOXAL® (MEDICEF) 250 mg susp. (fl. 100 mL), cp dispersibles 500 mg/1 g ; Amoxicilline Sanofi® 250/500 mg/5 mL susp., 500 mg gélule, 1 g dispersible ; NOVAMOX® (ADWYA) 250 mg/5 mL suspension FL/60 mL, 500 mg/5 mL suspension FL/60 mL, 500 mg gélule B/12, comprimés dispersibles 500 mg B/12 et B/24, 1 g comprimé dispersible B/12 (AMM DPM 9043971–9043976) ; PENAMOX® (MEDICEF) 250 mg poudre pour suspension orale FL/100 mL, 500 mg capsules B/24 et B/400, 1 g comprimé pelliculé sécable B/12, 500 mg granulés pour suspension FL/100 mL (AMM DPM 9183024/9183026/9183028/9183029/91830210H)",
+    synonyms: ["amoxicilline", "clamoxyl", "amoxil", "novamox", "penamox", "aminopénicilline", "أموكسيسيلين"],
+    searchExclusions: ["vaamox", "amoclan", "amoxi plus", "amoxi-clav", "amoxi clav", "amoxiclav", "augmentin", "ciblor", "clavumox", "mediclav", "novaclav", "clavulanique", "clavulanate", "biclavor", "clavepen", "clavor"],
     klass: { fr: "Antibiotique — aminopénicilline (bêta-lactamine)", ar: "مضاد حيوي — أمينوبنسلين (بيتا-لاكتام)" },
     highRisk: false,
     indications: {
@@ -46,8 +47,9 @@ export const medicationsPhase8: Medication[] = [
   {
     id: "azithromycine",
     name: { fr: "Azithromycine", ar: "أزيثروميسين" },
-    brands: "Zithrolox® 500 mg cp / 200 mg poudre ; Azadose® ; Zitrolide®",
-    synonyms: ["azithromycine", "zithrolox", "zithromax", "macrolide", "أزيثروميسين"],
+    brands: "Zithrolox® 500 mg cp / 200 mg poudre ; AZACINE® 500 mg cp sécable (B/3; DAR-ESSAYDALI) ; Azadose® ; Zitrolide® ; ZOMAX® (IBN AL BAYTAR) 250 mg gélule B/6, 500 mg cp B/3, suspensions 600 mg/15 mL, 900 mg/22.5 mL et 1500 mg/37.5 mL (AMM DPM 9073421–9073425) ; ZITROCIN® 500 mg cp B/3 et suspension 600 mg/15 mL (9253411/9253412) ; ZITHROMAX® 500 mg cp B/3 et poudre 1500 mg/37.5 mL (9243053/6043171) ; ZITHROMAX UNO® 500 mg cp B/2 (9243054) ; ZITROMAX 600 mg/15 mL et 900 mg/22.5 mL (8013021/8013022) ; ZITHROCARE® 500 mg cp B/3 (9343191) ; ZITRO® 500 mg cp B/3 (9234021) ; AZITHROCINE® (SIPHAT) 250 mg gélule B/6 (AMM 9003781) ; AZITRAL® (ACT PHARMA) 500 mg cp B/3 (9363071) ; AZITROMIN DUO® 500 mg cp B/2 (WEST PHARMA, 9293291) et AZITROMIN TRIO® 500 mg cp B/3 (9293292) ; AZIX® (PHARMAGHREB) cp 500 mg B/3 (9013601), suspensions 40 mg/mL : 15 mL (9013602), 22.5 mL (9013603), 30 mL (9013604), 37.5 mL (9013605) ; AZOMYCINE® (PIERRE FABRE) 500 mg cp B/3 (9323221) ; AZRO® (TERIAK) 500 mg cp B/3 (9253221) et suspensions 40 mg/mL : 15 mL (9253222), 22.5 mL (9253223), 37.5 mL (9253224)",
+    synonyms: ["azithromycine", "zithrolox", "zithromax", "zitromax", "zomax", "zitrocin", "zithrocare", "zitro", "macrolide", "أزيثروميسين"],
+    searchExclusions: ["azyter", "collyre", "ophtalmique"],
     klass: { fr: "Antibiotique — macrolide (couverture des germes atypiques)", ar: "مضاد حيوي — ماكروليد (يغطي الجراثيم اللانمطية)" },
     highRisk: false,
     indications: {

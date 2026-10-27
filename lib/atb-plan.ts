@@ -23,12 +23,14 @@ export interface PlanEntry {
 }
 
 export interface PlanState {
-  version: 2;
+  version: 3;
   entries: PlanEntry[];
 }
 
-// Version 2 invalide les snapshots créés avec l'ancien mappage des cellules OMEDIT.
-export const PLAN_KEY = "eutn:atb-plan-v2";
+// Version 3 invalide les snapshots pris avant la revue des contextes de dose (dont Ceftobiprole).
+// Les versions précédentes restent sur l'appareil, mais ne sont jamais réimportées comme décisions actives.
+export const PLAN_KEY = "eutn:atb-plan-v3";
+export const PREVIOUS_PLAN_KEY = "eutn:atb-plan-v2";
 export const LEGACY_PLAN_KEY = "eutn:atb-plan-v1";
 
 export const planReasonLabel: Record<PlanReason, Localized> = {
@@ -40,7 +42,7 @@ export const planReasonLabel: Record<PlanReason, Localized> = {
 };
 
 export function emptyPlan(): PlanState {
-  return { version: 2, entries: [] };
+  return { version: 3, entries: [] };
 }
 
 /** آخر قرار لكل تركيبة (الجولة الأعلى) — الحالة الحالية للخطّة. */
@@ -63,12 +65,12 @@ export function nextRound(plan: PlanState, id: string): number {
 export function addDecision(plan: PlanState, entry: Omit<PlanEntry, "round" | "at"> & { at?: string }): PlanState {
   const round = nextRound(plan, entry.id);
   const at = entry.at ?? new Date().toISOString();
-  return { version: 2, entries: [...plan.entries, { ...entry, round, at }] };
+  return { version: 3, entries: [...plan.entries, { ...entry, round, at }] };
 }
 
 /** حذف كل أثر تركيبة (رجوع عن الإدراج في الخطّة). */
 export function removeMolecule(plan: PlanState, id: string): PlanState {
-  return { version: 2, entries: plan.entries.filter((e) => e.id !== id) };
+  return { version: 3, entries: plan.entries.filter((e) => e.id !== id) };
 }
 
 export function resetPlan(): PlanState {
@@ -79,12 +81,12 @@ export function resetPlan(): PlanState {
 export function parsePlan(raw: unknown): PlanState {
   if (!raw || typeof raw !== "object") return emptyPlan();
   const o = raw as { version?: unknown; entries?: unknown };
-  if (o.version !== 2 || !Array.isArray(o.entries)) return emptyPlan();
+  if (o.version !== 3 || !Array.isArray(o.entries)) return emptyPlan();
   const entries = o.entries.filter((e): e is PlanEntry => {
     const x = e as Partial<PlanEntry>;
     return typeof x.id === "string" && typeof x.round === "number" && (x.decision === "retenue" || x.decision === "abandonnee");
   });
-  return { version: 2, entries };
+  return { version: 3, entries };
 }
 
 /** تصدير الخطّة نصًّا (يُلصق في الملاحظات أو الملف الطبي). */

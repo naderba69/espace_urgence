@@ -5,7 +5,7 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "ketamine",
     name: { fr: "Kétamine", ar: "كيتامين" },
-    brands: "Kétalar® 500 mg/10 mL ; Kétamine Panpharma® 50 mg/mL",
+    brands: "Kétalar® 500 mg/10 mL ; KETAMINE PANPHARMA® : 250 mg, B/25/5 mL (AMM DPM 7233011H) ; 50 mg/mL, B/5/5 mL (AMM DPM 7233012H).",
     synonyms: ["ketamine", "ketalar", "كيتامين", "كيتالار"],
     klass: { fr: "Anesthésique dissociatif — antagoniste NMDA", ar: "مخدّر انفصالي — مضاد NMDA" },
     highRisk: true,
@@ -36,8 +36,9 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "paracetamol",
     name: { fr: "Paracétamol IV", ar: "باراسيتامول وريدي" },
-    brands: "Perfalgan® 1 g/100 mL (IV) ; Doliprane® 1 g cp ; Dafalgan®",
-    synonyms: ["paracetamol", "perfalgan", "acetaminophene", "doliprane", "باراسيتامول", "بيرفالغان"],
+    brands: "ANALGAN® (SIPHAT) IV 10 mg/mL : 100 mL (AMM 9003018) ; ANALGAN ENFANT ET NOURRISSON® IV 10 mg/mL : 50 mL (AMM 9003017) ; Perfalgan® 1 g/100 mL (IV) ; STOPALGIC® (MEDIS) IV 10 mg/mL (50 mL : B/1 ou B/12 ; 100 mL : B/1 ou B/12) ; PARAMED® (UNIMED) IV 10 mg/mL, poches 50/100 mL (AMM DPM 9093801–9093804) ; PARAC INFO® (INFOMED) IV 10 mg/mL, poches 50/100 mL (AMM DPM 9193151/9193152) ; PARALGYL 500®/1000® (DORCAS) IV 10 mg/mL, poche 50 mL B/6 et 100 mL B/1, B/6 ou B/24 (AMM DPM 9313041–9313044) ; STOPALGIC® 500 mg/1 g cp et ADOL® 500 mg/1 g cp ou gouttes 100 mg/mL (formes orales uniquement, pas le schéma IV) ; Doliprane®/Dafalgan®/ALGESIC® formes orales uniquement, pas le schéma IV",
+    synonyms: ["paracetamol", "perfalgan", "paramed", "parac info", "paralgyl", "acetaminophene", "doliprane", "باراسيتامول", "بيرفالغان"],
+    searchExclusions: ["cetamol", "cetradol", "algesic", "algesic pediatrique", "algesic plus", "algesic rhume", "analgan 500", "analgan codeine", "analgan extra", "analgan jeune enfant", "analgan nourrissons", "analgan 170", "analgan 80", "oral", "suppositoire", "suppository", "comprimé", "comprime", "tablet", "suspension", "buvable", "sirop", "sachet", "gélule", "gelule", "capsule", "apyrex", "co-algesic", "co algidol", "stopalgic codeine", "stopalgic extra", "supradol", "synalvic", "windol", "dafalgan", "adol", "doliprane", "effadol", "efferalgan", "fervex", "fibrex", "novadol", "novadol extra", "novex adulte", "paracetyl", "paralvit", "fortadol", "fortalgic", "fresidol", "goldix", "gripex", "klipal codeine", "lamaline", "latifex plus", "bi-amdol"],
     klass: { fr: "Antalgique/antipyrétique non opioïde", ar: "مسكن/خافض حرارة غير أفيوني" },
     highRisk: false,
     indications: { fr: "Douleur légère à modérée, fièvre — palier 1 d'analgésie multimodale.", ar: "ألم خفيف–متوسط، حمّى — الدرجة الأولى من التسكين المتعدد." },
@@ -113,8 +114,9 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "trinitrine",
     name: { fr: "Trinitrine (glycéryl trinitrate)", ar: "ثلاثي نترات الغليسيريل" },
-    brands: "Natispray® 0,15 mg/dose (pulvérisation sublinguale) ; Trinitrine simple 15 mg/50 mL (IV)",
-    synonyms: ["trinitrine", "nitroglycerine", "nitroglycerin", "gtn", "ntg", "نيتروغليسرين", "ناتيسبراي"],
+    brands: "Trinitrine simple 15 mg/50 mL (IV)",
+    searchExclusions: ["natispray"],
+    synonyms: ["trinitrine", "nitroglycerine", "nitroglycerin", "gtn", "ntg", "نيتروغليسرين"],
     klass: { fr: "Vasodilatateur nitré (veineux > artériel)", ar: "موسّع وعائي نتراتي (وريدي > شرياني)" },
     highRisk: true,
     indications: {
@@ -146,8 +148,9 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "aspirine",
     name: { fr: "Aspirine (acide acétylsalicylique)", ar: "أسبرين (حمض أسيتيل الساليسيليك)" },
-    brands: "Aspégic® 500 mg/1 g (poudre IV, lysine) ; Kardégic® 75 mg",
-    synonyms: ["aspirine", "aspirin", "aas", "asa", "kardegic", "aspegic", "أسبرين", "كارديجيك", "أسبيجيك"],
+    brands: "Aspégic® (acétylsalicylate de lysine) 1 g inj. (B/6 + solvant/5 mL) et 500 mg inj. (B/20 flacons ou B/6 + solvant/5 mL) ; Aspégic Adultes® 1 g oral (B/16 ou B/20) ; Aspirine SIPHAT® 500 mg cp (B/20, B/500) ; Kardégic® (acétylsalicylate de lysine) 160 mg poudre orale (B/20, B/30) ; TROMBYL® 75 mg comprimé oral (PFIZER AB, flacon/100 ; AMM DPM 13473011) ; ACTALGINE® 500 mg cp (ACT PHARMA, B/18 ; AMM 9363151) ; CARDIOCINE® 100 mg comprimé oral (ACT PHARMA, B/30 AMM DPM 9363121, B/90 AMM DPM 9363122) ; Acétylsalicylate de lysine LABESFAL® 900 mg injectable (B/6 ou B/50 + solvant/5 mL ; AMM 4333041/4333042)",
+    searchExclusions: ["vigaspir", "phenaspirine", "cafenol"],
+    synonyms: ["aspirine", "aspirin", "aas", "asa", "trombyl", "kardegic", "aspegic", "أسبرين", "كارديجيك", "أسبيجيك"],
     klass: { fr: "Antiagrégant plaquettaire (COX-1)", ar: "مضاد تجمع صفيحي (COX-1)" },
     highRisk: false,
     indications: {
@@ -200,8 +203,8 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "oxytocine",
     name: { fr: "Ocytocine", ar: "أوكسيتوسين" },
-    brands: "Syntocinon® 5 UI/1 mL ; 10 UI/1 mL",
-    synonyms: ["oxytocine", "syntocinon", "ocitocine", "أوكسيتوسين", "سينتوسينون"],
+    brands: "Syntocinon® 5 UI/1 mL ; 10 UI/1 mL ; OXYTOCIN GRINDEKS® 5 UI/mL (B/10 amp. 1 mL, AMM DPM 15483011) ; OXYTOCINE® (GEDEON RICHTER) 5 UI (B/5 amp. 1 mL, AMM DPM 6673071) ; OXYTOCINE PANPHARMA® 5 UI/mL (B/10, AMM DPM 7233141)",
+    synonyms: ["oxytocine", "syntocinon", "oxytocin grindeks", "oxytocine gedeon richter", "oxytocine panpharma", "ocitocine", "أوكسيتوسين", "سينتوسينون"],
     klass: { fr: "Utérotonique", ar: "مقلِّص رحمي" },
     highRisk: true,
     indications: {
@@ -227,8 +230,8 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "lidocaine",
     name: { fr: "Lidocaïne (antiaarythmique)", ar: "ليدوكائين (مضاد نظم)" },
-    brands: "Xylocaïne® 2 % ampoule ; Xylocaïne® adrénalinée",
-    synonyms: ["lidocaine", "xylocaine", "ليدوكائين", "كزيلوكائين"],
+    synonyms: ["lidocaine", "ليدوكائين"],
+    searchExclusions: ["lidoca", "lidoject", "docaine", "xylocaine", "aftagel", "auripax", "chlorhydrate de lidocaine", "lidocaine unimed", "lidocaine 1%", "solvant pour poudres injectables", "voie intramusculaire", "emla", "orex spray", "otipax", "titanoreine lidocaine", "unicaine"],
     klass: { fr: "Antiarythmique classe Ib", ar: "مضاد نظم صنف Ib" },
     highRisk: true,
     indications: {
@@ -254,8 +257,8 @@ export const medicationsPhase3: Medication[] = [
   {
     id: "rocuronium",
     name: { fr: "Rocuronium", ar: "روكورونيوم" },
-    brands: "Esmeron® 50 mg/5 mL ; Rocuronium Kabi®",
-    synonyms: ["rocuronium", "esmeron", "curare", "روكورونيوم", "ازميرون"],
+    brands: "ESMERON® (MERCK SHARP & DOHME BV) 50 mg/5 mL, flacon B/10 (AMM DPM 70131511H) ; Rocuronium Kabi® ; RUCORON® (HIKMA) 50 mg/5 mL, flacon B/10 (AMM DPM 6653811H)",
+    synonyms: ["rocuronium", "esmeron", "rucoron", "curare", "روكورونيوم", "ازميرون"],
     klass: { fr: "Curare aminostéroïdique (NDMR) — induction rapide", ar: "مُرخٍ عضلي غير مزيل استقطاب — تحريض سريع" },
     highRisk: true,
     indications: {

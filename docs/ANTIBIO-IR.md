@@ -1,7 +1,7 @@
 # Antibiotiques & fonction rénale — documentation développeur
 
 **Page :** `/calculateurs/antibio-renal` · **Données :** `data/atb-renal.ts` · **Moteur :** `lib/atb-dose.ts`
-**Tests :** `__tests__/atb-renal.test.ts`, `__tests__/renal-clearance.test.ts`, `__tests__/ui.test.tsx` · **État :** corrections rénales en cours de revue, 2026-10-24 (application v18.1, non publiée)
+**Tests :** `__tests__/atb-renal.test.ts`, `__tests__/renal-clearance.test.ts`, `__tests__/ui.test.tsx` · **État :** corrections rénales en cours de revue, 2026-10-25 (application v18.1, non publiée)
 
 ---
 
@@ -29,11 +29,11 @@ hémodialyse) ou de pédiatrie sort du périmètre : la page renvoie vers le tab
 ```ts
 ATB_RENAL_STAGES   : 5 × { id, fr, ar, dgf }        // normorenal ≥90 … terminale <15
 ATB_RENAL_SECTIONS : 13 × { id, fr, ar }            // classes du tableau
-ATB_RENAL_ROWS     : 93 × { id, fr, ar, section, page, lines, notes }
+ATB_RENAL_ROWS     : 93 × { id, fr, ar, section, page, lines, notes, contextReviewRequired? }
 ATB_RENAL_BY_ID    : index id → ligne
 ```
 
-Une `lines[i]` décrit **une ligne de conduite** : `{ kind: "dose" | "info", d: [fr ×5] }`.
+Une `lines[i]` décrit **une ligne de conduite** : `{ kind: "dose" | "info", context?, d: [fr ×5] }`.
 - Le JSON archivé conserve toutes les cellules et coordonnées PDF. Quand une tranche géométrique
   intersecte plusieurs textes source distincts, `d[j]` contient un marqueur de revue (pas une
   posologie choisie) et une note limitée à cette tranche recopie les textes source. Les cellules
@@ -46,6 +46,12 @@ Une `lines[i]` décrit **une ligne de conduite** : `{ kind: "dose" | "info", d: 
   inachevée.
 - `kind: "info"` = consigne transverse non calculable (ex. ceftriaxone) ; elle n'est jamais
   présentée comme une dose.
+- `context` porte une étiquette éditoriale lorsqu'une cellule réunit plusieurs contextes. Le flag
+  `contextReviewRequired` bloque « Retenir » tant que l'interface ne collecte pas l'indication.
+  **Ceftobiprole IV (p.5)** en est le cas contrôlé : le PDF juxtapose 500 mg/8h et la variante
+  conditionnelle « infection sévère : 1 g/8h » dans une cellule unique. Les cellules rénales ne
+  reprennent pas le libellé sévère ; leurs valeurs ne sont pas attribuées à cette variante, qui
+  reste bloquée en IRC. La relecture visuelle confirme la structure, pas l'interprétation médicale.
 - Noms de molécules, classes et notes arabes sont des traductions éditoriales ; la vérification
   terminologique/clinique arabe reste à effectuer par des relecteurs qualifiés.
 
@@ -63,8 +69,10 @@ prouve la cohérence technique du générateur, pas la justesse clinique de chaq
 | `weightDoseText(txt, kg, lang)` | façade d'affichage de `calculateWeightDose` ; conserve les liens « ou »/« puis » entre fragments et ne dédouble pas un plafond en pseudo-dose |
 | `stageFromDfg(dfg)` | bornes des colonnes DFG du tableau ; renvoie `null` à 30 (valeur imprimée dans deux colonnes), ainsi que pour les valeurs non finies/négatives ; ne reçoit jamais une ClCr Cockcroft–Gault |
 | `cockcroftGault(a, kg, mgDl, sexe)` | `(140 − âge) × poids × 0,85 (F) / (72 × créatinine)` ; estime séparément la ClCr, sans choisir une colonne DFG |
+
+**Avertissement spécial cotrimoxazole/BACTRIM :** la notice tunisienne TERIAK de BACTRIM FORTE (AMM 9253082) demande une adaptation en insuffisance rénale et un contrôle de la kaliémie chez certains patients à risque ; elle ne donne pas de seuils rénaux dans le texte récupéré. Le RCP ANSM français de BACTRIM FORTE (mis à jour le 21/07/2025) raisonne selon la clairance de la créatinine et signale une surestimation d'environ 10 % avec la méthode à l'acide picrique ; il s'agit d'une source française, pas du RCP tunisien. La note dans `data/atb-renal.ts` est un rappel de sécurité, pas une règle de dose : ne transpose pas de seuils à partir du DFG indexé OMEDIT et vérifie la notice/RCP exacte du produit. Sources : [DPM, CTSP du 06/02/2024](http://www.dpm.tn/medicament/humain/antibioresistance/28-banner/399-comite-technique-des-specialites-pharmaceutiques-du-06-fevrier-2024), [notice tunisienne TERIAK BACTRIM FORTE (AMM 9253082)](https://www.med.tn/imedicament-notice-c6dfd827b55edbe28e564f9bf1f782ea.pdf), [RCP ANSM français](https://base-donnees-publique.medicaments.gouv.fr/medicament/64121235/extrait).
 | `toMgDl(v, unit)` | µmol/L → mg/dL (÷88,4) ; >20 mg/dL est signalé et refusé (aucune conversion automatique de l'unité) |
-| `requiresSourceCheck(txt)` | « Aucune donnée », cellule fusionnée, textes source multiples dans une tranche, « Réduction de la posologie », ½ / ¼ dose → ⚠ vérification source |
+| `requiresSourceCheck(txt)` | « Aucune donnée », cellule fusionnée, textes source multiples, contexte source non attribué, « Réduction de la posologie », ½ / ¼ dose → ⚠ vérification source |
 
 **الخوارزمية المستخلصة من خلايا PDF ليست معادلة جرعة عامة.** ملف OMEDIT جدول اختيار قيم: يُختار العمود من DFG، ثم تُقرأ خلية الدواء والمرحلة كما هي. الحساب الآلي الوحيد هو ضرب مقطع `mg/kg` الصريح في الوزن المُدخل؛ لا تُستنتج جرعة ثابتة من خلية مجاورة، ولا يُستنتج عدد مرات أو مدة علاج أو نظام أطفال/غسيل.
 
@@ -113,14 +121,17 @@ temporaire par défaut, le premier argument de `tools-atb-grid.py` peut être om
 explicites.
 
 Corrections et ajouts déclarés dans `PATCH` (`tools-gen-atb-ts.py`) : Céfidérocol, aminosides,
-Aztréonam IM/IV, Ceftolozane + tazobactam et ceftriaxone (info). La consigne du méropénem
+Aztréonam IM/IV, Ceftobiprole, Ceftolozane + tazobactam et ceftriaxone (info). Le Ceftobiprole
+sépare la posologie de base de la variante conditionnelle sévère ; l'interface n'enregistre pas de
+choix « Retenir » sans contexte, et n'attribue aucune cellule rénale à la variante sévère. La
+consigne du méropénem
 « Si posologie élevée (> 6 g/24h) : monitorage pharmacologique » est conservée comme note FR/AR ;
 elle était auparavant supprimée par le patch d'extraction. Pour l'amikacine, une note éditoriale
 séparée du texte PDF distingue explicitement la ligne OMEDIT des références CA-SFM/SPILF/SFPT 2025
 et rappelle DFG ≠ Cockcroft–Gault. Elle est produite par le générateur (`editorial_notes`) afin que
 la comparaison octet-par-octet reste reproductible ; elle n'est pas une cellule de dose du PDF.
 
-## Résultats de l'audit automatisé des cellules (relancé le 2026-10-24)
+## Résultats de l'audit automatisé des cellules (relancé le 2026-10-25)
 
 Le rapport `docs/AUDIT-ATB-CELLULES-2026-10-23.md` compare les **440 cellules physiques** du PDF,
 les **129 lignes source** et les **465 cases médicament×stade** du modèle. L'extraction ne trouve
@@ -176,10 +187,11 @@ l'application n'est pas terminé.
 
 | Règle | Mise en œuvre actuelle |
 |---|---|
-| Adulte stable ≥18 ans, non dialysé | **CKD-EPI 2021** estime le DFG `mL/min/1,73 m²` et sélectionne seul la colonne adulte. Si `poids < 0,8 × IBW`, l'interface avertit que le DFG est indexé et demande une interprétation prudente. |
+| Évolution/stabilité | Sélecteur explicite : inconnu (défaut), stable/chronique connu, ou aigu/variable/suspecté. Une créatinine isolée donne un DFG estimatif, mais ne prouve pas la stabilité ni la chronicité ; en mode inconnu aucune dose/stade n'est sélectionné. Le parcours aigu déclaré bloque même sans critère KDIGO saisi. Le choix « stable » est une donnée clinique déclarative, pas un diagnostic automatique. |
+| Adulte stable ≥18 ans, non dialysé | **CKD-EPI 2021** estime le DFG `mL/min/1,73 m²` et sélectionne seul la colonne adulte après déclaration de stabilité et en l'absence d'AKI détectée. Si `poids < 0,8 × IBW`, l'interface avertit que le DFG est indexé et demande une interprétation prudente. |
 | ClCr Cockcroft–Gault | Calcul affiché séparément pour information, avec poids réel si IMC <30 et poids ajusté `IBW + 0,4 × (réel − IBW)` si IMC ≥30 (Devine) ; l'option « poids idéal » agit uniquement sur cette ClCr. Cockcroft–Gault ne choisit ni ne modifie un stade du tableau DFG. |
 | Enfant <18 ans | **CKID U25** (`0,413 × taille (cm) / créatinine (mg/dL)`) affiché comme estimation pédiatrique informative ; taille obligatoire. Aucun stade ou dosage du tableau adulte n'est fourni, même en choix manuel. |
-| AKI selon KDIGO | Détection par hausse de créatinine `≥0,3 mg/dL/48 h`, rapport `≥1,5` sur 48 h/7 j, ou critères de diurèse : `<0,5 mL/kg/h` pendant 6 à <12 h (stade 1), pendant ≥12 h (stade 2), `<0,3` pendant ≥24 h (stade 3), ou anurie ≥12 h (stade 3). Une hausse documentée jusqu'à `≥4 mg/dL` et l'épuration extrarénale correspondent aussi au stade 3. Les critères d'AKI bloquent l'affichage des doses et tout choix automatique ou manuel dans ce tableau ; utiliser une conduite adaptée et un avis professionnel. |
+| AKI selon KDIGO | Détection par hausse de créatinine `≥0,3 mg/dL/48 h`, rapport `≥1,5` sur 48 h/7 j, ou critères de diurèse : `<0,5 mL/kg/h` pendant 6 à <12 h (stade 1), pendant ≥12 h (stade 2), `<0,3` pendant ≥24 h (stade 3), ou anurie ≥12 h (stade 3). Une créatinine `≥4 mg/dL` correspond au stade 3 seulement avec une hausse aiguë `≥0,5 mg/dL` ; c'est l'initiation de l'épuration extrarénale pendant l'épisode aigu (pas la dialyse chronique à elle seule) qui constitue un critère de stade 3. Les critères d'AKI bloquent l'affichage des doses et tout choix automatique ou manuel dans ce tableau ; utiliser une conduite adaptée et un avis professionnel. |
 | Dialyse/épuration extrarénale | Hors du périmètre du tableau adulte non dialysé ; le champ dédié bloque le stade, le tableau de dose et les décisions, sans option de contournement manuel. |
 | DFG = 30 | Le PDF place 30 dans deux colonnes adjacentes ; hors AKI/dialyse, le calcul automatique est bloqué et le choix manuel attend une confirmation de relecture professionnelle. |
 | Règle GPR antérieure non retenue | L'ancienne règle automatique « DFG 30–90 dégradé → +2 stades » et son exception dite des « molécules vitales » ont été retirées : aucune référence primaire/édition/phrase vérifiable retrouvée ne justifiait cette transformation précise. Elle n'est donc pas appliquée ni présentée comme règle GPR ; ne pas la réintroduire sans source identifiable et validation locale. |
@@ -192,25 +204,30 @@ l'application n'est pas terminé.
   tour (`#1 → #2 → …`) : l'historique n'est jamais écrasé.
 - Le panneau « Plan antibiotique » affiche les décisions courantes, permet **Copier**, **Imprimer**
   et **Vider**, et expose le texte exportable (`planToText`, FR/AR).
-- Persistance locale `eutn:atb-plan-v2` (aucune donnée ne quitte l'appareil) ; un plan `v1` détecté
-  après la correction des cellules sources n'est pas importé et déclenche un avertissement : les
-  anciennes captures de dose doivent être reconstruites/vérifiées. JSON ancien ou corrompu ⇒ plan
-  vide, jamais d'erreur. Snapshot contextuel conservé par décision (poids, stade, dose affichée).
+- Persistance locale `eutn:atb-plan-v3` (aucune donnée ne quitte l'appareil). Les plans `v1` et `v2`
+  antérieurs aux corrections de cellules/contextes ne sont pas importés ; s'ils contiennent des
+  entrées, un avertissement rappelle que les anciens snapshots restent conservés sur l'appareil,
+  mais doivent être reconstruits et vérifiés. JSON ancien ou corrompu ⇒ plan courant vide, jamais
+  d'erreur. Snapshot contextuel conservé par décision (poids, stade, dose affichée).
 
 ## 8. Pont de clairance général (`/calculateurs/renal-dose`)
 
-- Le bouton de chaque antibiotique de l'ancienne liste ouvre maintenant la recherche correspondante
-  dans le tableau complet de 93 lignes issu du PDF ; les doses abrégées de cette ancienne liste ne
-  sont plus affichées pour les antibiotiques.
+- Le bouton de chaque antibiotique de l'ancienne liste ouvre la recherche correspondante dans le
+  tableau complet de 93 lignes issu du PDF ; aucune ancienne dose abrégée n'est reprise dans ce pont.
 - La clairance Cockcroft–Gault calculée sur ce pont n'est pas transposée aux stades du tableau PDF,
   qui possède son propre estimateur, ses refus et ses limites.
-- Les autres médicaments de l'ancienne liste restent conservés, mais ne figurent pas dans le PDF
-  fourni et n'ont pas été validés par cette comparaison ; le bandeau de la page demande une
-  référence officielle locale avant toute utilisation clinique.
+- Le pont demande maintenant la même déclaration d'évolution rénale ; en mode inconnu, aigu,
+  KDIGO-AKI ou dialyse, Cockcroft–Gault peut rester informatif mais aucune posologie n'est affichée.
+  Les valeurs historiques à 48 h/7 j et la diurèse alimentent le repérage KDIGO.
+- Les anciennes posologies des autres médicaments ont été supprimées. Les noms restent visibles comme
+  couverture à compléter, sans dose ; seules gabapentine et prégabaline ont une grille active, liée
+  à leurs RCP individuels ANSM, limitée ici à l'adulte stable non dialysé sans critère KDIGO et au
+  poids saisi. Le choix d'un poids idéal bloque le dosage. Les RCP français ne valent pas validation
+  tunisienne ; vérifier la spécialité et le RCP local.
 
 ## 9. Sources consultées pour les corrections rénales (2026-10-24)
 
-- **KDIGO AKI 2012**, définition et tableau 2 de stadification : [guide officiel KDIGO (PDF)](https://kdigo.org/wp-content/uploads/2016/10/KDIGO-2012-AKI-Guideline-English.pdf). Il distingue la diurèse <0,5 mL/kg/h sur 6–12 h (stade 1 ; à exactement 12 h, le critère de stade 2 ≥12 h prévaut), ≥12 h (stade 2), <0,3 sur ≥24 h ou anurie ≥12 h (stade 3) ; l'épuration extrarénale est aussi un critère de stade 3. Cela soutient le repérage logiciel, pas un diagnostic ni une décision de dose.
+- **KDIGO AKI 2012**, définition et tableau 2 de stadification : [guide officiel KDIGO (PDF)](https://kdigo.org/wp-content/uploads/2016/10/KDIGO-2012-AKI-Guideline-English.pdf). Il distingue la diurèse <0,5 mL/kg/h sur 6–12 h (stade 1 ; à exactement 12 h, le critère de stade 2 ≥12 h prévaut), ≥12 h (stade 2), <0,3 sur ≥24 h ou anurie ≥12 h (stade 3) ; l'initiation d'une épuration extrarénale pendant l'épisode aigu est aussi un critère de stade 3 (une dialyse chronique ne suffit pas). Cela soutient le repérage logiciel, pas un diagnostic ni une décision de dose.
 - **AMIKACINE PANPHARMA 250 mg/mL — RCP ANSM**, mis à jour le 30/07/2024 : [fiche officielle](https://base-donnees-publique.medicaments.gouv.fr/medicament/63408093/extrait). Chez l'adulte et l'adolescent ≥12 ans, le schéma de fonction rénale normale `ClCr ≥50 mL/min` est `15 mg/kg/j`, maximum `1,5 g/j`. Le RCP demande pour l'obésité un poids de calcul `poids idéal + 0,4 × (poids actuel − poids idéal)` ; la page « dose sûre » ne calcule pas ce poids et bloque donc le preset si IMC ≥30. Ce schéma de RCP est distinct du tableau OMEDIT et de CA-SFM 2025.
 - **CA-SFM/SPILF/SFPT 2025**, tableau des doses d'antibiotiques : [PDF de référence](https://www.infectiologie.com/UserFiles/File/spilf/recos/doses-spilf-sfpt-casfm-2025.pdf). Pour amikacine, `25–30 mg/kg/j` concerne l'adulte non obèse sans insuffisance rénale ou hépatique ; ce schéma n'est pas fusionné avec le RCP Panpharma `15 mg/kg/j`, ni avec la ligne historique OMEDIT.
 - **Limite d'adoption :** ces RCP/recommandations françaises ne sont pas des protocoles tunisiens. L'audit vérifie l'attribution et le comportement de l'outil ; il ne prouve ni disponibilité du produit, ni validation clinique, ni adoption locale en Tunisie.
@@ -219,3 +236,49 @@ l'application n'est pas terminé.
 
 - Export PDF mis en page (le texte du plan est déjà prêt à imprimer).
 - Enregistrement du plan dans le « résumé de cas » (`lib/casesummary.ts`).
+
+## 11. Seuils continus — audit technique préparatoire (2026-10-25)
+
+Le nouveau script `data/issues/tools-atb-threshold-audit.py` compare les bords internes des cellules
+PDF aux graduations numériques DFG imprimées sur les 12 pages. Sur la copie archivée, **60/60
+coordonnées de frontière internes** correspondent à une graduation visible ; les graduations
+rencontrées sont 90, 70, 60, 50, 45, 40, 30, 25, 20, 15 et 10 mL/min/1,73 m². Rejouer avec
+PyMuPDF :
+
+```bash
+python data/issues/tools-atb-threshold-audit.py
+```
+
+**Portée strictement géométrique :** cela confirme la lecture d'une graduation au bord d'une
+cellule, mais ne valide ni le sens inclusif/exclusif à l'égalité, ni la transcription des doses, ni
+le contexte clinique, ni l'usage d'une équation rénale. Les coordonnées et les cellules doivent
+encore être rapprochées ligne par ligne de la source avant migration ; toute ambiguïté reste visible.
+
+`data/issues/tools-export-atb-continuous-cells.py` produit l'archive candidate
+`data/issues/OMEDIT-ATB-IR-V2.3.continuous-cells.candidate.json` : 93 médicaments, 129 lignes et
+327 cellules avec texte source et graduations géométriques. Les indications ne sont pas séparées,
+les textes restent non classés et l'inclusion aux frontières reste « non vérifiée » ; le fichier
+est explicitement non clinique et ne doit pas être importé dans l'application. Vérifier sa
+reproductibilité avec `python data/issues/tools-export-atb-continuous-cells.py --check`.
+
+`lib/atb-renal-dose.ts` prépare un sélecteur pur de cellules source par indication et voie, avec
+provenance, types distincts pour dose/note/absence de donnée/surveillance, et une règle explicite
+pour l'égalité de chaque seuil. Une égalité non vérifiée bloque la sélection. Ce moteur n'est pas
+relié à `data/atb-renal.ts` ni à l'interface : le calculateur de production conserve les 5 stades,
+les cellules ambiguës restent bloquées, et les protections contre AKI, dialyse et pédiatrie restent
+en place. **Aucune posologie ni borne clinique n'a été migrée par cette étape.**
+La sélection de colonne du tableau OMEDIT reste fondée sur le DFG CKD-EPI ; Cockcroft–Gault est
+séparé et ne devient pas le sélecteur par défaut.
+
+La comparaison de l'Annexe 1 du brief avec le JSON et le PDF source a été revue : 17 écarts textuels
+sur 123 comparaisons, dont plusieurs dus au regroupement de notes et d'indications dans les cellules.
+Le détail et les cas qui doivent rester bloqués avant migration sont consignés dans
+[`docs/AUDIT-ATB-ANNEX1-DIFFS-2026-10-25.md`](./AUDIT-ATB-ANNEX1-DIFFS-2026-10-25.md).
+
+Une relecture visuelle de la ligne Ceftobiprole (PDF p.5) a confirmé une seule ligne de tableau : la
+cellule de référence juxtapose 500 mg/8h en 2 h et une variante « infection sévère » à 1 g/8h en 4 h.
+Les cellules rénales n'explicitent pas cette variante. Le modèle historique à cinq stades conserve
+les valeurs rénales sur une ligne de base distincte, marque la variante sévère comme non attribuée
+en IRC et désactive « Retenir » tant que l'indication n'est pas confirmée. C'est une correction de
+structure/sécurité du modèle existant ; ce n'est ni une nouvelle posologie ni une migration vers le
+sélecteur continu.

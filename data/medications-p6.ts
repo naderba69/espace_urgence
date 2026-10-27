@@ -63,8 +63,8 @@ export const medicationsPhase6: Medication[] = [
   {
     id: "sufentanil",
     name: { fr: "Sufentanil (Sufenta®)", ar: "سوفنتانيل (سوفنتا)" },
-    brands: "Sufenta® 250 µg/5 mL ; 50 µg/mL (hospitalier)",
-    synonyms: ["sufentanil", "sufenta", "سوفنتانيل"],
+    brands: "SUFENTA® (Piramal) 10 µg/2 mL (B/5, AMM DPM 23693022H), 50 µg/10 mL (B/10, 23693021H) et 250 µg/5 mL (B/10, 2363023H) ; SUFENTAMED® (UNIMED) 10 µg/2 mL (B/5, 9093771H) ; SUFENTANIL MEDIS® 250 µg/5 mL (B/5, 9233671H) ; SUFENTANIL VIATRIS® 10 µg/2 mL (B/20, 4923271H) et 50 µg/10 mL (B/20, 4923272H)",
+    synonyms: ["sufentanil", "sufenta", "sufentamed", "sufentanil medis", "sufentanil viatris", "سوفنتانيل"],
     klass: { fr: "Opioïde majeur synthétique (×1000 morphine)", ar: "أفيوني اصطناعي قوي جداً" },
     highRisk: true,
     indications: { fr: "Sédation-analgésie prolongée du patient ventilé (post-ISR), douleur réfractaire lors de la ventilation mécanique.", ar: "تهدئة مستمرة للمنبّب، ألم عنيد أثناء التنفس الاصطناعي." },
@@ -82,8 +82,9 @@ export const medicationsPhase6: Medication[] = [
   {
     id: "octreotide",
     name: { fr: "Octréotide (Sandostatine®)", ar: "أوكتريوتيد (ساندوستاتين)" },
-    brands: "Sandostatine® 100 µg/1 mL ; 500 µg/1 mL",
+    brands: "Sandostatine® 50 µg/1 mL et 100 µg/1 mL (DPM : B/5 amp. 1 mL, AMM 10283181H/10283182H) ; 500 µg/1 mL",
     synonyms: ["octreotide", "sandostatine", "أوكتريوتيد"],
+    searchExclusions: ["octreotide neapolis", "sandostatine lar", "sandostatine l.a.r.", "sandostatin lar", "somatuline"],
     klass: { fr: "Analogue de la somatostatine — réduit le débit porte", ar: "مماثل سوماتوستاتين — يخفض جريان الباب" },
     highRisk: false,
     indications: { fr: "Hémorragie digestive haute par rupture de varices œsophagiennes (AVANT endoscopie).", ar: "نزيف هضمي علوي بدوالي مريء (قبل التنظير)." },

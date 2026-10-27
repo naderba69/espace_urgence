@@ -46,7 +46,8 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "sulfate-magnesium",
     name: { fr: "Sulfate de magnésium (MgSO4)", ar: "كبريتات المغنيزيوم" },
-    brands: "Sulfate de magnésium 15 % Aguettant® 10 mL (1,5 g)",
+    brands: "Sulfate de magnésium 15 % Aguettant® 10 mL (1,5 g) ; SULFATE DE MAGNESIUM PROAMP® (Aguettant) 15 %, ampoule 10 mL (B/50 ; AMM DPM 7093072H)",
+    searchExclusions: ["spasmag"],
     synonyms: ["magnesium", "mgso4", "sulfate de magnésium", "مغنيزيوم", "كبريتات"],
     klass: { fr: "Anticonvulsivant de l'éclampsie ; antiarythmique (torsades)", ar: "مضاد اختلاج الارتعاج؛ مضاد نظم (التورساد)" },
     highRisk: true,
@@ -80,6 +81,7 @@ export const medicationsPhase2: Medication[] = [
     id: "bicarbonate",
     name: { fr: "Bicarbonate de sodium 8,4 %", ar: "بيكربونات الصوديوم 8.4%" },
     brands: "Bicarbonate de sodium 8,4 % Aguettant® 250 mL ; 4,2 %",
+    searchExclusions: ["bicarbonate monosodique 1.4%", "bicarbonate monosodique 1.4"],
     synonyms: ["bicarbonate", "nahco3", "بيكربونات"],
     klass: { fr: "Alcalinisant / tampon", ar: "قلوِّن / منظّم حموضة" },
     highRisk: true,
@@ -109,7 +111,8 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "gluconate-calcium",
     name: { fr: "Gluconate de calcium 10 %", ar: "غلوكونات الكالسيوم 10%" },
-    brands: "Gluconate de calcium 10 % Aguettant® 10 mL",
+    brands: "Gluconate de calcium Aguettant® 10 % (B/100 amp. 10 mL) ; PROAMP® 10 % (Aguettant, B/50 amp. 10 mL) ; Calcium gluconate B. Braun® 10 % pour perfusion (B/20 amp. 10 mL)",
+    searchExclusions: ["chlorure de calcium", "calcium chloride", "frubiose", "glucalcium", "natecal", "buvable", "solution dpca", "dialyse peritoneale"],
     synonyms: ["calcium", "gluconate", "كالسيوم", "غلوكونات"],
     klass: { fr: "Cardioprotecteur dans l'hyperK ; antidote", ar: "حامٍ قلبي في فرط K؛ ترياق" },
     highRisk: true,
@@ -139,9 +142,10 @@ export const medicationsPhase2: Medication[] = [
   },
   {
     id: "insuline-rapide",
-    name: { fr: "Insuline rapide (Actrapid)", ar: "أنسولين سريع (أكترابيد)" },
-    brands: "Actrapid® HM 100 UI/mL flacon",
-    synonyms: ["insuline", "actrapid", "insulin", "أنسولين", "انسولين", "اكترابيد"],
+    name: { fr: "Insuline rapide", ar: "أنسولين سريع" },
+    brands: "",
+    synonyms: ["insuline", "insulin", "أنسولين", "انسولين"],
+    searchExclusions: ["actrapid", "actrapid penfill", "apidra", "apidra solostar", "insuline analogue", "gensulin r", "insugen r", "jusline r", "jusline n", "jusline 30/70", "mixtard 30", "mixtard 30 penfill", "novomix", "novorapid", "lantus", "lantus solostar", "levemir flexpen", "ryzodeg", "ryzodeg flex touch", "semglee", "tresiba", "tresiba flextouch", "toujeo", "toujeo solostar"],
     klass: { fr: "Insuline humaine rapide", ar: "أنسولين بشري سريع" },
     highRisk: true,
     indications: {
@@ -173,8 +177,9 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "salbutamol",
     name: { fr: "Salbutamol", ar: "سالبوتامول" },
-    brands: "Ventoline® nébules 2,5 mg/2,5 mL et 5 mg/2,5 mL ; aérosol 100 µg/dose",
+    brands: "Ventoline® nébules 2,5 mg/2,5 mL et 5 mg/2,5 mL ; VENTOL® (UNIMED) solution pour inhalation 2,5 mg/2,5 mL (B/10 et B/60 unidoses, AMM DPM 9094052/9094051H) ; AEROL® 100 µg/dose (aérosol, 200 doses — pas une solution pour nébulisation) ; VENTAXX® (VAGA) 100 µg/dose aérosol (200 doses, AMM DPM 9473011) ; BUTO-ASMA® (ALDO-UNION S.L) 100 µg/dose, aérosol 200 doses (AMM DPM 3013031)",
     synonyms: ["salbutamol", "ventoline", "albuterol", "فنتولين", "سالبوتامول"],
+    searchExclusions: ["albutol", "butalin", "seretide", "spiolto", "symbicort", "combifor", "cyvax", "foster"],
     klass: { fr: "β2-mimétique bronchodilatateur", ar: "موسّع قصبي بيتا-2" },
     highRisk: false,
     indications: {
@@ -203,7 +208,8 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "hydrocortisone",
     name: { fr: "Hydrocortisone (HSHC)", ar: "هيدروكورتيزون" },
-    brands: "Hydrocortisone Roussel® 100 mg flacon (HSH)",
+    brands: "",
+    searchExclusions: ["cortef", "suranil", "hydrocortisone medis", "hydrocortisone biocodex", "hydrocortisone upjhon", "hydrocortisone leurquin", "hydrocortisone medo"],
     synonyms: ["hydrocortisone", "solucortef", "كورتيزون", "هيدروكورتيزون"],
     klass: { fr: "Corticoïde rapide", ar: "كورتيكويد سريع" },
     highRisk: false,
@@ -227,7 +233,7 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "diazepam",
     name: { fr: "Diazépam", ar: "ديازيبام" },
-    brands: "Valium® 10 mg/2 mL (IV) ; Valium® 10 mg cp",
+    brands: "Valium® 10 mg/2 mL (IV) ; Valium® 10 mg cp ; Diazépam APM® 10 mg/2 mL inj. (B/5 ou B/100 amp.)",
     synonyms: ["diazepam", "valium", "ديازيبام", "فاليوم"],
     klass: { fr: "Benzodiazépine longue — anticonvulsivante", ar: "بنزوديازيبين طويل — مضاد اختلاج" },
     highRisk: true,
@@ -257,7 +263,8 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "morphine",
     name: { fr: "Morphine", ar: "مورفين" },
-    brands: "Morphine Aguettant® 10 mg/1 mL",
+    brands: "",
+    searchExclusions: ["morphine aguettant", "morphine medis", "morphine renaudin", "moscontin", "skenan lp", "skenan", "temgesic", "tramadis", "tramal"],
     synonyms: ["morphine", "مورفين", "مورفا"],
     klass: { fr: "Opioïde majeur — agoniste µ", ar: "أفيوني قوي — ناهض µ" },
     highRisk: true,
@@ -291,7 +298,8 @@ export const medicationsPhase2: Medication[] = [
   {
     id: "fentanyl",
     name: { fr: "Fentanyl", ar: "فنتانيل" },
-    brands: "Fentanyl Panpharma® 100 µg/2 mL ; Fentanyl Renaudin®",
+    brands: "Marque tunisienne pour voie IV non confirmée dans les extraits DPM examinés ; FENTANYL RENAUDIN/MEDIS/MYLAN/PIRAMAL y apparaît comme solution injectable sans voie explicite (voir rapport). Panpharma non confirmé dans ces extraits.",
+    searchExclusions: ["fentanyl renaudin", "fentanyl medis", "fentanyl mylan", "fentanyl piramal", "fentanyl panpharma", "rapifen", "alfentanil", "remifentanil", "remifentanyl", "durogesic"],
     synonyms: ["fentanyl", "فنتانيل"],
     klass: { fr: "Opioïde majeur (×100 morphine), courte action", ar: "أفيوني قوي (×100 مورفين)، قصير المفعول" },
     highRisk: true,

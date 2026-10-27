@@ -153,4 +153,4 @@ node scripts/crawl-audit.mjs       # 343 pages : erreurs console, hydratation, H
 - Clé API IA stockée uniquement dans le localStorage du navigateur — n'entrez votre clé que sur votre appareil personnel.
 - Images ECG en IndexedDB (miniatures JPEG ≤ 300 px, max 30 entrées, éviction FIFO — localStorage conservé pour les préférences).
 - Les sorties IA sont **indicatives** (photo non calibrée, LLM) : toute interprétation ECG doit être confirmée par un médecin qualifié.
-- Toute donnée patient saisie (poids, âge, créatinine, constantes, chronologie) reste **sur l'appareil** : aucun envoi réseau, aucune synchronisation cloud.
+- Les données patient restent **sur l'appareil par défaut** : aucun envoi automatique ni synchronisation cloud. Si l'utilisateur demande une fonction IA, le texte ou l'image associé peut être transmis directement au fournisseur configuré ; les deux explications contextualisées des calculateurs rénaux demandent une confirmation explicite et envoient seulement le contexte de calcul utile (sans nom ni identifiant ajouté par l'outil). Vérifier les règles de confidentialité du fournisseur et de l'établissement avant tout envoi.

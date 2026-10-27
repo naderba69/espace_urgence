@@ -8,27 +8,35 @@ import { useRegisterRecent } from "@/components/SearchBar";
 import PageHeader from "@/components/ui/PageHeader";
 import Badge from "@/components/ui/Badge";
 import T from "@/components/T";
+import CalculationExplainer from "@/components/ai/CalculationExplainer";
+import RenalCourseSelector from "@/components/renal/RenalCourseSelector";
 import { ibwKg } from "@/lib/calc";
+import { akiKdigo, scrToMgDl, type AkiResult, type RenalCourse } from "@/lib/renal-clearance";
 import { Gauge } from "lucide-react";
+
+const AKI_LABEL: Record<AkiResult["criteria"][number], { fr: string; ar: string }> = {
+  "scr-up-48h": { fr: "+0,3 mg/dL en 48 h", ar: "+٠٫٣ مغ/دل في ٤٨ سا" },
+  "scr-ratio-48h": { fr: "×1,5 en 48 h", ar: "×١٫٥ في ٤٨ سا" },
+  "scr-ratio-7d": { fr: "×1,5 en 7 j", ar: "×١٫٥ في ٧ أيام" },
+  "scr-4mg": { fr: "créatinine ≥4 mg/dL avec hausse aiguë ≥0,5 mg/dL", ar: "كرياتينين ≥4 مغ/دل مع ارتفاع حاد ≥0.5 مغ/دل" },
+  "urine-stage-1": { fr: "diurèse <0,5 mL/kg/h pendant 6 à <12 h", ar: "إدرار <0.5 مل/كغ/سا لمدة من 6 إلى أقل من 12 ساعة" },
+  "urine-stage-2": { fr: "diurèse <0,5 mL/kg/h pendant ≥12 h", ar: "إدرار <0.5 مل/كغ/سا لمدة ≥12 ساعة" },
+  "urine-stage-3": { fr: "diurèse <0,3 mL/kg/h pendant ≥24 h", ar: "إدرار <0.3 مل/كغ/سا لمدة ≥24 ساعة" },
+  "anuria-stage-3": { fr: "anurie pendant ≥12 h", ar: "انقطاع البول لمدة ≥12 ساعة" },
+  "renal-replacement": { fr: "initiation d'une épuration extrarénale (critère KDIGO 3)", ar: "بدء الإحلال الكلوي (معيار KDIGO 3)" },
+};
 
 type Band = { fr: string; ar: string; range?: { fr: string; ar: string } };
 type Row = {
   fr: string;
   ar: string;
-  bands: Band[];
-  sev: number[];
-  /** Seuils RCP propres au médicament, classés du plus élevé au plus bas. */
+  /** A dose is enabled only when both the product-specific source and its reviewed bands exist. */
+  bands?: Band[];
+  /** Seuils ClCr propres au RCP du médicament, classés du plus élevé au plus bas. */
   thresholds?: number[];
   note?: { fr: string; ar: string };
   source?: { fr: string; ar: string; url: string };
 };
-
-const BAND_NAMES = [
-  { fr: "≥ 60 mL/min", ar: "≥ ٦٠ مل/د" },
-  { fr: "30-59", ar: "٣٠-٥٩" },
-  { fr: "15-29", ar: "١٥-٢٩" },
-  { fr: "< 15", ar: "< ١٥" },
-];
 
 // Antibiotic shortcuts are routed to the complete, PDF-derived source table instead.
 const ANTIBIOTIC_SEARCH: Record<string, { query: string; fr: string; ar: string }[]> = {
@@ -49,67 +57,27 @@ function parseInput(value: string) {
   return Number.parseFloat(String(value).replace(",", "."));
 }
 
+/**
+ * Rules without a current product-specific source are intentionally represented by name only.
+ * They remain visible as coverage gaps, but no legacy dose text is shipped or rendered.
+ */
 const ROWS: Row[] = [
-  { fr: "Metformine", ar: "ميتفورمين", sev: [0, 1, 2, 3], bands: [
-    { fr: "Dose habituelle, contrôle de la créatinine.", ar: "جرعة معتادة مع مراقبة الكرياتينين." },
-    { fr: "Max 1 g/j, réévaluer souvent.", ar: "حد ١ غ/يوم، أعد التقييم كثيراً." },
-    { fr: "Max 500 mg/j, ne pas débuter.", ar: "حد ٥٠٠ مغ/يوم، لا تبدأ العلاج." },
-    { fr: "Contre-indiquée (acidose lactique).", ar: "ممنوع (حماض لبني)." }] },
-  { fr: "Énoxaparine curative", ar: "إينوكسابارين علاجي", sev: [0, 1, 2, 2], bands: [
-    { fr: "1 mg/kg ×2/j.", ar: "١ مغ/كغ ×٢/يوم." },
-    { fr: "1 mg/kg ×1/j.", ar: "١ مغ/كغ ×١/يوم." },
-    { fr: "1 mg/kg ×1/j + anti-Xa si possible.", ar: "١ مغ/كغ ×١/يوم مع قياس مضاد Xa إن أمكن." },
-    { fr: "Éviter: préférer l'héparine non fractionnée.", ar: "تجنّب: فضّل الهيبارين غير المجزأ." }] },
-  { fr: "Héparine non fractionnée", ar: "هيبارين غير مجزأ", sev: [0, 0, 0, 1], bands: [
-    { fr: "Protocole standard.", ar: "بروتوكول معتاد." },
-    { fr: "Protocole standard.", ar: "بروتوكول معتاد." },
-    { fr: "Surveillance rapprochée de l'aPTT.", ar: "مراقبة لصيقة لـ aPTT." },
-    { fr: "Pas d'accumulation; contrôler l'aPTT.", ar: "لا تراكم؛ راقب aPTT." }] },
-  { fr: "Vancomycine", ar: "فانكومايسين", sev: [0, 1, 2, 2], bands: [
-    { fr: "15 mg/kg /12 h.", ar: "١٥ مغ/كغ كل ١٢ س." },
-    { fr: "15 mg/kg /24 h.", ar: "١٥ مغ/كغ كل ٢٤ س." },
-    { fr: "Dose de charge puis selon dosage résiduel.", ar: "جرعة تحميل ثم حسب المستوى المتبقي." },
-    { fr: "Dose unique + dosage, redoser après dialyse.", ar: "جرعة وحيدة + معايرة، أعد الجرعة بعد الغسل." }] },
-  { fr: "Gentamicine / Amikacine", ar: "جنتاميسين / أميكاسين", sev: [0, 2, 2, 3], bands: [
-    { fr: "5 mg/kg (G) ou 15 mg/kg (A) /24 h.", ar: "٥ (ج) أو ١٥ (أ) مغ/كغ كل ٢٤ س." },
-    { fr: "Même dose, intervalle 36 h.", ar: "نفس الجرعة، الفاصل ٣٦ س." },
-    { fr: "Même dose, intervalle 48 h + dosage.", ar: "نفس الجرعة، الفاصل ٤٨ س + معايرة." },
-    { fr: "Dose unique sur avis, dialyse, dosage strict.", ar: "جرعة وحيدة باستشارة، غسل، معايرة صارمة." }] },
-  { fr: "Ceftriaxone", ar: "سيفترياكسون", sev: [0, 0, 0, 0], bands: [
-    { fr: "Pas d'ajustement.", ar: "لا تعديل." },
-    { fr: "Pas d'ajustement.", ar: "لا تعديل." },
-    { fr: "Pas d'ajustement.", ar: "لا تعديل." },
-    { fr: "Pas d'ajustement (max 2 g/j).", ar: "لا تعديل (حد ٢ غ/يوم)." }] },
-  { fr: "Ciprofloxacine", ar: "سيبروفلوكساسين", sev: [0, 0, 1, 1], bands: [
-    { fr: "400 mg ×2-3/j IV.", ar: "٤٠٠ مغ ×٢-٣/يوم وريدي." },
-    { fr: "400 mg ×2/j.", ar: "٤٠٠ مغ ×٢/يوم." },
-    { fr: "400 mg /24 h.", ar: "٤٠٠ مغ كل ٢٤ س." },
-    { fr: "400 mg /24 h puis dose après dialyse.", ar: "٤٠٠ مغ كل ٢٤ س مع جرعة بعد الغسل." }] },
-  { fr: "Lévofloxacine", ar: "ليفوفلوكساسين", sev: [0, 1, 1, 1], bands: [
-    { fr: "500 mg /12-24 h.", ar: "٥٠٠ مغ كل ١٢-٢٤ س." },
-    { fr: "500 mg /24 h puis adapter.", ar: "٥٠٠ مغ كل ٢٤ س ثم عدّل." },
-    { fr: "250 mg /24 h.", ar: "٢٥٠ مغ كل ٢٤ س." },
-    { fr: "250 mg /48 h.", ar: "٢٥٠ مغ كل ٤٨ س." }] },
-  { fr: "Amoxicilline", ar: "أموكسيسيلين", sev: [0, 0, 1, 2], bands: [
-    { fr: "Dose standard.", ar: "جرعة معتادة." },
-    { fr: "Dose standard.", ar: "جرعة معتادة." },
-    { fr: "Max 500 mg ×3/j.", ar: "حد ٥٠٠ مغ ×٣/يوم." },
-    { fr: "500 mg /24 h.", ar: "٥٠٠ مغ كل ٢٤ س." }] },
-  { fr: "Imipénème", ar: "إيميبينيم", sev: [0, 1, 1, 2], bands: [
-    { fr: "500 mg ×4/j (1 g ×3/j si grave).", ar: "٥٠٠ مغ ×٤/يوم (١ غ ×٣ إن كان شديداً)." },
-    { fr: "500 mg ×3/j.", ar: "٥٠٠ مغ ×٣/يوم." },
-    { fr: "500 mg ×2/j.", ar: "٥٠٠ مغ ×٢/يوم." },
-    { fr: "250 mg ×2/j.", ar: "٢٥٠ مغ ×٢/يوم." }] },
-  { fr: "Acyclovir", ar: "أسيكلوفير", sev: [0, 1, 1, 2], bands: [
-    { fr: "5-10 mg/kg /8 h.", ar: "٥-١٠ مغ/كغ كل ٨ س." },
-    { fr: "5-10 mg/kg /12 h.", ar: "٥-١٠ مغ/كغ كل ١٢ س." },
-    { fr: "5-10 mg/kg /24 h.", ar: "٥-١٠ مغ/كغ كل ٢٤ س." },
-    { fr: "5-10 mg/kg /24 h + hydratation, dose après dialyse.", ar: "٥-١٠ مغ/كغ كل ٢٤ س + إرواء، وجرعة بعد الغسل." }] },
+  { fr: "Metformine", ar: "ميتفورمين" },
+  { fr: "Énoxaparine curative", ar: "إينوكسابارين علاجي" },
+  { fr: "Héparine non fractionnée", ar: "هيبارين غير مجزأ" },
+  { fr: "Vancomycine", ar: "فانكومايسين" },
+  { fr: "Gentamicine / Amikacine", ar: "جنتاميسين / أميكاسين" },
+  { fr: "Ceftriaxone", ar: "سيفترياكسون" },
+  { fr: "Ciprofloxacine", ar: "سيبروفلوكساسين" },
+  { fr: "Lévofloxacine", ar: "ليفوفلوكساسين" },
+  { fr: "Amoxicilline", ar: "أموكسيسيلين" },
+  { fr: "Imipénème", ar: "إيميبينيم" },
+  { fr: "Nitrofurantoïne", ar: "نيتروفورانتوين" },
+  { fr: "Acyclovir", ar: "أسيكلوفير" },
   {
     fr: "Gabapentine",
     ar: "غابابنتين",
     thresholds: [80, 50, 30, 15],
-    sev: [0, 1, 1, 1, 1],
     bands: [
       { fr: "900–3 600 mg/j, répartis en 3 prises.", ar: "٩٠٠–٣٦٠٠ مغ/ي، مقسمة على ٣ جرعات.", range: { fr: "ClCr ≥ 80 mL/min", ar: "CrCl ≥ ٨٠ مل/د" } },
       { fr: "600–1 800 mg/j, répartis en 3 prises.", ar: "٦٠٠–١٨٠٠ مغ/ي، مقسمة على ٣ جرعات.", range: { fr: "ClCr 50–79 mL/min", ar: "CrCl ٥٠–٧٩ مل/د" } },
@@ -131,7 +99,6 @@ const ROWS: Row[] = [
     fr: "Prégabaline",
     ar: "بريغابالين",
     thresholds: [60, 30, 15],
-    sev: [0, 1, 1, 1],
     bands: [
       { fr: "Début : 150 mg/j ; maximum : 600 mg/j, en 2 ou 3 prises.", ar: "البداية: ١٥٠ مغ/ي؛ الحد الأقصى: ٦٠٠ مغ/ي، على جرعتين أو ٣.", range: { fr: "ClCr ≥ 60 mL/min", ar: "CrCl ≥ ٦٠ مل/د" } },
       { fr: "Début : 75 mg/j ; maximum : 300 mg/j, en 2 ou 3 prises.", ar: "البداية: ٧٥ مغ/ي؛ الحد الأقصى: ٣٠٠ مغ/ي، على جرعتين أو ٣.", range: { fr: "ClCr 30–<60 mL/min", ar: "CrCl ٣٠–<٦٠ مل/د" } },
@@ -148,26 +115,9 @@ const ROWS: Row[] = [
       url: "https://base-donnees-publique.medicaments.gouv.fr/medicament/63754960/extrait",
     },
   },
-  { fr: "Morphine et opioïdes", ar: "مورفين وأفيونيات", sev: [0, 1, 2, 2], bands: [
-    { fr: "Titration standard.", ar: "معايرة معتادة." },
-    { fr: "Espacer, surveiller la sédation.", ar: "باعد وراقب التخدير." },
-    { fr: "Réduire la dose de 50 %, sédation rapprochée.", ar: "خفّض ٥٠٪ وراقب التخدير عن قرب." },
-    { fr: "Éviter; métabolites actifs qui s'accumulent.", ar: "تجنّب؛ المستقلبات الفعّالة تتراكم." }] },
-  { fr: "Nitrofurantoïne", ar: "نيتروفورانتوين", sev: [0, 0, 3, 3], bands: [
-    { fr: "Dose standard.", ar: "جرعة معتادة." },
-    { fr: "Dose standard.", ar: "جرعة معتادة." },
-    { fr: "Contre-indiquée (échec et toxicité).", ar: "ممنوع (فشل وسمية)." },
-    { fr: "Contre-indiquée.", ar: "ممنوع." }] },
-  { fr: "AINS", ar: "مضادات الالتهاب غير الستيروئيدية", sev: [1, 2, 3, 3], bands: [
-    { fr: "Éviter si HTA/diurétique/IEC associés.", ar: "تجنّب مع الضغط/مدرّ/مثبّط الأنجيوتنسين." },
-    { fr: "Éviter.", ar: "تجنّب." },
-    { fr: "Dangereux: néphrotoxicité.", ar: "خطير: سمية كلوية." },
-    { fr: "Interdit.", ar: "محظور." }] },
-  { fr: "Colchicine", ar: "كولشيسين", sev: [0, 1, 2, 3], bands: [
-    { fr: "Cure courte standard.", ar: "علاج قصير معتاد." },
-    { fr: "Réduire, cure courte.", ar: "خفّض، علاج قصير." },
-    { fr: "Éviter (toxicité musculaire et médullaire).", ar: "تجنّب (سمية عضلية ونقيّة)." },
-    { fr: "Interdit.", ar: "محظور." }] },
+  { fr: "Morphine et opioïdes", ar: "مورفين وأفيونيات" },
+  { fr: "AINS", ar: "مضادات الالتهاب غير الستيروئيدية" },
+  { fr: "Colchicine", ar: "كولشيسين" },
 ];
 
 export default function RenalDosePage() {
@@ -179,6 +129,13 @@ export default function RenalDosePage() {
   const [sexe, setSexe] = useState<"m" | "f">("m");
   const [unit, setUnit] = useState<"mg" | "umol">("mg");
   const [scr, setScr] = useState("");
+  const [scr48h, setScr48h] = useState("");
+  const [scr7d, setScr7d] = useState("");
+  const [urineRate, setUrineRate] = useState("");
+  const [urineHours, setUrineHours] = useState("");
+  const [renalCourse, setRenalCourse] = useState<RenalCourse>("unknown");
+  const [onDialysis, setOnDialysis] = useState(false);
+  const [rrtInitiated, setRrtInitiated] = useState(false);
   const [confirmedSuspiciousUnit, setConfirmedSuspiciousUnit] = useState<string | null>(null);
   usePrefillPatient((p) => {
     if (!wt && p.w) setWt(p.w);
@@ -188,28 +145,55 @@ export default function RenalDosePage() {
   });
   const [useIbw, setUseIbw] = useState(false);
 
-  const scrValue = parseInput(scr);
   const ageValue = parseInput(age);
   const heightValue = parseInput(ht);
   const ibwValue = Number.isFinite(heightValue) && heightValue > 0 ? ibwKg(heightValue, sexe) : null;
   const invalidIbw = useIbw && (ibwValue === null || ibwValue <= 0);
-  const suspiciousMgUnit = unit === "mg" && Number.isFinite(scrValue) && scrValue > 20;
-  const confirmationKey = `${unit}:${scr}`;
+  const rawCreatinineValues = [scr, scr48h, scr7d];
+  const confirmationKey = `${unit}:${scr}:${scr48h}:${scr7d}`;
+  const suspiciousMgUnit = unit === "mg" && rawCreatinineValues.some((raw) => {
+    const value = parseInput(raw);
+    return Number.isFinite(value) && value > 20;
+  });
   const unitConfirmed = !suspiciousMgUnit || confirmedSuspiciousUnit === confirmationKey;
+  const creatinineInputIssue = rawCreatinineValues.some((raw) => {
+    if (!raw.trim()) return false;
+    const value = parseInput(raw);
+    return !Number.isFinite(value) || value <= 0;
+  });
+  const toMgDl = (raw: string): number | null => {
+    const value = parseInput(raw);
+    const converted = scrToMgDl(value, unit);
+    if (converted.mgDl !== null) return converted.mgDl;
+    return converted.suspectUnit && unitConfirmed ? value : null;
+  };
+  const currentScrMgDl = toMgDl(scr);
+  const scr48hMgDl = toMgDl(scr48h);
+  const scr7dMgDl = toMgDl(scr7d);
+
+  const akiAssessment = useMemo(() => akiKdigo({
+    scrNow: currentScrMgDl ?? Number.NaN,
+    scr48h: scr48hMgDl,
+    scr7d: scr7dMgDl,
+    urineMlKgH: parseInput(urineRate),
+    urineHours: parseInput(urineHours),
+    renalReplacementTherapyInitiated: rrtInitiated,
+  }), [currentScrMgDl, scr48hMgDl, scr7dMgDl, urineRate, urineHours, rrtInitiated]);
 
   const r = useMemo(() => {
-    const A = parseInput(age), W = parseInput(wt), H = parseInput(ht), S = parseInput(scr);
-    if (!Number.isFinite(A) || A < 18 || A >= 140 || !Number.isFinite(W) || W <= 0 || !Number.isFinite(S) || S <= 0) return null;
-    if (suspiciousMgUnit && confirmedSuspiciousUnit !== confirmationKey) return null;
+    const A = ageValue, W = parseInput(wt), H = heightValue, S = currentScrMgDl;
+    if (!Number.isFinite(A) || A < 18 || A >= 140 || !Number.isFinite(W) || W <= 0 || S === null || S <= 0) return null;
+    if (!unitConfirmed || creatinineInputIssue || invalidIbw) return null;
     const ibw = Number.isFinite(H) && H > 0 ? ibwKg(H, sexe) : null;
-    if (useIbw && (ibw === null || ibw <= 0)) return null;
-    const mg = unit === "mg" ? S : S / 88.4;
     const weightUsed = useIbw ? Math.min(W, ibw ?? W) : W;
-    const crcl = ((140 - A) * weightUsed * (sexe === "f" ? 0.85 : 1)) / (72 * mg);
+    const crcl = ((140 - A) * weightUsed * (sexe === "f" ? 0.85 : 1)) / (72 * S);
     if (!Number.isFinite(crcl) || crcl < 0) return null;
-    const band = crcl >= 60 ? 0 : crcl >= 30 ? 1 : crcl >= 15 ? 2 : 3;
-    return { crcl, band, mg, ibw, weightUsed };
-  }, [age, wt, ht, scr, sexe, unit, useIbw, suspiciousMgUnit, confirmedSuspiciousUnit, confirmationKey]);
+    return { crcl, mg: S, ibw, weightUsed };
+  }, [ageValue, wt, heightValue, sexe, currentScrMgDl, unitConfirmed, creatinineInputIssue, invalidIbw, useIbw]);
+
+  const doseContextEligible = Boolean(
+    r && renalCourse === "stable" && akiAssessment.stage === 0 && !onDialysis && !useIbw && !invalidIbw && unitConfirmed && !creatinineInputIssue,
+  );
 
   const cell = "flex flex-col gap-1 rounded-xl border border-line bg-surface p-3";
 
@@ -236,8 +220,8 @@ export default function RenalDosePage() {
       <section className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs leading-relaxed">
         <p className="font-bold text-amber-600">
           <T
-            fr="Le PDF fourni ne couvre que les antibiotiques. Les lignes Gabapentine et Prégabaline ont leur RCP français officiel lié sous chacune (produit et date indiqués) ; elles ne constituent pas une validation tunisienne. Les autres lignes proviennent de l’ancienne liste et restent à vérifier dans le RCP local avant tout usage clinique."
-            ar="ملف PDF المقدّم يخصّ المضادات فقط. أرفقت رابط النشرة الفرنسية الرسمية لكل من غابابنتين وبريغابالين مع اسم المنتج وتاريخه؛ وهذا لا يعني اعتماداً تونسياً. بقية الأسطر من القائمة القديمة وتحتاج إلى مراجعة النشرة المحلية قبل الاستعمال السريري."
+            fr="Le PDF fourni ne couvre que les antibiotiques. Seules les lignes Gabapentine et Prégabaline disposent ici d’un RCP français officiel lié (produit et date indiqués) ; cela ne vaut pas validation tunisienne. Les anciennes lignes des autres médicaments sont gardées comme repères de couverture, mais leurs anciennes posologies ont été retirées et aucun dosage n’est activé sans source produit/population relue."
+            ar="ملف PDF المقدّم يخصّ المضادات فقط. لا نفعّل هنا إلا سطري غابابنتين وبريغابالين المرتبطين بنشرة فرنسية رسمية (اسم المنتج والتاريخ مذكوران)، وهذا لا يعني اعتماداً تونسياً. أبقينا أسماء الأدوية الأخرى لحصر التغطية، وحذفنا جرعاتها القديمة؛ لن تُفعّل جرعة قبل مراجعة مصدر خاص بالمنتج والفئة."
           />
         </p>
       </section>
@@ -249,14 +233,30 @@ export default function RenalDosePage() {
           <NumStepper value={ wt } onValue={ setWt } className="field" label="wt" /></label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Taille (cm, option)" ar="الطول (سم، اختياري)" /></span>
           <NumStepper value={ ht } onValue={ setHt } className="field" label="ht" /></label>
-        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créatinine" ar="الكرياتينين" /></span>
+        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créatinine actuelle" ar="الكرياتينين الحالي" /></span>
           <div className="flex items-center gap-2">
-            <NumStepper value={ scr } onValue={(value) => { setScr(value); setConfirmedSuspiciousUnit(null); }} className="field" label="scr" />
+            <NumStepper value={scr} onValue={(value) => { setScr(value); setConfirmedSuspiciousUnit(null); }} className="field" label="scr" />
             <button onClick={() => { setUnit((u) => (u === "mg" ? "umol" : "mg")); setConfirmedSuspiciousUnit(null); }}
               className="shrink-0 rounded-lg border border-line px-2 py-1 text-xs font-black" dir="ltr">{unit === "mg" ? "mg/dL" : "µmol/L"}</button>
           </div>
         </label>
+        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créatinine il y a 48 h (option)" ar="كرياتينين قبل ٤٨ سا (اختياري)" /></span>
+          <NumStepper value={scr48h} onValue={(value) => { setScr48h(value); setConfirmedSuspiciousUnit(null); }} className="field" label="scr48" />
+        </label>
+        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créatinine il y a 7 j (option)" ar="كرياتينين قبل ٧ أيام (اختياري)" /></span>
+          <NumStepper value={scr7d} onValue={(value) => { setScr7d(value); setConfirmedSuspiciousUnit(null); }} className="field" label="scr7d" />
+        </label>
+        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Diurèse (mL/kg/h, option)" ar="إدرار البول (مل/كغ/سا، اختياري)" /></span>
+          <NumStepper value={urineRate} onValue={setUrineRate} step={0.1} className="field" label="urine" />
+        </label>
+        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Durée observée (h)" ar="مدة المراقبة (سا)" /></span>
+          <NumStepper value={urineHours} onValue={setUrineHours} className="field" label="urineH" />
+        </label>
       </section>
+      <p className="px-1 text-[11px] font-bold opacity-60">
+        <T fr="L’unité choisie s’applique aux trois créatininémies ; la diurèse est saisie en mL/kg/h." ar="تُطبّق الوحدة المختارة على قيم الكرياتينين الثلاث؛ ويُدخل إدرار البول بوحدة مل/كغ/سا." />
+      </p>
+      <RenalCourseSelector value={renalCourse} onChange={setRenalCourse} />
 
       <div className="flex flex-wrap gap-2">
         <button onClick={() => setSexe("m")} aria-pressed={sexe === "m"}
@@ -271,13 +271,48 @@ export default function RenalDosePage() {
           <T fr="Poids idéal (obésité)" ar="الوزن المثالي (سمنة)" />
         </button>
       </div>
+      <label className="flex items-start gap-2 rounded-xl border border-amber-500/40 bg-amber-500/5 p-3 text-sm font-bold">
+        <input
+          type="checkbox"
+          checked={onDialysis}
+          onChange={(event) => {
+            setOnDialysis(event.target.checked);
+            if (!event.target.checked) setRrtInitiated(false);
+          }}
+          className="mt-0.5"
+        />
+        <T fr="Dialyse / épuration extrarénale en cours : les grilles stables ci-dessous ne s’appliquent pas ; aucune dose n’est calculée." ar="غسيل أو إحلال كلوي جارٍ: لا تنطبق جداول الوظيفة المستقرة أدناه؛ لا تُحسب جرعة." />
+      </label>
+      {onDialysis && (
+        <label className="flex items-start gap-2 rounded-xl border border-red-500/40 bg-red-500/5 p-3 text-sm font-bold">
+          <input type="checkbox" checked={rrtInitiated} onChange={(event) => setRrtInitiated(event.target.checked)} className="mt-0.5" />
+          <T fr="L’épuration a été initiée pendant cet épisode aigu (critère KDIGO de stade 3). Ne cochez pas pour une dialyse chronique déjà en cours." ar="بدأ الإحلال الكلوي خلال هذه النوبة الحادة (معيار KDIGO للمرحلة 3). لا تحدد هذا الخيار إذا كان الغسيل مزمناً وقائماً من قبل." />
+        </label>
+      )}
+      {useIbw && (
+        <p role="alert" className="rounded-xl border border-amber-500/50 bg-amber-500/10 p-3 text-sm font-bold">
+          <T fr="Le poids idéal modifie la ClCr estimée, mais aucune règle de poids propre à ces RCP n’est activée ici : estimation seule, pas de dose." ar="يغيّر الوزن المثالي تقدير ClCr، لكن لا توجد هنا قاعدة وزن خاصة بهذه النشرات؛ تقدير فقط بلا جرعة." />
+        </p>
+      )}
 
       {suspiciousMgUnit && !unitConfirmed && (
         <div role="alert" className="rounded-2xl border border-amber-500/50 bg-amber-500/10 p-3 text-sm font-bold">
-          <p><T fr="Créatinine > 20 mg/dL : unité inhabituelle. Aucun résultat ni conseil de dose n’est affiché avant vérification. Si le laboratoire confirme mg/dL, confirmez la valeur ci-dessous ; sinon, changez l’unité en µmol/L." ar="الكرياتينين > ٢٠ مغ/دل: وحدة غير معتادة. لن تظهر نتيجة أو إرشادات جرعة قبل التحقق. إذا أكّد المختبر mg/dL فأكّد القيمة أدناه؛ وإلا غيّر الوحدة إلى µmol/L." /></p>
+          <p><T fr="Au moins une valeur de créatinine dépasse 20 mg/dL : unité inhabituelle. Aucun résultat ni conseil de dose n’est affiché avant vérification. Si le laboratoire confirme mg/dL pour toutes les valeurs saisies, confirmez ci-dessous ; sinon, changez l’unité en µmol/L." ar="تتجاوز قيمة كرياتينين واحدة على الأقل ٢٠ مغ/دل: وحدة غير معتادة. لن تظهر نتيجة أو إرشادات جرعة قبل التحقق. إذا أكد المختبر أن كل القيم المدخلة بوحدة mg/dL فأكّد أدناه؛ وإلا غيّر الوحدة إلى µmol/L." /></p>
           <button onClick={() => setConfirmedSuspiciousUnit(confirmationKey)} className="mt-2 rounded-lg border border-amber-600 px-3 py-2 font-black">
-            <T fr="Confirmer que la valeur est bien en mg/dL" ar="أؤكد أن القيمة فعلًا بوحدة mg/dL" />
+            <T fr="Confirmer que toutes les valeurs saisies sont bien en mg/dL" ar="أؤكد أن كل القيم المدخلة بوحدة mg/dL" />
           </button>
+        </div>
+      )}
+
+      {creatinineInputIssue && (
+        <p role="alert" className="rounded-xl border border-red-500/50 bg-red-500/10 p-3 text-sm font-bold text-red-500">
+          <T fr="Une valeur de créatinine saisie est invalide ou ≤0 ; corrigez-la ou effacez le champ concerné. Aucun calcul n’est affiché." ar="إحدى قيم الكرياتينين المدخلة غير صالحة أو ≤0؛ صححها أو امسح الحقل. لن يُعرض أي حساب." />
+        </p>
+      )}
+      {!r && akiAssessment.stage >= 1 && (
+        <div role="alert" className="rounded-xl border border-red-500/50 bg-red-500/10 p-3 text-sm font-bold text-red-500">
+          <p><T fr="Des critères KDIGO sont détectés malgré l’absence d’un résultat exploitable de Cockcroft–Gault. Repérage KDIGO " ar="رُصدت معايير KDIGO رغم عدم توفر نتيجة Cockcroft–Gault صالحة. تصنيف KDIGO " />{akiAssessment.stage}. <T fr="Aucune grille de fonction stable ni dose n’est proposée ; l’AKI doit être évaluée selon un protocole adapté." ar="لا يُعرض جدول وظيفة مستقرة أو جرعة؛ يجب تقييم القصور الحاد وفق بروتوكول مناسب." /></p>
+          <p className="mt-2 text-xs"><T fr="Critères : " ar="المعايير: " />{akiAssessment.criteria.map((criterion) => lang === "ar" ? AKI_LABEL[criterion].ar : AKI_LABEL[criterion].fr).join(" · ")}</p>
         </div>
       )}
 
@@ -296,49 +331,67 @@ export default function RenalDosePage() {
 
       {r ? (
         <>
-          <div className={`card sev-strip rounded-2xl border border-line bg-surface p-4 ${r.band === 3 ? "sev-critical" : r.band === 2 ? "sev-urgent" : r.band === 1 ? "sev-standard" : ""}`}>
+          {onDialysis ? (
+            <div role="alert" className="rounded-2xl border border-red-500/50 bg-red-500/10 p-3 text-sm font-black text-red-500">
+              <p><T fr="Dialyse/épuration extrarénale déclarée : l’estimation Cockcroft–Gault peut être affichée à titre informatif, mais aucune grille de dose n’est appliquée." ar="تم التصريح بالغسيل/الإحلال الكلوي: يمكن عرض تقدير Cockcroft–Gault للمعلومة، لكن لا يُطبّق أي جدول جرعات." /></p>
+              {akiAssessment.criteria.includes("renal-replacement") && (
+                <p className="mt-2 text-xs"><T fr="Épuration initiée pendant cet épisode : critère KDIGO de stade 3." ar="بدأ الإحلال خلال هذه النوبة: معيار KDIGO للمرحلة 3." /></p>
+              )}
+            </div>
+          ) : akiAssessment.stage >= 1 ? (
+            <div role="alert" className="rounded-2xl border border-red-500/50 bg-red-500/10 p-3 text-sm font-black text-red-500">
+              <p><T fr="Critères KDIGO d’atteinte rénale aiguë détectés : aucune grille de fonction stable ni dose n’est appliquée. Utiliser une évaluation/protocole adapté à l’AKI." ar="رُصدت معايير KDIGO لقصور كلوي حاد: لا يُطبّق جدول الوظيفة المستقرة ولا تُعرض جرعة. يلزم تقييم/بروتوكول خاص بالقصور الحاد." /></p>
+              <p className="mt-2 text-xs"><T fr="Critères : " ar="المعايير: " />{akiAssessment.criteria.map((criterion) => lang === "ar" ? AKI_LABEL[criterion].ar : AKI_LABEL[criterion].fr).join(" · ")} (KDIGO {akiAssessment.stage})</p>
+            </div>
+          ) : renalCourse === "acute" ? (
+            <div role="alert" className="rounded-2xl border border-red-500/50 bg-red-500/10 p-3 text-sm font-black text-red-500">
+              <T fr="Parcours aigu/variable déclaré : une absence de critère KDIGO dans les valeurs saisies ne prouve pas la stabilité. Aucune posologie de fonction rénale stable n’est affichée." ar="تم تحديد المسار على أنه حاد/متغير: عدم ظهور معيار KDIGO في القيم المدخلة لا يثبت الاستقرار. لا تُعرض جرعة من جدول الوظيفة المستقرة." />
+            </div>
+          ) : renalCourse === "unknown" ? (
+            <div role="status" className="rounded-2xl border border-amber-500/50 bg-amber-500/10 p-3 text-sm font-bold">
+              <T fr="Une créatinine isolée permet une estimation, pas de distinguer à elle seule AKI et fonction stable/chronique. Aucun palier ni dosage n’est donc sélectionné." ar="يسمح تحليل كرياتينين منفرد بتقدير الوظيفة، لكنه لا يميّز وحده بين القصور الحاد والوظيفة المستقرة/المزمنة؛ لذلك لا تُختار مرحلة أو جرعة." />
+            </div>
+          ) : null}
+
+          <div className="card rounded-2xl border border-line bg-surface p-4">
             <div className="flex items-center justify-between gap-2">
               <p className="text-2xl font-black tabular-nums" dir="ltr">{Math.round(r.crcl)} <span className="text-sm opacity-60">mL/min</span></p>
-              <Badge tone={r.band === 3 ? "critical" : r.band === 2 ? "urgent" : r.band === 1 ? "standard" : "neutral"}>
-                {lang === "ar" ? BAND_NAMES[r.band].ar : BAND_NAMES[r.band].fr}
+              <Badge tone={doseContextEligible ? "neutral" : "urgent"}>
+                {doseContextEligible
+                  ? <T fr="ClCr calculée — seuil propre au RCP" ar="ClCr محسوبة — العتبة حسب النشرة" />
+                  : <T fr="Estimation seule — aucune dose" ar="تقدير فقط — بلا جرعة" />}
               </Badge>
             </div>
             <p className="mt-1 text-xs opacity-70">
               {lang === "ar"
-                ? `Cockcroft-Gault · وزن مستعمل ${Math.round(r.weightUsed)} كغ${r.ibw ? ` (المثالي ${Math.round(r.ibw)})` : ""} · كرياتينين ${r.mg.toFixed(2)} مغ/دل`
-                : `Cockcroft-Gault · poids utilisé ${Math.round(r.weightUsed)} kg${r.ibw ? ` (idéal ${Math.round(r.ibw)})` : ""} · créatinine ${r.mg.toFixed(2)} mg/dL`}
+                ? `Cockcroft–Gault · الوزن المستعمل ${Math.round(r.weightUsed)} كغ${r.ibw ? ` (المثالي ${Math.round(r.ibw)})` : ""} · كرياتينين ${r.mg.toFixed(2)} مغ/دل`
+                : `Cockcroft–Gault · poids utilisé ${Math.round(r.weightUsed)} kg${r.ibw ? ` (idéal ${Math.round(r.ibw)})` : ""} · créatinine ${r.mg.toFixed(2)} mg/dL`}
             </p>
           </div>
 
           <ul className="flex flex-col gap-2">
             {ROWS.map((row) => {
               const antibiotics = ANTIBIOTIC_SEARCH[row.fr];
+              const reviewedDoseRule = Boolean(row.source && row.bands?.length && row.thresholds?.length);
               const thresholdIndex = row.thresholds?.findIndex((threshold) => r.crcl >= threshold);
-              const bandIndex = thresholdIndex === undefined ? r.band : thresholdIndex < 0 ? row.thresholds!.length : thresholdIndex;
-              const doseBand = row.bands[bandIndex];
-              const sev = row.sev[bandIndex] ?? 0;
-              const tone = sev === 3 ? "critical" : sev === 2 ? "urgent" : sev === 1 ? "standard" : "neutral";
-              const sevClass = sev === 3 ? "sev-critical" : sev === 2 ? "sev-urgent" : sev === 1 ? "sev-standard" : "";
+              const bandIndex = thresholdIndex === undefined ? null : thresholdIndex < 0 ? row.thresholds!.length : thresholdIndex;
+              const doseBand = doseContextEligible && reviewedDoseRule && bandIndex !== null ? row.bands?.[bandIndex] : undefined;
               return (
-                <li key={row.fr} className={`card rounded-2xl border border-line bg-surface p-3 ${antibiotics ? "" : `sev-strip ${sevClass}`}`}>
+                <li key={row.fr} className="card rounded-2xl border border-line bg-surface p-3">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-black">{lang === "ar" ? row.ar : row.fr}</p>
                     {antibiotics ? (
                       <Badge tone="neutral"><T fr="Tableau PDF" ar="جدول PDF" /></Badge>
+                    ) : reviewedDoseRule ? (
+                      <Badge tone="neutral"><T fr="RCP individuel lié" ar="نشرة دواء محدد مرتبطة" /></Badge>
                     ) : (
-                      <div className="flex flex-wrap justify-end gap-1">
-                        {doseBand.range && <Badge tone="neutral">{lang === "ar" ? doseBand.range.ar : doseBand.range.fr}</Badge>}
-                        <Badge tone={tone}>
-                          {sev === 3 ? <T fr="Contre-indiqué" ar="ممنوع" /> : sev === 2 ? <T fr="Risque" ar="خطر" /> : sev === 1 ? <T fr="Ajuster" ar="عدّل" /> : <T fr="Inchangé" ar="بلا تغيير" />}
-                        </Badge>
-                        <Badge tone="neutral"><T fr={row.source ? "RCP individuel" : "Hors PDF fourni"} ar={row.source ? "RCP فردي" : "خارج PDF المقدّم"} /></Badge>
-                      </div>
+                      <Badge tone="urgent"><T fr="En attente de source relue" ar="بانتظار مراجعة المصدر" /></Badge>
                     )}
                   </div>
                   {antibiotics ? (
                     <div className="mt-2">
                       <p className="text-sm font-bold opacity-80">
-                        <T fr="Les raccourcis de dose de l’ancienne liste ne sont pas affichés ; consultez les lignes détaillées du PDF source." ar="لا نعرض اختصار الجرعة من القائمة السابقة؛ راجع الأسطر التفصيلية في جدول PDF المصدر." />
+                        <T fr="Aucune ancienne dose n’est reprise ici ; les détails sont dans le tableau OMEDIT dédié, qui applique ses propres règles et exclusions." ar="لا نعرض الجرعات السابقة هنا؛ التفاصيل في جدول OMEDIT المخصّص الذي يطبّق قواعده واستثناءاته الخاصة." />
                       </p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {antibiotics.map((antibiotic) => (
@@ -348,12 +401,56 @@ export default function RenalDosePage() {
                         ))}
                       </div>
                     </div>
+                  ) : !reviewedDoseRule ? (
+                    <p className="mt-2 text-sm font-bold text-amber-600">
+                      <T fr="Dose désactivée : règle actuelle spécifique au produit, à l’indication et à la population non encore sourcée/revue." ar="الجرعة معطّلة: لم تُوثّق أو تُراجع بعد قاعدة حديثة خاصة بالدواء والاستطباب والفئة." />
+                    </p>
                   ) : (
                     <>
-                      <p className="mt-1 text-sm font-bold opacity-80">{lang === "ar" ? doseBand.ar : doseBand.fr}</p>
+                      {doseBand ? (
+                        <>
+                          {doseBand.range && <p className="mt-2 text-xs font-black opacity-70">{lang === "ar" ? doseBand.range.ar : doseBand.range.fr}</p>}
+                          <p className="mt-1 text-sm font-bold opacity-80">{lang === "ar" ? doseBand.ar : doseBand.fr}</p>
+                          <CalculationExplainer
+                            context={{
+                              title: lang === "ar" ? `${row.ar} — مجال الجرعة حسب ClCr` : `${row.fr} — plage selon la ClCr`,
+                              method: lang === "ar"
+                                ? "تحسب هذه الصفحة ClCr بمعادلة Cockcroft–Gault، ثم تقارن القيمة غير المقرّبة بعتبات النشرة الخاصة بهذا الدواء فقط. لا تستخدم CKD-EPI لاختيار هذا المجال، ولا تحسب جرعة فردية."
+                                : "Cette page estime la ClCr par Cockcroft–Gault, puis compare la valeur non arrondie aux seuils du RCP propre à ce médicament. Elle n’utilise pas CKD-EPI pour choisir cette plage et ne calcule pas une dose individuelle.",
+                              inputs: [
+                                {
+                                  label: lang === "ar" ? "ClCr التي استعملها الاختيار (غير مقرّبة)" : "ClCr utilisée par la sélection (non arrondie)",
+                                  value: `${r.crcl} mL/min`,
+                                },
+                                {
+                                  label: lang === "ar" ? "عتبات ClCr في هذه النشرة، من الأعلى إلى الأدنى" : "Seuils ClCr de ce RCP, du plus élevé au plus bas",
+                                  value: `${row.thresholds?.join(" · ") ?? "—"} mL/min`,
+                                },
+                              ],
+                              result: `${doseBand.range ? (lang === "ar" ? doseBand.range.ar : doseBand.range.fr) : ""} — ${lang === "ar" ? doseBand.ar : doseBand.fr}`,
+                              source: lang === "ar" ? row.source!.ar : row.source!.fr,
+                              limitations: lang === "ar"
+                                ? [
+                                    "المعروض مجال من نشرة فرنسية، وليس جرعة فردية يختارها التطبيق أو الذكاء الاصطناعي.",
+                                    "هذا المصدر لا يثبت اعتماداً أو توافراً في تونس؛ راجع نشرة المنتج المحلية ومختصاً.",
+                                    "لا ينطبق هذا المجال على القصور الحاد أو الغسيل؛ لا تفسّر هذه الأداة الحالات المحجوبة.",
+                                  ]
+                                : [
+                                    "La valeur affichée est une plage d’un RCP français, pas une dose individuelle choisie par l’application ou l’IA.",
+                                    "Cette source ne prouve ni l’adoption ni la disponibilité en Tunisie ; vérifier le RCP local avec un professionnel.",
+                                    "Cette plage ne couvre ni l’atteinte rénale aiguë ni la dialyse ; l’outil bloque ces contextes.",
+                                  ],
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <p role="status" className="mt-2 text-sm font-bold text-amber-600">
+                          <T fr="Aucune dose sélectionnée : contexte stable adulte non dialysé, absence de critère KDIGO et méthode de poids requise non réunis." ar="لم تُحدَّد جرعة: شروط البالغ المستقر غير الخاضع للغسيل، وغياب معيار KDIGO، وطريقة الوزن المطلوبة غير مكتملة." />
+                        </p>
+                      )}
                       {row.note && (
                         <p className="mt-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-2 text-xs leading-relaxed">
-                          {lang === "ar" ? row.note.ar : row.note.fr}
+                          <strong><T fr="Note RCP (pas un calcul) : " ar="ملاحظة النشرة (ليست حساباً): " /></strong>{lang === "ar" ? row.note.ar : row.note.fr}
                         </p>
                       )}
                       {row.source && (
@@ -374,9 +471,9 @@ export default function RenalDosePage() {
             <Link href="/calculateurs/antibiotiques" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Antibiotiques" ar="المضادات الحيوية" /></Link>
           </div>
         </>
-      ) : !(suspiciousMgUnit && !unitConfirmed) && !(Number.isFinite(ageValue) && ageValue > 0 && ageValue < 18) && !invalidIbw ? (
+      ) : !(suspiciousMgUnit && !unitConfirmed) && !creatinineInputIssue && !(Number.isFinite(ageValue) && ageValue > 0 && ageValue < 18) && !invalidIbw ? (
         <p className="rounded-xl border border-dashed border-line p-4 text-center text-sm opacity-70">
-          <T fr="Saisissez un âge adulte (18–139 ans), un poids et une créatinine positifs. La taille n’est requise que si vous activez le poids idéal." ar="أدخل عمراً للبالغين (١٨–١٣٩ سنة) ووزناً وكرياتينين موجبين. لا يُطلب الطول إلا عند تفعيل الوزن المثالي." />
+          <T fr="Saisissez un âge adulte (18–139 ans), un poids et une créatinine actuelle positifs. Les valeurs historiques et la diurèse sont facultatives ; la taille n’est requise que pour le poids idéal." ar="أدخل عمراً للبالغين (١٨–١٣٩ سنة) ووزناً وكرياتينين حالياً موجبة. القيم السابقة وإدرار البول اختيارية؛ ولا يُطلب الطول إلا للوزن المثالي." />
         </p>
       ) : null}
     </div>

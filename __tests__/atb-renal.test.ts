@@ -12,6 +12,7 @@ import {
   isFixedOnly,
   isMergedSourceCell,
   isNoData,
+  isUnassignedSourceContext,
   parseWeightDoses,
   requiresSourceCheck,
   stageFromDfg,
@@ -192,10 +193,246 @@ describe("atb-renal : valeurs recoupées avec le tableau source", () => {
     expect(ambiguityNotes.map((note) => note.fr).join(" | ")).toContain("1g/12h");
   });
 
-  it("Cotrimoxazole : contre-indication en IRC terminale", () => {
+  it("Céfoxitine : sépare les contextes et respecte la cellule fusionnée « Aucune donnée »", () => {
+    const r = ATB_RENAL_BY_ID["cefoxitine-iv"];
+    expect(r).toBeDefined();
+    expect(r!.contextReviewRequired).toBe(true);
+    expect(r!.lines[0].context?.fr).toBe("Infection peu grave");
+    expect(r!.lines[1].context?.fr).toBe("Infection grave et/ou CMI > 8 mg/L");
+    expect(r!.lines[1].d).toEqual([
+      "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue",
+      "Infection grave et/ou à CMI>8mg/l : 8 g/24h en continue",
+      "Aucune donnée",
+      "Aucune donnée",
+      "Aucune donnée",
+    ]);
+    expect(r!.lines[1].d.slice(2).every(isNoData)).toBe(true);
+  });
+
+  it("Imipénem-cilastatine p.6 : conserve les trois lignes sans leur inventer de contexte", () => {
+    const r = ATB_RENAL_BY_ID["imipenem-cilastatine-iv"];
+    expect(r).toBeDefined();
+    expect(r!.contextReviewRequired).toBe(true);
+    expect(r!.lines.map((line) => line.context?.fr)).toEqual([
+      "Ligne source 1 — contexte non précisé",
+      "Ligne source 2 — contexte non précisé",
+      "Ligne source 3 — contexte non précisé",
+    ]);
+    expect(r!.lines[0].d).toEqual([
+      "500 mg/6h en perfusion de 30 min",
+      "Cellules source multiples — consulter la note; aucune dose unique retenue",
+      "Cellules source multiples — consulter la note; aucune dose unique retenue",
+      "Cellules source multiples — consulter la note; aucune dose unique retenue",
+      "250 mg/12h",
+    ]);
+  });
+
+  it("Page 7 : conserve les variantes d'indication de lévofloxacine et d'ofloxacine sans choisir un schéma", () => {
+    const levofloxacine = ATB_RENAL_BY_ID["levofloxacine-iv-po"];
+    expect(levofloxacine).toBeDefined();
+    expect(levofloxacine!.contextReviewRequired).toBe(true);
+    expect(levofloxacine!.lines.map((line) => line.context?.fr)).toEqual([
+      "Schéma général — ligne source 1",
+      "Cystite non compliquée — ligne source 2",
+    ]);
+    expect(levofloxacine!.lines[1].d[0]).toBe("Cystite non compliquée : 250 mg /24h");
+
+    const ofloxacine = ATB_RENAL_BY_ID["ofloxacine-iv-po"];
+    expect(ofloxacine).toBeDefined();
+    expect(ofloxacine!.contextReviewRequired).toBe(true);
+    expect(ofloxacine!.lines.map((line) => line.context?.fr)).toEqual([
+      "Dose usuelle — ligne source 1",
+      "Infection sévère — ligne source 2",
+    ]);
+    expect(ofloxacine!.lines[1].d[0]).toBe("Infection sévère : 400 mg/12h");
+  });
+
+  it("Page 7 : maintient les valeurs des onze lignes alignées sur les cellules source", () => {
+    const merged = "Cellule fusionnée — voir la note commune du tableau";
+    const expected: Record<string, string[][]> = {
+      "amikacine-iv": [["15 à 30 mg/kg/j", merged, merged, merged, merged]],
+      "gentamicine-im-iv": [["3 à 8 mg/kg/j", merged, merged, merged, merged]],
+      "tobramycine-im-iv": [["3 à 8 mg/kg/j", merged, merged, merged, merged]],
+      "ciprofloxacine-po": [["500 à 750 mg/12h", "500 à 750 mg/12h", "250-500 mg/12h", "250-500 mg/24h", "250-500 mg/24h"]],
+      "ciprofloxacine-iv": [["400 mg/8 à 12h", "400 mg/8 à 12h", "400 mg/12h", "400 mg/24h", "400 mg/24h"]],
+      "delafloxacine-po": [["450 mg/12h", "450 mg/12h", "450 mg/12h", "450 mg/12h", "Déconseillé"]],
+      "delafloxacine-iv": [["300 mg/ 12 h en perfusion de 60 min", "300 mg/ 12 h en perfusion de 60 min", "300 mg/ 12 h en perfusion de 60 min", "200 mg/12 h", "Déconseillé"]],
+      "levofloxacine-iv-po": [
+        ["500 mg/12 à 24h", "500 mg/12 à 24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 500 mg puis 125 à 250 mg/48h"],
+        ["Cystite non compliquée : 250 mg /24h", "Cystite non compliquée : 250 mg /24h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "DC de 250 mg puis 125 mg/48h"],
+      ],
+      "moxifloxacine-iv-po": [["400 mg/24h", "400 mg/24h", "400 mg/24h", "400 mg/24h", "400 mg/24h"]],
+      "norfloxacine-po": [["400 mg/12 à 24 h", "400 mg/12 à 24 h", "400 mg/12 à 24 h", "400 mg/24h", "400 mg/24h"]],
+      "ofloxacine-iv-po": [
+        ["Dose usuelle : 200 mg/12h", "Dose usuelle : 200 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/48h"],
+        ["Infection sévère : 400 mg/12h", "Infection sévère : 400 mg/12h", "Cellules source multiples — consulter la note; aucune dose unique retenue", "Cellules source multiples — consulter la note; aucune dose unique retenue", "200 mg/24h OU 400 mg/48h"],
+      ],
+    };
+
+    for (const [id, lines] of Object.entries(expected)) {
+      expect(ATB_RENAL_BY_ID[id]?.lines.map((line) => line.d)).toEqual(lines);
+    }
+  });
+
+  it("Page 8 : conserve les posologies et consignes des neuf lignes source", () => {
+    const cdiff = "Traitement des infections à Clostridium difficile (ICD) : 125 mg/ 6h pendant 10 jours pour un 1er épisode d'ICD non sévère. Cette dose peut être augmentée à 500 mg/6h pendant 10 jours en cas d'ICD sévère ou compliquée. La dose maximale journalière ne devrait pas dépasser 2g.";
+    const monitoring = "DC, puis adapter en fonction de la concentration plasmatique à l'équilibre";
+    const expected: Record<string, string[][]> = {
+      "dalbavancine-iv": [["1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1500 mg en une seule perfusion OU 1000 mg en perfusion de 30 min suivi de 500 mg 7 jours après", "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après", "1000 mg en une seule perfusion OU 750 mg suivi de 375 mg 7 jours après"]],
+      "oritavancine-iv": [["1200 mg (dose unique) en perfusion de 3h", "1200 mg (dose unique) en perfusion de 3h", "1200 mg (dose unique) en perfusion de 3h", "Aucune donnée", "Aucune donnée"]],
+      "teicoplanine-im-iv": [
+        ["Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h", "Infection peu sévère : DC de 6 mg/kg/12h les 3 premières injections puis 6 mg/kg/24h", "DC de 6 mg/kg/12h les 3 premières injections puis 3 mg/kg/24h ou 6 mg/kg/48h", "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h", "DC de 6 mg/kg/12h les 3 premières injections puis 2 mg/kg/24h ou 6 mg/kg/72h"],
+        ["Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h", "Infection sévère : DC de 12 mg/kg/12h les 3 à 5 premières injections puis 12 mg/kg/24h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 6 mg/kg/24h ou 12 mg/kg/48h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h", "DC de 12 mg/kg/12h les 3 à 5 premières injections puis 4 mg/kg/24h ou 12 mg/kg/72h"],
+      ],
+      "teicoplanine-po": [Array(5).fill("Diarrhée et colite associées à une infection à Clostridium difficile : 100 - 200 mg deux fois par jour pendant 7 à 14 jours.")],
+      "vancomycine-iv": [["DC 30 mg/kg en perfusion de 2h puis : 20 à 40 mg/kg/j", monitoring, monitoring, monitoring, monitoring]],
+      "vancomycine-po": [Array(5).fill(cdiff)],
+      "metronidazole-po": [
+        ["250 mg/6h", "250 mg/6h", "250 mg/6h", "250 mg/6h", "250 mg/12h"],
+        ["500 mg/8h", "500 mg/8h", "500 mg/8h", "500 mg/8h", "250 mg/8h"],
+        ["500 mg/12h", "500 mg/12h", "500 mg/12h", "500 mg/12h", "500 mg/24h"],
+      ],
+      "metronidazole-iv": [
+        ["500 mg/8h", "500 mg/8h", "500 mg/8h", "500 mg/8h", "250 mg/8h"],
+        ["750 mg/8h", "750 mg/8h", "750 mg/8h", "750 mg/8h", "375 mg/8h"],
+      ],
+      "ornidazole-iv-po": [Array(5).fill("Infection à germes anaérobies : 1 à 1,5g /24h")],
+    };
+
+    for (const [id, lines] of Object.entries(expected)) {
+      expect(ATB_RENAL_BY_ID[id]?.lines.map((line) => line.d)).toEqual(lines);
+    }
+  });
+
+  it("Page 8 : bloque les schémas alternatifs ou conditionnels sans contexte recueilli", () => {
+    const expected: Record<string, string[]> = {
+      "dalbavancine-iv": ["Deux schémas alternatifs (OU) — choix non recueilli"],
+      "teicoplanine-im-iv": ["Infection peu sévère", "Infection sévère"],
+      "teicoplanine-po": ["Diarrhée/colite à Clostridium difficile"],
+      "metronidazole-po": [
+        "Ligne source 1 — contexte non précisé",
+        "Ligne source 2 — contexte non précisé",
+        "Ligne source 3 — contexte non précisé",
+      ],
+      "metronidazole-iv": [
+        "Ligne source 1 — contexte non précisé",
+        "Ligne source 2 — contexte non précisé",
+      ],
+      "ornidazole-iv-po": ["Infection à germes anaérobies"],
+    };
+
+    for (const [id, contexts] of Object.entries(expected)) {
+      const row = ATB_RENAL_BY_ID[id];
+      expect(row?.contextReviewRequired).toBe(true);
+      expect(row?.lines.map((line) => line.context?.fr)).toEqual(contexts);
+    }
+  });
+
+  it("Pages 1–4 et 9–12 : associe chaque ligne conditionnelle ou alternative à son contexte source", () => {
+    const expected: Record<string, string[]> = {
+      "amoxicilline-po": ["Ligne source 1 — contexte non précisé", "Ligne source 2 — contexte non précisé"],
+      "amoxicilline-iv": ["Ligne source 1 — contexte non précisé", "Ligne source 2 — contexte non précisé"],
+      "amoxicilline-acide-clavulanique-iv": ["Ligne source 1 — contexte non précisé", "Ligne source 2 — contexte non précisé"],
+      "ampicilline-sulbactam-iv": ["Posologie usuelle", "Infection à Acinetobacter spp"],
+      "benzathine-benzylpenicilline-im": ["Ligne source 1 — contexte non précisé", "Ligne source 2 — contexte non précisé"],
+      "cloxacilline-iv": ["Deux modalités alternatives (OU) — choix non recueilli"],
+      "oxacilline-iv": ["Deux modalités alternatives (OU) — choix non recueilli"],
+      "temocilline-iv": ["Administration intermittente — ligne source 1", "Administration continue — ligne source 2"],
+      "aztreonam-im": ["Cystite aiguë ou infection gonococcique non compliquée", "Infection urinaire haute et/ou compliquée"],
+      "aztreonam-iv": ["Infection peu sévère", "Infection sévère"],
+      "cefazoline-im-iv": ["Infection peu sévère", "Infection sévère"],
+      "cefepime-iv-im-possible": ["Infection respiratoire communautaire / pyélonéphrite non compliquée", "Infection sévère", "Infection très sévère"],
+      "cefotaxime-im-iv": ["Posologie standard", "Infection ostéo-articulaire", "Infection méningée"],
+      "azithromycine-po": ["Schémas selon l'indication — choix non recueilli"],
+      "clarithromycine-po": ["Ligne source 1 — contexte non précisé", "Ligne source 2 — contexte non précisé"],
+      "spiramycine-iv-po": ["Voie orale", "Voie intraveineuse"],
+      "sulfadiazine-po": ["Préventif / curatif — choix non recueilli"],
+      "trimethoprime-po": ["Cystite aiguë non compliquée"],
+      "doxycycline-iv-po": ["Tranche de poids et indication — choix non recueilli"],
+      "lymecycline-po": ["Ligne source 1 — contexte non précisé", "Acné"],
+      "tigecycline-iv": ["Infection non sévère", "Infection sévère"],
+      "daptomycine-iv": ["Infection non sévère", "Infection sévère"],
+      "fosfomycine-trometamol-po": ["Cystite aiguë non compliquée — femme/adolescente de plus de 12 ans"],
+      "linezolide-iv-po": ["Schéma standard — ligne source 1", "Infection grave de réanimation"],
+      "rifabutine-po": [
+        "Traitement curatif des infections à Mycobacterium avium complexe chez les sujets VIH+",
+        "Traitement préventif des infections à Mycobacterium avium complexe chez les sujets VIH+",
+      ],
+      "rifampicine-iv-po": ["Tuberculose", "Infection à germes Gram + ou -"],
+    };
+
+    expect(Object.keys(expected)).toHaveLength(26);
+    for (const [id, contexts] of Object.entries(expected)) {
+      const row = ATB_RENAL_BY_ID[id];
+      expect(row?.contextReviewRequired).toBe(true);
+      expect(row?.lines.map((line) => line.context?.fr)).toEqual(contexts);
+    }
+  });
+
+  it("Ceftazidime p.5 : garde les modes continu et discontinu séparés et non sélectionnables sans choix", () => {
+    for (const id of ["ceftazidime-im-iv", "ceftazidime-avibactam-iv"]) {
+      const r = ATB_RENAL_BY_ID[id];
+      expect(r).toBeDefined();
+      expect(r!.contextReviewRequired).toBe(true);
+      expect(r!.lines.map((line) => line.context?.fr)).toEqual([
+        "Administration discontinue",
+        "Administration continue",
+      ]);
+    }
+  });
+
+  it("Ceftobiprole : sépare le schéma de base et la variante sévère sans extrapoler celle-ci en IRC", () => {
+    const r = ATB_RENAL_BY_ID["ceftobiprole-iv"];
+    const unassigned = "Contexte source non attribué — vérifier; aucune dose unique retenue";
+    expect(r).toBeDefined();
+    expect(r!.contextReviewRequired).toBe(true);
+    expect(r!.lines).toHaveLength(2);
+    expect(r!.lines[0].context?.fr).toContain("Schéma de base");
+    expect(r!.lines[0].d).toEqual([
+      "500 mg /8h en perfusion de 2h",
+      "500 mg /8h en perfusion de 2h",
+      "Cellules source multiples — consulter la note; aucune dose unique retenue",
+      "250 mg/12h",
+      "250 mg/24h",
+    ]);
+    expect(r!.lines[1].context?.fr).toContain("infection sévère");
+    expect(r!.lines[1].d).toEqual([
+      "Si infection sévère : 1 g/8h en perfusion de 4h",
+      "Si infection sévère : 1 g/8h en perfusion de 4h",
+      "Cellules source multiples — consulter la note; aucune dose unique retenue",
+      unassigned,
+      unassigned,
+    ]);
+    expect(isUnassignedSourceContext(unassigned)).toBe(true);
+    expect(requiresSourceCheck(unassigned)).toBe(true);
+    expect(calculateWeightDose(unassigned, 70, "fr").text).toBeNull();
+    expect(r!.notes.some((note) => note.fr.includes("n'est attribuée à la variante sévère"))).toBe(true);
+    expect(r!.notes.some((note) => note.ar.includes("لم تُسنَد أي من هذه القيم الكلوية"))).toBe(true);
+  });
+
+  it("Ceftolozane-tazobactam : sépare le schéma standard de la pneumonie nosocomiale et bloque le choix sans indication", () => {
+    const r = ATB_RENAL_BY_ID["ceftolozane-tazobactam-iv"];
+    expect(r).toBeDefined();
+    expect(r!.contextReviewRequired).toBe(true);
+    expect(r!.lines).toHaveLength(2);
+    expect(r!.lines[0].context?.fr).toBe("Schéma standard");
+    expect(r!.lines[1].context?.fr).toContain("Pneumonie nosocomiale");
+    expect(r!.lines[0].d[2]).toContain("Cellules source multiples");
+    expect(r!.lines[1].d[2]).toContain("Cellules source multiples");
+    expect(r!.lines[0].d[3]).toBe("250 mg /8h");
+    expect(r!.lines[1].d[3]).toBe("500 mg/8h");
+    expect(r!.lines[0].d[4]).toContain("DC de 500 mg");
+    expect(r!.lines[1].d[4]).toContain("DC 1500 mg");
+  });
+
+  it("Cotrimoxazole : contre-indication en IRC terminale + avertissement RCP BACTRIM sans conversion DFG/ClCr", () => {
     const r = ATB_RENAL_BY_ID["cotrimoxazole-iv-po"];
     expect(isContraindicated(r!.lines[0].d[4])).toBe(true);
     expect(r!.section).toBe("sulfamides");
+    expect(r!.notes.some((note) => note.fr.includes("AMM 9253082") && note.fr.includes("sans préciser de seuils rénaux"))).toBe(true);
+    expect(r!.notes.some((note) => note.fr.includes("ne transposez pas ses seuils") && note.fr.includes("10 %"))).toBe(true);
+    expect(r!.ar).toBe(r!.fr);
+    expect(r!.notes[0].ar).toBe(r!.notes[0].fr);
   });
 
   it("Vancomycine IV : dose de charge pondérale 30 mg/kg, puis adaptation", () => {
@@ -356,6 +593,8 @@ describe("atb-dose : lecture des posologies pondérales", () => {
     expect(parseWeightDoses(ambiguous)).toHaveLength(0);
     expect(weightDoseText(ambiguous, 70, "fr")).toBeNull();
     expect(requiresSourceCheck("Réduction de la posologie")).toBe(true);
+    expect(isUnassignedSourceContext("Contexte source non attribué — aucune dose unique retenue")).toBe(true);
+    expect(requiresSourceCheck("Contexte source non attribué — aucune dose unique retenue")).toBe(true);
     expect(requiresSourceCheck("½ dose")).toBe(true);
     expect(requiresSourceCheck("2 g/8h")).toBe(false);
     expect(requiresSourceCheck("15 à 30 mg/kg/j")).toBe(false);
@@ -463,7 +702,7 @@ describe("atb-renal : périmètre adulte", () => {
 
   it("l'âge < 18 ans n'affiche aucune dose du tableau adulte, même si ClCr est calculable", () => {
     const crcl = cockcroftGault(12, 40, 0.8, "m")!; // calcul ClCr seul : ≈ 88,9 mL/min
-    const result = chooseStage({ ageYears: 12, sexe: "m", weightKg: 40, heightCm: 145, scrMgDl: 0.8 });
+    const result = chooseStage({ ageYears: 12, sexe: "m", weightKg: 40, heightCm: 145, scrMgDl: 0.8, renalCourse: "stable" });
     expect(crcl).toBeCloseTo(88.9, 1);
     expect(result.crclCg).toBeCloseTo(crcl, 6);
     expect(result.refusal).toBe("pediatric");

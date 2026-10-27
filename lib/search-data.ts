@@ -32,6 +32,7 @@ export function buildSearchIndex(): SearchItem[] {
       href: `/medicaments/${m.id}#doses`,
       title: m.name,
       hay: normalize(`${m.name.fr} ${m.name.ar} ${m.synonyms.join(" ")} ${m.klass.fr} ${m.klass.ar} ${m.brands ?? ""}`),
+      ...(m.searchExclusions ? { searchExclusions: m.searchExclusions } : {}),
     })),
     ...GCASES.map((g) => ({
       key: `guidage:${g.id}`,
