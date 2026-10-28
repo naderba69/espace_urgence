@@ -44,14 +44,12 @@ export const viewport: Viewport = {
   themeColor: "#0f172a",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover",       // edge-to-edge : l'app dessine sous la barre d'état
 };
 
 /* Anti-FOUC : applique langue/direction/thème/taille AVANT le premier rendu,
    à partir des préférences localStorage. v9.0 : thème « auto » par défaut = suit le système. */
-const INIT_SCRIPT = `(function(){try{var p=JSON.parse(localStorage.getItem("eutn:prefs")||"{}");var el=document.documentElement;var th=p.theme||"auto";var dark=th==="auto"?!!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches):th!=="light";el.classList.toggle("dark",dark);el.classList.toggle("amoled",th==="amoled");var l=p.lang==="ar"?"ar":"fr";el.lang=l;el.dir=l==="ar"?"rtl":"ltr";el.style.fontSize=(p.fontSize||16)+"px";}catch(e){document.documentElement.classList.add("dark");}})();`;
+const INIT_SCRIPT = `(function(){try{var p=JSON.parse(localStorage.getItem("eutn:prefs")||"{}");var el=document.documentElement;var th=["auto","dark","light","amoled"].indexOf(p.theme)>=0?p.theme:"auto";var dark=th==="auto"?!!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches):th!=="light";el.classList.toggle("dark",dark);el.classList.toggle("amoled",th==="amoled");var l=p.lang==="ar"?"ar":"fr";el.lang=l;el.dir=l==="ar"?"rtl":"ltr";var fs=[16,18,20].indexOf(p.fontSize)>=0?p.fontSize:16;el.style.fontSize=fs+"px";}catch(e){document.documentElement.classList.add("dark");}})();`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

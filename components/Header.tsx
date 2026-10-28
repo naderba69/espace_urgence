@@ -6,11 +6,13 @@ import { Activity, Menu, Moon, Sun, MonitorSmartphone, Volume2, VolumeX, Siren, 
 import { useApp } from "./Providers";
 import Nav from "./Nav";
 import InstallPwa from "./InstallPwa";
+import { useModalFocusTrap } from "@/lib/modal-focus";
 
 export default function Header() {
   const { t, prefs, setPref, setEmergencyOpen } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  useModalFocusTrap(panelRef, menuOpen);
 
   // Échap ferme le tiroir + verrouille le scroll de l'app-shell pendant l'ouverture
   useEffect(() => {

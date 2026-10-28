@@ -1,6 +1,8 @@
 // IndexedDB pour l'historique IA des ECG (images → trop grosses pour les 5 Mo de localStorage).
 // Miniatures JPEG ≤300 px, max 30 entrées, éviction FIFO.
 
+import { sanitizeEcgAnalysis } from "./ecg-parse";
+
 const DB_NAME = "eutn-db";
 const STORE = "ecg-analyses";
 const MAX_ENTRIES = 30;
@@ -62,8 +64,23 @@ export async function listEcgRecords(): Promise<EcgRecord[]> {
     const db = await openDb();
     return await new Promise((resolve) => {
       const req = db.transaction(STORE).objectStore(STORE).getAll();
-      req.onsuccess = () => resolve((req.result as EcgRecord[]).sort((a, b) => b.ts - a.ts)); // récent d'abord
-      req.onerror = () => resolve([]);
+      req.onsuccess = () => {
+        const rawRecords = req.result as unknown[];
+        const safeRecords: EcgRecord[] = [];
+        for (const item of rawRecords) {
+          if (!item || typeof item !== "object") continue;
+          const candidate = item as Record<string, unknown>;
+          const analysis = sanitizeEcgAnalysis(candidate.analysis);
+          if (typeof candidate.id !== "number" || !Number.isFinite(candidate.id) ||
+              typeof candidate.ts !== "number" || !Number.isFinite(candidate.ts) ||
+              candidate.ts <= 0 || typeof candidate.thumb !== "string" || candidate.thumb.length > 1_000_000 ||
+              !/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(candidate.thumb) || !analysis) continue;
+          safeRecords.push({ id: candidate.id, ts: candidate.ts, thumb: candidate.thumb, analysis, raw: "" });
+        }
+        db.close();
+        resolve(safeRecords.sort((a, b) => b.ts - a.ts)); // récent d'abord
+      };
+      req.onerror = () => { db.close(); resolve([]); };
     });
   } catch {
     return [];

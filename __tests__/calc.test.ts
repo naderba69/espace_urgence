@@ -9,7 +9,7 @@ import {
 } from "../lib/calc";
 import { searchItems, loadSearchIndex } from "../lib/search";
 import { getMedication } from "../data/medications";
-import { MED_TOOLS, pumpCfgFromPerfusion } from "../data/med-tools";
+import { MED_TOOLS, pumpCfgFromPerfusion, pumpCfgFromPreset } from "../data/med-tools";
 
 describe("saisie décimale des poids", () => {
   it("accepte virgule ou point comme séparateur décimal", () => {
@@ -78,11 +78,11 @@ describe("Parkland", () => {
 });
 
 describe("amines (PSE)", () => {
-  it("noradrénaline 4 mg/50 mL → 80 µg/mL", () => {
-    expect(concUgPerMl(4, 50)).toBe(80);
+  it("noradrénaline-base 8 mg/50 mL → 160 µg/mL", () => {
+    expect(concUgPerMl(8, 50)).toBe(160);
   });
-  it("0,1 µg/kg/min à 70 kg = 5,25 mL/h", () => {
-    expect(amineFlow(0.1, 70, 4, 50)).toBeCloseTo(5.25);
+  it("0,1 µg/kg/min à 70 kg = 2,625 mL/h à 160 µg/mL", () => {
+    expect(amineFlow(0.1, 70, 8, 50)).toBeCloseTo(2.625);
   });
 });
 
@@ -201,8 +201,8 @@ describe("abaques de perfusion", () => {
   it("dobutamine 5 µg/kg/min à 100 kg → 30 mL/h", () => {
     expect(perfusionFlow(preset("dobutamine", "µg/kg/min"), 5, 100)).toBeCloseTo(30, 1);
   });
-  it("noradrénaline RE.NAU 1 mg/h (8 mg/40 mL) → 5 mL/h", () => {
-    expect(perfusionFlow(preset("noradrenaline", "mg/h"), 1, 1)).toBeCloseTo(5, 1);
+  it("noradrénaline-base RE.NAU 1 mg/h (8 mg/50 mL, 160 µg/mL) → 6,25 mL/h", () => {
+    expect(perfusionFlow(preset("noradrenaline", "mg/h"), 1, 1)).toBeCloseTo(6.25, 2);
   });
   it("adrénaline anaphylaxie 0,1 mg/h = vitesse 2 (50 µg/mL)", () => {
     expect(perfusionFlow(preset("adrenaline", "mg/h"), 0.1, 1)).toBeCloseTo(2, 1);
@@ -238,8 +238,8 @@ describe("abaques de perfusion", () => {
   it("exacyl entretien 125 mg/h (25 mg/mL) → 5 mL/h", () => {
     expect(perfusionFlow(preset("acide-tranexamique", "mg/h"), 125, 1)).toBeCloseTo(5, 2);
   });
-  it("labétalol 0,1 mg/kg/h à 70 kg (2 mg/mL) → 3,5 mL/h (abaque)", () => {
-    expect(perfusionFlow(preset("labetalol", "mg/kg/h"), 0.1, 70)).toBeCloseTo(3.5, 2);
+  it("labétalol 1 mg/min (2 mg/mL) → 30 mL/h (abaque)", () => {
+    expect(perfusionFlow(preset("labetalol", "mg/min"), 1, 1)).toBeCloseTo(30, 2);
   });
   it("toutes les préparations ont une concentration > 0 et une fourchette cohérente", () => {
     for (const p of PERFUSIONS) {
@@ -380,12 +380,14 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     expect(flowForUnit("UI/kg/h", 0.1, 70, 1)).toBeCloseTo(7);
     expect(flowForUnit("µg/min", 100, 70, 200)).toBeCloseTo(30);
   });
-  it("pompe dérivée seulement si une préparation unique est définie", () => {
-    // Noradrénaline a deux protocoles RE.NAU : l'écran médicament emploie son réglage explicite.
+  it("pompe dérivée uniquement depuis les préparations structurées", () => {
+    // Noradrénaline a deux presets et conserve son réglage explicite.
     expect(pumpCfgFromPerfusion("noradrenaline")).toBeUndefined();
     expect(MED_TOOLS.noradrenaline?.pump?.unit).toBe("µg/kg/min");
-    const t = pumpCfgFromPerfusion("trinitrine")!;
-    expect(t.defAmpMg).toBeGreaterThan(0);
+    const dobu = pumpCfgFromPerfusion("dobutamine")!;
+    expect(dobu.defAmpMg * dobu.defCount / dobu.defTarget).toBe(1);
+    expect(pumpCfgFromPerfusion("propofol")?.defAmpMg).toBe(500);
+    expect(pumpCfgFromPerfusion("trinitrine")).toBeUndefined();
   });
   it("recherche par nom commercial tunisien", async () => {
     await loadSearchIndex(); // v17.0 — index chargé à la demande
@@ -403,8 +405,11 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
 
     const atroventKeys = searchItems("atrovent", 10).map((i) => i.key);
     expect(atroventKeys).not.toContain("medicament:ipratropium");
+    // DPM confirme la DCI, la forme injectable et l'indication, mais pas la voie
+    // IV/IM exacte : garder ces AMM visibles sur la fiche sans les indexer comme
+    // synonymes d'une carte dont les doses sont spécifiques à une voie.
     for (const brand of ["atropine saiph", "atropine sulfate aguettant", "atropinum sulfuricum"]) {
-      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:atropine");
+      expect(searchItems(brand, 10).map((i) => i.key), brand).not.toContain("medicament:atropine");
     }
     expect(searchItems("atropine unimed collyre", 10).map((i) => i.key)).not.toContain("medicament:atropine");
     expect(searchItems("atropine", 10).map((i) => i.key)).toContain("medicament:atropine");
@@ -422,11 +427,19 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     for (const brand of ["gentalline", "gentadar", "unigenta collyre", "unigenta 0.3%", "unigenta 0,3% collyre"]) {
       expect(searchItems(brand, 10).map((i) => i.key), brand).not.toContain("medicament:gentamicine");
     }
+    // Les AMM listent « solution injectable » et une indication systémique,
+    // sans préciser IV/IM : ne pas rabattre ces spécialités sur la posologie IV.
     for (const brand of ["genta 80", "gentainject 80", "unigenta 10", "unigenta 160", "cidomycine 20"]) {
-      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:gentamicine");
+      expect(searchItems(brand, 10).map((i) => i.key), brand).not.toContain("medicament:gentamicine");
     }
     expect(searchItems("gentamicine", 10).map((i) => i.key)).toContain("medicament:gentamicine");
     expect(getMedication("gentamicine")?.brands).toContain("9093536");
+    // Le snapshot DPM 2024 distingue les comprimés adultes TERIAK
+    // (sulfaméthopyrazine + triméthoprime) de la suspension pédiatrique
+    // cotrimoxazole : aucune spécialité BACTRIM ne doit être aliasée ici.
+    for (const term of ["bactrim", "bactrim forte", "bactrim nourrissons"]) {
+      expect(searchItems(term, 10).map((i) => i.key).filter((key) => key.startsWith("medicament:")), term).toEqual([]);
+    }
     expect(searchItems("vaamox", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
     expect(searchItems("amoclan", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
     expect(searchItems("amoxi plus", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
@@ -836,17 +849,34 @@ describe("v2.8 Broselow", () => {
 });
 
 describe("v2.8 cohérence perfusions (garde-fou données)", () => {
-  it("chaque médicament avec une seule préparation produit une pompe ; les ambiguïtés sont refusées", () => {
+  it("génère une pompe seulement si la préparation structurée concorde avec concUgPerMl", () => {
     for (const drugId of new Set(PERFUSIONS.map((p) => p.drugId))) {
       const matches = PERFUSIONS.filter((p) => p.drugId === drugId);
       const cfg = pumpCfgFromPerfusion(drugId);
-      if (matches.length === 1) {
+      if (matches.length === 1 && matches[0].pumpPreparation) {
         expect(cfg, drugId).toBeTruthy();
         expect(cfg!.defTarget, drugId).toBeGreaterThan(0);
+        const preparedMl = matches[0].pumpPreparation!.convention === "total"
+          ? cfg!.defTarget
+          : cfg!.defTarget + cfg!.defCount * cfg!.defAmpVol;
+        const factor = matches[0].pumpPreparation!.amountUnit === "UI" ? 1 : 1000;
+        expect((cfg!.defAmpMg * cfg!.defCount * factor) / preparedMl).toBeCloseTo(matches[0].concUgPerMl, 4);
       } else {
-        expect(cfg, `${drugId}: plusieurs indications ne doivent pas sélectionner la première`).toBeUndefined();
+        expect(cfg, `${drugId}: pas de préparation structurée unique, pas de pompe automatique`).toBeUndefined();
       }
     }
+  });
+  it("Dobutamine et propofol ne récupèrent plus les premiers nombres de leur texte libre", () => {
+    const dobutamine = PERFUSIONS.find((p) => p.drugId === "dobutamine")!;
+    const propofol = PERFUSIONS.find((p) => p.drugId === "propofol")!;
+    expect(dobutamine.concUgPerMl).toBe(1000);
+    expect(pumpCfgFromPerfusion("dobutamine")?.defTarget).toBe(250);
+    expect(propofol.prep.fr).toContain("10 mg/mL");
+    expect(propofol.concUgPerMl).toBe(10000);
+    expect(pumpCfgFromPerfusion("propofol")?.defTarget).toBe(50);
+    expect(pumpCfgFromPerfusion("propofol")?.defAmpMg).toBe(500);
+    expect(pumpCfgFromPreset({ ...dobutamine, concUgPerMl: 2000 })).toBeUndefined();
+    expect(pumpCfgFromPreset({ ...propofol, concUgPerMl: 100001 })).toBeUndefined();
   });
 });
 

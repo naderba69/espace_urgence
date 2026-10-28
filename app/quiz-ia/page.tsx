@@ -1,6 +1,7 @@
 "use client";
 // Quiz de révision IA : QCM générés depuis le contenu du site, correction immédiate.
 import { useRef, useState } from "react";
+import Link from "next/link";
 import AiGate from "@/components/ai/AiGate";
 import { useApp } from "@/components/Providers";
 import T from "@/components/T";
@@ -9,13 +10,13 @@ import { trackEvent } from "@/lib/analytics";
 import { GraduationCap, Loader2, RotateCcw, CheckCircle2, XCircle } from "lucide-react";
 import { reveal } from "@/lib/reveal";
 import { useRefIndexMap } from "@/lib/ref-index";
-
-interface Qcm { question: string; options: string[]; correct: number; explanation: string }
+import { AiQuizValidationError, parseGeneratedAiQuiz, type AiQuizItem } from "@/lib/ai-quiz";
 
 export default function QuizPage() {
   const { t, lang } = useApp();
   const [topic, setTopic] = useState("acr-adulte");
-  const [qs, setQs] = useState<Qcm[]>([]);
+  const [qs, setQs] = useState<AiQuizItem[]>([]);
+  const [quizSource, setQuizSource] = useState<{ title: string; sources: string[] } | null>(null);
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -29,31 +30,53 @@ export default function QuizPage() {
   const finished = qs.length > 0 && idx >= qs.length;
 
   const run = async () => {
+    if (busy) return;
     setBusy(true);
     setErr("");
     setQs([]);
+    setQuizSource(null);
     setIdx(0);
     setScore(0);
     setPicked(null);
     trackEvent("ai_query", { kind: "quiz" });
-    // import dynamique : le texte du protocole (étapes, points-clés) n'arrive qu'ici,
-    // au clic sur « Générer » — l'action est déjà en ligne puisqu'elle appelle l'IA.
-    const { getProtocol } = await import("@/data/protocols");
-    const p = getProtocol(topic);
-    const sys =
-      (lang === "ar"
-        ? "أنشئ 5 أسئلة اختيار متعددة بالعربية لمهنيي الاستعجالي حول البروتوكول أدناه. أجب فقط بمصفوفة JSON: [{\"question\":\"...\",\"options\":[\"أ\",\"ب\",\"ج\",\"د\"],\"correct\":0,\"explanation\":\"قصيرة\"}]. كل الخيارات قصيرة ومحتملة؛ تجنّب «كل ما سبق». البروتوكول: "
-        : "Génère 5 QCM en français pour professionnels des urgences sur le protocole ci-dessous. Réponds UNIQUEMENT par un tableau JSON : [{\"question\":\"...\",\"options\":[\"a\",\"b\",\"c\",\"d\"],\"correct\":0,\"explication_courte\":\"...\"} mappé sur la clé explanation]. Options courtes et plausibles ; pas de « toutes les réponses ». Protocole : ") +
-      (p ? JSON.stringify({ titre: p.title, etapes: p.steps.map((s) => s.title), points: p.keyPoints }) : "");
     try {
-      const raw = await generateText("Génère le quiz.", sys);
-      const m = raw.match(/\[[\s\S]*\]/);
-      const parsed = m ? (JSON.parse(m[0]) as Qcm[]) : null;
-      if (!parsed || !Array.isArray(parsed) || !parsed[0]?.options) throw new Error("format");
-      setQs(parsed.slice(0, 5));
+      // Le contenu source n'est chargé qu'au clic explicite sur « Générer ».
+      const { getProtocol } = await import("@/data/protocols");
+      const protocol = getProtocol(topic);
+      if (!protocol) throw new Error("protocol-not-found");
+
+      const protocolContext = JSON.stringify({
+        title: protocol.title,
+        steps: protocol.steps.map((step) => step.title),
+        keyPoints: protocol.keyPoints,
+        references: protocol.meta.sources,
+      });
+      const systemPrompt = lang === "ar"
+        ? `أنشئ خمسة أسئلة تعليمية لفهم بنية البروتوكول ومبادئ السلامة فقط. لا تسأل ولا تذكر جرعات أو أرقاماً أو عتبات أو مدد علاج أو توصيات علاجية جديدة. لا تضف معلومة غير موجودة في المصدر. إذا لم تكفِ المادة، أعد أسئلة أقل تنوعاً لكن أرسل خمسة وفق المخطط. أجب بمصفوفة JSON فقط، لكل عنصر question وoptions (أربعة نصوص) وcorrect (فهرس من صفر إلى ثلاثة) وexplanation. المصدر: ${protocolContext}`
+        : `Crée cinq QCM pédagogiques sur la compréhension de la structure du protocole et ses principes de sécurité uniquement. N'interroge pas et ne mentionne aucune dose, aucun chiffre, seuil, délai thérapeutique ou nouvelle recommandation. N'ajoute rien qui ne figure dans la source. Réponds uniquement par un tableau JSON de cinq objets avec question, options (quatre textes), correct (index de zéro à trois) et explanation. Source : ${protocolContext}`;
+
+      const raw = await generateText("Génère le quiz.", systemPrompt, { language: lang });
+      const parsed = parseGeneratedAiQuiz(raw);
+      setQs(parsed);
+      setQuizSource({
+        title: lang === "ar" ? protocol.title.ar : protocol.title.fr,
+        sources: protocol.meta.sources,
+      });
       reveal(quizRef.current);
-    } catch (e) {
-      setErr(e instanceof AiError ? t(`ai.error.${e.code}`) : t("ai.error.provider"));
+    } catch (cause) {
+      if (cause instanceof AiQuizValidationError) {
+        setErr(cause.reason === "numeric-content"
+          ? (lang === "ar"
+            ? "رُفض الاختبار لأن الإجابة تضمنت أرقاماً أو وحدات. استخدم اختبار المراجعة الثابت أو راجع البروتوكول مباشرة."
+            : "QCM refusé : la réponse contient des chiffres ou des unités, ou ne respecte pas le format attendu. Utilisez le quiz de révision fixe ou consultez directement le protocole.")
+          : (lang === "ar"
+            ? "تعذر إنشاء اختبار من هذا البروتوكول. استخدم اختبار المراجعة الثابت."
+            : "Impossible de créer le QCM à partir de ce protocole. Utilisez le quiz de révision fixe."));
+      } else if (cause instanceof Error && cause.message === "protocol-not-found") {
+        setErr(lang === "ar" ? "لم يُعثر على البروتوكول المختار." : "Le protocole sélectionné est introuvable.");
+      } else {
+        setErr(cause instanceof AiError ? t(`ai.error.${cause.code}`) : t("ai.error.provider"));
+      }
     } finally {
       setBusy(false);
     }
@@ -68,6 +91,13 @@ export default function QuizPage() {
   return (
     <div className="flex max-w-2xl flex-col gap-5">
       <h1 className="flex items-center gap-2 text-2xl font-extrabold"><GraduationCap className="h-7 w-7 text-blue-500" /> {t("ai.quiz.title")}</h1>
+      <p role="note" className="rounded-xl border border-amber-600/40 bg-amber-500/10 p-3 text-sm leading-relaxed">
+        <T
+          fr="Quiz généré par IA, non vérifié : une erreur reste possible. Il ne sert pas à prendre une décision clinique. Les chiffres, unités et formats non conformes sont refusés automatiquement, mais les autres réponses peuvent aussi être erronées et doivent être vérifiées dans le protocole et ses références."
+          ar="اختبار مولّد بالذكاء الاصطناعي وغير مُدقّق؛ قد تبقى فيه أخطاء. لا يُستخدم لاتخاذ قرار سريري. تُرفض الأرقام المكتوبة بالأرقام والوحدات والتنسيقات غير المطابقة آلياً، لكن قد تبقى أخطاء في بقية الإجابات؛ تحقّق منها في البروتوكول ومراجعه."
+        />
+      </p>
+      <p className="text-sm"><Link href="/quiz" className="font-bold text-blue-600 underline"><T fr="Ouvrir le quiz de révision fixe" ar="افتح اختبار المراجعة الثابت" /></Link></p>
       <AiGate title={t("ai.quiz.title")}>
         <div className="card flex flex-wrap items-end gap-3 rounded-2xl border border-line bg-surface p-4">
           <label className="flex min-w-48 flex-1 flex-col gap-1 font-semibold">
@@ -97,6 +127,12 @@ export default function QuizPage() {
             <p className="text-sm font-bold opacity-70">
               {idx + 1}/{qs.length} · <T fr="Score" ar="النتيجة" /> {score}
             </p>
+            {quizSource && (
+              <p className="rounded-lg bg-surface2 p-2 text-xs leading-relaxed" dir="auto">
+                <T fr="Thème source (à vérifier)" ar="مصدر الموضوع (يجب التحقق منه)" /> : {quizSource.title}
+                {quizSource.sources.length > 0 && <> — <T fr="Références" ar="المراجع" /> : {quizSource.sources.join(" · ")}</>}
+              </p>
+            )}
             <p className="text-lg font-bold">{qs[idx].question}</p>
             <div className="grid gap-2">
               {qs[idx].options.map((o, i) => {

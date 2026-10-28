@@ -6,6 +6,7 @@ import { useApp } from "@/components/Providers";
 import T from "@/components/T";
 import { loadSearchIndex, searchItems, type RefType } from "@/lib/search";
 import { generateText } from "@/lib/ai";
+import { parseAiSearchKeywords } from "@/lib/ai-search";
 import { aiReady } from "@/lib/ai-config";
 import { trackEvent } from "@/lib/analytics";
 import { useRegisterRecent } from "@/components/SearchBar";
@@ -62,10 +63,11 @@ export default function RecherchePage() {
       const sys = lang === "ar"
         ? `أعط 1-3 كلمات مفتاحية طبية للبحث، بالعربية أو الفرنسية، مفصولة بمسافات فقط. لا شيء آخر.`
         : `Donne 1 à 3 mots-clés médicaux pour une recherche (français ou arabe), séparés par des espaces, rien d'autre.`;
-      const raw = await generateText(`Recherche : ${q}`, sys);
-      const kw = raw.replace(/["'.،]/g, " ").trim();
+      const raw = await generateText(`Recherche : ${q}`, sys, { language: lang });
+      const kw = parseAiSearchKeywords(raw);
+      if (!kw) return;
       setAiQ(kw);
-      if (kw) setQ(kw);
+      setQ(kw);
     } catch {
       /* silencieux */
     } finally {

@@ -49,7 +49,7 @@ export const protocolsP5: Protocol[] = [
     ],
     medications: ["paracetamol", "morphine"],
     calculators: [],
-    meta: { sources: ["SFMU/SRLF recommandations envenimation", "Centre antipoison Tunis 71 335 500"], lastReviewed: "2026-09" },
+    meta: { sources: ["SFMU/SRLF recommandations envenimation", "71 335 500 cité par l'ambassade des États-Unis en Tunisie (2025), à confirmer localement"], lastReviewed: "2026-10" },
   },
   {
     id: "intoxication-co",
@@ -279,7 +279,7 @@ export const protocolsP5: Protocol[] = [
   },
     steps: [
       { title: { fr: "Identifier : molécule, dose, heure — emballage ou ordonnance si possible", ar: "حدّد: الجزيء، الجرعة، الساعة — علبة الدواء إن أمكن" } },
-      { title: { fr: "Appeler CENTRE ANTIPOISON 71 335 500 avant tout traitement spécifique", ar: "اتصل بمركز السموم 71 335 500 قبل أي علاج نوعي" } },
+      { title: { fr: "Appeler le Centre antipoison : 71 335 500 (numéro cité par l'ambassade des États-Unis en Tunisie en 2025, à confirmer localement) avant tout traitement spécifique.", ar: "اتصل بمركز السموم: 71 335 500 (رقم أوردته سفارة الولايات المتحدة في تونس سنة 2025، ويجب تأكيده محلياً) قبل أي علاج نوعي." } },
       { title: { fr: "Charbon activé 50 g PO < 1 h si ingestion récente et conscience conservée (PAS si BZD/opioïdes → coma !)", ar: "فحم نشط 50 غ فموياً خلال ساعة إذا واعٍ (لا إذا مهدئات!)" } },
       { title: { fr: "Antidote selon toxidrome : naloxone (opioïdes), flumazénil (BZD) CONVENU avec prudence (sevrage), NaHCO3 (cardiotoxiques), hypno overdose (précautions hépatiques)", ar: "الترياق حسب السمية: نالوكسون (أفيونيات)، فلومازينيل بحذر (BZD)، بيكربونات (قلبية)، NAC (باراسيتامول)" } },
     ],
@@ -310,6 +310,6 @@ export const protocolsP5: Protocol[] = [
     ],
     medications: ["naloxone", "acetylcysteine", "flumazenil"],
     calculators: [],
-    meta: { sources: ["Centre antipoison Tunis 71 335 500", "SRLF — intoxications médicamenteuses"], lastReviewed: "2026-09" },
+    meta: { sources: ["71 335 500 cité par l'ambassade des États-Unis en Tunisie (2025), à confirmer localement", "SRLF — intoxications médicamenteuses"], lastReviewed: "2026-10" },
   },
 ];

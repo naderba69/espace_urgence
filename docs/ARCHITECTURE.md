@@ -176,7 +176,7 @@ il doit tourner sur un `out/sw.js` fraîchement copié (c'est ce que fait `npm r
 
 
 `public/sw.js` contient le marqueur `/*__PRECACHE__*/[]`. `scripts/gen-precache.mjs`
-le remplace après le build par la liste réelle des **1114 entrées** (~17,2 Mo brut, ≈5,8 Mo gzip) : assets `_next` + icônes + `ref-index.json` + les 98 fichiers `/reval/*` + les 34 pages de premier niveau **+ les payloads RSC de navigation (`index.txt`) des 294 pages de détail** (protocoles, médicaments, calculateurs). **Ne jamais supprimer ce
+le remplace après le build par la liste réelle des fichiers admissibles. Lors de la vérification du 2026-10-28, elle comptait **1 100 entrées** (~16,8 Mo avant compression) ; le nombre et la taille varient avec le contenu et les artefacts de build. La liste couvre les assets `_next`, les icônes, `ref-index.json`, les fichiers `/reval/*`, les pages de premier niveau et les payloads RSC de navigation (`index.txt`) des pages de détail (protocoles, médicaments, calculateurs). **Ne jamais supprimer ce
 marqueur** : le script sort en erreur si le motif `/*__PRECACHE__*/[]` est absent.
 La constante `VERSION` est la clé du cache : l'incrémenter purge l'ancien cache à l'activation.
 

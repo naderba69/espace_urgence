@@ -18,6 +18,7 @@ import { NAV_GROUPS } from "./Nav";
 import { loadSearchIndex, normalize, searchItems, type SearchItem } from "@/lib/search";
 import { trackEvent } from "@/lib/analytics";
 import { uiClick } from "@/lib/audio";
+import { useModalFocusTrap } from "@/lib/modal-focus";
 
 interface Entry {
   id: string;
@@ -47,6 +48,8 @@ export default function CommandPaletteBody({ open, onClose }: { open: boolean; o
   const [indexReady, setIndexReady] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocusTrap(dialogRef, open);
 
   // v17.0 — l'index de recherche arrive en import() dynamique : on l'attend une fois.
   useEffect(() => {
@@ -139,7 +142,7 @@ export default function CommandPaletteBody({ open, onClose }: { open: boolean; o
   let idx = -1;
 
   return (
-    <div className="fixed inset-0 z-[65] lg:flex lg:items-start lg:justify-center lg:pt-[12vh]" role="dialog" aria-modal="true" aria-label={t("palette.open")}>
+    <div ref={dialogRef} tabIndex={-1} className="fixed inset-0 z-[65] lg:flex lg:items-start lg:justify-center lg:pt-[12vh]" role="dialog" aria-modal="true" aria-label={t("palette.open")}>
       {/* backdrop */}
       <button aria-label="fermer" onClick={onClose} className="eutn-backdrop absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
       {/* panneau */}

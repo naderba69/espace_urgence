@@ -2699,7 +2699,7 @@ export const revals: Record<string, Reval> = {
     stall: {
       signs: [{ fr: "Arythmies persistantes malgré correction du K⁺/Mg²⁺", ar: "اضطرابات نظم مستمرة رغم تصحيح البوتاسيوم/المغنزيوم" },],
       actions: [
-        { txt: { fr: "Antidote Fab si disponible (appel Centre Anti Poison 71 335 335), lidocaïne/phenytoine pour arythmies ventriculaires, pacing si bloc", ar: "ترياق Fab إن توفر (اتصل بمركز السموم 71335335)، ليدوكائين/فينيتوئين لاضطرابات بطينية، ناظمة عند الحصار" } },
+        { txt: { fr: "Antidote Fab si disponible (appel Centre antipoison : 71 335 500, numéro cité par l'ambassade des États-Unis en Tunisie en 2025, à confirmer localement), lidocaïne/phénytoïne pour arythmies ventriculaires, pacing si bloc", ar: "ترياق Fab إن توفر (اتصل بمركز السموم: 71 335 500، رقم أوردته سفارة الولايات المتحدة في تونس سنة 2025 ويجب تأكيده محلياً)، ليدوكائين/فينيتوئين لاضطرابات بطينية، ناظمة عند الحصار" } },
         SAMU,
       ],
     },

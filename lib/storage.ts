@@ -28,6 +28,77 @@ export function writeJSON(key: string, value: unknown): void {
   }
 }
 
+export type PersistedPrefs = {
+  lang: "fr" | "ar";
+  theme: "auto" | "dark" | "light" | "amoled";
+  fontSize: 16 | 18 | 20;
+  muted: boolean;
+  printSize: "a4" | "a5";
+};
+
+/** JSON localStorage est une entrée non fiable : ne jamais confondre cast TS et validation. */
+export function sanitizePrefs(value: unknown): PersistedPrefs {
+  const x = value && typeof value === "object" ? value as Record<string, unknown> : {};
+  return {
+    lang: x.lang === "ar" ? "ar" : "fr",
+    theme: x.theme === "dark" || x.theme === "light" || x.theme === "amoled" ? x.theme : "auto",
+    fontSize: x.fontSize === 18 || x.fontSize === 20 ? x.fontSize : 16,
+    muted: x.muted === true,
+    printSize: x.printSize === "a5" ? "a5" : "a4",
+  };
+}
+
+export function sanitizeStringArray(value: unknown, limit = 50): string[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.filter((x): x is string => typeof x === "string").map((x) => x.trim()).filter(Boolean))].slice(0, limit);
+}
+
+export function sanitizeRecentKeys(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return sanitizeStringArray(value.flatMap((entry) =>
+    entry && typeof entry === "object" && typeof (entry as { key?: unknown }).key === "string"
+      ? [(entry as { key: string }).key]
+      : []
+  ), 10);
+}
+
+export type PersistedPatient = { w: string; age: string; scr: string; sexe: "m" | "f" };
+
+/** Garde des champs numériques textuels compatibles avec les formulaires, rejette les formes corrompues. */
+export function sanitizePatient(value: unknown): PersistedPatient {
+  const x = value && typeof value === "object" ? value as Record<string, unknown> : {};
+  const numberText = (candidate: unknown): string => {
+    if (typeof candidate !== "string" && typeof candidate !== "number") return "";
+    const text = String(candidate).trim().slice(0, 24);
+    if (!text || !/^\d+(?:[.,]\d+)?$/.test(text)) return "";
+    const number = Number(text.replace(",", "."));
+    return Number.isFinite(number) && number >= 0 ? text : "";
+  };
+  return {
+    w: numberText(x.w),
+    age: numberText(x.age),
+    scr: numberText(x.scr),
+    sexe: x.sexe === "f" ? "f" : "m",
+  };
+}
+
+export type PersistedPatientLogEntry = { at: number; p: PersistedPatient };
+
+/** Assainit l'archive patient locale sans prétendre appliquer une durée de conservation légale. */
+export function sanitizePatientLog(value: unknown, now = Date.now(), limit = 5): PersistedPatientLogEntry[] {
+  if (!Array.isArray(value)) return [];
+  const safe: PersistedPatientLogEntry[] = [];
+  for (const candidate of value) {
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) continue;
+    const entry = candidate as Record<string, unknown>;
+    const at = entry.at;
+    if (typeof at !== "number" || !Number.isFinite(at) || at <= 0 || at > now) continue;
+    const patient = sanitizePatient(entry.p);
+    if (patient.w || patient.age || patient.scr) safe.push({ at, p: patient });
+  }
+  return safe.sort((a, b) => b.at - a.at).slice(0, Math.max(0, limit));
+}
+
 export function removeKey(key: string): void {
   if (typeof window === "undefined") return;
   try {

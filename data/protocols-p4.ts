@@ -153,9 +153,9 @@ export const protocolsP4: Protocol[] = [
     steps: [
       { title: { fr: "Glycémie capillaire immédiate (si non possible → traiter sur clinique : sueurs, tremblements, agitation puis confusion, coma)", ar: "قياس سكر شعري فوري (وإلا عالج على الأعراض)" } },
       { title: { fr: "Si conscience conservée : sucre rapide per os 15 g (3 sucres, jus). Réévaluer 15 min.", ar: "إذا واعٍ: سكر سريع فموياً 15 غ. أعد التقييم بعد 15 د." } },
-      { title: { fr: "Si inconscient/comateux : G30 1 ampoule (10 g) IV ; pas de per os", ar: "إذا فاقد الوعي: G30 أمبولة وريدي؛ بلا فم" } },
-      { title: { fr: "Si pas de voie IV : glucagon 1 mg IM/SC", ar: "إذا لا خط وريدي: غلوكاغون 1 ملغ عضلي" } },
-      { title: { fr: "Réévaluer glycémie à 15 min (objectif ≥ 0,8 g/L) ; si besoin 2ᵉ dose G30", ar: "أعد القياس بعد 15 د؛ كرر G30 لدى الحاجة" } },
+      { title: { fr: "Adulte inconscient/comateux : rien per os. Glucose hypertonique IV selon protocole adulte validé : 10–15 g correspondent à ≈33–50 mL de G30 %. PROAMP en ampoule de 10 mL : 3 g/ampoule (4–5 ampoules apportent 12–15 g). Vérifier la présentation ; ne pas extrapoler cette dose à l'enfant.", ar: "البالغ فاقد الوعي/في غيبوبة: يُمنع إعطاؤه شيئاً بالفم. غلوكوز مفرط التوتر وريدياً وفق بروتوكول بالغين معتمد: 10–15 غ تعادل نحو 33–50 مل من G30٪. أمبولة PROAMP بحجم 10 مل تحتوي 3 غ (4–5 أمبولات تعطي 12–15 غ). تحقق من المستحضر، ولا تعمم هذه الجرعة على الأطفال." } },
+      { title: { fr: "Adulte sans voie IV : glucagon 1 mg IM/SC selon le protocole applicable.", ar: "البالغ دون خط وريدي: غلوكاغون 1 ملغ عضلياً أو تحت الجلد وفق البروتوكول المعتمد." } },
+      { title: { fr: "Recontrôler la glycémie à 15 min ; si l'hypoglycémie persiste, réévaluer et répéter selon le protocole adapté à l'âge et la présentation, sans assimiler une ampoule à 10 g.", ar: "أعد قياس السكر بعد 15 دقيقة؛ إذا استمر نقص السكر فأعد التقييم وكرر العلاج حسب بروتوكول مناسب للعمر والمستحضر، ولا تعتبر الأمبولة الواحدة مساوية لـ10 غ." } },
     ],
     keyPoints: [
       { fr: "Hypoglycémie = cause-de-coma-jusqu'à-preuve : toujours doser.", ar: "نقص السكر = سبب غيبوبة حتى ثبوت العكس." },
@@ -165,7 +165,7 @@ export const protocolsP4: Protocol[] = [
       {
         when: { fr: "Si glycémie < 0,5 deux mesures de suite malgré le glucagon/G30", ar: "إذا السكر أقل من 0.5 مرتين رغم الغلوكاغون/G30" },
         do: [
-          { fr: "2ᵉ ampoule G30 + prudence (surdose possible en insulino-résistant ou antidiabétique prolongé).", ar: "أمبولة ثانية + حذر (جرعة زائدة ممكنة)." },
+          { fr: "Persistance malgré correction : contrôle glycémique et réévaluation médicale urgente ; ne pas répéter automatiquement une ampoule, vérifier le dosage et le protocole adapté.", ar: "استمرار نقص السكر بعد التصحيح: أعد القياس واطلب تقييماً طبياً عاجلاً؛ لا تكرر الأمبولة آلياً، وتحقق من الجرعة والبروتوكول المناسب." },
           { fr: "Évaluer une prise prolongée d'antidiabétique (sulfamide) → surveillera 24 h.", ar: "اشتباه مضاد سكري طويل المفعول ← راقب 24 س." },
         ],
       },
@@ -179,7 +179,7 @@ export const protocolsP4: Protocol[] = [
     ],
     medications: ["glucose30"],
     calculators: [],
-    meta: { sources: ["ADA 2026", "HAS — diabète"], lastReviewed: "2026-09" },
+    meta: { sources: ["HAS — Synthèse des recommandations sélectionnées, 2025-07 (hypoglycémie adulte, source résumée ADA 2024)", "RCP GLUCOSE 30 % PROAMP — Base de Données Publique des Médicaments/ANSM (composition et voie propres à PROAMP, source française hors Tunisie)"], lastReviewed: "2026-10" },
   },
   {
     id: "syncope",

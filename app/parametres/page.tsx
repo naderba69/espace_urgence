@@ -11,6 +11,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import Link from "next/link";
 import T from "@/components/T";
 import AiSection from "@/components/ai/AiSection";
+import { clearEcgRecords } from "@/lib/ecg-db";
 
 interface BIPEvent extends Event {
   prompt: () => void;
@@ -134,8 +135,10 @@ export default function SettingsPage() {
         onClick={() => {
           Object.values(KEYS).forEach((k) => localStorage.removeItem(k));
           Object.keys(localStorage).filter((k) => k.startsWith("eutn:")).forEach((k) => localStorage.removeItem(k));
-          setResetMsg(true);
-          setTimeout(() => window.location.reload(), 800);
+          void clearEcgRecords().finally(() => {
+            setResetMsg(true);
+            setTimeout(() => window.location.reload(), 800);
+          });
         }}
         className="touch gap-2 rounded-xl border border-red-500/50 px-5 py-3 font-bold text-red-400 hover:bg-red-500/10"
       >

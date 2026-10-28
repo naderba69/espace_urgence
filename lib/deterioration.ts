@@ -127,7 +127,8 @@ export const DETER_RULES: DeterRule[] = [
     id: "hypoglycemie",
     sev: "urgent",
     title: { fr: "Hypoglycémie", ar: "نقص سكر الدم" },
-    when: (v) => num(v.gly) && v.gly! < 70,
+    // L'interface et Vitals utilisent g/L : ADA 2026, <70 mg/dL = <0,7 g/L.
+    when: (v) => num(v.gly) && v.gly! < 0.7,
     observed: (v) => `Glycémie ${v.gly} g/L`,
     criteria: [
       { fr: "Sueurs froides / tremblements", ar: "عرق بارد / رجفة" },
@@ -242,7 +243,8 @@ export const DETER_RULES: DeterRule[] = [
     id: "addison",
     sev: "critical",
     title: { fr: "Crise surrénalienne (Addison)", ar: "أزمة ربعية (قصور الكظر الحاد)" },
-    when: (v) => num(v.pas) && v.pas! < 90 && num(v.gly) && v.gly! < 80,
+    // Le seuil historique de 80 mg/dL est converti en 0,8 g/L ; heuristique non diagnostique à valider localement.
+    when: (v) => num(v.pas) && v.pas! < 90 && num(v.gly) && v.gly! < 0.8,
     observed: (v) => `PAS ${v.pas} mmHg · Glycémie ${v.gly} g/L`,
     criteria: [
       { fr: "Corticothérapie récente ou arrêtée brutalement", ar: "كورتيزون حديث أو إيقافه فجأة" },

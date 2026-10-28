@@ -3,7 +3,7 @@
 import { readAiConfig, type AiProvider } from "./ai-config";
 
 export class AiError extends Error {
-  code: "no-key" | "invalid-key" | "rate-limit" | "network" | "provider" | "disabled";
+  code: "no-key" | "invalid-key" | "rate-limit" | "network" | "provider" | "disabled" | "consent";
   constructor(code: AiError["code"], extra?: string) {
     super(extra ?? code);
     this.code = code;
@@ -46,17 +46,17 @@ export interface AiTextInput {
 // ---------- Gemini ----------
 async function geminiGenerate(cfg: ReturnType<typeof readAiConfig>, input: AiTextInput, image?: { b64: string; mime: string }): Promise<string> {
   const model = image ? cfg.visionModel : cfg.textModel;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(cfg.apiKey)}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
   const contents = input.messages.map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: m.content }],
   }));
-  if (image) contents.push({ role: "user", parts: [{ inline_data: { mime_type: image.mime, data: image.b64 } }, { text: input.system ?? "" }] } as never);
+  if (image) contents.push({ role: "user", parts: [{ inline_data: { mime_type: image.mime, data: image.b64 } }] } as never);
   const res = await postWithTimeout(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-goog-api-key": cfg.apiKey },
     body: JSON.stringify({
-      ...(input.system && !image ? { system_instruction: { parts: [{ text: input.system }] } } : {}),
+      ...(input.system ? { system_instruction: { parts: [{ text: input.system }] } } : {}),
       contents,
       generationConfig: { temperature: input.temperature ?? 0.3, maxOutputTokens: input.maxTokens ?? 2048 },
     }),
@@ -106,25 +106,60 @@ function route(cfgProvider: AiProvider, cfg: ReturnType<typeof readAiConfig>, in
   return cfgProvider === "openrouter" ? openrouterGenerate(cfg, input, image) : geminiGenerate(cfg, input, image);
 }
 
-export async function generateText(prompt: string, systemPrompt?: string): Promise<string> {
-  const cfg = readAiConfig();
-  if (!cfg.enabled) throw new AiError("disabled");
-  if (!cfg.apiKey.trim()) throw new AiError("no-key");
-  return route(cfg.provider, cfg, { system: systemPrompt, messages: [{ role: "user", content: prompt }] });
+export interface AiTransferOptions {
+  /** Only set after the caller has just collected an explicit, task-specific consent. */
+  transferConfirmed?: boolean;
+  language?: "fr" | "ar";
 }
 
-export async function chat(messages: ChatMessage[], systemPrompt: string): Promise<string> {
+function confirmExternalTransfer(
+  cfg: ReturnType<typeof readAiConfig>,
+  messages: ChatMessage[],
+  hasImage: boolean,
+  options: AiTransferOptions,
+): void {
+  if (options.transferConfirmed) return;
+  if (typeof window === "undefined" || typeof window.confirm !== "function") throw new AiError("consent");
+
+  const provider = cfg.provider === "gemini" ? "Google Gemini" : "OpenRouter";
+  const model = hasImage ? cfg.visionModel : cfg.textModel;
+  const requestText = messages.map((message) => message.content).join("\n").replace(/\s+/g, " ").slice(0, 320);
+  const preview = requestText ? `\n\n${options.language === "ar" ? "مقتطف من الطلب" : "Extrait de la demande"} : ${requestText}${requestText.length === 320 ? "…" : ""}` : "";
+  const message = options.language === "ar"
+    ? `سيُرسل طلبك والسياق المُدخل${hasImage ? " والصورة الطبية" : ""} إلى خدمة خارجية: ${provider} (النموذج ${model}). قد تحتوي المعلومات على بيانات صحية. لا ترسل اسماً أو معرّفاً، وتحقق من سياسة مؤسستك والمزوّد؛ قد تُحتسب كلفة.${preview}`
+    : `Votre demande et le contexte saisi${hasImage ? " ainsi que l’image médicale" : ""} seront transmis au service externe ${provider} (modèle ${model}). Ils peuvent contenir des données de santé. N’envoyez aucun nom ni identifiant ; vérifiez les règles de votre établissement et du fournisseur. Des coûts peuvent s’appliquer.${preview}`;
+  if (!window.confirm(message)) throw new AiError("consent");
+}
+
+export async function generateText(prompt: string, systemPrompt?: string, options: AiTransferOptions = {}): Promise<string> {
   const cfg = readAiConfig();
   if (!cfg.enabled) throw new AiError("disabled");
   if (!cfg.apiKey.trim()) throw new AiError("no-key");
+  const input = { system: systemPrompt, messages: [{ role: "user" as const, content: prompt }] };
+  confirmExternalTransfer(cfg, input.messages, false, options);
+  return route(cfg.provider, cfg, input);
+}
+
+export async function chat(messages: ChatMessage[], systemPrompt: string, options: AiTransferOptions = {}): Promise<string> {
+  const cfg = readAiConfig();
+  if (!cfg.enabled) throw new AiError("disabled");
+  if (!cfg.apiKey.trim()) throw new AiError("no-key");
+  confirmExternalTransfer(cfg, messages, false, options);
   return route(cfg.provider, cfg, { system: systemPrompt, messages });
 }
 
-export async function analyzeImage(imageBase64: string, prompt: string, mime = "image/jpeg"): Promise<string> {
+export async function analyzeImage(
+  imageBase64: string,
+  prompt: string,
+  mime = "image/jpeg",
+  options: AiTransferOptions = {},
+): Promise<string> {
   const cfg = readAiConfig();
   if (!cfg.enabled) throw new AiError("disabled");
   if (!cfg.apiKey.trim()) throw new AiError("no-key");
-  return route(cfg.provider, cfg, { system: prompt, messages: [{ role: "user", content: "Analyse cette image médicale." }] }, { b64: imageBase64, mime });
+  const messages = [{ role: "user" as const, content: "Analyse cette image médicale." }];
+  confirmExternalTransfer(cfg, messages, true, options);
+  return route(cfg.provider, cfg, { system: prompt, messages }, { b64: imageBase64, mime });
 }
 
 /** TTS gratuit : Web Speech API (voix du système). Retourne false si non supporté. */
@@ -143,6 +178,6 @@ export function stopSpeaking(): void {
 }
 
 /** Test de connexion — prompt trivial, utilisé par les Paramètres. */
-export async function testConnection(): Promise<void> {
-  await generateText("Réponds par le mot : OK");
+export async function testConnection(options: AiTransferOptions = {}): Promise<void> {
+  await generateText("Réponds par le mot : OK", undefined, options);
 }

@@ -8,6 +8,7 @@ import { loadSearchIndex, searchItems, resolveRef, type SearchItem } from "@/lib
 import { KEYS, readJSON, writeJSON } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import { generateText } from "@/lib/ai";
+import { parseAiSearchKeywords } from "@/lib/ai-search";
 import { aiReady } from "@/lib/ai-config";
 
 interface SpeechRec {
@@ -153,9 +154,12 @@ export default function SearchBar({ big = false }: { big?: boolean }) {
                 trackEvent("ai_query", { kind: "search" });
                 const kw = await generateText(
                   `Extrais 1 à 3 mots-clés médicaux (français ou arabe) pour chercher dans une base de données de protocoles d'urgence. Réponds UNIQUEMENT avec les mots-clés séparés par des espaces, rien d'autre.\nQuestion : ${q}`,
-                  "Tu es un extracteur de mots-clés pour la recherche médicale."
+                  "Tu es un extracteur de mots-clés pour la recherche médicale.",
+                  { language: lang }
                 );
-                setQ(kw.trim());
+                const parsedKeywords = parseAiSearchKeywords(kw);
+                if (!parsedKeywords) return;
+                setQ(parsedKeywords);
                 setOpen(true);
               } catch { /* silencieux */ }
             }}

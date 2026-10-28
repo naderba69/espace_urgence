@@ -40,10 +40,10 @@ import { MED_TOOLS } from "@/data/med-tools";
 describe("PumpTool", () => {
   it("يحسب السرعة ويعرضها ثم يحدّثها مع الجرعة", () => {
     render(<PumpTool cfg={MED_TOOLS.noradrenaline.pump!} storageKey="eutn:test:pump" />);
-    expect(screen.getAllByText(/0\.66/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/1\.31/).length).toBeGreaterThan(0);
     const dose = screen.getAllByRole("spinbutton").find((i) => (i as HTMLInputElement).value === "0.05");
     fireEvent.change(dose!, { target: { value: "0.1" } });
-    expect(screen.getAllByText(/1\.31/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/2\.63/).length).toBeGreaterThan(0);
   });
 });
 
@@ -185,14 +185,15 @@ describe("PumpTool mode entrante", () => {
     const inputs = screen.getAllByRole("spinbutton");
     fireEvent.change(inputs[0], { target: { value: "2" } });
     expect(screen.getByText(/الترحيل الآمن/)).toBeTruthy();
-    expect(screen.getAllByText(/0\.66/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/1\.31/).length).toBeGreaterThan(0);
   });
 });
 
 describe("MedTools pompe auto", () => {
-  it("trinitrine hérite de la pompe RE.NAU", () => {
+  it("refuse une pompe issue d'une préparation libre non structurée et affiche un avertissement", () => {
     render(<MedTools medId="trinitrine" hasNativeDose={false} />);
-    expect(screen.getByRole("tab", { name: /تحضيري/ })).toBeTruthy();
+    expect(screen.getByText(/Préparation non structurée|التحضير غير مهيكل/)).toBeTruthy();
+    expect(screen.queryByRole("tab", { name: /تحضيري/ })).toBeNull();
   });
 });
 
@@ -1668,7 +1669,7 @@ describe("v9.0 redesign — نظام التصميم", () => {
   it("v9.0 : thème auto par défaut + anti-FOUC système", async () => {
     const fs = await import("node:fs");
     const layout = fs.readFileSync("app/layout.tsx", "utf8");
-    expect(layout).toContain('p.theme||"auto"');
+    expect(layout).toContain('["auto","dark","light","amoled"].indexOf(p.theme)>=0?p.theme:"auto"');
     expect(layout).toContain("prefers-color-scheme: dark");
     expect(layout).toContain("IBM Plex Sans Arabic local");
     expect(layout).toContain("@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2");

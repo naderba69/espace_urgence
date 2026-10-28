@@ -57,7 +57,7 @@ export default function ECGHistory({ refreshKey }: { refreshKey: number }) {
               <div className="relative mb-2 aspect-[4/3] w-full overflow-hidden rounded-lg bg-black">
                 <Image src={r.thumb} alt="ECG" fill className="object-contain" unoptimized />
               </div>
-              <ECGResultCard analysis={r.analysis} raw={r.raw} />
+              <ECGResultCard analysis={r.analysis} />
             </div>
           ))}
         </div>
@@ -73,7 +73,7 @@ export default function ECGHistory({ refreshKey }: { refreshKey: number }) {
                   <Image src={r.thumb} alt="ECG" fill className="object-contain" unoptimized />
                 </div>
                 <div className="p-2 text-start">
-                  <p className="line-clamp-2 text-xs font-bold">{r.analysis.suspectedDiagnosis ?? "—"}</p>
+                  <p className="line-clamp-2 text-xs font-bold">{lang === "ar" ? "ملاحظات ECG" : "Observations ECG"}{r.analysis.heartRateBpm != null ? ` · ${r.analysis.heartRateBpm}/min` : ""}</p>
                   <p className="text-[11px] opacity-60">{fmtDate(r.ts)}</p>
                 </div>
               </button>

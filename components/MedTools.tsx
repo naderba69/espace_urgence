@@ -4,9 +4,10 @@
 import { useState } from "react";
 import { Scale, Syringe, Link2, FileText, AlertTriangle } from "lucide-react";
 import { MED_TOOLS, pumpCfgFromPerfusion } from "@/data/med-tools";
+import { PERFUSIONS } from "@/data/perfusions";
 import { clampDose } from "@/lib/calc";
 import T from "@/components/T";
-import { TabBar, NumField, Hero, ChipLink } from "./tools/ui";
+import { TabBar, NumField, Hero, ChipLink, WarnNote } from "./tools/ui";
 import PumpTool from "./tools/PumpTool";
 
 // v17.2 — `linkedProtos` arrive résolu par le serveur (id + titre) : plus besoin de
@@ -14,6 +15,8 @@ import PumpTool from "./tools/PumpTool";
 export default function MedTools({ medId, hasNativeDose, linkedProtos = [] }: { medId: string; hasNativeDose: boolean; linkedProtos?: { id: string; title: { fr: string; ar: string } }[] }) {
   const manual = MED_TOOLS[medId];
   const pump = manual?.pump ?? pumpCfgFromPerfusion(medId);
+  const hasPerfusion = PERFUSIONS.some((preset) => preset.drugId === medId);
+  const needsManualConcentration = hasPerfusion && !pump;
   const wd = manual?.weightDose;
   const links = manual?.links ?? [];
   const protos = manual?.protocols ?? [];
@@ -22,7 +25,7 @@ export default function MedTools({ medId, hasNativeDose, linkedProtos = [] }: { 
   const [tab, setTab] = useState<"dose" | "pump" | "links">(pump ? "pump" : hasWeightDose && !hasNativeDose ? "dose" : "links");
   const [weight, setWeight] = useState("70");
 
-  if (!pump && !hasWeightDose && links.length === 0 && protos.length === 0) return null;
+  if (!pump && !hasWeightDose && links.length === 0 && protos.length === 0 && !needsManualConcentration) return null;
 
   const tabs = [
     (hasWeightDose && !hasNativeDose) && { id: "dose" as const, label: <span className="inline-flex items-center gap-1"><Scale className="h-4 w-4" aria-hidden /><T fr="Dose" ar="الجرعة" /></span> },
@@ -37,6 +40,11 @@ export default function MedTools({ medId, hasNativeDose, linkedProtos = [] }: { 
 
   return (
     <section className="card flex flex-col gap-4 rounded-2xl border border-blue-600/40 bg-surface p-4">
+      {needsManualConcentration && (
+        <WarnNote tone="amber">
+          <T fr="Préparation non structurée : aucune pompe automatique affichée. Vérifier la préparation réellement prescrite et sa concentration avec l'équipe ; ne pas déduire la concentration du texte libre." ar="التحضير غير مهيكل: لم تُعرض مضخة تلقائية. تحقق من التحضير والتركيز الموصوفين مع الفريق؛ لا تستنتج التركيز من نص حر." />
+        </WarnNote>
+      )}
       <div className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 font-black text-blue-500">
           <Syringe className="h-5 w-5" aria-hidden />

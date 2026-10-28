@@ -12,7 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { dictionaries, type Lang } from "@/lib/i18n";
-import { KEYS, readJSON, writeJSON } from "@/lib/storage";
+import { KEYS, readJSON, sanitizePatient, sanitizePrefs, sanitizeRecentKeys, sanitizeStringArray, writeJSON } from "@/lib/storage";
 import { setAudioMuted } from "@/lib/audio";
 import { initAnalytics, trackPageView } from "@/lib/analytics";
 import { usePathname } from "next/navigation";
@@ -32,11 +32,6 @@ export function isEffectiveDark(theme: Theme): boolean {
   if (theme === "dark" || theme === "amoled") return true;
   if (theme === "light") return false;
   return typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)")?.matches === true;
-}
-
-interface RecentItem {
-  key: string;
-  at: number;
 }
 
 /** v13.3 — المريض النشط : بيانات تُدخل مرة واحدة وتتعبّأ بها المحركات (كتابة فوقية حرة). */
@@ -98,13 +93,13 @@ export default function Providers({ children }: { children: ReactNode }) {
   }, []);
   // Chargement initial depuis localStorage (préférences, favoris, récents, patient actif)
   useEffect(() => {
-    const p = { ...DEFAULT_PREFS, ...readJSON<Partial<Prefs>>(KEYS.prefs, {}) };
+    const p = sanitizePrefs(readJSON<unknown>(KEYS.prefs, {}));
     // eslint-disable-next-line react-hooks/set-state-in-effect -- préférences lues après hydratation (le serveur rend les défauts ; INIT_SCRIPT évite le FOUC)
     setPrefs(p);
     applyPrefs(p);
-    setFavorites(readJSON<string[]>(KEYS.favorites, []));
-    setRecent(readJSON<RecentItem[]>(KEYS.recent, []).map((r) => r.key));
-    setPatientState(readJSON<ActivePatient>(KEYS.patient, EMPTY_PATIENT));
+    setFavorites(sanitizeStringArray(readJSON<unknown>(KEYS.favorites, [])));
+    setRecent(sanitizeRecentKeys(readJSON<unknown>(KEYS.recent, [])));
+    setPatientState(sanitizePatient(readJSON<unknown>(KEYS.patient, EMPTY_PATIENT)));
     setHydrated(true);
 
     // Service worker (production uniquement) — chemin préfixé par le basePath de déploiement.

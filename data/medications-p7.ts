@@ -50,8 +50,8 @@ export const medicationsPhase7: Medication[] = [
     },
     dosePediatric: { fr: "2-3 mL/kg en bolus (max 100 mL) en 10-15 min sous surveillance rapprochée.", ar: "2-3 مل/كغ دفعة (أقصى 100 مل) خلال 10-15 د بمراقبة لصيقة." },
     dilution: {
-      fr: "Poches prêtes à l'emploi préférées. À défaut : 100 mL de NaCl 0,9 % + 20 mL de NaCl 20 % ≈ 3,7 % (validation pharmacie). Voie centrale préférée ; voie périphérique possible en urgence (veine de bon calibre).",
-      ar: "أكياس جاهزة أفضل. بديلها: 100 مل NaCl ‏0.9% + 20 مل NaCl ‏20% ≈ ‏3.7% (تصديق الصيدلية). يفضل الوريد المركزي؛ الطرفي جائز طارئاً (وريد عريض).",
+      fr: "Poches prêtes à l'emploi préférées. À défaut, préparation par la pharmacie uniquement selon une procédure validée : calcul théorique pour 100 mL de NaCl 3 % — 11 mL de NaCl 20 % (2,2 g) + 89 mL de NaCl 0,9 % (0,801 g) = 3,001 g/100 mL ≈ 3 %. Vérifier le volume final et la méthode locale ; ne pas préparer au lit du patient. L'ancienne formule 100 mL + 20 mL donne 4,08 %, pas 3,7 % et ne doit pas être utilisée comme NaCl 3 %. Voie centrale préférée ; voie périphérique selon protocole d'urgence et surveillance.",
+      ar: "تُفضّل الأكياس الجاهزة. وعند عدم توفرها، لا يُحضّر المحلول إلا في الصيدلية ووفق إجراء معتمد: الحساب النظري لكل 100 مل من NaCl 3٪ — ‏11 مل من NaCl 20٪ (2.2 غ) + ‏89 مل من NaCl 0.9٪ (0.801 غ) = ‏3.001 غ/100 مل، أي نحو 3٪. تحقق من الحجم النهائي وطريقة التحضير المحلية؛ ولا تحضّره عند سرير المريض. الصيغة السابقة 100 مل + 20 مل تعطي 4.08٪ لا 3.7٪، فلا تُستخدم على أنها NaCl 3٪. يُفضّل الخط المركزي؛ ويُستخدم الطرفي وفق بروتوكول الطوارئ والمراقبة." ,
     },
     contraindications: {
       fr: "Hyponatrémie asymptomatique (correction rapide inutile et dangereuse), hypernatrémie, surcharge hydrique sévère (OAP).",
@@ -61,7 +61,7 @@ export const medicationsPhase7: Medication[] = [
     nursing: { fr: "Na⁺ toutes les 2-4 h pendant la correction. PLAFOND : ≤ 10 mmol/L/24 h (≤ 8 si haut risque). Tenir la fiche horaire de correction.", ar: "صوديوم كل 2-4 س أثناء التصحيح. السقف: ≤ 10 ملي مول/24 س (≤ 8 عند الخطر العالي). أمسك ورقة توقيت التصحيح." },
     storage: { fr: "T° ambiante.", ar: "حرارة الغرفة." },
     alternatives: ["furosemide"],
-    meta: { sources: ["Guidelines européennes hyponatrémie 2014", "RE.NAU"], lastReviewed: "2026-09" },
+    meta: { sources: ["European Clinical Practice Guideline on hyponatraemia, 2014 (3 % saline; §§7.1.1–7.1.2)", "RCP CHLORURE DE SODIUM PROAMP 20 % — Base de Données Publique des Médicaments/ANSM (concentration ; source française hors Tunisie)", "Calcul de composition contrôlé : formule massique explicitée dans dilution", "RE.NAU (surveillance, à valider localement)"], lastReviewed: "2026-10" },
   },
   {
     id: "propylthiouracil",

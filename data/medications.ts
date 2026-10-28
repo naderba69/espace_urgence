@@ -107,8 +107,8 @@ const medicationsCore: Medication[] = [
   {
     id: "atropine",
     name: { fr: "Atropine", ar: "أتروبين" },
-    brands: "Présentations enregistrées au DPM (mise à jour de la liste : 07/10/2026 ; l'AMM n'atteste pas la disponibilité en pharmacie) : ATROPINE SAIPH® 0,25 mg/mL, solution injectable, B/10/1 mL (SAIPH ; AMM 9163801H) ; ATROPINE SULFATE AGUETTANT® 0,250 mg/1 mL, solution injectable, B/10/1 mL (LABORATOIRE AGUETTANT ; AMM 7093062H) ; ATROPINUM SULFURICUM® 1 mg/mL, solution injectable, B/10/1 mL (SOPHARMA SA ; AMM 10793011H). Les fiches DPM indiquent la forme injectable et des indications compatibles avec cette carte ; la voie exacte reste à vérifier au RCP du produit réellement utilisé.",
-    searchExclusions: ["atropine unimed", "unimed atropine", "collyre", "ophthalmic"],
+    brands: "Présentations enregistrées au DPM (mise à jour de la liste : 07/10/2026 ; l'AMM n'atteste pas la disponibilité en pharmacie) : ATROPINE SAIPH® 0,25 mg/mL, solution injectable, B/10/1 mL (SAIPH ; AMM 9163801H) ; ATROPINE SULFATE AGUETTANT® 0,250 mg/1 mL, solution injectable, B/10/1 mL (LABORATOIRE AGUETTANT ; AMM 7093062H) ; ATROPINUM SULFURICUM® 1 mg/mL, solution injectable, B/10/1 mL (SOPHARMA SA ; AMM 10793011H). Ces AMM sont recensées à titre documentaire uniquement : la voie exacte n'est pas établie par les fiches examinées et ces noms ne sont pas indexés comme alias de la posologie IV. Vérifier le RCP propre au produit avant toute utilisation.",
+    searchExclusions: ["atropine unimed", "unimed atropine", "atropine saiph", "atropine sulfate aguettant", "atropinum sulfuricum", "collyre", "ophthalmic"],
     synonyms: ["atropine", "أتروبين", "اتروبين"],
     klass: { fr: "Anticholinergique (antimuscarinique)", ar: "مضاد كوليني (مضاد موسكاريني)" },
     highRisk: false,
@@ -159,8 +159,8 @@ const medicationsCore: Medication[] = [
       ar: "0.05-0.3 مكغ/كغ/د مضخة (وسط الإنعاش)، معايرة دقيقة.",
     },
     dilution: {
-      fr: "Préparation/concentration selon le produit et le protocole local (repère affiché ailleurs : 4 mg/50 mL). G5 % préféré dans le Livret RE.NAU ; vérifier la compatibilité du diluant. En choc septique, SSC 2026 suggère de commencer par voie périphérique plutôt que retarder en attendant un abord central ; surveillance étroite du site et sécurité selon protocole local.",
-      ar: "التحضير/التركيز حسب المستحضر والبروتوكول المحلي (المرجع المعروض في موضع آخر: 4 ملغ/50 مل). يفضل دليل RE.NAU غلوكوز 5%؛ تحقق من توافق المذيب. في الصدمة الإنتانية تقترح SSC 2026 البدء عبر وريد طرفي بدلاً من التأخير انتظاراً لخط مركزي؛ مع مراقبة لصيقة للموضع والسلامة وفق البروتوكول المحلي.",
+      fr: "Repère unique de calcul dans l'application, selon le Livret RE.NAU 2018 : 8 mg de noradrénaline exprimés en base, complétés à 50 mL de G5 % = 160 µg/mL. Le nombre d'ampoules dépend de l'équivalence base/tartrate indiquée dans le RCP du produit local ; ne jamais déduire cette équivalence du seul nom ou dosage commercial. Vérifier le diluant compatible et le protocole local. En choc septique, SSC 2026 suggère de commencer par voie périphérique plutôt que retarder en attendant un abord central ; surveillance étroite du site et sécurité selon protocole local.",
+      ar: "مرجع حساب موحد في التطبيق وفق دليل RE.NAU لعام 2018: 8 ملغ نورأدرينالين محسوبة كقاعدة فعالة، تُستكمل إلى 50 مل من غلوكوز 5% = 160 مكغ/مل. يعتمد عدد الأمبولات على مكافئ القاعدة/الطرطرات المذكور في نشرة المستحضر المحلي؛ لا تستنتج هذا المكافئ من الاسم أو التركيز التجاري وحدهما. تحقق من المذيب والبروتوكول المحلي. في الصدمة الإنتانية تقترح SSC 2026 البدء عبر وريد طرفي بدلاً من التأخير انتظاراً لخط مركزي؛ مع مراقبة لصيقة للموضع واتباع السلامة المحلية.",
     },
     contraindications: {
       fr: "Hypovolémie non corrigée (à remplir d'abord) ; relatives : thrombose mésentérique/périphérique.",
@@ -179,7 +179,7 @@ const medicationsCore: Medication[] = [
     interactions: [
       { drug: "IMAO / antidépresseurs tricycliques", severity: "high", description: { fr: "HTA majeure par potentialisation — réduire la dose initiale fortement.", ar: "ارتفاع ضغط شديد بالتفعيل — خفّض الجرعة الابتدائية كثيراً." } },
     ],
-    meta: { sources: ["Livret RE.NAU 2018 (dose/preparation)", "Surviving Sepsis Campaign 2026 (MAP, first-line agent, peripheral start)", "ERC 2021"], lastReviewed: "2026-10" },
+    meta: { sources: ["Livret RE.NAU 2018 (dose/preparation)", "RCP NORADRENALINE (TARTRATE) AGUETTANT — ANSM 2018 : 8 mg tartrate/4 mL = 4 mg base, présentation française uniquement", "Surviving Sepsis Campaign 2026 (MAP, first-line agent, peripheral start)", "ERC 2021"], lastReviewed: "2026-10" },
   },
   {
     id: "midazolam",
@@ -228,11 +228,11 @@ const medicationsCore: Medication[] = [
       ar: "جرعة أفيونية زائدة مع تثبيط تنفسي (تواتر أقل من 12، حدقة دبوسية، غيبوبة). تشخيصي وعلاجي.",
     },
     doseAdult: {
-      fr: "0,4 mg IV/IM/IN, répéter toutes les 2–3 min jusqu'à récupération respiratoire (objectif : respirer, pas réveiller complètement). Max initial ~10 mg avant de réviser le diagnostic. PSE si produit retard.",
-      ar: "0.4 ملغ وريد/عضلي/أنفي، تُعاد كل 2-3 د حتى استعادة التنفس (الهدف: التنفس لا اليقظة الكاملة). ~10 ملغ قبل مراجعة التشخيص. مضخة إن كان منتجاً ممتد المفعول.",
+      fr: "Surdosage avec dépression respiratoire : 0,2–2 mg IV/IO/IM, répéter toutes les 2–3 min et titrer jusqu'au rétablissement d'une ventilation suffisante (objectif : respirer, pas réveiller complètement). En cas de dépendance aux opioïdes avec respiration conservée, titration IV prudente selon protocole pour limiter le sevrage ; ne pas retarder la ventilation au masque. Voie intranasale : uniquement avec un dispositif intranasal adapté, à la dose de sa notice (les dispositifs référencés par la FDA délivrent 2 ou 4 mg) ; ne pas convertir la solution injectable en dose IN. Réévaluer le diagnostic si absence de réponse après doses répétées ; perfusion si rebond/prolongation.",
+      ar: "جرعة زائدة مع تثبيط التنفس: 0.2–2 ملغ وريدياً أو داخل العظم أو عضلياً، تُكرر كل 2–3 دقائق وتُعاير حتى كفاية التهوية (الهدف استعادة التنفس، لا الإفاقة الكاملة). عند الاعتماد على الأفيونات مع بقاء التنفس، عاير بحذر وريدياً وفق البروتوكول لتقليل أعراض السحب؛ لا تؤخر التهوية بالقناع. الأنف: فقط بجهاز أنفي مخصص وبجرعة نشرته (الأجهزة المذكورة في FDA تعطي 2 أو 4 ملغ)؛ لا تحوّل محلول الحقن إلى جرعة أنفية. أعد تقييم التشخيص إذا لم تحدث استجابة بعد جرعات متكررة؛ يُنظر في التسريب عند عودة التثبيط أو استمراره.",
     },
-    dosePediatric: { fr: "0,01 mg/kg IV/IM (max 2 mg), titrer.", ar: "0.01 ملغ/كغ وريد/عضلي (أقصى 2 ملغ)، مع معايرة." },
-    dilution: { fr: "Pur ; PSE : 2 mg dans 50 mL G5 %.", ar: "نقي؛ المضخة: 2 ملغ في 50 مل G5%." },
+    dosePediatric: { fr: "Intoxication aiguë par opioïdes : 0,1 mg/kg IV/IO/IM, maximum 2 mg par dose (sans dépasser la dose adulte), répétable toutes les 2–3 min en poursuivant la ventilation. IN : uniquement si un dispositif adapté est disponible, selon sa notice ; ne pas utiliser cette posologie pour un simple surdosage iatrogène chez un patient dépendant sans protocole spécialisé.", ar: "تسمم أفيوني حاد: 0.1 ملغ/كغ وريدياً أو داخل العظم أو عضلياً، بحد أقصى 2 ملغ للجرعة (ولا تتجاوز جرعة البالغ)، وتُكرر كل 2–3 دقائق مع استمرار التهوية. الأنف: فقط عند توفر جهاز مخصص ووفق نشرته؛ لا تستخدم هذه الجرعة لزيادة علاجية بسيطة لدى مريض معتمد دون بروتوكول متخصص." },
+    dilution: { fr: "Solution injectable listée : 0,4 mg/mL. PSE éventuelle selon protocole et dose de réveil. Aucun dispositif intranasal tunisien n'est documenté ici ; ne pas utiliser l'ampoule injectable par voie IN sans autorisation/protocole spécifique.", ar: "محلول الحقن المدرج: 0.4 ملغ/مل. التسريب المستمر وفق البروتوكول وجرعة الاستجابة. لم يُوثق هنا جهاز أنفي تونسي؛ لا تستخدم أمبولة الحقن أنفياً دون ترخيص أو بروتوكول خاص." },
     contraindications: { fr: "Aucune absolue en urgence vitale.", ar: "لا موانع مطلقة في الخطر الحيوي." },
     sideEffects: {
       fr: "Syndrome de sevrage aigu (agitation, vomissements, douleurs), OAP rare en réveil brutal chez toxicomane chronique.",
@@ -244,8 +244,8 @@ const medicationsCore: Medication[] = [
     },
     storage: { fr: "Température ambiante, lumière.", ar: "حرارة الغرفة بعيداً عن الضوء." },
     alternatives: [],
-    weightDose: { mgPerKg: 0.01, maxMg: 2, note: { fr: "Pédiatrie : 0,01 mg/kg (max 2 mg/dose).", ar: "أطفال: 0.01 ملغ/كغ (أقصى 2 ملغ/جرعة)." } },
-    meta: { sources: ["AHA 2023 man. spéciales intoxications", "HAS tox urgence"], lastReviewed: "2026-08" },
+    weightDose: { mgPerKg: 0.1, maxMg: 2, note: { fr: "Enfant, surdosage aigu par opioïdes : 0,1 mg/kg IV/IO/IM, maximum 2 mg par dose ; titrer à la ventilation, avec BVM disponible.", ar: "طفل بتسمم أفيوني حاد: 0.1 ملغ/كغ وريدياً/داخل العظم/عضلياً، بحد أقصى 2 ملغ للجرعة؛ عاير وفق التنفس مع توفر التهوية بالقناع." } },
+    meta: { sources: ["AHA 2023 Focused Update — poisoning, table 2 (adult 0.2–2 mg; child 0.1 mg/kg; titration; pediatric maximum not above adult dose)", "AHA 2025 CPR/ECC Guidelines — ventilation/CPR is not delayed for naloxone", "FDA NARCAN nasal spray labeling (2023/2026) — device-specific single spray; not equivalent to injectable ampoule"], lastReviewed: "2026-10" },
   },
   {
     id: "glucose30",
@@ -260,23 +260,23 @@ const medicationsCore: Medication[] = [
       ar: "نقص سكر عرضي مع اضطراب وعي (سكر شعري أقل من 0.8 غ/ل أو إن تعذّر قياسه بسرعة).",
     },
     doseAdult: {
-      fr: "1–2 ampoules G30 % IV lente (40–80 mL), réévaluer glycémie à 10–15 min. Si alcoolisme/dénutrition : thiamine 250 mg avant (prévention Gayet-Wernicke).",
-      ar: "1-2 أمبولة G30 وريد بطيء (40-80 مل)، أعد قياس السكر بعد 10-15 د. إن كان إدمان كحول/سوء تغذية: ثيامين 250 ملغ قبلها.",
+      fr: "Conscience altérée : chez l'adulte, glucose hypertonique IV 10–15 g selon le protocole de l'établissement (HAS, synthèse des recommandations sélectionnées, 2025, reprenant ADA 2024). En G30 % : ≈33–50 mL. PROAMP 10 mL contient 3 g ; 4–5 ampoules apportent 12–15 g. Recontrôler à 10–15 min ; répéter uniquement après réévaluation et selon le protocole applicable. La posologie des présentations locales doit être vérifiée sur leur propre RCP.",
+      ar: "عند اضطراب الوعي: للبالغ، غلوكوز مفرط التوتر وريدياً بجرعة 10–15 غ وفق بروتوكول المؤسسة (ملخص توصيات HAS لسنة 2025، ناقل عن ADA 2024). بتركيز G30٪: نحو 33–50 مل. أمبولة PROAMP بحجم 10 مل تحتوي 3 غ؛ وتعطي 4–5 أمبولات 12–15 غ. أعد قياس السكر بعد 10–15 دقيقة؛ ولا تكرر العلاج إلا بعد إعادة التقييم ووفق البروتوكول المناسب. يجب التحقق من جرعة المستحضرات المحلية في نشراتها الخاصة.",
     },
     dosePediatric: {
       fr: "G10 % : 5 mL/kg IV (préférable au G30 % hyperosmolaire). Nourrisson : G10 % 5 mL/kg relire 10–15 min.",
       ar: "غلوكوز 10%: 5 مل/كغ وريد (يفضَّل على 30% مفرط التوتر). أعد القياس بعد 10-15 د.",
     },
-    dilution: { fr: "Pur IV lent (voir pédiatrie : préférer G10 %).", ar: "نقي وريد بطيء (للأطفال يفضَّل 10%)." },
+    dilution: { fr: "Solution hypertonique : suivre le RCP de la présentation exacte. Pour GLUCOSE 30 % PROAMP uniquement : perfusion centrale ; en urgence d'hypoglycémie sévère sans voie centrale, voie périphérique possible selon le RCP avec rinçage immédiat au NaCl 0,9 %. Ne pas transposer ce RCP aux présentations SIPHAT/INFOMED sans vérification de leur notice.", ar: "محلول مفرط التوتر: اتبع نشرة المستحضر المحدد. بالنسبة إلى GLUCOSE 30٪ PROAMP فقط: تسريب مركزي؛ وفي طوارئ نقص السكر الشديد، يمكن استخدام خط طرفي عند غياب الخط المركزي وفق النشرة، مع غسل الخط فوراً بمحلول NaCl 0.9٪. لا تعمم هذه النشرة على مستحضرات SIPHAT/INFOMED دون التحقق من نشراتها." },
     contraindications: { fr: "Œdème/désordre intracrânien aigu — relative.", ar: "وذمة/خلل دماغي حاد — نسبية." },
     sideEffects: { fr: "Phlébite, hyperglycémie rebond, hyponatrémie de dilution (sur-correction).", ar: "التهاب وريد، فرط سكر ارتدادي، نقص صوديوم تمددي." },
     nursing: {
-      fr: "Contrôler glycémie AVANT et APRÈS (10–15 min). Voie périphérique OK (irritant léger). Patient conscient hypoglycémique : sucre oral d'abord.",
-      ar: "قِس السكر قبل وبعد (10-15 د). خط محيطي مقبول. الواعي: سكر فموي أولاً.",
+      fr: "Contrôler la glycémie avant puis 10–15 min après. Patient conscient et capable d'avaler : glucose oral. PROAMP 30 % : voie périphérique uniquement pour l'urgence d'hypoglycémie sévère sans accès central, rinçage immédiat au NaCl 0,9 % et surveillance du point de perfusion selon le RCP ; vérifier séparément les notices SIPHAT/INFOMED.",
+      ar: "قِس السكر قبل العلاج ثم بعد 10–15 دقيقة. إذا كان المريض واعياً وقادراً على البلع: غلوكوز فموي. PROAMP 30٪: لا يُستخدم الخط الطرفي إلا في طوارئ نقص السكر الشديد عند غياب الخط المركزي، مع غسل فوري بـNaCl 0.9٪ ومراقبة موضع التسريب وفق النشرة؛ وتحقق من نشرات SIPHAT/INFOMED كلٌّ على حدة.",
     },
     storage: { fr: "Température ambiante.", ar: "حرارة الغرفة." },
     alternatives: [],
-    meta: { sources: ["HAS hypoglycémie urgence", "AHA FOAM tox"], lastReviewed: "2026-08" },
+    meta: { sources: ["HAS — Synthèse des recommandations sélectionnées, 2025-07 (hypoglycémie adulte, reprise ADA 2024)", "RCP GLUCOSE 30 % PROAMP — Base de Données Publique des Médicaments/ANSM (composition et voie propres à PROAMP, source française hors Tunisie)"], lastReviewed: "2026-10" },
   },
   {
     id: "furosemide",

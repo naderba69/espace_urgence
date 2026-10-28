@@ -237,7 +237,7 @@ l'application n'est pas terminé.
 - Export PDF mis en page (le texte du plan est déjà prêt à imprimer).
 - Enregistrement du plan dans le « résumé de cas » (`lib/casesummary.ts`).
 
-## 11. Seuils continus — audit technique préparatoire (2026-10-25)
+## 11. Seuils continus — audit technique préparatoire (actualisé le 2026-10-28)
 
 Le nouveau script `data/issues/tools-atb-threshold-audit.py` compare les bords internes des cellules
 PDF aux graduations numériques DFG imprimées sur les 12 pages. Sur la copie archivée, **60/60
@@ -249,10 +249,15 @@ PyMuPDF :
 python data/issues/tools-atb-threshold-audit.py
 ```
 
-**Portée strictement géométrique :** cela confirme la lecture d'une graduation au bord d'une
-cellule, mais ne valide ni le sens inclusif/exclusif à l'égalité, ni la transcription des doses, ni
-le contexte clinique, ni l'usage d'une équation rénale. Les coordonnées et les cellules doivent
-encore être rapprochées ligne par ligne de la source avant migration ; toute ambiguïté reste visible.
+**Portée strictement documentaire/géométrique :** la correspondance graduation-frontière ne
+valide pas, à elle seule, le sens inclusif/exclusif des seuils intermédiaires, les doses, le contexte
+clinique ni l’usage d’une équation rénale. Le sélecteur de production `stageFromDfg` est distinct
+du candidat continu : il suit les colonnes imprimées (`≥90`, puis seuils 60 et 15) et renvoie
+`null` exactement à 30 au lieu de choisir l’une des deux colonnes. Les tests couvrent les égalités
+90, 60, 30 et 15, ainsi que des valeurs de part et d’autre ; ils vérifient le comportement logiciel,
+pas une règle clinique plus précise que le tableau. Le sélecteur candidat continu reste non relié et
+les égalités non vérifiées continuent de bloquer toute sélection candidate. Aucune posologie n’a été
+modifiée dans cette passe.
 
 `data/issues/tools-export-atb-continuous-cells.py` produit l'archive candidate
 `data/issues/OMEDIT-ATB-IR-V2.3.continuous-cells.candidate.json` : 93 médicaments, 129 lignes et

@@ -4,11 +4,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getProblems, removeProblem, type Problem } from "@/lib/deterioration";
-import { UserRound, Pencil, X, RotateCcw, ChevronDown } from "lucide-react";
+import { UserRound, Pencil, X, RotateCcw, ChevronDown, Trash2 } from "lucide-react";
 import { useApp, EMPTY_PATIENT, type ActivePatient } from "@/components/Providers";
 import T from "@/components/T";
+import { sanitizePatientLog, type PersistedPatientLogEntry } from "@/lib/storage";
 
-type LogEntry = { at: number; p: ActivePatient };
+type LogEntry = PersistedPatientLogEntry;
 const LOG_KEY = "eutn:patient-log";
 const MAX_LOG = 5;
 
@@ -30,8 +31,11 @@ export default function ActivePatient() {
   useEffect(() => {
     if (!hydrated) return;
     try {
+      const raw: unknown = JSON.parse(localStorage.getItem(LOG_KEY) || "[]");
+      const safeLog = sanitizePatientLog(raw);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- أرشيف محلي يُقرأ بعد الهيدراسيون
-      setLog(JSON.parse(localStorage.getItem(LOG_KEY) || "[]") as LogEntry[]);
+      setLog(safeLog);
+      localStorage.setItem(LOG_KEY, JSON.stringify(safeLog));
     } catch { /* ignore */ }
   }, [hydrated]);
 
@@ -63,6 +67,18 @@ export default function ActivePatient() {
     const next = log.filter((x) => x.at !== e.at);
     setLog(next);
     try { localStorage.setItem(LOG_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+    setShowLog(false);
+  };
+
+  const deleteArchivedCase = (at: number) => {
+    const next = log.filter((entry) => entry.at !== at);
+    setLog(next);
+    try { localStorage.setItem(LOG_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+  };
+
+  const clearArchive = () => {
+    setLog([]);
+    try { localStorage.removeItem(LOG_KEY); } catch { /* ignore */ }
     setShowLog(false);
   };
 
@@ -164,10 +180,17 @@ export default function ActivePatient() {
 
       {log.length > 0 && !open && (
         <div className="mt-2 border-t border-line pt-2">
-          <button onClick={() => setShowLog(!showLog)} className="flex w-full items-center justify-between text-xs font-black opacity-80">
-            <span className="flex items-center gap-1"><RotateCcw className="h-3.5 w-3.5" />{lang === "ar" ? `حالات مغلقة (${log.length})` : `Cas clos (${log.length})`}</span>
-            <ChevronDown className={`h-4 w-4 ${showLog ? "rotate-180" : ""}`} />
-          </button>
+          <div className="flex items-center justify-between gap-2">
+            <button onClick={() => setShowLog(!showLog)} className="flex flex-1 items-center justify-between text-xs font-black opacity-80">
+              <span className="flex items-center gap-1"><RotateCcw className="h-3.5 w-3.5" />{lang === "ar" ? `حالات مغلقة (${log.length})` : `Cas clos (${log.length})`}</span>
+              <ChevronDown className={`h-4 w-4 ${showLog ? "rotate-180" : ""}`} />
+            </button>
+            {showLog && (
+              <button onClick={clearArchive} className="touch inline-flex items-center gap-1 rounded-full border border-red-500/50 px-2 py-1 text-[10px] font-black text-red-400" aria-label={lang === "ar" ? "حذف كل الحالات المؤرشفة" : "Effacer toutes les archives patient"}>
+                <Trash2 className="h-3 w-3" aria-hidden /><T fr="Tout effacer" ar="امسح الكل" />
+              </button>
+            )}
+          </div>
           {showLog && (
             <ul className="mt-2 flex flex-col gap-1">
               {log.map((e) => {
@@ -177,15 +200,25 @@ export default function ActivePatient() {
                   <li key={e.at} className="flex items-center justify-between gap-2 rounded-lg border border-line p-1.5 text-xs font-bold">
                     <span dir="ltr">{stamp}</span>
                     <span dir="ltr" className="opacity-70">{e.p.w} kg · {e.p.age} a · {e.p.scr}</span>
-                    <button onClick={() => restore(e)} className="touch rounded-full border border-line px-2 py-1 text-[10px] font-black" style={{ color: "var(--accent)" }}>
-                      {lang === "ar" ? "استرجاع" : "Restaurer"}
-                    </button>
+                    <span className="flex shrink-0 items-center gap-1">
+                      <button onClick={() => restore(e)} className="touch rounded-full border border-line px-2 py-1 text-[10px] font-black" style={{ color: "var(--accent)" }}>
+                        {lang === "ar" ? "استرجاع" : "Restaurer"}
+                      </button>
+                      <button onClick={() => deleteArchivedCase(e.at)} className="touch rounded-full border border-red-500/40 p-1 text-red-400" aria-label={`${lang === "ar" ? "حذف الحالة المؤرشفة" : "Supprimer le cas archivé"} ${stamp}`}>
+                        <Trash2 className="h-3.5 w-3.5" aria-hidden />
+                      </button>
+                    </span>
                   </li>
                 );
               })}
             </ul>
           )}
         </div>
+      )}
+      {!open && (active || log.length > 0) && (
+        <p className="mt-2 border-t border-line pt-2 text-[11px] font-semibold text-amber-500">
+          <T fr="Données patient enregistrées sur cet appareil, sans expiration automatique. Effacez-les sur un appareil partagé ; l’archive peut être supprimée ici ou via Réinitialiser dans les paramètres." ar="تُحفظ بيانات المريض على هذا الجهاز دون انتهاء تلقائي. امسحها على الأجهزة المشتركة؛ يمكن حذف الأرشيف هنا أو عبر إعادة الضبط في الإعدادات." />
+        </p>
       )}
     </div>
   );

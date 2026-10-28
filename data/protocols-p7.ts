@@ -228,7 +228,7 @@ export const protocolsPhase7: Protocol[] = [
     keyPoints: [
       { fr: "Odeur d'ail/poisson pourrie à l'haleine = signature de la phosphine.", ar: "رائحة ثوم/سمك متعفن بالنفس = بصمة الفوسفين." },
       { fr: "Aucun antidote prouvé : la survie dépend de la précocité de la réanimation et du soutien circulatoire.", ar: "لا ترياق مثبت: النجاة رهينة التبكير بالإنعاش ودعم الدوران." },
-      { fr: "Prévenir le centre antipoison (CNPP Tunis : 80 102 550) — déclaration obligatoire.", ar: "أبلغ مركز مكافحة التسمم (تونس: 80 102 550) — التبليغ إجباري." },
+      { fr: "Contacter le Centre antipoison : 71 335 500 (numéro cité par l'ambassade des États-Unis en Tunisie en 2025, à confirmer localement).", ar: "اتصل بمركز السموم: 71 335 500 (رقم أوردته سفارة الولايات المتحدة في تونس سنة 2025، ويجب تأكيده محلياً)." },
     ],
     trajectory: [
       { when: { fr: "Arrêt cardiaque réfractaire", ar: "توقف قلبي مستعصٍ" }, do: [
@@ -240,7 +240,7 @@ export const protocolsPhase7: Protocol[] = [
     ],
     medications: ["noradrenaline", "amiodarone", "bicarbonate", "sulfate-magnesium", "midazolam", "rocuronium"],
     calculators: [],
-    meta: { sources: ["Proudfoot 2019 review", "CNPP Tunisie"], lastReviewed: "2026-09" },
+    meta: { sources: ["Proudfoot 2019 review", "71 335 500 cité par l'ambassade des États-Unis en Tunisie (2025), à confirmer localement"], lastReviewed: "2026-10" },
   },
   {
     id: "sca-nstem",
