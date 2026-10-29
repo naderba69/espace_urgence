@@ -72,7 +72,7 @@ const GUARDS: Guard[] = [
       { fr: "Poids et clairance pris en compte (dose de charge adaptée).", ar: "الوزن والتصفية محسوبان (جرعة تحميل مناسبة)." },
       { fr: "Allergie bêta-lactamine interrogée/étiquetée.", ar: "حساسية البيتا-لاكتام مُسألة/موسومة." },
     ],
-    links: [{ href: "/calculateurs/sepsis-commandement", fr: "Assistant sepsis", ar: "مساعد الإنتان" }, { href: "/calculateurs/antibiotiques", fr: "Doses et rein", ar: "الجرعة والكلى" }] },
+    links: [{ href: "/calculateurs/sepsis-commandement", fr: "Assistant sepsis", ar: "مساعد الإنتان" }, { href: "/calculateurs/antibio-renal", fr: "Tableau ATB OMEDIT", ar: "جدول OMEDIT للمضادات" }] },
   { id: "noac-saign", sev: 2, fr: "NOAC chez le patient qui saigne", ar: "مضاد مباشر عند المريض النازف",
     items: [
       { fr: "Heure exacte de la dernière prise (< 2-4 h: charbon si conscient).", ar: "توقيت آخر جرعة (< ٢-٤ س: فحم إذا واعٍ)." },

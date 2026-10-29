@@ -13,11 +13,22 @@ export interface PerfusionPreset {
   doseStep: number;
   doseStart?: number;
   weightBased: boolean;
+  /** Plafond de débit initial en UI/h, utile pour les presets HNF (ex. SCA). */
+  maxUnitsPerHour?: number;
   note?: Localized;               // conseil clinique court
   bolus?: Localized;              // bolus/dose de charge avant la seringue
   warnings?: Localized;           // alerte sécurité (affichée en rouge, mise en avant)
   tips?: Localized;               // pratiques pro (voie dédiée, relais, incompatibilités, surveillance)
   source?: string;                // référence
+  /** Préparation initiale structurée pour l'outil de pompe ; sans ce champ, aucune génération automatique. */
+  pumpPreparation?: {
+    amount: number;
+    amountUnit: "mg" | "g" | "UI";
+    volumeMl: number;
+    count: number;
+    targetMl: number;
+    convention: "total" | "added";
+  };
 }
 
 const RE_NAU = "Livret RE.NAU 2018";
@@ -27,7 +38,7 @@ export const PERFUSIONS: PerfusionPreset[] = [
   {
     drugId: "noradrenaline",
     label: { fr: "Noradrénaline — choc septique (µg/kg/min)", ar: "نورأدرينالين — صدمة إنتانية" },
-    prep: { fr: "8 mg dans 50 mL G5 % (160 µg/mL)", ar: "8 ملغ في 50 مل غلوكوز 5%" },
+    prep: { fr: "8 mg de noradrénaline-base complétés à 50 mL G5 % (160 µg/mL) ; vérifier l'équivalence base/tartrate selon le RCP local", ar: "8 ملغ من قاعدة النورأدرينالين تُستكمل إلى 50 مل غلوكوز 5% (160 مكغ/مل)؛ تحقق من مكافئ القاعدة/الطرطرات وفق النشرة المحلية" },
     concUgPerMl: (8 * 1000) / 50,
     unit: "µg/kg/min",
     doseMin: 0.05, doseMax: 1, doseStep: 0.05, doseStart: 0.1,
@@ -39,16 +50,16 @@ export const PERFUSIONS: PerfusionPreset[] = [
   },
   {
     drugId: "noradrenaline",
-    label: { fr: "Noradrénaline — RE.NAU (mg/h)", ar: "نورأدرينالين — ملغ/س (RE.NAU)" },
-    prep: { fr: "8 mg complétés à 40 mL G5 % (200 µg/mL)", ar: "8 ملغ إلى 40 مل غلوكوز (200 مكغ/مل)" },
-    concUgPerMl: 200,
+    label: { fr: "Noradrénaline-base (mg/h)", ar: "نورأدرينالين كقاعدة فعالة — ملغ/س" },
+    prep: { fr: "8 mg de noradrénaline-base complétés à 50 mL G5 % (160 µg/mL) ; vérifier l'équivalence base/tartrate selon le RCP local", ar: "8 ملغ من قاعدة النورأدرينالين تُستكمل إلى 50 مل غلوكوز 5% (160 مكغ/مل)؛ تحقق من مكافئ القاعدة/الطرطرات وفق النشرة المحلية" },
+    concUgPerMl: 160,
     unit: "mg/h",
     doseMin: 0.5, doseMax: 6, doseStep: 0.5, doseStart: 1,
     weightBased: false,
-    note: { fr: "Abaque RE.NAU : 1 mg/h = 5 mL/h. À 70 kg, 1 mg/h ≈ 0,24 µg/kg/min.", ar: "جدول RE.NAU: 1 ملغ/س = 5 مل/س." },
+    note: { fr: "À 160 µg/mL : 1 mg/h = 6,25 mL/h. À 70 kg, 1 mg/h ≈ 0,24 µg/kg/min. Vérifier la concentration affichée et l'unité prescrite.", ar: "عند 160 مكغ/مل: 1 ملغ/س = 6.25 مل/س. وعند وزن 70 كغ، 1 ملغ/س ≈ 0.24 مكغ/كغ/د. تحقق من التركيز والوحدة الموصوفة." },
     warnings: { fr: "Dosage élevé en mg/h — vérifier l'unité avec le médecin prescripteur.", ar: "جرعة بالملغ/س — تحقق من الوحدة مع الطبيب." },
     tips: { fr: "Surveillance : scope, PA, diurèse, point de ponction. Relais progressif.", ar: "مراقبة: scope، ضغط، بيلة، موضع الحقن. تبديل تدريجي." },
-    source: RE_NAU,
+    source: RE_NAU + " (repère posologique mg/h ; concentration harmonisée dans l'application à 160 µg/mL)",
   },
   {
     drugId: "adrenaline",
@@ -97,6 +108,7 @@ export const PERFUSIONS: PerfusionPreset[] = [
     warnings: { fr: "Corriger l'hypovolémie avant administration. Contre-indiquée en cas d'obstacle mécanique au remplissage/à l'éjection ou d'obstruction dynamique intraventriculaire. Ne pas traiter une hypotension isolée par dobutamine.", ar: "صحّح نقص الحجم قبل الإعطاء. تُمنع عند وجود عائق ميكانيكي للامتلاء/القذف أو انسداد ديناميكي داخل البطين. لا تعالج هبوط الضغط وحده بالدوبوتامين." },
     tips: { fr: "Perfusion IV continue par pompe. À l'hôpital : surveillance cardiovasculaire continue et diurèse ; hors hôpital en attente d'admission : médecin au chevet, PA/FC au moins toutes les 15 min (RCP). Ne pas mélanger au bicarbonate ni aux solutions fortement alcalines ; vérifier la compatibilité avant toute co-perfusion. Arrêter progressivement.", ar: "تسريب وريدي مستمر بمضخة. داخل المستشفى: مراقبة قلبية وعائية مستمرة والإدرار؛ وخارجه بانتظار القبول الطبي: يبقى الطبيب بجانب المريض ويُقاس الضغط والنبض كل 15 دقيقة على الأقل (النشرة). لا تخلطه بالبيكربونات أو المحاليل القلوية بشدة؛ تحقّق من التوافق قبل التسريب المشترك. أوقفه تدريجياً." },
     source: "ANSM (France) — RCP DOBUTAMINE PANPHARMA, mise à jour 18/03/2022, §§4.1–4.4 et 6.6 ; SSC 2026 (indication septique adulte)",
+    pumpPreparation: { amount: 250, amountUnit: "mg", volumeMl: 20, count: 1, targetMl: 250, convention: "total" },
   },
   {
     drugId: "isoprenaline",
@@ -143,12 +155,12 @@ export const PERFUSIONS: PerfusionPreset[] = [
     label: { fr: "Labétalol (Trandate®) — SAA / prééclampsie", ar: "لابيتالول (تراندات) — أبهر/ما قبل تسمم حمل" },
     prep: { fr: "100 mg complétés à 50 mL G5 % (2 mg/mL)", ar: "100 ملغ إلى 50 مل غلوكوز (2 ملغ/مل)" },
     concUgPerMl: 2000,
-    unit: "mg/kg/h",
-    doseMin: 0.1, doseMax: 0.3, doseStep: 0.05, doseStart: 0.1,
-    weightBased: true,
-    bolus: { fr: "1 mg/kg IVL pur sur 1 min, renouvelable ×1 après 10 min.", ar: "1 ملغ/كغ وريد بطيء صافي خلال دقيقة، قابل للتكرار بعد 10 د." },
-    warnings: { fr: "Réduire si FC < 50/min. CI : asthme, BPCO, IC décompensée, BAV, choc.", ar: "قلّل إن كان النبض أقل من 50. ممنوع: ربو، قصور قلب منفك، حصار، صدمة." },
-    source: RE_NAU,
+    unit: "mg/min",
+    doseMin: 0.5, doseMax: 2, doseStep: 0.5, doseStart: 1,
+    weightBased: false,
+    bolus: { fr: "10–20 mg IV lente sur 2 min (schéma obstétrical : commencer à 20 mg) ; réévaluer la PA avant toute dose suivante. Suivre le protocole local.", ar: "10–20 ملغ ببطء وريدياً خلال دقيقتين (في بروتوكول التوليد: ابدأ بـ20 ملغ)؛ أعد قياس الضغط قبل أي جرعة تالية. اتبع البروتوكول المحلي." },
+    warnings: { fr: "Réduire si FC < 50/min. CI : asthme, BPCO/bronchospasme, IC décompensée, BAV, choc. Doses IV en milieu surveillé.", ar: "خفّض الجرعة إن كان النبض أقل من 50. يُمنع عند الربو/التشنج القصبي، قصور القلب المنفك، حصار AV أو الصدمة. الجرعات الوريدية في بيئة مراقبة." },
+    source: RE_NAU + " (préparation) ; ACOG Practice Bulletin No. 222 (2020) ; FDA Prescribing Information (2024), §2.2 (doses fixes et perfusion 2 mg/min)",
   },
   {
     drugId: "trinitrine",
@@ -225,6 +237,7 @@ export const PERFUSIONS: PerfusionPreset[] = [
     warnings: { fr: "Émulsion lipidique sans conservateur → changer seringue/tubulure selon règles d'hygiène (risque bactérien). CI : allergie arachide/soja (œuf), hypovolémie non corrigée. Hypotension quasi constante à l'induction.", ar: "محلول دهني بلا حافظ → بدّل السرنجة حسب قواعد النظافة. ممنوع: حساسية فول/صويا، نقص حجم غير مصحح. هبوط ضغط شبه ثابت عند التحريض." },
     tips: { fr: "IPC : cisatracurium, chlorure de calcium, héparine, vancomycine, amikacine. Diurèse verte → avis médical.", ar: "عدم توافق: سيزاتراكوريوم، كلورور كالسيوم، هيبارين. بيلة خضراء → رأي طبي." },
     source: RE_NAU,
+    pumpPreparation: { amount: 500, amountUnit: "mg", volumeMl: 50, count: 1, targetMl: 50, convention: "total" },
   },
   {
     drugId: "midazolam",
@@ -291,27 +304,30 @@ export const PERFUSIONS: PerfusionPreset[] = [
   // ══════════════ ANTICOAGULANTS ══════════════
   {
     drugId: "heparine",
-    label: { fr: "Héparine HNF — SCA (bolus 70 UI/kg puis 12 UI/kg/h)", ar: "هيبارين — متلازمة تاجية حادة" },
+    label: { fr: "Héparine HNF — SCA médical (départ 60/12 UI/kg/h)", ar: "هيبارين — علاج متلازمة تاجية دون قسطرة" },
     prep: { fr: "25 000 UI complétés à 50 mL NaCl 0,9 % (500 UI/mL)", ar: "25 ألف وحدة إلى 50 مل (500 وحدة/مل)" },
     concUgPerMl: 500,
     unit: "UI/kg/h",
-    doseMin: 10, doseMax: 15, doseStep: 1, doseStart: 12,
+    doseMin: 12, doseMax: 12, doseStep: 1, doseStart: 12,
     weightBased: true,
-    bolus: { fr: "SCA : bolus 70 UI/kg IV avant la seringue.", ar: "متلازمة تاجية: دفعة 70 وحدة/كغ قبل المضخة." },
-    warnings: { fr: "TCA toutes les 4-6 h, cible 2-3× témoin. IPC : amiodarone, dobutamine, kétamine, nicardipine, propofol, diazépam… Surveiller hémorragie + plaquettes (J5 : thrombopénie type II).", ar: "‏TCA كل 4-6 س (هدف 2-3×). عدم توافق متعدد. راقب نزيفاً وصفائح (يوم 5)." },
-    source: RE_NAU,
+    maxUnitsPerHour: 1000,
+    bolus: { fr: "SCA : bolus initial 60 UI/kg IV, maximum 4 000 UI, avant la seringue. Hors dose de PCI; en cas de fibrinolyse, suivre le protocole spécifique.", ar: "متلازمة تاجية: دفعة أولية 60 وحدة/كغ وريدياً، بحد أقصى 4000، قبل المضخة. ليست جرعة PCI؛ اتبع بروتوكول تحليل الخثرة عند إجرائه." },
+    note: { fr: "Débit initial 12 UI/kg/h (maximum 1 000 UI/h). Ce preset ne calcule pas l'ajustement ultérieur au TCA.", ar: "التدفق الأولي 12 وحدة/كغ/س (الحد الأقصى 1000 وحدة/س). لا يحسب هذا الخيار التعديل اللاحق وفق TCA." },
+    warnings: { fr: "Contrôles TCA et ajustement selon la cible ACS (60–80 s sans fibrinolyse; 50–70 s avec fibrinolyse) et le protocole cardiologique/local; ne pas employer un ratio TCA générique. Surveiller saignement et plaquettes. PCI : dose et ACT réglés en salle de cathétérisme.", ar: "افحص TCA وعدّل وفق هدف SCA (60–80 ثانية دون تحليل الخثرة؛ 50–70 معه) والبروتوكول المحلي؛ لا تستخدم نسبة عامة. راقب النزيف والصفائح. القسطرة: الجرعة وACT في القاعة." },
+    source: "AHA/ACC ACS 2025, Table 10 + corrections 2025; RE.NAU 2018 (préparation, à vérifier localement)",
   },
   {
     drugId: "heparine",
-    label: { fr: "Héparine HNF — EP (bolus 80 UI/kg puis 18 UI/kg/h)", ar: "هيبارين — انصمام رئوي" },
+    label: { fr: "Héparine HNF — TVP/EP si HNF retenue (exemple UW)", ar: "هيبارين — خثار وريدي/صمة عند اختيار غير المجزأ (مثال UW)" },
     prep: { fr: "25 000 UI complétés à 50 mL NaCl 0,9 % (500 UI/mL)", ar: "25 ألف وحدة إلى 50 مل (500 وحدة/مل)" },
     concUgPerMl: 500,
     unit: "UI/kg/h",
-    doseMin: 15, doseMax: 22, doseStep: 1, doseStart: 18,
+    doseMin: 18, doseMax: 18, doseStep: 1, doseStart: 18,
     weightBased: true,
-    bolus: { fr: "EP : bolus 80 UI/kg IV avant la seringue.", ar: "انصمام رئوي: دفعة 80 وحدة/كغ." },
-    tips: { fr: "Pas besoin d'interrompre l'HNF pendant alteplase si VVP dédiée.", ar: "لا حاجة لإيقاف الهيبارين أثناء ألتيبلاز إذا كان هناك خط محيطي مخصص." },
-    source: RE_NAU,
+    bolus: { fr: "Schéma UW Medicine : bolus 80 UI/kg IV (maximum 10 000 UI). Ne l'utiliser que si l'équipe a retenu l'HNF et après vérification du protocole local.", ar: "بروتوكول UW Medicine: دفعة 80 وحدة/كغ (حد أقصى 10000). لا تستخدمه إلا بعد اختيار الفريق والتحقق من البروتوكول المحلي." },
+    note: { fr: "Débit initial 18 UI/kg/h. Premier anti-Xa à 6 h (cible usuelle UW 0,3–0,7 UI/mL); ajuster seulement avec un nomogramme local validé.", ar: "التدفق الأولي 18 وحدة/كغ/س. أول anti-Xa بعد 6 ساعات (هدف UW ‏0.3–0.7 وحدة/مل)؛ عدّل وفق مخطط محلي معتمد فقط." },
+    warnings: { fr: "Pour l'EP, l'AHA/ACC 2026 préfère l'HBPM à l'HNF dans la plupart des anticoagulations parentérales initiales. La cible TCA dépend du réactif et du laboratoire. Thrombolyse/reperfusion : bolus, suspension et reprise exigent un protocole spécifique — ce preset ne les définit pas.", ar: "في الصمة، تفضل إرشادات AHA/ACC 2026 الهيبارين منخفض الوزن الجزيئي غالباً. هدف TCA يعتمد على الكاشف والمختبر. تحليل/إعادة تروية: الدفعة والإيقاف والاستئناف وفق بروتوكول خاص؛ لا يحددها هذا الخيار." },
+    source: "UW Medicine Anticoagulation Services (schéma institutionnel HNF, consulté 2026) ; AHA/ACC EP 2026 (préférence HBPM)",
   },
   // ══════════════ ENDOCRINIENS / DIVERS ══════════════
   {
@@ -393,8 +409,12 @@ export function perfusionFlow(p: PerfusionPreset, dose: number, weightKg: number
     case "mg/min":
       return (doseUgPerMin * (p.unit === "mg/min" ? 60 : 1)) / (p.concUgPerMl / 1000);
     case "UI/kg/h":
-    case "UI/h":
-      return doseUgPerMin / (p.concUgPerMl || 1); // UI/mL direct
+    case "UI/h": {
+      const effectiveUnitsPerHour = p.maxUnitsPerHour === undefined
+        ? doseUgPerMin
+        : Math.min(doseUgPerMin, p.maxUnitsPerHour);
+      return effectiveUnitsPerHour / (p.concUgPerMl || 1); // UI/mL direct
+    }
     case "g/h":
       return doseUgPerMin / (p.concUgPerMl / 1_000_000);
     default:

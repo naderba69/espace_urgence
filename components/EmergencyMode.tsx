@@ -1,6 +1,8 @@
 "use client";
 // Mode urgence : superposition plein écran, gros boutons (usage stress/mouvement).
 import Link from "next/link";
+import { useEffect, useRef } from "react";
+import { useModalFocusTrap } from "@/lib/modal-focus";
 import { useApp } from "./Providers";
 import { Timer, Syringe, Brain, HeartPulse, AlertTriangle, LogOut } from "lucide-react";
 
@@ -15,6 +17,21 @@ const ITEMS = [
 
 export default function EmergencyMode() {
   const { emergencyOpen, setEmergencyOpen, lang, t } = useApp();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocusTrap(dialogRef, emergencyOpen);
+  useEffect(() => {
+    if (!emergencyOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setEmergencyOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [emergencyOpen, setEmergencyOpen]);
   if (!emergencyOpen) return null;
 
   return (
@@ -22,6 +39,7 @@ export default function EmergencyMode() {
       role="dialog"
       aria-modal="true"
       aria-label={t("emergency.title")}
+      ref={dialogRef}
       className="fixed inset-0 z-50 w-full max-w-none bg-[#0b1220] p-4 sm:p-8 overflow-y-auto"
     >
       <div className="mx-auto max-w-3xl flex flex-col gap-6 min-h-full">
@@ -36,7 +54,6 @@ export default function EmergencyMode() {
           <button
             onClick={() => setEmergencyOpen(false)}
             className="touch shrink-0 gap-2 rounded-xl bg-slate-700 px-4 py-2.5 text-base font-bold text-white hover:bg-slate-600 sm:px-5 sm:py-3 sm:text-lg"
-            autoFocus
           >
             <LogOut className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden /> {t("emergency.exit")}
           </button>

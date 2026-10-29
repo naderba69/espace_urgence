@@ -9,6 +9,170 @@ export interface Release { v: string; date: string; notes: Localized[] }
 
 export const CHANGELOG: Release[] = [
   {
+    v: "18.7",
+    date: "2026-10-28",
+    notes: [
+      {
+        fr: "Asthme aigu : mise à jour documentaire selon GINA 2026, avec seuils/cibles d’oxygène, doses et critères de sortie actualisés. L’ipratropium nébulisé suit la limite SCHN : 250 µg jusqu’à 6 ans inclus, 500 µg au-delà; le journal conserve la dose tracée. Les alternatives IV de corticostéroïde et doses nébulisées sont attribuées à leurs sources NHS/SCHN, sans conversion depuis les doses pMDI/orales.",
+        ar: "الربو الحاد: تحديث مرجعي وفق GINA 2026 لعتبات وأهداف الأكسجين والجرعات ومعايير الخروج. يتبع الإبراتروبيوم بالرذاذ حد SCHN: ‏250 مكغ حتى سن 6 سنوات شاملاً، و500 مكغ بعد ذلك؛ ويحفظ السجل الجرعة المسجلة. نُسبت البدائل الوريدية للكورتيكوستيرويد وجرعات الرذاذ إلى مراجع NHS/SCHN دون تحويلها من جرعات البخاخ أو الفم.",
+      },
+      {
+        fr: "L’assistant d’asthme demande l’âge, n’applique pas le parcours GINA ≥6 ans aux plus jeunes, limite les répétitions de salbutamol et ne calcule pas le MgSO₄ pédiatrique. Corrections logicielles et tests automatisés ne remplacent pas une validation clinique indépendante.",
+        ar: "يطلب مساعد الربو العمر، ولا يطبق مسار GINA للأعمار ≥6 على الأصغر، ويحد تكرار السالبوتامول ولا يحسب MgSO₄ للأطفال. لا تحل التصحيحات البرمجية والاختبارات الآلية محل التحقق السريري المستقل.",
+      },
+    ],
+  },
+  {
+    v: "18.6",
+    date: "2026-10-28",
+    notes: [
+      {
+        fr: "Interface française exclusive : le sélecteur de langue a été retiré, les préférences arabes anciennes sont migrées vers le français et le document utilise toujours le sens de lecture gauche-à-droite. Les données arabes conservées dans le référentiel ne sont plus affichées par l’interface.",
+        ar: "أصبحت الواجهة فرنسية فقط: أزيل اختيار اللغة، وتحوّل التفضيل العربي القديم إلى الفرنسية، وأصبح اتجاه الواجهة ثابتاً من اليسار إلى اليمين. لا تعرض الواجهة البيانات العربية التي بقيت في المرجع.",
+      },
+      {
+        fr: "Contraste élargi : les couleurs de texte informatif des familles bleue, rouge, ambre, verte, orange, violette et cyan sont assombries en thème clair et éclaircies en thèmes sombre/AMOLED. Les textes blancs sur des fonds orange, ambre et cyan ont été remplacés par un premier plan foncé.",
+        ar: "تحسين التباين: أُغمقت ألوان النصوص المعلوماتية في الوضع الفاتح وأُضيئت في الوضعين الداكن وAMOLED لعائلات الأزرق والأحمر والعنبر والأخضر والبرتقالي والبنفسجي والسماوي. واستُبدل النص الأبيض على الخلفيات البرتقالية والعنبرية والسماوية بلون داكن.",
+      },
+    ],
+  },
+  {
+    v: "18.5",
+    date: "2026-10-28",
+    notes: [
+      {
+        fr: "Contraste des couleurs de gravité : les libellés critiques, urgents et standards du thème clair utilisent maintenant des teintes plus foncées pour dépasser le seuil WCAG AA de 4,5:1 sur leurs fonds. Les couleurs sombres sont conservées.",
+        ar: "تباين ألوان الخطورة: تستخدم الآن تسميات الخطورة الحرجة والعاجلة والعادية في المظهر الفاتح ألواناً أغمق لتجاوز حد WCAG AA البالغ 4.5:1 على خلفياتها. لم تتغير ألوان المظهر الداكن.",
+      },
+    ],
+  },
+  {
+    v: "18.4",
+    date: "2026-10-28",
+    notes: [
+      {
+        fr: "Accessibilité : les suggestions de recherche et l’historique suivent maintenant le modèle combobox/listbox avec sélection au clavier et annonce de l’option active. Les filtres, sélecteurs de rythme et contrôles de calcul utilisent des groupes de boutons nommés avec état activé explicite plutôt que des rôles ARIA incomplets de liste d’onglets ou de radios. Le tiroir de navigation expose sa relation au bouton d’ouverture et un libellé explicite pour fermer.",
+        ar: "إمكانية الوصول: تتبع اقتراحات البحث والسجل الآن نمط combobox/listbox مع التحديد بلوحة المفاتيح وإعلان الخيار النشط. وتستخدم المرشحات واختيارات الإيقاع وضوابط الحساب مجموعات أزرار مسماة مع حالة اختيار واضحة بدلاً من أدوار ARIA غير مكتملة للتبويبات أو أزرار الاختيار. كما يوضح درج التنقل ارتباطه بزر الفتح ويحمل زر إغلاقه تسمية صريحة.",
+      },
+    ],
+  },
+  {
+    v: "18.3",
+    date: "2026-10-28",
+    notes: [
+      {
+        fr: "Mode hors ligne : les réponses de navigation interne Next/RSC sont désormais mises en cache avec les en-têtes nécessaires au respect de Vary, tout en retirant le paramètre _rsc variable. Le cache du service worker est renouvelé pour réinitialiser les anciennes clés incompatibles.",
+        ar: "وضع عدم الاتصال: تُخزّن الآن استجابات التنقل الداخلي Next/RSC مع الترويسات اللازمة لاحترام Vary، مع حذف معامل _rsc المتغير. جرى تحديث مخبأ عامل الخدمة لإزالة المفاتيح القديمة غير المتوافقة.",
+      },
+      {
+        fr: "Analyse ECG : si le navigateur ne peut pas décoder ou redimensionner l’image, son original n’est plus envoyé au fournisseur ni conservé comme miniature. Les textes reçus sont aussi débarrassés des contrôles Unicode de direction qui peuvent inverser l’affichage; l’estimation reste non validée cliniquement.",
+        ar: "تحليل ECG: إذا تعذر على المتصفح فك الصورة أو تغيير حجمها، فلن تُرسل النسخة الأصلية إلى المزوّد ولن تُحفظ كصورة مصغّرة. وتُنقّى النصوص أيضاً من محارف Unicode التي قد تعكس اتجاه العرض؛ ويبقى التقدير غير مُثبت سريرياً."
+      },
+    ],
+  },
+  {
+    v: "18.2",
+    date: "2026-10-28",
+    notes: [
+      {
+        fr: "Transferts IA : l’aperçu de consentement montre également un extrait et la longueur du contexte / des consignes transmis. Pour l’image ECG, l’accord est rattaché au fournisseur et au modèle; leur changement avant l’envoi révoque l’accord et bloque le transfert.",
+        ar: "نقل بيانات الذكاء الاصطناعي: يعرض ملخص الموافقة الآن مقتطفاً وطول السياق والتعليمات المرسلة أيضاً. وفي صورة ECG ترتبط الموافقة بالمزوّد والنموذج؛ فإذا تغيّرا قبل الإرسال تُلغى الموافقة ويُمنع النقل.",
+      },
+      {
+        fr: "Confidentialité locale : la fiche SAMU, les journaux cliniques et l’historique ECG sont limités à la session de l’onglet; les anciennes données locales recensées sont purgées. Un navigateur peut restaurer une session, et IndexedDB reste partagée entre les onglets : ce mécanisme n’est pas un effacement sécurisé.",
+        ar: "الخصوصية المحلية: حُصرت بطاقة SAMU والسجلات السريرية وسجل ECG في جلسة التبويب؛ وتُحذف البيانات المحلية القديمة التي جرى تحديدها. قد يستعيد المتصفح الجلسة، كما أن IndexedDB مشتركة بين التبويبات؛ لذلك لا يُعد هذا محواً آمناً.",
+      },
+      {
+        fr: "Réévaluation : les seuils de glycémie sont maintenant cohérents avec la saisie en g/L (hypoglycémie <0,7 g/L, équivalent de 70 mg/dL selon ADA 2026). Le seuil de 0,8 g/L de l'alerte surrénalienne reste une heuristique non diagnostique, à valider localement.",
+        ar: "إعادة التقييم: أصبحت عتبات سكر الدم متوافقة مع الإدخال بوحدة غ/ل (نقص السكر <0.7 غ/ل، أي 70 مغ/دل وفق ADA 2026). وتبقى عتبة 0.8 غ/ل في تنبيه الكظر إشارة غير تشخيصية تحتاج إلى تحقق محلي.",
+      },
+      {
+        fr: "Hypoglycémie adulte : suppression de l'équivalence erronée « 1 ampoule G30 = 10 g ». La dose générale de 10–15 g est sourcée par la synthèse HAS 2025 (reprise ADA 2024) ; la concentration de PROAMP est indiquée séparément (3 g par ampoule de 10 mL). Les notices tunisiennes SIPHAT/INFOMED et la conduite locale restent à valider.",
+        ar: "نقص السكر لدى البالغ: أُزيلت المعادلة الخاطئة «أمبولة G30 واحدة = 10 غ». جرعة 10–15 غ موثقة في ملخص HAS لسنة 2025 (نقلاً عن ADA 2024)، وفُصل عنها تركيز PROAMP (3 غ في أمبولة 10 مل). ما زالت نشرات SIPHAT/INFOMED التونسية والتدبير المحلي بحاجة إلى تحقق.",
+      },
+      {
+        fr: "Sufentanil pédiatrique : retrait de la dose ambiguë sans unité de temps ; seule l'induction IV chez l'enfant de plus d'un mois est reprise du RCP SUFENTA (bolus lent 0,2–0,5 µg/kg, avec un autre agent). Aucun schéma IV n'est recommandé par ce RCP chez le nouveau-né ; pas de perfusion continue pédiatrique extrapolée.",
+        ar: "سوفنتانيل الأطفال: أُزيلت الجرعة الملتبسة بلا وحدة زمنية؛ وأُبقي فقط تحريض التخدير الوريدي لمن تجاوز شهراً، وفق نشرة SUFENTA (دفعة بطيئة 0.2–0.5 مكغ/كغ مع عامل آخر). لا توصي النشرة بجرعة وريدية لحديث الولادة؛ ولم تُستنتج جرعة تسريب مستمر للأطفال.",
+      },
+      {
+        fr: "NaCl hypertonique : retrait de la recette qui donne 4,08 % au lieu du 3,7 % annoncé ; calcul théorique de 3 % relégué à une préparation pharmaceutique selon procédure locale validée. Les poches prêtes à l'emploi restent préférées.",
+        ar: "محلول NaCl مفرط التوتر: أُزيلت الوصفة التي تعطي 4.08٪ بدلاً من 3.7٪ المعلنة؛ ووُضع حساب 3٪ النظري ضمن التحضير الصيدلي وفق إجراء محلي معتمد. تبقى الأكياس الجاهزة مفضلة.",
+      },
+      {
+        fr: "Propofol : les règles pédiatriques et de durée d'utilisation sont maintenant propres à l'indication et à la présentation. Pour DIPRIVAN 10 mg/mL, l'anesthésie générale est autorisée après 1 mois, mais la sédation en soins intensifs est contre-indiquée avant 16 ans ; une solution diluée se prépare immédiatement et s'utilise sous 6 h, tandis que la perfusion non diluée peut aller jusqu'à 12 h selon le RCP. Les reliquats ne se conservent pas et ces règles ne sont pas généralisées aux produits locaux.",
+        ar: "بروبوفول: أصبحت قيود الأطفال ومدة الاستخدام مرتبطة بالاستطباب والمستحضر. وفق نشرة DIPRIVAN 10 ملغ/مل، يمكن التخدير العام بعد عمر شهر، لكن تهدئة العناية المركزة ممنوعة قبل 16 سنة؛ ويُحضّر المحلول المخفف فوراً ويُستخدم خلال 6 ساعات، بينما يمكن أن يستمر التسريب غير المخفف حتى 12 ساعة وفق النشرة. لا تُحفظ البقايا ولا تُعمم هذه القواعد على المستحضرات المحلية.",
+      },
+      {
+        fr: "Éclampsie : priorité à la stabilisation maternelle avant la naissance. Après stabilisation, l'équipe obstétricale décide du moment et de la voie selon l'état maternel et fœtal ainsi que les facteurs obstétricaux ; l'éclampsie seule n'impose pas une césarienne. Cette formulation suit l'ACOG Practice Bulletin No. 222 (2020), sans remplacer un protocole local.",
+        ar: "الارتعاج: تُعطى الأولوية لتثبيت الأم قبل الولادة. بعد الاستقرار، يحدد فريق التوليد التوقيت والطريقة وفق حالتي الأم والجنين والعوامل التوليدية؛ والارتعاج وحده لا يفرض القيصرية. تستند الصياغة إلى نشرة ACOG رقم 222 لعام 2020، ولا تحل محل بروتوكول محلي.",
+      },
+      {
+        fr: "Hémorragie digestive haute : retrait du furosémide hors indication. L'octréotide n'est référencé que pour la branche cirrhose/suspicion de varices ; l'acide tranexamique n'est pas ajouté, l'ESGE ne le recommandant pas dans l'hémorragie non variqueuse. Revue clinique locale requise.",
+        ar: "النزف الهضمي العلوي: أُزيل الفوروسيميد لعدم ملاءمته. يرتبط الأوكتريوتيد فقط بفرع تشمع الكبد أو الاشتباه بالدوالي؛ ولم يُضف حمض الترانيكساميك لأن ESGE لا توصي به في النزف غير الدوالي. يلزم تقييم سريري محلي.",
+      },
+      {
+        fr: "Centre antipoison : les coordonnées affichées dans les protocoles sont harmonisées provisoirement sur le 71 335 500, cité par l'ambassade des États-Unis en Tunisie en 2025. Aucune source officielle tunisienne actuelle confirmant le numéro n'a été trouvée ; confirmation locale indispensable avant usage.",
+        ar: "مركز السموم: وُحّد رقم الاتصال المعروض في البروتوكولات مبدئياً إلى 71 335 500، وهو رقم أوردته سفارة الولايات المتحدة في تونس سنة 2025. لم يُعثر على مصدر تونسي رسمي حديث يؤكد الرقم؛ يلزم التحقق محلياً قبل استعماله.",
+      },
+      {
+        fr: "Noradrénaline : concentration harmonisée à 8 mg de base/50 mL (160 µg/mL) dans la fiche, les abaques et la pompe. Le compte d'ampoules dépend de l'équivalence base/tartrate du RCP local ; ne pas la deviner à partir du dosage commercial. Le débit mg/h a été recalculé pour cette concentration.",
+        ar: "نورأدرينالين: وُحّد التركيز إلى 8 ملغ قاعدة فعالة/50 مل (160 مكغ/مل) في البطاقة والجداول والمضخة. يعتمد عدد الأمبولات على مكافئ القاعدة/الطرطرات في نشرة المستحضر المحلي؛ لا تخمّنه من التركيز التجاري. أُعيد حساب معدل ملغ/ساعة وفق هذا التركيز.",
+      },
+      {
+        fr: "Labétalol : suppression du bolus adulte non sourcé de 1 mg/kg ; la dose est maintenant fixe et la perfusion est exprimée en mg/min, conformément aux sources vérifiées. Le protocole obstétrical local doit être confirmé.",
+        ar: "لابيتالول: أُزيلت دفعة البالغ غير المسندة بجرعة 1 ملغ/كغ؛ أصبحت الجرعة ثابتة والتسريب بوحدة ملغ/دقيقة وفق المصادر التي تمت مراجعتها. يجب تأكيد بروتوكول التوليد المحلي.",
+      },
+      {
+        fr: "Naloxone : distinction entre dose pédiatrique de surdosage aigu (0,1 mg/kg, max 2 mg/dose) et titration adulte. La voie intranasale n'est pas extrapolée à partir de l'ampoule injectable ; aucun dispositif IN local n'est documenté.",
+        ar: "نالوكسون: فُصلت جرعة تسمم الأطفال الحاد (0.1 ملغ/كغ، بحد أقصى 2 ملغ للجرعة) عن معايرة البالغين. لم تُستنتج الجرعة الأنفية من أمبولة الحقن؛ ولا يوجد جهاز أنفي محلي موثق في قاعدة البيانات.",
+      },
+      {
+        fr: "Pompe automatique : suppression de l'analyse fragile du premier nombre du texte libre. Elle n'est créée que depuis une préparation structurée dont la concentration concorde avec la donnée numérique ; sinon, un avertissement remplace le calcul. Cas dobuta/propofol couverts par des tests.",
+        ar: "المضخة التلقائية: أُزيل تحليل أول رقم في النص الحر لأنه غير موثوق. لا تُنشأ المضخة إلا من تحضير مهيكل يطابق تركيزه القيمة الرقمية؛ وإلا يظهر تنبيه بدل الحساب. تشمل الاختبارات حالتي الدوبوتامين والبروبوفول.",
+      },
+      {
+        fr: "Transferts IA : confirmation locale avant envoi des textes, avec fournisseur, modèle et extrait de demande ; l’explication des calculateurs bloque l’envoi si la destination change après confirmation. Analyse ECG restreinte aux observations descriptives filtrées, avec consentement spécifique pour l'image et sans diagnostic, gravité ou recommandations IA. Les anciennes analyses ECG sont assainies à la lecture.",
+        ar: "نقل بيانات الذكاء الاصطناعي: تأكيد محلي قبل إرسال النص مع بيان المزوّد والنموذج ومقتطف من الطلب؛ ويُحجب إرسال شرح الحاسبة إذا تغيّرت الوجهة بعد التأكيد. حُصر تحليل ECG في ملاحظات وصفية مُنقّاة مع موافقة خاصة على إرسال الصورة، دون تشخيص أو درجة خطورة أو توصيات آلية. تُنقّى التحليلات القديمة عند قراءتها.",
+      },
+      {
+        fr: "Quiz IA : format strict des questions/réponses et refus des chiffres et unités afin d’empêcher l’affichage de doses numériques générées. Le thème source et ses références restent visibles ; le quiz est signalé comme non vérifié et un quiz fixe est accessible. Ces contrôles ne valident pas la justesse médicale des réponses.",
+        ar: "اختبار الذكاء الاصطناعي: فُرض تنسيق محدد للأسئلة والأجوبة ورُفضت الأرقام والوحدات لمنع عرض جرعات رقمية مولّدة. يظهر البروتوكول المصدر ومراجعه، مع تنبيه بأن الاختبار غير مُدقّق وإتاحة اختبار ثابت. لا تثبت هذه الضوابط صحة الإجابات الطبية.",
+      },
+      {
+        fr: "Compte rendu IA : avertissement avant saisie sur la suppression des noms/identifiants et les règles de l’établissement ; la sortie est marquée comme brouillon non vérifié à relire et corriger avant transmission.",
+        ar: "التقرير بالذكاء الاصطناعي: تنبيه قبل الإدخال لحذف الأسماء والمعرّفات والتحقق من قواعد المؤسسة؛ وتُعرض النتيجة كمسودة غير مدققة يجب مراجعتها وتصحيحها قبل التسليم.",
+      },
+      {
+        fr: "Recherche assistée : les sorties IA sont limitées à 1–3 mots-clés alphabétiques bornés, sans chiffres ni prose. Une réponse non conforme est ignorée plutôt que d’être injectée dans les résultats de recherche.",
+        ar: "البحث المساعد: حُصرت مخرجات الذكاء الاصطناعي في كلمة إلى ثلاث كلمات بحث حرفية محدودة، بلا أرقام أو نص إنشائي. تُهمل الإجابة غير المطابقة بدلاً من إدخالها في نتائج البحث.",
+      },
+      {
+        fr: "Recherche médicaments : les six présentations injectables UNIGENTA sont de nouveau indexées après vérification de la voie I.M./I.V. sur le catalogue fabricant et la notice V4. Cela ne valide pas les doses ni la disponibilité; les autres marques dont la voie reste non documentée ne sont pas aliasées.",
+        ar: "بحث الأدوية: أُعيدت فهرسة عروض UNIGENTA الستة القابلة للحقن بعد التحقق من طريقي العضل والوريد في كتالوج الشركة والنشرة V4. هذا لا يثبت الجرعات أو التوفر؛ ولم تُربط العلامات الأخرى التي لم يُوثق طريقها.",
+      },
+      {
+        fr: "Clé IA : elle reste désormais en mémoire vive jusqu’au rechargement, n’est pas enregistrée sur l’appareil et les anciennes clés persistées sont supprimées à la lecture de la configuration. Elle doit être ressaisie après rechargement.",
+        ar: "مفتاح الذكاء الاصطناعي: يبقى الآن في الذاكرة المؤقتة حتى إعادة التحميل، ولا يُحفظ على الجهاز؛ وتُحذف المفاتيح القديمة المحفوظة عند قراءة الإعدادات. يجب إدخاله مجدداً بعد إعادة التحميل.",
+      },
+      {
+        fr: "Données patient : le patient actif et son archive sont désormais stockés temporairement dans la session de l’onglet, au lieu du stockage persistant. Les anciennes clés localStorage sont supprimées au démarrage. Une restauration de session par le navigateur reste possible ; sur un appareil partagé, fermer l’onglet et effacer les données de navigation.",
+        ar: "بيانات المريض: يُخزّن المريض النشط وأرشفته مؤقتاً في جلسة علامة التبويب بدلاً من التخزين الدائم. تُحذف المفاتيح القديمة من localStorage عند التشغيل. قد يستعيد المتصفح الجلسة؛ على جهاز مشترك أغلق علامة التبويب وامسح بيانات التصفح.",
+      },
+      {
+        fr: "Validation du stockage : plusieurs instantanés de calculateurs, historiques et checklists sont vérifiés avant restauration ; les valeurs non conformes sont ignorées. Les brouillons de calcul et de préparation PSE sont temporaires par onglet, comme les données du patient actif.",
+        ar: "التحقق من التخزين: تُفحص عدة سجلات للحاسبات والقوائم قبل استعادتها؛ وتُهمل القيم غير المطابقة. تحفظ مسودات الحساب وتحضير المضخة مؤقتاً في علامة التبويب، مثل بيانات المريض النشط.",
+      },
+      {
+        fr: "Accessibilité des dialogues : confinement/restauration du focus et arrière-plan inerte ajoutés à l’avertissement médical, la palette, la fiche d’abréviation et l’aide PWA ; Échap ferme les aides non bloquantes.",
+        ar: "إتاحة النوافذ: أُضيف حصر/استعادة التركيز وتعطيل الخلفية إلى التحذير الطبي ولوحة الأوامر وشرح الاختصارات ومساعدة التثبيت؛ ويغلق Escape المساعدات غير الإلزامية.",
+      },
+      {
+        fr: "Service worker : correction du repli hors-ligne sous un sous-chemin (GitHub Pages), où la route pouvait être préfixée deux fois et la fiche déjà en cache ignorée. Tests exécutés sur la navigation hors-ligne à la racine et avec base path.",
+        ar: "عامل الخدمة: إصلاح الرجوع دون اتصال عند النشر داخل مسار فرعي (GitHub Pages)، إذ كان المسار يُضاف مرتين وقد لا تُعثر البطاقة المخزنة. اختُبر التنقل دون اتصال عند الجذر ومع المسار الفرعي.",
+      },
+    ],
+  },
+  {
     v: "18.1",
     date: "2026-09-21",
     // v18.1 — الطابق 2 و3: تقدير كلوي مزمن/حادّ/أطفال + خطّة علاج بحلقة إعادة تقييم a → b.

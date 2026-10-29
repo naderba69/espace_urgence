@@ -1,6 +1,6 @@
 // Google Analytics 4 — ID temporaire à REMPLACER (voir README).
 // Rien n'est chargé tant que l'ID reste le placeholder ou que l'utilisateur s'est désinscrit.
-import { KEYS, readJSON } from "./storage";
+import { KEYS, readJSON, sanitizeCounterMap } from "./storage";
 
 export const GA_MEASUREMENT_ID = "G-XXXXXXXXXX"; // ← remplacer par votre ID GA4
 
@@ -35,8 +35,9 @@ const STATS_KEY = "eutn:stats-v1";
 export function bumpLocal(key: string) {
   if (typeof window === "undefined") return;
   try {
-    const raw = JSON.parse(localStorage.getItem(STATS_KEY) ?? "{}") as Record<string, number>;
-    raw[key] = (raw[key] ?? 0) + 1;
+    const raw = sanitizeCounterMap(JSON.parse(localStorage.getItem(STATS_KEY) ?? "{}"));
+    if (!key || key.length > 120) return;
+    raw[key] = Math.min((raw[key] ?? 0) + 1, 2_147_483_647);
     localStorage.setItem(STATS_KEY, JSON.stringify(raw));
   } catch { /* stockage indisponible */ }
 }
@@ -44,7 +45,7 @@ export function bumpLocal(key: string) {
 export function readLocalStats(): Record<string, number> {
   if (typeof window === "undefined") return {};
   try {
-    return JSON.parse(localStorage.getItem(STATS_KEY) ?? "{}") as Record<string, number>;
+    return sanitizeCounterMap(JSON.parse(localStorage.getItem(STATS_KEY) ?? "{}"));
   } catch {
     return {};
   }
@@ -52,7 +53,7 @@ export function readLocalStats(): Record<string, number> {
 
 export function resetLocalStats() {
   if (typeof window === "undefined") return;
-  localStorage.removeItem(STATS_KEY);
+  try { localStorage.removeItem(STATS_KEY); } catch { /* stockage indisponible */ }
 }
 
 export function trackEvent(name: string, params?: Record<string, unknown>) {

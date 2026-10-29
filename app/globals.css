@@ -10,7 +10,7 @@
   --surface: #ffffff;
   --surface-2: #f1f5f9;
   --line: #e2e8f0;
-  /* --font-inter / --font-arabic fournis par next/font (layout.tsx) — ne pas redéfinir ici */
+  /* --font-inter est fourni par next/font (layout.tsx) — ne pas redéfinir ici */
 }
 .dark {
   --bg: #0f172a;         /* navy profond (charte) */
@@ -37,6 +37,37 @@ html.amoled .stat-chip { backdrop-filter: none; background: rgba(21, 101, 192, 0
 html.amoled .card { box-shadow: none; }
 html.amoled .eutn-header { box-shadow: none; }
 
+/* Couleurs de texte informatif : les teintes Tailwind 400/500 ont un contraste insuffisant sur fond clair.
+   Ces alias couvrent aussi les icônes de même classe (assombrissement/éclaircissement acceptable),
+   et maintiennent AA sur surface, fond, et cartes des thèmes clair, sombre et AMOLED. */
+:root {
+  --contrast-blue-text: #1d4ed8;
+  --contrast-red-text: #b91c1c;
+  --contrast-amber-text: #92400e;
+  --contrast-green-text: #166534;
+  --contrast-orange-text: #c2410c;
+  --contrast-purple-text: #7e22ce;
+  --contrast-sky-text: #0369a1;
+}
+.dark {
+  --contrast-blue-text: #93c5fd;
+  --contrast-red-text: #fca5a5;
+  --contrast-amber-text: #fcd34d;
+  --contrast-green-text: #86efac;
+  --contrast-orange-text: #fdba74;
+  --contrast-purple-text: #d8b4fe;
+  --contrast-sky-text: #7dd3fc;
+}
+:root :is(.text-blue-400, .text-blue-500, .text-blue-600, .text-blue-700) { color: var(--contrast-blue-text) !important; }
+:root :is(.text-red-400, .text-red-500, .text-red-600, .text-red-700) { color: var(--contrast-red-text) !important; }
+:root :is(.text-amber-400, .text-amber-500, .text-amber-600, .text-amber-700) { color: var(--contrast-amber-text) !important; }
+:root .text-green-500 { color: var(--contrast-green-text) !important; }
+:root :is(.text-orange-400, .text-orange-500) { color: var(--contrast-orange-text) !important; }
+:root .text-purple-500 { color: var(--contrast-purple-text) !important; }
+:root :is(.text-sky-400, .text-sky-500, .text-sky-600) { color: var(--contrast-sky-text) !important; }
+:root .hover\:text-blue-500:hover { color: var(--contrast-blue-text) !important; }
+:root .group:hover .group-hover\:text-blue-500 { color: var(--contrast-blue-text) !important; }
+
 @theme inline {
   --color-bg: var(--bg);
   --color-fg: var(--fg);
@@ -50,16 +81,6 @@ body {
   background: var(--bg);
   color: var(--fg);
 }
-
-/* Police arabe quand la langue active = ar */
-html[lang="ar"] body {
-  font-family: var(--font-arabic), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  line-height: 1.8; /* respiration des diacritiques arabes */
-}
-/* v1.8 — l'espacement négatif des lettres casse les liaisons arabes (glyphes superposés) */
-html[lang="ar"] * { letter-spacing: 0 !important; }
-html[lang="ar"] #contenu h1 { line-height: 1.45; }
-html[lang="ar"] #contenu h2 { line-height: 1.5; }
 
 /* Accessibilité : focus visible partout */
 :focus-visible {
@@ -400,18 +421,18 @@ input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 /* ════════════════════════════════════════════════════════════════════
    v9.0 — REDESIGN PRO : jetons sémantiques (MDCalc-like)
    Couleurs de gravité UNIFIÉES : critical / urgent / standard
-   + échelle typographique arabe (IBM Plex Sans Arabic)
+   + échelle typographique adaptée aux grands caractères
    ════════════════════════════════════════════════════════════════════ */
 
 :root {
   /* Gravité — clair */
-  --sev-critical: #d32f2f;
+  --sev-critical: #b71c1c;
   --sev-critical-bg: #fdecea;
   --sev-critical-line: #f5c6c2;
-  --sev-urgent: #e65100;
+  --sev-urgent: #b93800;
   --sev-urgent-bg: #fff3e0;
   --sev-urgent-line: #ffd9a8;
-  --sev-standard: #0f766e;
+  --sev-standard: #0b6b63;
   --sev-standard-bg: #e0f2f1;
   --sev-standard-line: #b2dfdb;
   /* v10.0 — M3 : accent = BLEU MÉDICAL (rouge réservé à la gravité) */
@@ -466,10 +487,6 @@ input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 }
 .btn-primary:hover { background: var(--accent-strong); }
 .btn-primary:active { transform: scale(.98); }
-
-/* IBM Plex Sans Arabic : respiration optimisée (chiffres latins tabulaires conservés) */
-html[lang="ar"] body { font-feature-settings: "kern"; }
-html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3 { font-weight: 700; }
 
 /* Cartes : token ombre unifié */
 .card { box-shadow: var(--shadow-1); }

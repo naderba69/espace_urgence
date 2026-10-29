@@ -1,11 +1,12 @@
 "use client";
 // Invite d'installation PWA : Android/Chrome (beforeinstallprompt) + instructions iOS Safari.
 // 3 variantes : "banner" (carte en page d'accueil), "icon" (en-tête, desktop), "drawer" (menu ☰ — toujours visible sur mobile).
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useApp } from "./Providers";
 import { readJSON, writeJSON } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import { Download, Share, X, Smartphone } from "lucide-react";
+import { useModalFocusTrap } from "@/lib/modal-focus";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -26,6 +27,17 @@ export default function InstallPwa({ variant }: { variant: "banner" | "icon" | "
   const [dismissed, setDismissed] = useState(true);
   const [isIos, setIsIos] = useState(false);
   const [showIosHelp, setShowIosHelp] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocusTrap(dialogRef, showIosHelp);
+
+  useEffect(() => {
+    if (!showIosHelp) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowIosHelp(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [showIosHelp]);
 
   const isAr = lang === "ar";
   const title = isAr ? "ثبّت التطبيق" : "Installer l'application";
@@ -74,14 +86,14 @@ export default function InstallPwa({ variant }: { variant: "banner" | "icon" | "
 
   // ── Aide pas-à-pas (iOS / navigateurs sans beforeinstallprompt) ──────────
   const helpSheet = showIosHelp && (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center" role="alertdialog" aria-modal="true">
+    <div ref={dialogRef} tabIndex={-1} className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center" role="alertdialog" aria-modal="true" aria-labelledby="install-help-title">
       <div className="card w-full max-w-sm rounded-2xl border border-line bg-surface p-5">
-        <p className="mb-3 flex items-center gap-2 text-lg font-black">
+        <h2 id="install-help-title" className="mb-3 flex items-center gap-2 text-lg font-black">
           <Share className="h-5 w-5 text-blue-500" aria-hidden />
           {isIos
             ? (isAr ? "التثبيت على iPhone" : "Installation sur iPhone")
             : (isAr ? "التثبيت على هذا الجهاز" : "Installer sur cet appareil")}
-        </p>
+        </h2>
         {isIos ? (
           <ol className="ms-5 list-decimal space-y-2 text-sm leading-relaxed">
             <li>{isAr ? "افتح الموقع في متصفح Safari" : "Ouvrez le site dans Safari"}</li>

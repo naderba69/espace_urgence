@@ -6,7 +6,7 @@ const require = createRequire(import.meta.url);
 const ts = require("typescript");
 const ROOT = process.cwd();
 const DATA = join(ROOT, "data");
-const TODAY = "2026-10-24";
+const TODAY = "2026-10-28";
 
 function propName(prop) {
   if (!prop?.name) return null;
@@ -239,7 +239,7 @@ addNoCitation("quickref-emergencyNumbers", readCollectionItems("quickref.ts", "e
 const partialCitation = referenceRecords.filter((r) => ["triage", "perfusions"].includes(r.group));
 
 const expected = {
-  protocols: 98, medications: 73, calculators: 131, procedures: 10, trees: 9,
+  protocols: 98, medications: 74, calculators: 131, procedures: 10, trees: 9,
   ecg: 11, checklists: 3, triage: 22, perfusions: 28, "atb-renal": 93,
   guidage: 41, quiz: 42, reval: 98, "med-tools": 15, "protocol-categories": 8,
   abbreviations: 47, motifs: 6, "quickref-vitalSigns": 4, "quickref-emergencyNumbers": 5, glasgow: 6,
@@ -302,7 +302,7 @@ if (process.argv.includes("--check")) {
     `- **${referenceRecords.filter((r) => r.sources.length && r.lastReviewed).length}** سجلًا فيها حقلا مصدر وتاريخ مراجعة معلنَان في metadata؛ هذا لا يثبت الاطلاع على الوثيقة أو مقابلة كل ادعاء.`,
     `- **${partialCitation.length}** سجل فرز/تسريب فيه اسم مصدر مختصر فقط، بلا تاريخ أو صفحة على مستوى السجل.`,
     `- **${referenceRecords.filter((r) => r.group === "atb-renal" && r.page !== null).length}** صفًا للمضادات يشير إلى صفحة في PDF مشترك؛ RCP/GPR/ePOPI ليس مربوطًا بكل جرعة/خلية.`,
-    `- لفحص الأعداد: \`npm run audit:reference-inventory:check\`; لإعادة توليد هذا التقرير: \`node scripts/audit-source-inventory.mjs > docs/REFERENCE-INVENTORY-2026-10-24.md\`.`,
+    `- لفحص الأعداد: \`npm run audit:reference-inventory:check\`; لإعادة توليد هذا التقرير: \`node scripts/audit-source-inventory.mjs > docs/REFERENCE-INVENTORY-2026-10-28.md\`.`,
     "- التوليد الآلي لا يقرأ أو يثبت النص السريري ولا يراجع الترجمات؛ وظيفة الأداة جرد المصادر والمواضع فقط.",
     `- **${noRecordCitation.length}** مدخلًا بلا إحالة أولية على مستوى السجل.`,
     `- **${citationRegistry.reduce((sum, source) => sum + source.usageCount, 0)}** ذكرًا خامًا للمصادر و**${citationRegistry.length}** تسمية مصدر فريدة؛ منها **${citationRegistry.filter((source) => source.urls.length).length}** فقط لها URL في metadata (بعضها رابط موقع عام لا للوثيقة).`,

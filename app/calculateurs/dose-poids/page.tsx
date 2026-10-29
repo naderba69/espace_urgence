@@ -5,8 +5,9 @@ import { medications } from "@/data/medications";
 import { useApp } from "@/components/Providers";
 import { useRegisterRecent } from "@/components/SearchBar";
 import { trackEvent } from "@/lib/analytics";
-import { readJSON, writeJSON } from "@/lib/storage";
+import { readSessionJSON, writeSessionJSON } from "@/lib/storage";
 import { weightDoseForWeight, weightResusPanel } from "@/lib/calc";
+import { sanitizeDoseWeightState } from "@/lib/calculator-storage";
 import T from "@/components/T";
 
 const STORE = "eutn:calc:dose-poids";
@@ -21,15 +22,14 @@ export default function DosePoidsPage() {
   // Restaure la dernière saisie
   useEffect(() => {
     if (!hydrated) return;
-    const saved = readJSON<{ medId: string; weight: string }>(STORE, null as never);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration localStorage après hydratation (anti-mismatch)
-    if (saved?.medId && eligible.some((m) => m.id === saved.medId)) setMedId(saved.medId);
-    if (saved?.weight) setWeight(saved.weight);
+    const saved = sanitizeDoseWeightState(readSessionJSON<unknown>(STORE, null), eligible.map((m) => m.id));
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration sessionStorage après hydratation (anti-mismatch)
+    if (saved) { setMedId(saved.medId); setWeight(saved.weight); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
   useEffect(() => {
-    if (hydrated) writeJSON(STORE, { medId, weight });
+    if (hydrated) writeSessionJSON(STORE, { medId, weight });
   }, [medId, weight, hydrated]);
 
   const med = eligible.find((m) => m.id === medId);

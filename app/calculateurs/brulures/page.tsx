@@ -1,7 +1,7 @@
 "use client";
 // v5.0 — مساعد الحروق الفردي: سوائل ABA 2018 بالوزن والمساحة + تبريد مؤرّخ + تسكين + سجل.
 import { useEffect, useState } from "react";
-import { fmtMMSS } from "@/lib/calc";
+import { burnResuscitationRates, fmtMMSS } from "@/lib/calc";
 import { fmtJournal } from "@/lib/journal";
 import { useRegisterRecent } from "@/components/SearchBar";
 import NumStepper from "@/components/ui/NumStepper";
@@ -23,6 +23,8 @@ export default function BruluresPage() {
     if (!w && p.w) setW(p.w);
   });
   const [pct, setPct] = useState("");
+  const [hoursSinceBurn, setHoursSinceBurn] = useState("0");
+  const [fluidsGivenFirst8h, setFluidsGivenFirst8h] = useState("0");
   const [chrono, setChrono] = useState<{ start: number | null; acc: number }>({ start: null, acc: 0 });
   const [now, setNow] = useState(0);
   const [events, setEvents] = useState<{ type: EvType; at: number }[]>([]);
@@ -34,11 +36,13 @@ export default function BruluresPage() {
   }, [chrono]);
 
   const weight = parseFloat(w); const p = parseFloat(pct);
+  const elapsed = parseFloat(hoursSinceBurn);
+  const receivedFirst8h = parseFloat(fluidsGivenFirst8h);
   const ok = Number.isFinite(weight) && weight > 0 && Number.isFinite(p) && p > 0;
   const factor = ped ? 3 : 2;
-  const total = ok ? Math.round(factor * weight * p) : 0;
-  const rate1 = ok ? Math.round(total / 2 / 8) : 0;
-  const rate2 = ok ? Math.round(total / 2 / 16) : 0;
+  const burnRates = ok
+    ? burnResuscitationRates(weight, p, factor, elapsed, receivedFirst8h)
+    : null;
 
   const lastCool = events.find((e) => e.type === "cool")?.at ?? null;
   const sinceCool = lastCool === null ? null : now - lastCool;
@@ -111,22 +115,51 @@ export default function BruluresPage() {
             <T fr="Enfant (3 mL)" ar="طفل (3 مل)" />
           </button>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="mb-1 block text-xs font-bold opacity-70"><T fr="Poids (kg)" ar="الوزن (كغ)" /></label>
-            <NumStepper value={ w } onValue={ setW } placeholder="70" className="w-24 rounded-xl border border-line bg-surface2 px-3 py-2 font-black tabular-nums" label="w" />
+            <NumStepper value={ w } onValue={ setW } placeholder="70" className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="w" />
           </div>
           <div>
             <label className="mb-1 block text-xs font-bold opacity-70"><T fr="SC brûlée % (2ᵉ-3 degré)" ar="المساحة ٪ (درجة 2-3)" /></label>
-            <NumStepper value={ pct } onValue={ setPct } placeholder="20" className="w-24 rounded-xl border border-line bg-surface2 px-3 py-2 font-black tabular-nums" label="pct" />
+            <NumStepper value={ pct } onValue={ setPct } placeholder="20" max={100} step={1} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="pct" />
           </div>
+          <div>
+            <label className="mb-1 block text-xs font-bold opacity-70"><T fr="Heures depuis la brûlure" ar="الساعات منذ الحرق" /></label>
+            <NumStepper value={hoursSinceBurn} onValue={setHoursSinceBurn} max={24} step={0.5} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="hours-since-burn" />
+          </div>
+          {Number.isFinite(elapsed) && elapsed < 8 && (
+            <div>
+              <label className="mb-1 block text-xs font-bold opacity-70"><T fr="Liquides reçus en phase 0–8 h (mL)" ar="السوائل المتلقاة خلال ٠–٨ س (مل)" /></label>
+              <NumStepper value={fluidsGivenFirst8h} onValue={setFluidsGivenFirst8h} step={50} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="fluids-first-8h" />
+            </div>
+          )}
         </div>
-        {ok && (
-          <ul className="mt-3 space-y-1 text-sm font-black text-blue-500" dir="ltr">
-            <li>{`${factor} mL × ${weight} kg × ${p} % = ${total} mL / 24 h`}</li>
-            <li>{`8 premières h : ${total / 2} mL → ${rate1} mL/h`}</li>
-            <li>{`16 h suivantes : ${rate2} mL/h`}</li>
-          </ul>
+        {ok && burnRates && (
+          <>
+            <ul className="mt-3 space-y-1 text-sm font-black text-blue-500" dir="ltr">
+              <li>{`${factor} mL × ${weight} kg × ${p} % = ${Math.round(burnRates.total24)} mL / 24 h`}</li>
+              {burnRates.firstRate !== null
+                ? <li>{`Phase 0–8 h : ${Math.round(burnRates.remainingFirstVolume)} mL restants / ${burnRates.remainingFirstHours} h = ${Math.round(burnRates.firstRate)} mL/h`}</li>
+                : burnRates.remainingFirstHours > 0
+                  ? <li>Moins d’une heure avant la fin de la phase 0–8 h : pas de débit de rattrapage calculé.</li>
+                  : <li>La fenêtre 0–8 h est passée : aucun rattrapage automatique de cette première moitié.</li>}
+              <li>{`Phase 8–24 h : ${Math.round(burnRates.next16h)} mL / 16 h = ${Math.round(burnRates.secondRate)} mL/h (moyenne prévue)`}</li>
+            </ul>
+            {burnRates.remainingFirstVolume === 0 && burnRates.remainingFirstHours > 0 && (
+              <p className="mt-2 rounded-lg bg-amber-500/10 p-2 text-xs font-bold text-amber-700">
+                <T fr="La moitié prévue pour les 8 premières heures est déjà atteinte selon le volume saisi : aucun rattrapage supplémentaire n’est calculé." ar="وفق الحجم المدخل، تم بلوغ نصف السوائل المقدر لأول ٨ ساعات؛ لم يُحسب أي تعويض إضافي." />
+              </p>
+            )}
+            <p className="mt-2 text-xs font-bold opacity-70">
+              <T fr="Estimation de départ uniquement : la moyenne de phase 8–24 h ne déduit pas les liquides déjà reçus pendant cette phase. Ajuster les apports selon le volume total administré, la diurèse, l’état clinique et le protocole local." ar="تقدير أولي فقط: متوسط مرحلة ٨–٢٤ ساعة لا يخصم السوائل المعطاة خلالها. عدّل الإعطاء حسب إجمالي السوائل والبول والحالة السريرية والبروتوكول المحلي." />
+            </p>
+          </>
+        )}
+        {ok && !burnRates && (
+          <p className="mt-3 rounded-lg bg-amber-500/10 p-2 text-xs font-bold text-amber-700">
+            <T fr="Vérifiez les données : SC brûlée ≤ 100 %, délai entre 0 et moins de 24 h, liquides reçus non négatifs." ar="تحقق من البيانات: مساحة الحرق ≤ ١٠٠٪، والمدة بين ٠ وأقل من ٢٤ ساعة، والسوائل المتلقاة غير سالبة." />
+          </p>
         )}
       </div>
 

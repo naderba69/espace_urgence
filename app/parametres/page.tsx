@@ -1,16 +1,16 @@
 "use client";
-// Paramètres : langue, thème, taille, son, installation PWA, analytics, réinitialisation, IA (phase 3).
+// Paramètres : thème, taille, son, installation PWA, analytics, réinitialisation et IA.
 import { useEffect, useState } from "react";
 import { useApp } from "@/components/Providers";
 import { KEYS, readJSON, writeJSON } from "@/lib/storage";
 import { DISCLAIMER_EVENT } from "@/components/DisclaimerGate";
-import { languagesNice } from "@/lib/display";
 import { Moon, Sun, Volume2, VolumeX, Download, Trash2, MoonStar, Sparkles, MonitorSmartphone } from "lucide-react";
 import { Settings2 } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 import Link from "next/link";
 import T from "@/components/T";
 import AiSection from "@/components/ai/AiSection";
+import { clearEcgRecords } from "@/lib/ecg-db";
 
 interface BIPEvent extends Event {
   prompt: () => void;
@@ -47,15 +47,6 @@ export default function SettingsPage() {
   return (
     <div className="flex max-w-2xl flex-col gap-4">
       <PageHeader icon={<Settings2 className="h-6 w-6" />} title={t("settings.title")} />
-
-      <Row label={t("settings.language")}>
-        {(Object.keys(languagesNice) as Array<keyof typeof languagesNice>).map((l) => (
-          <button key={l} onClick={() => setPref("lang", l)} aria-pressed={prefs.lang === l}
-            className={`touch rounded-xl border px-5 py-2 font-bold ${prefs.lang === l ? "border-blue-600 bg-blue-600 text-white" : "border-line hover:bg-surface2"}`}>
-            {languagesNice[l]}
-          </button>
-        ))}
-      </Row>
 
       <Row label={t("settings.theme")}>
         <button onClick={() => setPref("theme", "auto")} aria-pressed={prefs.theme === "auto"}
@@ -134,8 +125,11 @@ export default function SettingsPage() {
         onClick={() => {
           Object.values(KEYS).forEach((k) => localStorage.removeItem(k));
           Object.keys(localStorage).filter((k) => k.startsWith("eutn:")).forEach((k) => localStorage.removeItem(k));
-          setResetMsg(true);
-          setTimeout(() => window.location.reload(), 800);
+          sessionStorage.clear();
+          void clearEcgRecords().finally(() => {
+            setResetMsg(true);
+            setTimeout(() => window.location.reload(), 800);
+          });
         }}
         className="touch gap-2 rounded-xl border border-red-500/50 px-5 py-3 font-bold text-red-400 hover:bg-red-500/10"
       >

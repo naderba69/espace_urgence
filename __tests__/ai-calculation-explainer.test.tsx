@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 
 const mocks = vi.hoisted(() => ({
   aiReady: vi.fn(() => true),
+  readAiConfig: vi.fn(() => ({ enabled: true, provider: "gemini", textModel: "gemini-2.5-flash", visionModel: "gemini-2.5-flash", apiKey: "never-render-this-key" })),
   generateText: vi.fn(),
 }));
 
@@ -13,6 +14,7 @@ vi.mock("@/components/Providers", () => ({
 
 vi.mock("@/lib/ai-config", () => ({
   aiReady: mocks.aiReady,
+  readAiConfig: mocks.readAiConfig,
 }));
 
 vi.mock("@/lib/ai", () => ({
@@ -50,6 +52,9 @@ describe("CalculationExplainer — consentement et périmètre", () => {
     expect(screen.getByText("تأكيد الإرسال أولاً")).toBeTruthy();
     expect(screen.getByText(/القيم تظل معطيات صحية/)).toBeTruthy();
     expect(screen.getByText("61.7 mL/min")).toBeTruthy();
+    expect(screen.getByText("Google Gemini")).toBeTruthy();
+    expect(screen.getByText("gemini-2.5-flash")).toBeTruthy();
+    expect(screen.queryByText("never-render-this-key")).toBeNull();
     expect(mocks.generateText).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole("button", { name: "أرسل واشرح" }));
@@ -60,6 +65,21 @@ describe("CalculationExplainer — consentement et périmètre", () => {
     expect(systemPrompt).toContain("Do not recalculate");
     expect(screen.getByText("هذا شرح للنتيجة الموجودة فقط.")).toBeTruthy();
     expect(screen.getByText(/هذا الشرح لا يصادق على المصدر/)).toBeTruthy();
+  });
+
+  it("actualise la confirmation et n’envoie pas si le fournisseur ou le modèle a changé", async () => {
+    render(<CalculationExplainer context={CONTEXT} />);
+    fireEvent.click(screen.getByRole("button", { name: "اشرح هذه النتيجة بالذكاء الاصطناعي" }));
+    mocks.readAiConfig.mockReturnValue({ enabled: true, provider: "openrouter", textModel: "openai/gpt-4.1-mini", visionModel: "google/gemini-2.5-flash", apiKey: "never-render-this-key" });
+
+    fireEvent.click(screen.getByRole("button", { name: "أرسل واشرح" }));
+    expect(mocks.generateText).not.toHaveBeenCalled();
+    expect(screen.getByText("OpenRouter")).toBeTruthy();
+    expect(screen.getByText("openai/gpt-4.1-mini")).toBeTruthy();
+    expect(screen.getByRole("status").textContent).toContain("تغيّر إعداد الذكاء الاصطناعي");
+
+    fireEvent.click(screen.getByRole("button", { name: "أرسل واشرح" }));
+    await waitFor(() => expect(mocks.generateText).toHaveBeenCalledTimes(1));
   });
 
   it("إلغاء التأكيد لا يرسل شيئاً إلى المزوّد", () => {

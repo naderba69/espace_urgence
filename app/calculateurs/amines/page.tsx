@@ -25,9 +25,9 @@ export default function AminesPage() {
         <h1 className="text-2xl font-extrabold"><T fr="Amines — pompe avancée" ar="الأمينات — مضخة متقدمة" /></h1>
       </header>
 
-      <div className="flex flex-wrap gap-2" role="radiogroup">
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Médicament vasoactif / دواء رافع للضغط">
         {DRUGS.map((d) => (
-          <button key={d.id} role="radio" aria-checked={drug === d.id} onClick={() => setDrug(d.id)}
+          <button key={d.id} aria-pressed={drug === d.id} onClick={() => setDrug(d.id)}
             className={`touch rounded-full border px-4 py-2 text-sm font-black transition ${drug === d.id ? "border-blue-600 bg-blue-600 text-white" : "border-line opacity-70 hover:opacity-100"}`}>
             <T fr={d.fr} ar={d.ar} />
           </button>

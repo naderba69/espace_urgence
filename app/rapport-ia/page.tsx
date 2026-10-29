@@ -51,7 +51,7 @@ export default function RapportPage() {
         : "Rédige une note de transmission médicale en français, format SBAR (Situation, Background, Assessment, Recommandation) — ton professionnel, concis, sans invention : note « non précisé » si l'information manque.";
     const prompt = `Âge : ${f.age || "?"} — Sexe : ${f.sexe}\nMotif : ${f.motif}\nHistoire/contexte : ${f.histoire || "—"}\nConstantes : ${f.constantes || "—"}\nGestes/interventions : ${f.gestes || "—"}\nTraitements : ${f.traitements || "—"}`;
     try {
-      setOut(await generateText(prompt, sys));
+      setOut(await generateText(prompt, sys, { language: lang }));
       reveal(outRef.current);
     } catch (e) {
       setErr(e instanceof AiError ? t(`ai.error.${e.code}`) : t("ai.error.provider"));
@@ -75,6 +75,12 @@ export default function RapportPage() {
         <h1 className="flex items-center gap-2 text-2xl font-extrabold"><FileText className="h-7 w-7 text-blue-500" /> {t("ai.report.title")}</h1>
       </header>
       <AiGate title={t("ai.report.title")}>
+        <p role="note" className="rounded-xl border border-amber-600/40 bg-amber-500/10 p-3 text-sm leading-relaxed">
+          <T
+            fr="Avant l’envoi, retirez tout nom ou identifiant et vérifiez les règles de votre établissement. La note générée est un brouillon non vérifié : contrôlez chaque donnée dans le dossier source et corrigez-la avant toute transmission."
+            ar="قبل الإرسال، احذفوا كل اسم أو معرّف وتحققوا من قواعد مؤسستكم. الملاحظة المولّدة مسودة غير مدققة: راجعوا كل معلومة في الملف الأصلي وصححوها قبل أي تسليم."
+          />
+        </p>
         <div className="card flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4">
           <div className="grid grid-cols-3 gap-3">
             <label className="flex flex-col gap-1 text-sm font-semibold">
@@ -109,6 +115,12 @@ export default function RapportPage() {
 
         {out && (
           <div className="card rounded-2xl border border-line bg-surface p-4">
+            <div role="note" className="mb-3 rounded-lg border border-amber-600/40 bg-amber-500/10 p-3 text-sm leading-relaxed">
+              <T
+                fr="Brouillon IA non vérifié — relisez et corrigez avant transmission. L’IA peut omettre ou ajouter des éléments."
+                ar="مسودة مولّدة بالذكاء الاصطناعي وغير مدققة — راجعوها وصححوها قبل التسليم. قد يحذف الذكاء الاصطناعي معلومات أو يضيف غيرها."
+              />
+            </div>
             <div className="mb-2 flex items-center justify-between">
               <p className="font-bold text-blue-500"><T fr="Note générée (SBAR)" ar="الملاحظة المولّدة (SBAR)" /></p>
               <button onClick={() => void copy()} className="touch gap-2 rounded-xl border border-line px-3 py-1.5 text-sm font-semibold hover:bg-surface2">

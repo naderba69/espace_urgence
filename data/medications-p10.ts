@@ -168,9 +168,9 @@ export const medicationsPhase10: Medication[] = [
   {
     id: "ondansetron",
     name: { fr: "Ondansétron", ar: "أوندانسيترون" },
-    brands: "Zophren® 4 mg/2 mL inj ; lyoc 4-8 mg ; ONDANSETRON MEDIS 4 mg/8 mg comprimés pelliculés B/10 (AMM DPM 9233333/9233334) ; ZEMITRON® (ADVANCED PHARMACEUTICAL IND.) 8 mg comprimé enrobé B/10 (AMM DPM 4213031H) ; PMS-ONDANSETRON 8 mg comprimé pelliculé flacon/30 (AMM DPM 2903032)",
+    brands: "Zophren® 4 mg/2 mL inj ; lyoc 4-8 mg ; ONDANSETRON MEDIS 4 mg/8 mg comprimés pelliculés B/10 (AMM DPM 9233333/9233334) et solution injectable IV 4 mg/2 mL B/5 (9233332H), 8 mg/4 mL B/5 (9233331H) ; ONDANSETRON UNIMED IV 4 mg/2 mL B/10 (9093641H) et 8 mg/4 mL B/10 (9093642H) ; ONDANSETRON RENAUDIN IV 4 mg/2 mL B/10 (7713091H) et 8 mg/4 mL B/10 (7713092H) ; ZEMITRON® (ADVANCED PHARMACEUTICAL IND.) 8 mg comprimé enrobé B/10 (AMM DPM 4213031H) ; PMS-ONDANSETRON 8 mg comprimé pelliculé flacon/30 (AMM DPM 2903032)",
     synonyms: ["ondansetron", "zophren", "ondansetron medis", "zemitron", "pms-ondansetron", "setron", "أوندانسيترون"],
-    searchExclusions: ["ondansetron unimed", "ondofren", "ondansetron saiph", "ondansetron steripharm", "ondansetron renaudin", "ondansetron medis 8 mg/4 ml", "ondansetron medis 4 mg/2 ml"],
+    searchExclusions: ["ondofren", "ondansetron saiph", "ondansetron steripharm"],
     klass: { fr: "Antiémétique — antagoniste 5-HT3", ar: "مضاد إقياء — مضاد 5-HT3" },
     highRisk: false,
     indications: {
@@ -204,6 +204,6 @@ export const medicationsPhase10: Medication[] = [
     storage: { fr: "T° ambiante.", ar: "حرارة الغرفة." },
     alternatives: [],
     weightDose: { mgPerKg: 0.15, maxMg: 8, note: { fr: "0,15 mg/kg/dose, max 8 mg.", ar: "‏0.15 ملغ/كغ/جرعة، أقصى 8 ملغ." } },
-    meta: { sources: ["AAP gastro-entérite 2014", "Résumé des caractéristiques produit"], lastReviewed: "2026-09" },
+    meta: { sources: ["AAP gastro-entérite 2014", "Résumé des caractéristiques produit", "DPM Tunisie — Répertoire des médicaments génériques, janvier 2021 (copie consultable; groupe ondansétron injectable, voie IV, MEDIS/UNIMED)", "UNIMED — fiche fabricant ONDANSETRON 4 mg/2 mL et 8 mg/4 mL, solution injectable IV", "ANSM — RCP ONDANSETRON RENAUDIN 2 mg/mL injectable IV, ampoules 4 mg/2 mL et 8 mg/4 mL (R0180497)"], lastReviewed: "2026-10" },
   },
 ];

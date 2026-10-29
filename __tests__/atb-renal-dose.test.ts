@@ -33,8 +33,8 @@ const sous30: AtbSegment = {
 };
 const sous10: AtbSegment = {
   seuil: 10,
-  egaliteAuSeuil: "ce-segment",
-  contenu: contenu("dose-source", "segment sous ou égal à 10"),
+  egaliteAuSeuil: "segment-superieur",
+  contenu: contenu("dose-source", "segment sous 10"),
 };
 
 const source = {
@@ -61,35 +61,33 @@ function contenuSelectionne(regimeAtb: RegimeAtb, dfg: number): ContenuCelluleAt
 }
 
 describe("sélecteur de cellule source DFG", () => {
-  it("utilise les seuils propres à la ligne et applique seulement l'égalité documentée", () => {
+  it("applique la borne haute exclusive et conserve l'exception DFG 30 propre à la ligne", () => {
     const cible = regime([sous30, reference, sous10, sous50]);
     const cas = [
       [50, "référence"],
       [49.9, "segment sous 50"],
-      [30, "segment sous 50"],
       [29.9, "segment sous 30"],
-      [10, "segment sous ou égal à 10"],
-      [9.9, "segment sous ou égal à 10"],
+      [10, "segment sous 30"],
+      [9.9, "segment sous 10"],
       [120, "référence"],
     ] as const;
 
     for (const [dfg, attendu] of cas) {
       expect(contenuSelectionne(cible, dfg), `DFG=${dfg}`).toBe(attendu);
     }
+    expect(cellulePourDFG(cible, 30)).toMatchObject({ status: "boundary-30", seuil: 30, source });
+
+    const sansSeuil30 = regime([reference, sous50]);
+    expect(contenuSelectionne(sansSeuil30, 30)).toBe("segment sous 50");
   });
 
-  it("bloque une égalité dont l'interprétation n'est pas vérifiée", () => {
+  it("ne laisse pas une ancienne métadonnée d'égalité neutraliser la règle E1", () => {
     const cible = regime([
       reference,
       { ...sous50, egaliteAuSeuil: "non-verifiee" },
-      sous10,
     ]);
 
-    expect(cellulePourDFG(cible, 50)).toMatchObject({
-      status: "egalite-non-verifiee",
-      seuil: 50,
-      source,
-    });
+    expect(contenuSelectionne(cible, 50)).toBe("référence");
     expect(contenuSelectionne(cible, 49.9)).toBe("segment sous 50");
   });
 
@@ -109,12 +107,12 @@ describe("sélecteur de cellule source DFG", () => {
       borneHaute: { valeur: 50, incluse: false },
     });
     expect(trente).toEqual({
-      borneBasse: { valeur: 10, incluse: false },
+      borneBasse: { valeur: 10, incluse: true },
       borneHaute: { valeur: 30, incluse: false },
     });
     expect(dix).toEqual({
       borneBasse: { valeur: null, incluse: null },
-      borneHaute: { valeur: 10, incluse: true },
+      borneHaute: { valeur: 10, incluse: false },
     });
   });
 

@@ -6,6 +6,7 @@ import { useApp } from "@/components/Providers";
 import T from "@/components/T";
 import { loadSearchIndex, searchItems, type RefType } from "@/lib/search";
 import { generateText } from "@/lib/ai";
+import { parseAiSearchKeywords } from "@/lib/ai-search";
 import { aiReady } from "@/lib/ai-config";
 import { trackEvent } from "@/lib/analytics";
 import { useRegisterRecent } from "@/components/SearchBar";
@@ -62,10 +63,11 @@ export default function RecherchePage() {
       const sys = lang === "ar"
         ? `أعط 1-3 كلمات مفتاحية طبية للبحث، بالعربية أو الفرنسية، مفصولة بمسافات فقط. لا شيء آخر.`
         : `Donne 1 à 3 mots-clés médicaux pour une recherche (français ou arabe), séparés par des espaces, rien d'autre.`;
-      const raw = await generateText(`Recherche : ${q}`, sys);
-      const kw = raw.replace(/["'.،]/g, " ").trim();
+      const raw = await generateText(`Recherche : ${q}`, sys, { language: lang });
+      const kw = parseAiSearchKeywords(raw);
+      if (!kw) return;
       setAiQ(kw);
-      if (kw) setQ(kw);
+      setQ(kw);
     } catch {
       /* silencieux */
     } finally {
@@ -105,9 +107,10 @@ export default function RecherchePage() {
       {aiQ && <p className="text-xs opacity-60"><T fr={`Mots-clés extraits : ${aiQ}`} ar={`كلمات مستخرجة: ${aiQ}`} /></p>}
 
       {q.trim().length >= 2 && (
-        <div className="flex flex-wrap gap-2" role="tablist" aria-label="filtres">
+        <div className="flex flex-wrap gap-2" role="group" aria-label={lang === "ar" ? "تصفية النتائج" : "Filtres des résultats"}>
           <button
             onClick={() => setFilter("all")}
+            aria-pressed={filter === "all"}
             className={`touch rounded-xl px-4 py-2 text-sm font-bold ${filter === "all" ? "bg-blue-600 text-white" : "border border-line hover:bg-surface2"}`}
           >
             {lang === "ar" ? "الكل" : "Tout"} ({indexReady ? searchItems(q, 60).length : 0})
@@ -120,6 +123,7 @@ export default function RecherchePage() {
               <button
                 key={tp}
                 onClick={() => setFilter(tp)}
+                aria-pressed={filter === tp}
                 className={`touch flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold ${filter === tp ? "bg-blue-600 text-white" : "border border-line hover:bg-surface2"}`}
               >
                 <meta.Icon className="h-4 w-4" aria-hidden />

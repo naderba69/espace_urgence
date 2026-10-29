@@ -6,7 +6,7 @@ import { BrainCircuit, Loader2, Settings2 } from "lucide-react";
 import { useApp } from "@/components/Providers";
 import T from "@/components/T";
 import { AiError, generateText } from "@/lib/ai";
-import { aiReady } from "@/lib/ai-config";
+import { aiReady, readAiConfig } from "@/lib/ai-config";
 import {
   buildCalculationExplanationRequest,
   type CalculationExplanationContext,
@@ -14,6 +14,16 @@ import {
 
 function errorKey(error: unknown): string {
   return error instanceof AiError ? `ai.error.${error.code}` : "ai.error.provider";
+}
+
+type TransferDestination = { provider: string; model: string };
+
+function currentDestination(): TransferDestination {
+  const config = readAiConfig();
+  return {
+    provider: config.provider === "openrouter" ? "OpenRouter" : "Google Gemini",
+    model: config.textModel,
+  };
 }
 
 function ContextRow({ label, value }: { label: string; value: string }) {
@@ -30,6 +40,8 @@ export default function CalculationExplainer({ context }: { context: Calculation
   const { lang, t } = useApp();
   const consentHeadingId = useId();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [destination, setDestination] = useState<TransferDestination | null>(null);
+  const [destinationChanged, setDestinationChanged] = useState(false);
   const [configOpen, setConfigOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState<{ signature: string; text: string } | null>(null);
@@ -46,6 +58,8 @@ export default function CalculationExplainer({ context }: { context: Calculation
       return;
     }
     setConfigOpen(false);
+    setDestination(currentDestination());
+    setDestinationChanged(false);
     setConfirmOpen(true);
   };
 
@@ -53,6 +67,14 @@ export default function CalculationExplainer({ context }: { context: Calculation
     if (!aiReady()) {
       setConfirmOpen(false);
       setConfigOpen(true);
+      return;
+    }
+
+    const current = currentDestination();
+    if (!destination || destination.provider !== current.provider || destination.model !== current.model) {
+      setDestination(current);
+      setDestinationChanged(true);
+      setConfirmOpen(true);
       return;
     }
 
@@ -64,7 +86,7 @@ export default function CalculationExplainer({ context }: { context: Calculation
     setError(null);
     setLoading(true);
     try {
-      const text = await generateText(request.prompt, request.systemPrompt);
+      const text = await generateText(request.prompt, request.systemPrompt, { transferConfirmed: true, language: lang });
       setAnswer({ signature: requestSignature, text: text.slice(0, 5_000) });
     } catch (cause) {
       setError({ signature: requestSignature, message: t(errorKey(cause)) });
@@ -101,6 +123,11 @@ export default function CalculationExplainer({ context }: { context: Calculation
           <h3 id={consentHeadingId} className="text-sm font-black">
             <T fr="Confirmer avant l’envoi" ar="تأكيد الإرسال أولاً" />
           </h3>
+          {destinationChanged && (
+            <p className="mt-1 rounded-lg bg-amber-500/10 p-2 text-xs font-bold" role="status">
+              <T fr="La configuration IA a changé depuis l’ouverture. Vérifiez le fournisseur et le modèle ci-dessous avant tout envoi." ar="تغيّر إعداد الذكاء الاصطناعي منذ فتح هذه النافذة. تحقّق من المزوّد والنموذج أدناه قبل الإرسال." />
+            </p>
+          )}
           <p className="mt-1 text-xs leading-relaxed">
             <T
               fr="Après confirmation, le contexte affiché ci-dessous sera envoyé directement depuis ce navigateur au fournisseur IA que vous avez choisi. Les deux calculateurs concernés n’incluent ni nom ni identifiant patient, mais les valeurs restent des données de santé : continuez uniquement si les règles de votre établissement et celles du fournisseur l’autorisent. Des coûts liés à votre compte peuvent s’appliquer. Cette demande n’est pas ajoutée à l’historique local. L’IA explique le résultat fourni par l’application ; elle ne le recalcule pas et ne choisit pas de traitement."
@@ -109,6 +136,8 @@ export default function CalculationExplainer({ context }: { context: Calculation
           </p>
 
           <dl className="mt-2 rounded-lg bg-surface/80 px-2">
+            <ContextRow label={lang === "ar" ? "المزوّد الخارجي" : "Fournisseur externe"} value={destination?.provider ?? "—"} />
+            <ContextRow label={lang === "ar" ? "النموذج" : "Modèle"} value={destination?.model ?? "—"} />
             <ContextRow label={lang === "ar" ? "الحاسبة / النتيجة" : "Outil / résultat"} value={context.title} />
             <ContextRow label={lang === "ar" ? "الطريقة" : "Méthode"} value={context.method} />
             {context.inputs.map((item, index) => <ContextRow key={`${item.label}-${index}`} label={item.label} value={item.value} />)}
@@ -121,7 +150,7 @@ export default function CalculationExplainer({ context }: { context: Calculation
             <button type="button" onClick={() => void sendForExplanation()} className="touch min-h-10 rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white">
               <T fr="Envoyer et expliquer" ar="أرسل واشرح" />
             </button>
-            <button type="button" onClick={() => setConfirmOpen(false)} className="touch min-h-10 rounded-lg border border-line px-3 py-2 text-xs font-bold">
+            <button type="button" onClick={() => { setConfirmOpen(false); setDestinationChanged(false); }} className="touch min-h-10 rounded-lg border border-line px-3 py-2 text-xs font-bold">
               <T fr="Annuler" ar="إلغاء" />
             </button>
           </div>

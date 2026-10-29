@@ -1,8 +1,9 @@
 "use client";
 // Chef d'orchestre : capture/upload → compression → analyse IA → carte résultat + historique.
-import { useRef, useState } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import { useApp } from "@/components/Providers";
 import { analyzeImage, AiError } from "@/lib/ai";
+import { DEFAULT_AI, readAiConfig, subscribeAiConfig } from "@/lib/ai-config";
 import { prepareForAi, thumbnail, addEcgRecord, type EcgAnalysis } from "@/lib/ecg-db";
 import { parseEcgResponse } from "@/lib/ecg-parse";
 import CameraCapture from "./CameraCapture";
@@ -10,67 +11,87 @@ import ECGResultCard from "./ECGResultCard";
 import { trackEvent } from "@/lib/analytics";
 import { Camera, ImageUp, ScanSearch, RefreshCcw, Loader2 } from "lucide-react";
 import Image from "next/image";
-
-const PROTOCOL_IDS = "acr-adulte, acr-pediatrique, anaphylaxie, sca-stemi, avc, hyperkaliemie, oap, etat-mal-epileptique, polytraumatisme";
+import T from "@/components/T";
 
 function analysisPrompt(lang: "fr" | "ar"): string {
-  const base = `Tu es un assistant ECG de médecine d'urgence pour professionnels de santé. Analyse cette photo de rythme/ECG et réponds UNIQUEMENT avec un objet JSON compact (aucun texte autour), clés exactes :
+  const base = `Tu es un outil expérimental de description visuelle d'ECG, pas un médecin. Réponds UNIQUEMENT avec un objet JSON compact, avec ces clés exactes :
 {
  "rhythm": string,
  "heartRateBpm": number | null,
- "intervals": string (PR/QRS/QT estimés),
+ "intervals": string (estimations PR/QRS/QT uniquement si lisibles),
  "stSegment": string,
  "tWave": string,
  "hyperkalemiaSigns": string,
- "avBlockSigns": string,
- "suspectedDiagnosis": string,
- "severity": "normal" | "caution" | "critical",
- "confidence": number entre 0 et 1,
- "immediateRecommendations": [string, …] (max 4, courtes),
- "protocolIds": [parmi: ${PROTOCOL_IDS}] (ou []),
- "summary": string (1–2 phrases)
+ "avBlockSigns": string
 }
-Les valeurs sont des ESTIMATIONS indicatives (photo, pas de calibration) — reste prudent, ne fabrique rien.`;
+Ne donne aucun diagnostic, niveau de gravité, recommandation, conduite à tenir ni protocole. La photo peut être non calibrée ou illisible : indique l'incertitude plutôt que d'inventer. Ces valeurs restent des estimations non validées.`;
   return lang === "ar"
-    ? base + "\nRéponds avec les valeurs textuelles en ARABE (clés inchangées)."
-    : base + "\nRéponds en FRANÇAIS.";
+    ? base + "\nاكتب القيم الوصفية بالعربية مع إبقاء المفاتيح كما هي."
+    : base + "\nRéponds en français.";
 }
 
 export default function ECGAnalyzer({ onSaved }: { onSaved: () => void }) {
   const { t, lang } = useApp();
+  const aiConfig = useSyncExternalStore(subscribeAiConfig, readAiConfig, () => DEFAULT_AI);
+  const providerName = aiConfig.provider === "gemini" ? "Google Gemini" : "OpenRouter";
+  const destinationKey = `${aiConfig.provider}:${aiConfig.visionModel}`;
   const [mode, setMode] = useState<"shot" | "camera" | "preview" | "busy" | "result">("shot");
   const [photo, setPhoto] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<{ a: EcgAnalysis; raw: string } | null>(null);
+  const [result, setResult] = useState<EcgAnalysis | null>(null);
+  const [acceptedDestination, setAcceptedDestination] = useState<string | null>(null);
+  const transferAccepted = acceptedDestination === destinationKey;
   const fileRef = useRef<HTMLInputElement>(null);
 
   const onFile = (file: File | undefined) => {
     if (!file) return;
     const rd = new FileReader();
-    rd.onload = () => { setPhoto(String(rd.result)); setMode("preview"); setError(null); };
+    rd.onload = () => { setPhoto(String(rd.result)); setAcceptedDestination(null); setMode("preview"); setError(null); };
     rd.readAsDataURL(file);
   };
 
   const analyze = async () => {
-    if (!photo) return;
+    const confirmedDestination = acceptedDestination;
+    if (!photo || !confirmedDestination || confirmedDestination !== destinationKey) return;
     setMode("busy");
     setError(null);
     trackEvent("ecg_analysis");
     try {
       const { b64, mime } = await prepareForAi(photo);
-      const raw = await analyzeImage(b64, analysisPrompt(lang), mime);
-      const a = parseEcgResponse(raw) ?? { summary: raw.slice(0, 900) };
-      setResult({ a, raw });
-      await addEcgRecord({ ts: Date.now(), thumb: await thumbnail(photo), analysis: a, raw });
-      onSaved();
+      const currentConfig = readAiConfig();
+      const currentDestination = `${currentConfig.provider}:${currentConfig.visionModel}`;
+      if (!currentConfig.enabled || currentDestination !== confirmedDestination) {
+        setAcceptedDestination(null);
+        setError(lang === "ar"
+          ? "تغيّر المزوّد أو النموذج بعد موافقتك؛ أعد التحقق من تفاصيل الإرسال قبل المتابعة."
+          : "Le fournisseur ou le modèle a changé après votre accord. Vérifiez à nouveau la destination avant l’envoi.");
+        setMode("preview");
+        return;
+      }
+      const raw = await analyzeImage(b64, analysisPrompt(lang), mime, { transferConfirmed: true, language: lang });
+      const a = parseEcgResponse(raw);
+      if (!a) throw new Error("invalid-ecg-response");
+      // Ne pas exposer ni archiver le texte libre brut produit par le modèle.
+      setResult(a);
+      const safeThumbnail = await thumbnail(photo);
+      if (safeThumbnail) {
+        try {
+          await addEcgRecord({ ts: Date.now(), thumb: safeThumbnail, analysis: a, raw: "" });
+          onSaved();
+        } catch { /* résultat courant conservé, mais rien n'est archivé */ }
+      }
       setMode("result");
     } catch (e) {
-      setError(e instanceof AiError ? t(`ai.error.${e.code}`) : t("ai.error.provider"));
+      setError(e instanceof Error && e.message === "invalid-ecg-response"
+        ? (lang === "ar" ? "تعذر قراءة إجابة منظمة وآمنة. أعد المحاولة أو اقرأ التخطيط الأصلي مباشرة." : "Réponse structurée inexploitable. Réessayez ou interprétez directement l'ECG original.")
+        : e instanceof Error && e.message === "invalid-image"
+          ? (lang === "ar" ? "الصورة غير قابلة للقراءة أو غير مدعومة؛ لم تُرسل إلى المزوّد." : "Image illisible ou format non pris en charge ; aucune image n’a été envoyée au fournisseur.")
+          : e instanceof AiError ? t(`ai.error.${e.code}`) : t("ai.error.provider"));
       setMode("preview");
     }
   };
 
-  const reset = () => { setPhoto(null); setResult(null); setError(null); setMode("shot"); };
+  const reset = () => { setPhoto(null); setResult(null); setError(null); setAcceptedDestination(null); setMode("shot"); };
 
   return (
     <section className="flex flex-col gap-4">
@@ -96,7 +117,7 @@ export default function ECGAnalyzer({ onSaved }: { onSaved: () => void }) {
 
       {mode === "camera" && (
         <CameraCapture
-          onCapture={(d) => { setPhoto(d); setMode("preview"); }}
+          onCapture={(d) => { setPhoto(d); setAcceptedDestination(null); setMode("preview"); }}
           onFileInstead={() => fileRef.current?.click()}
         />
       )}
@@ -112,11 +133,25 @@ export default function ECGAnalyzer({ onSaved }: { onSaved: () => void }) {
               </div>
             )}
           </div>
+          {mode === "preview" && (
+            <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-sm font-semibold">
+              <input
+                type="checkbox"
+                checked={transferAccepted}
+                onChange={(event) => setAcceptedDestination(event.target.checked ? destinationKey : null)}
+                className="mt-1 h-4 w-4 shrink-0 accent-amber-500"
+              />
+              <span><T
+                fr={`J’accepte l’envoi de cette image médicale depuis cet appareil à ${providerName} (modèle ${aiConfig.visionModel}), un service externe. Retirez les identifiants directs et ne transmettez l’image que si votre cadre de soins l’autorise ; vérifiez aussi les règles du fournisseur, des coûts peuvent s’appliquer. Une miniature et les observations restent dans l’historique local (30 résultats max.) jusqu’à suppression ou au nettoyage d’une nouvelle session ; le navigateur peut restaurer une session.`}
+                ar={`أوافق على إرسال هذه الصورة الطبية من هذا الجهاز إلى ${providerName} (النموذج ${aiConfig.visionModel})، وهي خدمة خارجية. احذف المعرّفات المباشرة ولا ترسل الصورة إلا إذا سمح إطار الرعاية بذلك؛ وتحقق أيضاً من قواعد المزوّد، فقد تُحتسب كلفة. تبقى صورة مصغّرة وملاحظات في السجل المحلي (حتى 30 نتيجة) إلى حين الحذف أو تنظيف جلسة جديدة؛ وقد يستعيد المتصفح الجلسة.`}
+              /></span>
+            </label>
+          )}
           <div className="mt-3 flex justify-center gap-3">
             <button onClick={reset} className="touch gap-2 rounded-xl border border-line px-5 py-3 font-bold hover:bg-surface2">
               <RefreshCcw className="h-5 w-5" aria-hidden /> {t("ai.ecg.back")}
             </button>
-            <button onClick={() => void analyze()} disabled={mode === "busy"}
+            <button onClick={() => void analyze()} disabled={mode === "busy" || !transferAccepted}
               className="touch gap-2 rounded-xl bg-blue-600 px-8 py-3 text-lg font-black text-white hover:bg-blue-500 disabled:opacity-50">
               <ScanSearch className="h-6 w-6" aria-hidden /> {t("ai.ecg.analyze")}
             </button>
@@ -132,7 +167,7 @@ export default function ECGAnalyzer({ onSaved }: { onSaved: () => void }) {
               <Image src={photo} alt="ECG analysé" fill className="object-contain" unoptimized />
             </div>
           )}
-          <ECGResultCard analysis={result.a} raw={result.raw} />
+          <ECGResultCard analysis={result} />
           <button onClick={reset} className="touch mx-auto gap-2 rounded-xl border border-line px-6 py-3 font-bold hover:bg-surface2">
             <RefreshCcw className="h-5 w-5" aria-hidden /> {t("ai.ecg.back")}
           </button>

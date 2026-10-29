@@ -47,9 +47,9 @@ export const protocolsP6: Protocol[] = [
         ],
       },
     ],
-    medications: ["furosemide"],
+    medications: ["octreotide"],
     calculators: [],
-    meta: { sources: ["ESGE 2021", "ACG upper GI bleeding"], lastReviewed: "2026-09" },
+    meta: { sources: ["ESGE Guideline Update 2021 — NVUGIH: no tranexamic acid; no routine octreotide for non-variceal bleeding (octreotide remains conditional on suspected varices in this protocol)", "ACG upper GI bleeding"], lastReviewed: "2026-10" },
   },
   {
     id: "exacerbation-bpco",
@@ -199,11 +199,11 @@ export const protocolsP6: Protocol[] = [
       { title: { fr: "Si convulsions : SURVEILLER NE PAS SE BATTRE — position latérale gauche, sécuriser la langue", ar: "إذا تشنجات: راقب لا تُقاتل — وضعية جانبية يسرى، أمّن اللسان" } },
       { title: { fr: "MgSO4 : 4 g IV en 15-20 min puis entretien 1 g/h (antidote : gluconate Ca 1 g IV si dépression respiratoire)", ar: "كبريتات مغنيزيوم: 4 غ على 15-20 د ثم 1 غ/س (الترياق: غلوكونات كالسيوم 1 غ إذا اكتئاب تنفسي)" } },
       { title: { fr: "Antihypertenseur : labétalol bolus 20 mg IV (ou nicardipine/hydralazine selon protocole) — cible TA < 160/110", ar: "خافض ضغط: لابيتالول 20 ملغ دفعة — هدف ضغط أقل من 160/110" } },
-      { title: { fr: "Ne PAS retarder l'accouchement pour stabiliser si présence d'éclampsie ou souffrance fœtale", ar: "لا تُأخّر الولادة لتثبيت إذا ارتعاج أو معاناة جنينية" } },
+      { title: { fr: "Après la crise : stabiliser d'abord la mère (voies aériennes, contrôle des convulsions et de l'HTA sévère, oxygénation), puis organiser une naissance en temps utile. Le moment et la voie d'accouchement relèvent de l'équipe obstétricale selon les états maternel et fœtal, le terme et les conditions obstétricales ; l'éclampsie seule n'impose pas une césarienne.", ar: "بعد النوبة: ثبّت حالة الأم أولاً (الطريق الهوائي، ضبط التشنجات وارتفاع الضغط الشديد، والأكسجة)، ثم نظّم الولادة في الوقت المناسب. يحدد فريق التوليد التوقيت وطريقة الولادة وفق حالتي الأم والجنين وعمر الحمل والظروف التوليدية؛ فالارتعاج وحده لا يفرض القيصرية." } },
       { title: { fr: "Transport vers maternité de référence type III — monitoring fœtal continu", ar: "نقل لمستشفى ولادة نوع III — مراقبة جنينية مستمرة" } },
     ],
     keyPoints: [
-      { fr: "L'éclampsie est une urgence vitale maternelle MAIS la vitalité fœtale prime.", ar: "الارتعاج طارئ أمومي لكن حيوية الجنين أولى." },
+      { fr: "L'éclampsie est une urgence maternelle : la stabilisation maternelle est prioritaire et protège aussi le fœtus. Après stabilisation, réévaluer la situation fœtale ; la naissance doit être organisée en temps utile et sa voie décidée par l'équipe obstétricale selon l'ensemble des facteurs maternels et fœtaux.", ar: "الارتعاج طارئ يهدد الأم: تثبيت الأم أولاً يحمي الجنين أيضاً. بعد الاستقرار، أعد تقييم حالة الجنين؛ تُنظّم الولادة في الوقت المناسب ويحدد فريق التوليد طريقتها وفق جميع العوامل المتعلقة بالأم والجنين." },
       { fr: "Le MgSO4 est UNIQUEMENT anticonvulsivant, PAS abaisser la TA → antihypertenseur nécessaire.", ar: "الكبريتات مضاد تشنج فقط، لا يخفض الضغط ← يلزم خافض ضغط." },
     ],
     trajectory: [
@@ -229,6 +229,6 @@ export const protocolsP6: Protocol[] = [
     ],
     medications: ["sulfate-magnesium"],
     calculators: [],
-    meta: { sources: ["ACOG/ISSHP pré-éclampsie", "SFAR obstétrique"], lastReviewed: "2026-09" },
+    meta: { sources: ["ACOG Practice Bulletin No. 222 — Gestational Hypertension and Preeclampsia, 2020 (eclampsia: stabilisation maternelle avant naissance ; voie selon critères obstétricaux)", "ISSHP recommendations on hypertensive disorders of pregnancy", "SFAR obstétrique"], lastReviewed: "2026-10" },
   },
 ];

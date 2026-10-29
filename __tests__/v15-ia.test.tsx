@@ -154,9 +154,9 @@ describe("v15.0 — تزامن الإصدار", () => {
   it("lib/version = 15.0 و sw.js متزامن", async () => {
     const fs = await import("node:fs");
     const { APP_VERSION } = await import("../lib/version");
-    expect(APP_VERSION).toBe("18.1");
+    expect(APP_VERSION).toBe("18.7");
     const sw = fs.readFileSync("public/sw.js", "utf8");
-    expect(sw).toContain('const VERSION = "eutn-v18.1";');
+    expect(sw).toContain('const VERSION = "eutn-v18.7";');
   });
 });
 
@@ -238,9 +238,10 @@ describe("v15.3 — المخزون المسبق (100% دون اتصال)", () =>
     expect(sw).toContain('req.headers.get("RSC") === "1"');
     expect(sw).toContain("ignoreSearch: true");
     expect(sw).toContain("Response.error()");
-    // تطبيع المسار: تنقّل كامل بعنوان ينتهي بشرطة مائلة يجب أن يجد النسخة المخزَّنة بدونه
+    // تطبيع المسار: إزالة base path الموجود أصلًا في pathname قبل بناء الصيغ البديلة.
     expect(sw).toContain("const clean = url.pathname.replace(/"); // v17.4 — تطبيع المسار
-    for (const c of ["`${BASE}${clean}`", "`${BASE}${clean}/`", "`${BASE}${clean}.html`", "`${BASE}${clean}/index.html`"]) {
+    expect(sw).toContain("clean === BASE || clean.startsWith(`${BASE}/`)");
+    for (const c of ["`${BASE}${route}`", "`${BASE}${route}/`", "`${BASE}${route}.html`", "`${BASE}${route}/index.html`"]) {
       expect(sw, c).toContain(c);
     }
   });

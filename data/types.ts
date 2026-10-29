@@ -26,6 +26,7 @@ export interface Medication {
   brands?: string;             // spécialités courantes en Tunisie
   synonyms: string[];          // pour la recherche (adrenaline = épinéphrine…)
   searchExclusions?: string[]; // alias ambigus à ne pas rabattre sur cette fiche (forme/indication non concordante)
+  brandCaution?: Localized;     // prudence produit/voie affichée au-dessus des doses si des alias provisoires sont indexés
   klass: Localized;            // classe thérapeutique
   highRisk: boolean;
   indications: Localized;

@@ -28,9 +28,9 @@ export default function EcgPage() {
         <div className="aspect-[640/140] w-full">
           <ECGTrace key={rhythm.id} kind={rhythm.kind} />
         </div>
-        <div className="mt-3 flex flex-wrap gap-2" role="tablist" aria-label="rythmes">
+        <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label={lang === "ar" ? "إيقاعات ECG" : "Rythmes ECG"}>
           {ecgRhythms.map((r) => (
-            <button key={r.id} role="tab" aria-selected={rhythm.id === r.id}
+            <button key={r.id} aria-pressed={rhythm.id === r.id}
               onClick={() => { setRhythm(r); reveal(ficheRef.current); }}
               className={`touch rounded-xl border px-3 py-2 text-sm font-semibold ${rhythm.id === r.id ? "border-blue-600 bg-blue-600 text-white" : "border-line hover:bg-surface2"}`}>
               {lang === "ar" ? r.title.ar : r.title.fr}

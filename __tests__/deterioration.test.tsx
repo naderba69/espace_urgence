@@ -23,11 +23,12 @@ vi.mock("@/components/Providers", () => ({
   usePrefillPatient: () => {},
 }));
 
-import { evaluateVitals, addProblem, getProblems, removeProblem, PROBLEMS_KEY } from "@/lib/deterioration";
+import { evaluateVitals, addProblem, getProblems, removeProblem, PROBLEMS_KEY, sanitizeProblems } from "@/lib/deterioration";
 import ReevaluationPage from "@/app/reevaluation/page";
 
 beforeEach(() => {
   localStorage.clear();
+  sessionStorage.clear();
 });
 
 describe("v16.0 — محرّك القواعد", () => {
@@ -47,9 +48,11 @@ describe("v16.0 — محرّك القواعد", () => {
     expect(evaluateVitals({ age: 17, fr: 24, pas: 95, gcs: 15 }).map((a) => a.rule.id)).not.toContain("sepsis");
     expect(evaluateVitals({ age: 54, fr: 16, pas: 130, gcs: 15 }).map((a) => a.rule.id)).not.toContain("sepsis");
   });
-  it("نقص السكر / غلاسكو ≤8 / بطء القلب: نوافذها مضبوطة", () => {
-    expect(evaluateVitals({ gly: 55 }).map((a) => a.rule.id)).toContain("hypoglycemie");
-    expect(evaluateVitals({ gly: 110 }).map((a) => a.rule.id)).not.toContain("hypoglycemie");
+  it("نقص السكر: العتبة بوحدة g/L؛ وغلاسكو ≤8 / بطء القلب نوافذها مضبوطة", () => {
+    expect(evaluateVitals({ gly: 0.55 }).map((a) => a.rule.id)).toContain("hypoglycemie");
+    expect(evaluateVitals({ gly: 0.69 }).map((a) => a.rule.id)).toContain("hypoglycemie");
+    expect(evaluateVitals({ gly: 0.7 }).map((a) => a.rule.id)).not.toContain("hypoglycemie");
+    expect(evaluateVitals({ gly: 1.1 }).map((a) => a.rule.id)).not.toContain("hypoglycemie");
     expect(evaluateVitals({ gcs: 7 }).map((a) => a.rule.id)).toContain("gcs8");
     expect(evaluateVitals({ gcs: 12 }).map((a) => a.rule.id)).not.toContain("gcs8");
     expect(evaluateVitals({ fc: 35 }).map((a) => a.rule.id)).toContain("bradycardie");
@@ -61,6 +64,19 @@ describe("v16.0 — محرّك القواعد", () => {
 });
 
 describe("v16.0 — مشيخة المضاعفات (تخزين)", () => {
+  it("assainit les archives malformées et reconstruit le titre depuis la règle connue", () => {
+    const now = 20_000;
+    const safe = sanitizeProblems([
+      { id: "oap-10000", ruleId: "oap", at: 10_000, title: null, vitals: "SpO2 85" },
+      { id: "bad", ruleId: "unknown", at: 10_000, title: {}, vitals: "x" },
+      { id: "oap-future", ruleId: "oap", at: now + 1, title: {}, vitals: "x" },
+      null,
+    ], now);
+    expect(safe).toHaveLength(1);
+    expect(safe[0].title.fr).toContain("OAP");
+    expect(safe[0].vitals).toBe("SpO2 85");
+  });
+
   it("إضافة ثم إزالة — مع تجاهل معرفات مجهولة", () => {
     expect(getProblems()).toEqual([]);
     const list = addProblem("oap", "SpO₂ 85 %");
@@ -70,7 +86,7 @@ describe("v16.0 — مشيخة المضاعفات (تخزين)", () => {
     const unknown = addProblem("nope", "x");
     expect(unknown).toHaveLength(1);
     expect(removeProblem(list[0].id)).toHaveLength(0);
-    expect(localStorage.getItem(PROBLEMS_KEY)).toBe("[]");
+    expect(sessionStorage.getItem(PROBLEMS_KEY)).toBe("[]");
   });
 });
 
@@ -145,8 +161,8 @@ describe("v16.0 — حارس بنيوي", () => {
   it("الإصدار 16.2 متزامن (lib ↔ sw)", async () => {
     const fs = await import("node:fs");
     const { APP_VERSION } = await import("../lib/version");
-    expect(APP_VERSION).toBe("18.1");
-    expect(fs.readFileSync("public/sw.js", "utf8")).toContain('const VERSION = "eutn-v18.1";');
+    expect(APP_VERSION).toBe("18.7");
+    expect(fs.readFileSync("public/sw.js", "utf8")).toContain('const VERSION = "eutn-v18.7";');
   });
 });
 
@@ -161,10 +177,13 @@ describe("v16.1 — القواعد الثلاث الجديدة", () => {
     expect(ids).not.toContain("oap"); // SpO₂ 91 فوق نافذة OAP — اشتباه معزول نظيف
     expect(evaluateVitals({ fc: 105, spo2: 95 }).map((a) => a.rule.id)).not.toContain("ep");
   });
-  it("أزمة ربعية: انقباضي <90 + سكر <80 — تتقاطع بصدق مع نقص السكر", () => {
-    const ids = evaluateVitals({ pas: 82, gly: 60 }).map((a) => a.rule.id);
+  it("عتبة التنبيه الكظري بوحدة g/L؛ تبقى إشارة غير تشخيصية وتتقاطع مع نقص السكر عند انطباق العتبتين", () => {
+    const ids = evaluateVitals({ pas: 82, gly: 0.6 }).map((a) => a.rule.id);
     expect(ids).toContain("addison");
     expect(ids).toContain("hypoglycemie");
+    expect(evaluateVitals({ pas: 82, gly: 0.8 }).map((a) => a.rule.id)).not.toContain("addison");
+    expect(evaluateVitals({ pas: 90, gly: 0.79 }).map((a) => a.rule.id)).not.toContain("addison");
+    expect(evaluateVitals({ pas: 82, gly: 0.9 }).map((a) => a.rule.id)).not.toContain("addison");
   });
   it("سلامة الروابط: كل روابط القواعد التسع تقابل مسارات موجودة فعلاً", async () => {
     const fs = await import("node:fs");

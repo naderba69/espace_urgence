@@ -25,6 +25,14 @@ export const PerfusionSchema = z.object({
   warnings: LocalizedSchema.optional(),
   tips: LocalizedSchema.optional(),
   source: z.string().optional(),
+  pumpPreparation: z.object({
+    amount: z.number().positive(),
+    amountUnit: z.enum(["mg", "g", "UI"]),
+    volumeMl: z.number().min(0),
+    count: z.number().positive(),
+    targetMl: z.number().positive(),
+    convention: z.enum(["total", "added"]),
+  }).optional(),
 }).refine((p) => p.doseMax >= p.doseMin, { message: "doseMax doit être au moins doseMin (dose fixe admise)" });
 
 export const CalculatorMetaSchema = z.object({

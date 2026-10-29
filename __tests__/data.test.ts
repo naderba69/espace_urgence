@@ -54,6 +54,117 @@ describe("zod — données cliniques", () => {
       expect(r.success, m.id).toBe(true);
     }
   });
+  it("hypoglycémie adulte : dose de glucose exprimée en grammes, concentration PROAMP sourcée, sans confusion ampoule/10 g", () => {
+    const glucose = medications.find((m) => m.id === "glucose30")!;
+    const hypo = protocols.find((p) => p.id === "hypoglycemie")!;
+    expect(glucose.doseAdult.fr).toContain("10–15 g");
+    expect(glucose.doseAdult.fr).toContain("33–50 mL");
+    expect(glucose.doseAdult.fr).toContain("3 g");
+    expect(glucose.doseAdult.fr).toContain("4–5 ampoules");
+    expect(glucose.doseAdult.fr).not.toMatch(/1–2 ampoules.*40–80 mL/);
+    expect(glucose.dilution.fr).toContain("PROAMP uniquement");
+    expect(glucose.nursing.fr).toContain("rinçage immédiat");
+    expect(glucose.meta.sources.join(" ")).toContain("RCP GLUCOSE 30 % PROAMP");
+    const adultStep = hypo.steps.find((s) => s.title.fr.includes("Adulte inconscient"))?.title.fr ?? "";
+    expect(adultStep).toContain("10–15 g");
+    expect(adultStep).toContain("3 g/ampoule");
+    expect(adultStep).not.toContain("1 ampoule (10 g)");
+    expect(hypo.meta.sources.join(" ")).toContain("RCP GLUCOSE 30 % PROAMP");
+  });
+  it("NaCl hypertonique : recette théorique de 3 % calculée, ancienne recette à 4,08 % signalée", () => {
+    const nacl = medications.find((m) => m.id === "nacl-hypertonique")!;
+    expect(nacl.dilution.fr).toContain("11 mL de NaCl 20 % (2,2 g) + 89 mL de NaCl 0,9 % (0,801 g)");
+    expect(nacl.dilution.fr).toContain("3,001 g/100 mL ≈ 3 %");
+    expect(nacl.dilution.fr).toContain("donne 4,08 %");
+    expect(nacl.dilution.fr).toContain("ne pas préparer au lit du patient");
+    expect(nacl.nursing.fr).toContain("Na⁺ toutes les 2-4 h");
+  });
+  it("sufentanil pédiatrique : conserve uniquement le schéma IV confirmé par le RCP SUFENTA", () => {
+    const sufentanil = medications.find((m) => m.id === "sufentanil")!;
+    expect(sufentanil.dosePediatric.fr).toContain("plus d'un mois");
+    expect(sufentanil.dosePediatric.fr).toContain("0,2–0,5 µg/kg");
+    expect(sufentanil.dosePediatric.fr).toContain("≥30 s");
+    expect(sufentanil.dosePediatric.fr).toContain("Aucune posologie IV n'est recommandée dans ce RCP chez le nouveau-né");
+    expect(sufentanil.dosePediatric.fr).not.toContain("0,005-0,01 µg/kg");
+    expect(sufentanil.meta.sources.join(" ")).toContain("RCP SUFENTA 50 µg/10 mL");
+  });
+  it("propofol : distingue les limites de conservation du Diprivan et les restrictions pédiatriques par indication", () => {
+    const propofol = medications.find((m) => m.id === "propofol")!;
+    expect(propofol.storage.fr).toContain("DIPRIVAN 10 mg/mL uniquement");
+    expect(propofol.storage.fr).toContain("non diluée au plus 12 h");
+    expect(propofol.storage.fr).toContain("après dilution");
+    expect(propofol.storage.fr).toContain("dans les 6 h");
+    expect(propofol.storage.fr).toContain("ne pas conserver les reliquats");
+    expect(propofol.dosePediatric.fr).toContain("plus d'un mois");
+    expect(propofol.dosePediatric.fr).toContain("contre-indiquée avant 16 ans");
+    expect(propofol.dosePediatric.fr).toContain("ne vaut pas autorisation pour les autres présentations");
+    expect(propofol.meta.sources.join(" ")).toContain("RCP DIPRIVAN 10 mg/mL");
+  });
+  it("naloxone : dose pédiatrique aiguë distincte et voie nasale liée à son dispositif", () => {
+    const card = medications.find((med) => med.id === "naloxone")!;
+    expect(card.doseAdult.fr).toContain("0,2–2 mg IV/IO/IM");
+    expect(card.doseAdult.fr).not.toContain("0,4 mg IV/IM/IN");
+    expect(card.doseAdult.fr).toContain("ne pas convertir la solution injectable en dose IN");
+    expect(card.dosePediatric?.fr).toContain("0,1 mg/kg IV/IO/IM, maximum 2 mg");
+    expect(card.weightDose).toMatchObject({ mgPerKg: 0.1, maxMg: 2 });
+    expect(card.dilution.fr).toContain("Aucun dispositif intranasal tunisien n'est documenté ici");
+    expect(card.meta.sources.join(" ")).toContain("AHA 2023 Focused Update");
+  });
+  it("labétalol : les bolus IV sont fixes et la perfusion est exprimée en mg/min", () => {
+    const card = medications.find((med) => med.id === "labetalol")!;
+    const preset = PERFUSIONS.find((entry) => entry.drugId === "labetalol")!;
+    expect(card.doseAdult.fr).toContain("10–20 mg IV lente sur 2 min");
+    expect(card.doseAdult.fr).toContain("300 mg");
+    expect(card.doseAdult.fr).not.toContain("mg/kg");
+    expect(card.weightDose).toBeUndefined();
+    expect(preset.unit).toBe("mg/min");
+    expect(preset.doseMin).toBe(0.5);
+    expect(preset.doseMax).toBe(2);
+    expect(preset.bolus?.fr).toContain("10–20 mg IV lente sur 2 min");
+    expect(preset.bolus?.fr).not.toContain("mg/kg");
+    expect(preset.source).toContain("ACOG Practice Bulletin No. 222");
+  });
+  it("noradrénaline : préparation de référence synchronisée entre fiche, abaques et pompe", () => {
+    const card = medications.find((med) => med.id === "noradrenaline")!;
+    const presets = PERFUSIONS.filter((entry) => entry.drugId === "noradrenaline");
+    const pump = MED_TOOLS.noradrenaline.pump!;
+    const pumpBaseMg = pump.defAmpMg * pump.defCount;
+    expect(card.dilution.fr).toContain("8 mg de noradrénaline exprimés en base, complétés à 50 mL");
+    expect(presets).toHaveLength(2);
+    for (const preset of presets) {
+      expect(preset.concUgPerMl).toBe(160);
+      expect(preset.prep.fr).toContain("160 µg/mL");
+    }
+    expect(pumpBaseMg / pump.defTarget * 1000).toBe(160);
+    expect(card.dilution.fr).toContain("ne jamais déduire cette équivalence");
+  });
+  it("centre antipoison : un seul numéro candidat et avertissement de vérification locale", () => {
+    const selectedProtocols = ["intoxication-medicamenteuse", "intoxication-phosphure-aluminium", "intoxication-digoxine"]
+      .map((id) => protocols.find((p) => p.id === id));
+    const scope = JSON.stringify({ emergencyNumbers, selectedProtocols, revals });
+    expect(scope).toContain("71 335 500");
+    expect(scope).not.toMatch(/80 102 550|71 335 335|71335335|80102550/);
+    expect(scope).toContain("à confirmer localement");
+    expect(emergencyNumbers.find((entry) => entry.service.fr.includes("antipoison"))?.note?.fr).toContain("confirmer localement");
+  });
+  it("hémorragie digestive haute : pas de furosémide ni de TXA routinier, octréotide limité aux varices suspectées", () => {
+    const protocol = protocols.find((p) => p.id === "hemorragie-digestive-haute")!;
+    expect(protocol.medications).not.toContain("furosemide");
+    expect(protocol.medications).not.toContain("acide-tranexamique");
+    expect(protocol.medications).toContain("octreotide");
+    expect(protocol.steps.some((s) => s.title.fr.includes("Si cirrhose/suspicion varices") && s.title.fr.includes("octreotide"))).toBe(true);
+    expect(protocol.meta.sources.join(" ")).toContain("ESGE Guideline Update 2021");
+  });
+  it("éclampsie : la stabilisation maternelle précède la décision obstétricale de naissance", () => {
+    const eclampsia = protocols.find((p) => p.id === "hypertension-gravidique")!;
+    const principle = eclampsia.keyPoints.find((p) => p.fr.includes("stabilisation maternelle est prioritaire"))?.fr ?? "";
+    const delivery = eclampsia.steps.find((s) => s.title.fr.includes("Après la crise"))?.title.fr ?? "";
+    expect(principle).toContain("protège aussi le fœtus");
+    expect(principle).not.toContain("la vitalité fœtale prime");
+    expect(delivery).toContain("stabiliser d'abord la mère");
+    expect(delivery).toContain("l'éclampsie seule n'impose pas une césarienne");
+    expect(eclampsia.meta.sources.join(" ")).toContain("ACOG Practice Bulletin No. 222");
+  });
   it("céfotaxime : posologies RCP Panpharma tracées, sans volume de dilution non sourcé", () => {
     const cefotaxime = medications.find((m) => m.id === "cefotaxime")!;
     expect(cefotaxime.meta.sources.join(" ")).toMatch(/ANSM.*Panpharma 1 g.*12\/04\/2024/);

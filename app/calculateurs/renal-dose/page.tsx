@@ -318,8 +318,7 @@ export default function RenalDosePage() {
 
       {Number.isFinite(ageValue) && ageValue > 0 && ageValue < 18 && (
         <p role="alert" className="rounded-2xl border border-red-500/50 bg-red-500/10 p-3 text-sm font-black text-red-500">
-          <T fr="Ce calculateur et les lignes médicamenteuses ci-dessous sont réservés à l’adulte ; aucun résultat adulte n’est affiché pour un patient pédiatrique." ar="هذه الحاسبة وأسطر الأدوية أدناه للبالغين؛ لا تُعرض نتيجة البالغين لمريض طفل." />{" "}
-          <Link href="/calculateurs/antibiotiques" className="underline"><T fr="Ouvrir l’outil pédiatrique" ar="افتح أداة الأطفال" /></Link>
+          <T fr="Ce calculateur et les lignes médicamenteuses ci-dessous sont réservés à l’adulte ; aucun résultat adulte n’est affiché pour un patient pédiatrique. Utilisez un protocole pédiatrique adapté au produit et à l’indication." ar="هذه الحاسبة وأسطر الأدوية أدناه للبالغين؛ لا تُعرض نتيجة البالغين لطفل. استخدم بروتوكولاً للأطفال مناسباً للمستحضر والاستطباب." />
         </p>
       )}
 
@@ -468,7 +467,7 @@ export default function RenalDosePage() {
           <div className="flex flex-wrap gap-2">
             <Link href="/calculateurs/aki" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="AKI / KDIGO" ar="قصور الكلى الحاد" /></Link>
             <Link href="/calculateurs/safe-dose" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Moteur de dose sûre" ar="محرّك الجرعة الآمنة" /></Link>
-            <Link href="/calculateurs/antibiotiques" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Antibiotiques" ar="المضادات الحيوية" /></Link>
+            <Link href="/calculateurs/antibio-renal" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Tableau ATB OMEDIT" ar="جدول OMEDIT للمضادات" /></Link>
           </div>
         </>
       ) : !(suspiciousMgUnit && !unitConfirmed) && !creatinineInputIssue && !(Number.isFinite(ageValue) && ageValue > 0 && ageValue < 18) && !invalidIbw ? (

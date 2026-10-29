@@ -30,7 +30,7 @@ export default function AiSection() {
     setTesting(true);
     setTestResult(null);
     try {
-      await testConnection();
+      await testConnection({ language: lang });
       setTestResult("ok");
       setTestMsg("");
     } catch (e) {
@@ -135,8 +135,8 @@ export default function AiSection() {
           <p className="flex gap-2 rounded-xl bg-amber-500/10 p-3 text-xs text-amber-500">
             <Info className="h-4 w-4 shrink-0" aria-hidden />
             {lang === "ar"
-              ? "بياناتك (نصوص/صور) تُرسل مباشرة من متصفحك إلى المزوّد المختار — تكاليف محتملة على حسابك. المفتاح محفوظ محلياً فقط؛ لا تدخله على جهاز مشترك."
-              : "Vos données (textes/images) partent de votre navigateur vers le fournisseur choisi — coûts possibles sur votre compte. La clé n'est stockée que localement ; ne la saisissez pas sur un appareil partagé."}
+              ? "تُرسل النصوص والصور إلى المزوّد المختار وقد تُحسب تكاليف. مفتاح API يبقى في ذاكرة الصفحة فقط ولا يُحفظ على الجهاز؛ أعد إدخاله بعد إعادة التحميل."
+              : "Les textes et images sont envoyés au fournisseur choisi (coûts possibles). La clé API reste uniquement en mémoire vive et n'est pas conservée sur l'appareil ; il faudra la ressaisir après rechargement."}
           </p>
         </>
       )}

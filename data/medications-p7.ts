@@ -50,8 +50,8 @@ export const medicationsPhase7: Medication[] = [
     },
     dosePediatric: { fr: "2-3 mL/kg en bolus (max 100 mL) en 10-15 min sous surveillance rapprochée.", ar: "2-3 مل/كغ دفعة (أقصى 100 مل) خلال 10-15 د بمراقبة لصيقة." },
     dilution: {
-      fr: "Poches prêtes à l'emploi préférées. À défaut : 100 mL de NaCl 0,9 % + 20 mL de NaCl 20 % ≈ 3,7 % (validation pharmacie). Voie centrale préférée ; voie périphérique possible en urgence (veine de bon calibre).",
-      ar: "أكياس جاهزة أفضل. بديلها: 100 مل NaCl ‏0.9% + 20 مل NaCl ‏20% ≈ ‏3.7% (تصديق الصيدلية). يفضل الوريد المركزي؛ الطرفي جائز طارئاً (وريد عريض).",
+      fr: "Poches prêtes à l'emploi préférées. À défaut, préparation par la pharmacie uniquement selon une procédure validée : calcul théorique pour 100 mL de NaCl 3 % — 11 mL de NaCl 20 % (2,2 g) + 89 mL de NaCl 0,9 % (0,801 g) = 3,001 g/100 mL ≈ 3 %. Vérifier le volume final et la méthode locale ; ne pas préparer au lit du patient. L'ancienne formule 100 mL + 20 mL donne 4,08 %, pas 3,7 % et ne doit pas être utilisée comme NaCl 3 %. Voie centrale préférée ; voie périphérique selon protocole d'urgence et surveillance.",
+      ar: "تُفضّل الأكياس الجاهزة. وعند عدم توفرها، لا يُحضّر المحلول إلا في الصيدلية ووفق إجراء معتمد: الحساب النظري لكل 100 مل من NaCl 3٪ — ‏11 مل من NaCl 20٪ (2.2 غ) + ‏89 مل من NaCl 0.9٪ (0.801 غ) = ‏3.001 غ/100 مل، أي نحو 3٪. تحقق من الحجم النهائي وطريقة التحضير المحلية؛ ولا تحضّره عند سرير المريض. الصيغة السابقة 100 مل + 20 مل تعطي 4.08٪ لا 3.7٪، فلا تُستخدم على أنها NaCl 3٪. يُفضّل الخط المركزي؛ ويُستخدم الطرفي وفق بروتوكول الطوارئ والمراقبة." ,
     },
     contraindications: {
       fr: "Hyponatrémie asymptomatique (correction rapide inutile et dangereuse), hypernatrémie, surcharge hydrique sévère (OAP).",
@@ -61,7 +61,7 @@ export const medicationsPhase7: Medication[] = [
     nursing: { fr: "Na⁺ toutes les 2-4 h pendant la correction. PLAFOND : ≤ 10 mmol/L/24 h (≤ 8 si haut risque). Tenir la fiche horaire de correction.", ar: "صوديوم كل 2-4 س أثناء التصحيح. السقف: ≤ 10 ملي مول/24 س (≤ 8 عند الخطر العالي). أمسك ورقة توقيت التصحيح." },
     storage: { fr: "T° ambiante.", ar: "حرارة الغرفة." },
     alternatives: ["furosemide"],
-    meta: { sources: ["Guidelines européennes hyponatrémie 2014", "RE.NAU"], lastReviewed: "2026-09" },
+    meta: { sources: ["European Clinical Practice Guideline on hyponatraemia, 2014 (3 % saline; §§7.1.1–7.1.2)", "RCP CHLORURE DE SODIUM PROAMP 20 % — Base de Données Publique des Médicaments/ANSM (concentration ; source française hors Tunisie)", "Calcul de composition contrôlé : formule massique explicitée dans dilution", "RE.NAU (surveillance, à valider localement)"], lastReviewed: "2026-10" },
   },
   {
     id: "propylthiouracil",
@@ -135,8 +135,8 @@ export const medicationsPhase7: Medication[] = [
   {
     id: "dexamethasone",
     name: { fr: "Dexaméthasone", ar: "ديكساميثازون" },
-    brands: "",
-    searchExclusions: ["auricularum", "auricularum ear drops", "dexacol", "dexamex", "ster-dex", "tobracort", "tobradex", "maxidrol", "medaxon", "dectancyl", "soludecadron", "dexamethasone medis", "dexamedis fort", "dexone", "unidex", "collyre", "ophtalmique", "eye drops"],
+    brands: "DEXAMETHASONE MEDIS 4 mg/mL (B/50 ampoules/1 mL, AMM 9233132H) ; DEXAMEDIS FORT 8 mg/2 mL (B/1 ampoule, AMM 9233133) ; UNIDEX 4 mg/1 mL (B/5, AMM 9093194 ; B/50, AMM 9093191H) ; UNIDEX FORT 8 mg/2 mL (B/1, AMM 9093192 ; B/10, AMM 9093193) ; DEXONE 4 4 mg/1 mL (B/50 AMM 9313031H ; B/1 AMM 9313035 ; B/5 AMM 9313034 ; B/10 AMM 9313036).",
+    searchExclusions: ["auricularum", "auricularum ear drops", "dexacol", "dexamex", "ster-dex", "tobracort", "tobradex", "maxidrol", "medaxon", "dectancyl", "soludecadron", "dexone 8", "collyre", "ophtalmique", "eye drops"],
     synonyms: ["dexaméthasone", "corticoïde", "ديكساميثازون"],
     klass: { fr: "Corticoïde de synthèse longue durée — puissant anti-inflammatoire, sans interférence avec le dosage du cortisol", ar: "كورتيزون صناعي طويل الأمد — مضاد التهاب قوي دون تداخل مع قياس الكورتيزول" },
     highRisk: true,
@@ -167,6 +167,6 @@ export const medicationsPhase7: Medication[] = [
     },
     storage: { fr: "T° ambiante, à l'abri de la lumière.", ar: "حرارة الغرفة بعيداً عن الضوء." },
     alternatives: ["hydrocortisone"],
-    meta: { sources: ["Endocrine Society 2016", "RE.NAU 2018"], lastReviewed: "2026-09" },
+    meta: { sources: ["Endocrine Society 2016", "RE.NAU 2018", "MEDIS — notices Dexaméthasone MediS p148 et DexamédiS/DexamédiS Fort p238 (IV/IM; AMM `9233132H`/`9233133`)", "UNIMED — notice UNIDEX/UNIDEX FORT V6 (29/08/2025; IV/IM; AMM `9093194`, `9093191H`, `9093192`, `9093193`)", "DPM Tunisie — Répertoire des médicaments génériques, Janvier 2021, groupe DEXAMETHASONE 4 mg injectable (voie IV/IM; DEXONE 4 et présentations listées)"], lastReviewed: "2026-10" },
   },
 ];

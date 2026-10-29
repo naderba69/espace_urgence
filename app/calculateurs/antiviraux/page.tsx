@@ -112,7 +112,7 @@ export default function AntivirauxPage() {
       )}
 
       <div className="flex flex-wrap gap-2">
-        <Link href="/calculateurs/antibiotiques" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Antibiotiques" ar="المضادات الحيوية" /></Link>
+        <Link href="/calculateurs/antibio-renal" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Tableau ATB OMEDIT" ar="جدول OMEDIT للمضادات" /></Link>
         <Link href="/calculateurs/renal-dose" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Bridge rénal" ar="الجسر الكلوي" /></Link>
         <Link href="/calculateurs/coma" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}><T fr="Approche coma (méningite)" ar="الغيبوبة (السحائي)" /></Link>
       </div>

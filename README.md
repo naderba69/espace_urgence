@@ -1,17 +1,17 @@
-# Espace Urgence TN — فضاء الاستعجالي
+# Espace Urgence TN
 
-Références & outils pour les urgences et le SAMU en Tunisie. Bilingue **français / العربية** (RTL), sombre par défaut, **hors-ligne (PWA)**, sans backend.
+Références et outils en français pour les urgences et le SAMU en Tunisie. Interface française exclusive, sombre par défaut, **hors ligne (PWA)**, sans backend.
 
 > ⚠️ **Avertissement clinique** : les fiches ne sont pas toutes reliées à une référence et à une date de relecture propres à chaque entrée ; les métadonnées présentes sont déclaratives et ne prouvent pas une validation indépendante. L'ensemble doit être revu et validé par des médecins/pharmaciens tunisiens avant tout usage clinique. Toujours vérifier les doses et les protocoles dans les référentiels locaux à jour.
 
 ---
 
-## Chiffres clés (v18.1)
+## Chiffres clés (v18.7)
 
 | Contenu | Nombre | Source |
 |---|---|---|
 | Protocoles | **98** | `data/protocols*.ts` |
-| Médicaments | **73** | `data/medications*.ts` |
+| Médicaments | **74** | `data/medications*.ts` |
 | Calculateurs | **131** | `data/calculators.ts` |
 | Arbres décisionnels | **9** | `data/trees.ts` |
 | Procédures (checklists) | **10** | `data/procedures.ts` |
@@ -29,7 +29,7 @@ Références & outils pour les urgences et le SAMU en Tunisie. Bilingue **franç
 
 - Next.js 16 (App Router, **export statique** `output: 'export'`), React 19, TypeScript strict
 - Tailwind CSS v4 (variante sombre par classe, propriétés logiques RTL)
-- Aucune base de données : contenu = `data/*.ts` bilingue `{ fr, ar }` ; données utilisateur = `localStorage`
+- Aucune base de données : contenu = `data/*.ts` référencé, avec des champs historiques `{ fr, ar }` ; interface utilisateur désormais affichée exclusivement en français. Données utilisateur locales selon le type (préférences, données temporaires de session).
 - PWA : `public/manifest.webmanifest` + service worker maison `public/sw.js` (pas de next-pwa)
 - Audio : Web Audio API (`lib/audio.ts`) — métronome RCP, alarmes
 - Analytics : GA4 via `lib/analytics.ts` — **ID placeholder `G-XXXXXXXXXX` à remplacer** ; désactivation possible dans Paramètres
@@ -58,7 +58,7 @@ Guide pas à pas : **[docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md)**.
 
 ```
 app/                     pages (accueil, protocoles, médicaments, calculateurs, réa, mémo, checklists…)
-components/              Providers (langue/thème/favoris/récents/patient actif), Header, Nav, SearchBar…
+components/              Providers (thème/favoris/récents/patient actif), Header, Nav, SearchBar…
   └ CommandPalette.tsx   enveloppe légère (montée partout) + CommandPaletteBody.tsx (chargé à la demande)
 data/                    contenu médical bilingue ; traçabilité des sources/revues incomplète selon les jeux
   └ counts.ts            compteurs d'affichage (sans importer les bases complètes)
@@ -134,13 +134,13 @@ node scripts/crawl-audit.mjs       # 343 pages : erreurs console, hydratation, H
 
 - **Phase 1 ✅** — socle : i18n/RTL, thème, recherche avec synonymes, favoris réordonnables, récents, mode urgence, avertissement obligatoire, impression, PWA.
 - **Phase 2 ✅** — masse de contenu, rythmes ECG (tracés animés), procédures, hubs pédiatrie/obstétrique/psychiatrie/traumatologie.
-- **Phase 3 ✅** — IA optionnelle (Gemini/OpenRouter, clé locale, modèles libres) orientée terrain « une saisie → un résultat » : **⚡ Flash IA**, analyseur ECG photo/caméra (IndexedDB), triage, SBAR, quiz, recherche assistée. Plus de chat flottant.
+- **Phase 3 — IA optionnelle, portée limitée** — Gemini/OpenRouter avec modèles configurables : analyse ECG expérimentale limitée à des observations descriptives, compte rendu SBAR en brouillon, quiz pédagogique non vérifié, recherche assistée et explications de calculs. **Flash IA et triage IA génératifs sont suspendus** pour éviter la production non déterministe de doses ou de décisions de triage. Les sorties restantes ne sont pas une validation médicale.
 - **Phase 4 ✅** — `lib/calc.ts` (fonctions dosimétriques pures) + tests vitest ; **131 calculateurs** (NIHSS, HAS-BLED, héparine IV, Adrogué-Madias, insuline ACD avec garde-fou potassium…).
 - **Phase 5 ✅** — arbres décisionnels interactifs (`components/trees/TreeRunner.tsx`) + 9 arbres.
-- **Phase 6 ✅** — couverture « maladie + évolution + complications » : champ `trajectory` sur chaque fiche ; **98 protocoles**, **73 médicaments** ; envenimation scorpionique (grades I–III tunisiens), intoxications, noyade, hypothermie, HDH, BPCO, pré-éclampsie…
+- **Phase 6 ✅** — couverture « maladie + évolution + complications » : champ `trajectory` sur chaque fiche ; **98 protocoles**, **74 médicaments** ; envenimation scorpionique (grades I–III tunisiens), intoxications, noyade, hypothermie, HDH, BPCO, pré-éclampsie…
 - **Phase 7 ✅ (v16.x)** — moteur de détection de la détérioration + boucle de réévaluation + résumé de cas unifié.
 - **Phase 8 ✅ (v17.0)** — **performance** (premier chargement −50 %), **hors-ligne renforcé** (34 pages précachées au lieu de 6), **qualité** (lint 0/0, 572 tests), **documentation** (CHANGELOG.md, docs/ARCHITECTURE.md), correction de la recherche arabe (hamza) et de la barre d'onglets mobile.
-- **Phase 14 (v18.1, corrections en cours)** — **fonction rénale et plan a → b** : CKD-EPI 2021 seul pour la colonne DFG adulte, CKID U25 informatif sans dose adulte, Cockcroft–Gault (ClCr) affiché séparément, repérage/stadification KDIGO. En AKI, le tableau de fonction stable et tout choix manuel sont bloqués ; dialyse et pédiatrie sont hors du tableau adulte. La règle d'escalade GPR « +2 stades » non traçable a été retirée ; le preset Panpharma amikacine exige âge adulte, ClCr ≥50 et contrôle d'IMC, sans calcul en obésité faute de poids corrigé saisi. Chaque molécule peut être **retenue ou abandonnée** puis réévaluée avec export imprimable.
+- **Phase 14 (v18.2, travaux en cours — non clôturée)** — **fonction rénale et plan a → b** : CKD-EPI 2021 seul pour la colonne DFG adulte, CKID U25 informatif sans dose adulte, Cockcroft–Gault (ClCr) affiché séparément, repérage/stadification KDIGO. En AKI, le tableau de fonction stable et tout choix manuel sont bloqués ; dialyse et pédiatrie sont hors du tableau adulte. La règle d'escalade GPR « +2 stades » non traçable a été retirée ; le preset Panpharma amikacine exige âge adulte, ClCr ≥50 et contrôle d'IMC, sans calcul en obésité faute de poids corrigé saisi. Chaque molécule peut être **retenue ou abandonnée** puis réévaluée avec export imprimable. Les corrections logicielles et tests ne valent pas revue clinique complète.
 - **Phase 13 ✅ (v18.0)** — **antibiotiques & fonction rénale** : les 12 pages du tableau OMEDIT V2.3 sont consultables (`/calculateurs/antibio-renal`) — 93 molécules × 5 stades, texte FR issu de l'extraction avec corrections structurelles documentées (fidélité cellule par cellule non certifiée), **calcul pondéral** et sélection de colonne par DFG CKD-EPI ; Cockcroft–Gault (ClCr) reste séparé et ne choisit pas la colonne. Alertes « contre-indiqué » / « aucune donnée » ; source archivée et limites détaillées dans `docs/ANTIBIO-IR.md`.
 - **Phase 12 ✅ (v17.4)** — **guidage + réévaluation par fichier** : `GET /reval/<id>` (98 fichiers, ~1,7 Ko gzip) et champ `g` dans `ref-index.json` ⇒ la fiche n'embarque plus `data/guidage.ts` ni `data/reval.ts` (données de page 17,1 Ko gzip après premier écran) ; **hors-ligne réparé** : les payloads RSC des pages de détail sont précachés (1110 entrées) et `sw.js` cache les navigations internes + essaie les variantes de chemin (`/x`, `/x/`, `/x.html`, `/x/index.html`) ⇒ n'importe quelle fiche s'ouvre hors-ligne depuis une liste déjà visitée.
 - **Phase 11 ✅ (v17.3)** — **fichier de références généralisé** : `/protocoles` 335 → 163 Ko et `/quiz-ia` 333 → 161 Ko ; **cache HTTP déclaré** (`vercel.json`, `public/_headers`) ; **gouvernance du contenu** (garde-fou de fraîcheur documenté + test de cohérence projection ↔ données).
@@ -150,7 +150,7 @@ node scripts/crawl-audit.mjs       # 343 pages : erreurs console, hydratation, H
 
 ## Sécurité & limites
 
-- Clé API IA stockée uniquement dans le localStorage du navigateur — n'entrez votre clé que sur votre appareil personnel.
+- La clé API IA reste en mémoire vive jusqu'au rechargement et n'est pas écrite dans localStorage; les anciennes clés persistées sont purgées lors de la lecture de configuration. Cela ne protège pas contre un script malveillant exécuté dans la même origine : n'utilisez pas de clé sur un appareil partagé et révoquez-la si elle a été exposée.
 - Images ECG en IndexedDB (miniatures JPEG ≤ 300 px, max 30 entrées, éviction FIFO — localStorage conservé pour les préférences).
 - Les sorties IA sont **indicatives** (photo non calibrée, LLM) : toute interprétation ECG doit être confirmée par un médecin qualifié.
-- Les données patient restent **sur l'appareil par défaut** : aucun envoi automatique ni synchronisation cloud. Si l'utilisateur demande une fonction IA, le texte ou l'image associé peut être transmis directement au fournisseur configuré ; les deux explications contextualisées des calculateurs rénaux demandent une confirmation explicite et envoient seulement le contexte de calcul utile (sans nom ni identifiant ajouté par l'outil). Vérifier les règles de confidentialité du fournisseur et de l'établissement avant tout envoi.
+- Les données patient restent sur l'appareil par défaut, sans synchronisation cloud automatique. Chaque fonction IA transmet toutefois à un fournisseur externe les données nécessaires à la requête après confirmation dans l'interface; le contenu saisi peut inclure des données de santé. La confirmation technique n'est ni une autorisation de l'établissement ni une garantie de conformité. Retirez vous-même tout nom ou identifiant, vérifiez les règles locales et la politique du fournisseur, et n'envoyez aucune donnée sans autorisation. Les explications de calculs transmettent un contexte borné et n'effectuent ni ne recommandent le calcul de dose.

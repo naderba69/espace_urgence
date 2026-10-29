@@ -166,7 +166,7 @@ mode avion : une liste précachée s'ouvrait, mais **toucher une carte aboutissa
    `_next/`), avec clé normalisée sans le paramètre `_rsc` (unique à chaque requête) et
    `Response.error()` quand le réseau échoue et que rien n'est en cache.
    En complément, `scripts/gen-precache.mjs` précache les payloads des **294 pages de détail** :
-   ~577 Ko gzip au total (98 protocoles 425 Ko, 73 médicaments 133 Ko, 131 calculateurs 20 Ko)
+   ~578 Ko gzip au total (98 protocoles 425 Ko, 74 médicaments ~134 Ko, 131 calculateurs 20 Ko)
    — sans eux, seule une fiche déjà visitée s'ouvrirait.
 2. **Chemins variantes.** Un repli de navigation voit souvent `/x/` là où la visite directe a
    stocké `/x` (avec `trailingSlash: true`, le `Router` normalise). Le repli essaie désormais
@@ -176,7 +176,7 @@ il doit tourner sur un `out/sw.js` fraîchement copié (c'est ce que fait `npm r
 
 
 `public/sw.js` contient le marqueur `/*__PRECACHE__*/[]`. `scripts/gen-precache.mjs`
-le remplace après le build par la liste réelle des **1114 entrées** (~17,2 Mo brut, ≈5,8 Mo gzip) : assets `_next` + icônes + `ref-index.json` + les 98 fichiers `/reval/*` + les 34 pages de premier niveau **+ les payloads RSC de navigation (`index.txt`) des 294 pages de détail** (protocoles, médicaments, calculateurs). **Ne jamais supprimer ce
+le remplace après le build par la liste réelle des fichiers admissibles. Lors de la vérification du 2026-10-28, elle comptait **1 100 entrées** (~16,8 Mo avant compression) ; le nombre et la taille varient avec le contenu et les artefacts de build. La liste couvre les assets `_next`, les icônes, `ref-index.json`, les fichiers `/reval/*`, les pages de premier niveau et les payloads RSC de navigation (`index.txt`) des pages de détail (protocoles, médicaments, calculateurs). **Ne jamais supprimer ce
 marqueur** : le script sort en erreur si le motif `/*__PRECACHE__*/[]` est absent.
 La constante `VERSION` est la clé du cache : l'incrémenter purge l'ancien cache à l'activation.
 
@@ -243,7 +243,7 @@ Trois familles de pages téléchargeaient des bases qu'elles n'affichent pas :
 
 | Cas | Avant | Solution |
 |---|---|---|
-| Fiche protocole | base des 73 médicaments + calculateurs (~260 Ko brut) | `lib/protocol-props.ts` — props calculées au build |
+| Fiche protocole | base des 74 médicaments + calculateurs (~260 Ko brut) | `lib/protocol-props.ts` — props calculées au build |
 | Fiche médicament | base des 98 protocoles + perfusions (~530 Ko brut) | `lib/medication-props.ts` |
 | Pages de liens (spécialités, triage, ECG, revue) | une ou deux bases complètes | `lib/hub-props.ts` + `/ref-index.json` |
 

@@ -277,12 +277,12 @@ R — Recommendation : ${verdict ? reval[verdict].actions.map((a) => a.txt.fr).j
       {/* Verdict */}
       <div className="mb-3 grid grid-cols-3 gap-2">
         <button onClick={() => pick("improve")} aria-pressed={verdict === "improve"}
-          className={`touch flex flex-col items-center gap-1 rounded-xl border p-3 text-xs font-black ${verdict === "improve" ? "border-sky-600 bg-sky-600 text-white" : "border-sky-600/50 bg-sky-600/10 text-sky-500"}`}>
+          className={`touch flex flex-col items-center gap-1 rounded-xl border p-3 text-xs font-black ${verdict === "improve" ? "border-sky-600 bg-sky-600 text-slate-950" : "border-sky-600/50 bg-sky-600/10 text-sky-500"}`}>
           <CheckCircle2 className="h-6 w-6" aria-hidden />
           <T fr="Amélioration" ar="تحسّن" />
         </button>
         <button onClick={() => pick("stall")} aria-pressed={verdict === "stall"}
-          className={`touch flex flex-col items-center gap-1 rounded-xl border p-3 text-xs font-black ${verdict === "stall" ? "border-amber-500 bg-amber-500 text-white" : "border-amber-500/50 bg-amber-500/10 text-amber-500"}`}>
+          className={`touch flex flex-col items-center gap-1 rounded-xl border p-3 text-xs font-black ${verdict === "stall" ? "border-amber-500 bg-amber-500 text-slate-950" : "border-amber-500/50 bg-amber-500/10 text-amber-500"}`}>
           <MinusCircle className="h-6 w-6" aria-hidden />
           <T fr="Stagnation" ar="ركود" />
         </button>
@@ -342,7 +342,7 @@ R — Recommendation : ${verdict ? reval[verdict].actions.map((a) => a.txt.fr).j
                     <button onClick={() => setRoscDone((d) => (d.includes(i) ? d.filter((x) => x !== i) : [...d, i]))}
                       aria-pressed={roscDone.includes(i)}
                       className={`touch flex w-full items-center gap-2 rounded-lg border p-2 text-start text-sm font-bold ${roscDone.includes(i) ? "border-sky-600 bg-sky-600/15 text-sky-500" : "border-line bg-surface2"}`}>
-                      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border text-xs ${roscDone.includes(i) ? "border-sky-600 bg-sky-600 text-white" : "border-line"}`} aria-hidden>
+                      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border text-xs ${roscDone.includes(i) ? "border-sky-600 bg-sky-600 text-slate-950" : "border-line"}`} aria-hidden>
                         {roscDone.includes(i) ? "✓" : ""}
                       </span>
                       {lang === "ar" ? c.ar : c.fr}

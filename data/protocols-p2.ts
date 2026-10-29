@@ -141,12 +141,12 @@ export const protocolsP2: Protocol[] = [
     img: [{ fr: "Radio thorax si suspicion pneumothorax/foyer", ar: "صورة صدر إن اشتباه استرواح/بؤرة" }],
   },
     steps: [
-      { title: { fr: "Évaluer la gravité : parole, FR, FC, SpO2, conscience, silencieux clinique ?", ar: "قيّم الشدة: الكلام، التنفس، النبض، التشبع، الوعي، صدر صامت؟" } },
-      { title: { fr: "O2 pour SpO2 93-95 % ; postures (assis)", ar: "أكسجين لتشبع 93-95%؛ إجلاس" } },
-      { title: { fr: "Salbutamol 5 mg nébuleux (ou MDI+chambre 4-8 bouffées) + ipratropium 0,5 mg q20 min ×3", ar: "سالبوتامول 5 ملغ رذاذ (أو بخاخ 4-8 بخات) + إبراتروبيوم 0.5 ملغ كل 20 د ×3" } },
-      { title: { fr: "Corticothérapie précoce : prednisolone 40-50 mg PO ou hydrocortisone 200 mg IV", ar: "كورتيكويد مبكراً: بريدنيزولون 40-50 ملغ فموياً أو هيدروكورتيزون 200 ملغ وريد" } },
-      { title: { fr: "Si très grave : MgSO4 2 g IV sur 20 min ; réévaluer à 1 h ; critères de gravité", ar: "إن شديدة جداً: كبريتات مغنيزيوم 2 غ على 20 د؛ أعد التقييم بعد ساعة" } },
-      { title: { fr: "Signes de danger de mort : FR > 25, FC > 110, SpO2 < 92, épuisement, confusion, paralysie respiratoire → réa/assistance ventilatoire", ar: "علامات خطر محدق: FRأكثر من 25، FCأكثر من 110، تشبعأقل من 92، إرهاق، تشوش، وهن تنفسي ← إنعاش" } },
+      { title: { fr: "Ce schéma GINA concerne les adultes, adolescents et enfants ≥6 ans ; <6 ans : parcours spécifique petite enfance. Évaluer sans délai : parole, capacité à boire/s'allonger, FR, SpO₂ en air ambiant, auscultation et PEF si disponible. Chez tout patient <18 ans, utiliser aussi un score pédiatrique validé (ex. PRAM). Si anaphylaxie associée, adrénaline IM en premier selon le protocole d'anaphylaxie.", ar: "يخص هذا المسار وفق GINA البالغين والمراهقين والأطفال من عمر 6 سنوات؛ أما دون ذلك فاستعمل مساراً خاصاً بالطفولة المبكرة. قيّم فوراً: الكلام والقدرة على الشرب والاستلقاء ومعدل التنفس والتشبع في هواء الغرفة والإصغاء وPEF إن توفر. لمن هم دون 18 سنة، استعمل أيضاً مقياساً أطفالياً معتمداً مثل PRAM. عند ترافق التأق، أعط الأدرينالين العضلي أولاً وفق بروتوكول التأق." } },
+      { title: { fr: "O₂ uniquement si SpO₂ <92 % ; si nécessaire, titrer à 92–95 %. L'oxymétrie peut surestimer chez les peaux foncées ; tenir compte de l'altitude.", ar: "الأكسجين فقط إذا كان التشبع أقل من 92%؛ وإذا لزم، عاير إلى 92–95%. قد يبالغ مقياس التأكسج في التقدير لدى البشرة الداكنة؛ راعِ الارتفاع عن سطح البحر." } },
+      { title: { fr: "Exacerbation sévère (≥6 ans) : salbutamol 6–10 bouffées de 100 µg avec pMDI + chambre, une bouffée à la fois, ou 5 mg nébulisés ; répéter si nécessaire toutes les 20–30 min, jusqu'à 3 doses dans la 1re heure, en réévaluant après chaque dose. Ajouter précocement ipratropium pMDI 4 bouffées avec chaque dose de salbutamol, jusqu'à 3 doses (GINA). Si nébulisation : doses spécifiques d'âge sur la fiche médicament ; ne pas convertir la dose pMDI.", ar: "نوبة شديدة (من عمر 6 سنوات): سالبوتامول 6–10 بخات بتركيز 100 مكغ مع بخاخ وغرفة، بخة واحدة كل مرة، أو 5 ملغ بالرذاذ؛ تُكرر عند الحاجة كل 20–30 دقيقة، حتى 3 جرعات في الساعة الأولى، مع إعادة التقييم بعد كل جرعة. أضف الإبراتروبيوم مبكراً عبر البخاخ 4 بخات مع كل جرعة سالبوتامول، حتى 3 جرعات (GINA). وإذا استُخدم الرذاذ، اتبع الجرعات الخاصة بالعمر في بطاقة الدواء؛ لا تحول جرعة البخاخ إلى الرذاذ." } },
+      { title: { fr: "Hors forme légère : prednisolone 40–50 mg PO chaque matin pendant 5–7 jours chez l'adulte ; chez l'enfant, 1–2 mg/kg/j (max. 40 mg) pendant 3–5 jours. Vérifier la tranche d'âge et la voie avant administration.", ar: "ما عدا النوبة الخفيفة: بريدنيزولون 40–50 ملغ فموياً صباحاً لمدة 5–7 أيام للبالغ؛ وللطفل 1–2 ملغ/كغ/يوم (حد أقصى 40 ملغ) لمدة 3–5 أيام. تحقق من العمر والطريق قبل الإعطاء." } },
+      { title: { fr: "Signes de gravité : impossibilité de parler, boire ou s'allonger, SpO₂ en air ambiant <92 %, FR >30/min, thorax silencieux/peu ventilé ou PEF <50 %. Danger vital : somnolence, confusion ou cyanose → transfert immédiat / équipe de réanimation.", ar: "علامات الشدة: عدم القدرة على الكلام أو الشرب أو الاستلقاء، تشبع أقل من 92% في هواء الغرفة، تنفس أكثر من 30/د، صدر صامت أو تهوية ضعيفة، أو PEF أقل من 50%. خطر على الحياة: نعاس أو ارتباك أو زرقة ← نقل فوري/فريق الإنعاش." } },
+      { title: { fr: "Si réponse insuffisante à la prise en charge initiale d'une forme sévère : avis spécialisé ; MgSO₄ IV 2 g sur 20 min à considérer sélectivement. Réévaluer et surveiller le K⁺/rythme si fortes doses répétées de β₂-mimétique.", ar: "إذا كانت الاستجابة غير كافية للعلاج الأولي للنوبة الشديدة: اطلب رأياً مختصاً؛ يمكن التفكير انتقائياً في كبريتات المغنيسيوم 2 غ وريدياً خلال 20 دقيقة. أعد التقييم وراقب K+ والنظم عند تكرار جرعات عالية من موسع بيتا-2." } },
     ],
     keyPoints: [
       { fr: "Ne PAS retarder la corticothérapie ; l'ipratropium se cumule au début.", ar: "لا تؤخر الكورتيكويد؛ إبراتروبيوم يُضاف باكراً." },
@@ -156,19 +156,19 @@ export const protocolsP2: Protocol[] = [
       { when: { fr: "Aggravation : épuisement, silence auscultatoire, SpO₂ < 90 %, bradycardie, GCS ↓", ar: "تدهور: إنهاك، صمت سمعي، تشبع أقل من 90%، بطء قلب، هبوط غلاسكو" }, do: [
         { fr: "Intubation-ventilation en urgence (préoxygénation, kétamine) ; attention à l'expiration longue (barotraumatisme).", ar: "تنبيب وتهوية عاجلة (أكسجة أولية، كيتامين)؛ حذار الزفير الطويل (رضح ضغطي)." },
       ]},
-      { when: { fr: "Réponse partielle à 20-30 min", ar: "استجابة جزئية خلال 20-30 د" }, do: [
-        { fr: "Répéter salbutamol continu ± ipratropium ; MgSO₄ 2 g IV / 20 min si forme grave ; corticoïdes IV/PO.", ar: "كرر سالبوتامول متواصلاً ± إيبراتروبيوم؛ مغنيزيوم 2 غ وريدياً / 20 د في الشكل الشديد؛ كورتيكويدات وريدياً/فموية." },
+      { when: { fr: "Réponse insuffisante ou aggravation après le traitement initial", ar: "استجابة غير كافية أو تدهور بعد العلاج الأولي" }, do: [
+        { fr: "Transfert/avis urgent en structure aiguë ; réévaluer diagnostic, signes vitaux et PEF/FEV1 si possible. Répéter le salbutamol seulement si nécessaire, jusqu'à 3 doses sur la première heure ; ipratropium réservé à la phase initiale (≤1–2 h). MgSO₄ IV sélectif si forme sévère avec réponse insuffisante ; surveiller les effets indésirables des β₂-mimétiques.", ar: "نقل/استشارة عاجلة في مرفق حاد؛ أعد تقييم التشخيص والعلامات الحيوية وPEF/FEV1 إن أمكن. كرر السالبوتامول عند الحاجة فقط حتى 3 جرعات في الساعة الأولى؛ يقتصر الإبراتروبيوم على المرحلة الأولية (≤1–2 ساعة). يمكن التفكير انتقائياً في MgSO₄ الوريدي عند النوبة الشديدة غير المستجيبة؛ راقب الآثار الجانبية لموسعات بيتا-2." },
       ]},
       { when: { fr: "Amélioration franche", ar: "تحسّن واضح" }, do: [
-        { fr: "Poursuivre β2 horaire puis espacer ; corticoïdes oraux ; NE PAS sortir avant 1 h après la dernière dose.", ar: "واصل β2 كل ساعة ثم تباعد؛ كورتيكويدات فموية؛ لا خروج قبل ساعة من آخر جرعة." },
+        { fr: "Envisager la sortie seulement après amélioration stable pendant 1–2 h après la dernière dose de salbutamol, SpO₂ ≥92 % en air ambiant, PEF >70 % du meilleur/prédit et ressources à domicile suffisantes. Optimiser le traitement contenant un CSI, remettre un plan d'action et organiser le suivi dans la semaine.", ar: "لا تفكر في الخروج إلا بعد تحسن مستقر لمدة 1–2 ساعة بعد آخر جرعة سالبوتامول، وتشبع ≥92% في هواء الغرفة، وPEF أعلى من 70% من الأفضل/المتوقع، وتوفر دعم منزلي كافٍ. حسّن العلاج المحتوي على CSI، وقدّم خطة عمل ونظّم المتابعة خلال أسبوع." },
       ]},
       { when: { fr: "Complication : pneumothorax (déviation, douleur brutale, SpO₂ ↓)", ar: "مضاعفة: استرواح (انحراف، ألم مفاجئ، هبوط تشبع)" }, do: [
         { fr: "Si pneumothorax sous tension suspecté et décompression indiquée : appliquer sans délai la filière locale et la notice du dispositif ; si ventilation mécanique, alerter l'équipe responsable et réévaluer.", ar: "عند الاشتباه باسترواح ضاغط واستطباب إزالة الضغط: اتبع فوراً المسار المحلي وتعليمات الجهاز؛ وإذا كان المريض على تهوية آلية فأبلغ الفريق المسؤول وأعد التقييم." },
       ]},
     ],
-    medications: ["salbutamol", "hydrocortisone", "sulfate-magnesium"],
+    medications: ["salbutamol", "ipratropium", "prednisolone", "sulfate-magnesium"],
     calculators: [],
-    meta: { sources: ["GINA 2024", "BTS/SIGN 2024"], lastReviewed: "2026-08" },
+    meta: { sources: ["GINA Strategy Report 2026 (Summary Guide, Figure 9, p. 36 ; adultes, adolescents et enfants ≥6 ans)", "GINA Difficult-to-Treat & Severe Asthma Guide 2026 (ipratropium, courte durée)", "NHS Greater Glasgow and Clyde — acute severe asthma in adults (ipratropium nébulisé et MgSO₄ IV 1.2–2 g/20 min ; revue 2022)", "Sydney Children's Hospitals Network — Asthma: Acute Management v10.2 (doses pédiatriques nébulisées ; publication 2026-02-06)"], lastReviewed: "2026-10" },
   },
   {
     id: "choc-septique",
