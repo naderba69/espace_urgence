@@ -34,6 +34,11 @@ Toutes les dates sont au format `AAAA-MM-JJ`.
 
 ## [Unreleased] — 2026-10-28
 
+### ATB-DFG V2 — préparation non clinique (2026-10-30)
+- Préparation de l’interface française à seuils continus : recherche multi-mots, filtres par familles, cartes, détail des intervalles, transparence E1–E4 et états de traduction/surveillance.
+- Le panneau est raccordé au DFG CKD-EPI brut déjà calculé (Cockcroft–Gault reste informatif). Le drapeau reste désactivé en production; le mode de revue est accessible uniquement en développement après un clic explicite et porte l’avertissement « ne pas prescrire ».
+- Vérification humaine des écarts, validation tunisienne et revue des traductions arabes restent à faire. Cette entrée décrit une préparation logicielle et n’autorise pas un usage clinique.
+
 ### Interface du calculateur ATB-DFG
 - Ajout d’une sélection explicite d’un ou plusieurs antibiotiques et d’un filtre « Mes antibiotiques choisis » pour consulter uniquement les cartes retenues pour le patient; la sélection est distincte du bouton « Retenir » du plan thérapeutique.
 - La page conserve ses garde-fous : elle ne choisit pas l’antibiotique, ne remplace pas les contextes d’infection et bloque toujours les doses lorsque la fonction rénale ou la cellule source n’est pas exploitable.
