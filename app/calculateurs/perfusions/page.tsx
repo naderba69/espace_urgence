@@ -8,7 +8,8 @@ import T from "@/components/T";
 import { PERFUSIONS, perfusionFlow, type PerfusionPreset } from "@/data/perfusions";
 import { getMedication } from "@/data/medications";
 import { trackEvent } from "@/lib/analytics";
-import { readJSON, writeJSON } from "@/lib/storage";
+import { readSessionJSON, writeSessionJSON } from "@/lib/storage";
+import { sanitizePerfusionState } from "@/lib/calculator-storage";
 import Link from "next/link";
 import { ArrowRight, Info, Syringe, AlertTriangle, Stethoscope } from "lucide-react";
 
@@ -26,22 +27,19 @@ export default function PerfusionsPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    const saved = readJSON<{ idx: number; weight: string; dose: number }>(STORE, null as never);
-    /* eslint-disable react-hooks/set-state-in-effect -- restauration localStorage après hydratation, pour éviter un mismatch SSR/hydratation. */
+    const saved = sanitizePerfusionState(readSessionJSON<unknown>(STORE, null), PERFUSIONS.length);
+    /* eslint-disable react-hooks/set-state-in-effect -- restauration sessionStorage après hydratation, pour éviter un mismatch SSR/hydratation. */
     if (saved) {
-      const restoredIdx = Number.isInteger(saved.idx) && saved.idx >= 0 && saved.idx < PERFUSIONS.length ? saved.idx : 0;
-      const preset = PERFUSIONS[restoredIdx];
-      const savedDose = Number.isFinite(saved.dose) && saved.dose > 0
-        ? Math.min(Math.max(saved.dose, preset.doseMin), preset.doseMax)
-        : 0;
-      setIdx(restoredIdx);
-      setWeight(saved.weight ?? "70");
+      const preset = PERFUSIONS[saved.idx];
+      const savedDose = saved.dose > 0 ? Math.min(Math.max(saved.dose, preset.doseMin), preset.doseMax) : 0;
+      setIdx(saved.idx);
+      setWeight(saved.weight);
       setDose(savedDose);
     }
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [hydrated]);
   useEffect(() => {
-    if (hydrated) writeJSON(STORE, { idx, weight, dose });
+    if (hydrated) writeSessionJSON(STORE, { idx, weight, dose });
   }, [idx, weight, dose, hydrated]);
 
   const p: PerfusionPreset = PERFUSIONS[idx];
@@ -155,7 +153,11 @@ export default function PerfusionsPage() {
             let unit: string;
             if (p.unit.includes("µg")) { perH = p.unit.includes("min") ? d * wkg * 60 / 1000 : d * wkg / 1000; unit = "mg/h"; }
             else if (p.unit.includes("mg")) { perH = p.unit.includes("min") ? d * wkg * 60 : d * wkg; unit = "mg/h"; }
-            else if (p.unit.includes("UI")) { perH = d * wkg; unit = "UI/h"; }
+            else if (p.unit.includes("UI")) {
+              perH = d * wkg;
+              if (p.maxUnitsPerHour !== undefined) perH = Math.min(perH, p.maxUnitsPerHour);
+              unit = "UI/h";
+            }
             else if (p.unit.includes("g/h")) { perH = d; unit = "g/h"; }
             else { perH = 0; unit = ""; }
             return `${perH >= 100 ? Math.round(perH) : Math.round(perH * 100) / 100} ${unit}`;

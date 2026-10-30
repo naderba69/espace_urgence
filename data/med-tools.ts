@@ -32,7 +32,8 @@ export interface MedToolCfg {
 
 export const MED_TOOLS: Record<string, MedToolCfg> = {
   noradrenaline: {
-    pump: { unit: "µg/kg/min", doseMin: 0.01, doseMax: 1, doseStep: 0.01, doseStart: 0.05, defAmpMg: 4, defAmpVol: 4, defCount: 4, defTarget: 50, warnAbove: 0.5 },
+    // Standard calcul : 8 mg base/50 mL = 160 µg/mL. 2 × 4 mg base-equivalent ampoules only when the local RCP confirms that equivalence.
+    pump: { unit: "µg/kg/min", doseMin: 0.01, doseMax: 1, doseStep: 0.01, doseStart: 0.05, defAmpMg: 4, defAmpVol: 4, defCount: 2, defTarget: 50, warnAbove: 0.5 },
     protocols: ["choc-septique"],
   },
   dobutamine: {
@@ -55,8 +56,7 @@ export const MED_TOOLS: Record<string, MedToolCfg> = {
   },
   amikacine: {
     links: [
-      { href: "/calculateurs/antibiotiques", label: { fr: "Dose adulte + ClCr (Cockcroft–Gault)", ar: "جرعة البالغ + ClCr (Cockcroft–Gault)" } },
-      { href: "/calculateurs/antibio-renal?q=Amikacine", label: { fr: "Tableau rénal séparé (DFG)", ar: "جدول كلوي منفصل (DFG)" } },
+      { href: "/calculateurs/antibio-renal?q=Amikacine", label: { fr: "Tableau ATB OMEDIT (DFG, référence séparée)", ar: "جدول OMEDIT للمضادات (DFG، مرجع منفصل)" } },
     ],
     badges: { renal: { fr: "Répétition guidée par la fonction rénale/TDM", ar: "تكرار الجرعة حسب الكلى وقياس مستويات الدواء" } },
   },
@@ -93,7 +93,8 @@ export const MED_TOOLS: Record<string, MedToolCfg> = {
     weightDose: { mgPerKg: 1.2, maxMg: 100, decimals: 0, note: { fr: "RSI : 1,2 mg/kg IV", ar: "التسلسل السريع: 1.2 ملغ/كغ وريدياً" } },
   },
   propofol: {
-    pump: { unit: "mg/kg/h", doseMin: 0.5, doseMax: 4, doseStep: 0.5, doseStart: 1, defAmpMg: 200, defAmpVol: 20, defCount: 2, defTarget: 50, warnAbove: 4 },
+    // 10 mg/mL, one 50 mL vial: 500 mg in 50 mL (no dilution); verify the exact product.
+    pump: { unit: "mg/kg/h", doseMin: 0.5, doseMax: 4, doseStep: 0.5, doseStart: 1, defAmpMg: 500, defAmpVol: 50, defCount: 1, defTarget: 50, warnAbove: 4 },
     badges: { pregnancy: { fr: "Éviter en obstétrique", ar: "يُتجنب في التوليد" } },
   },
   "sulfate-magnesium": {
@@ -102,35 +103,43 @@ export const MED_TOOLS: Record<string, MedToolCfg> = {
   },
 };
 
-import { PERFUSIONS } from "./perfusions";
+import { PERFUSIONS, type PerfusionPreset } from "./perfusions";
 
-/** v2.3 — pompe auto-configurée depuis la préparation RE.NAU de toute perfusion connue. */
-export function pumpCfgFromPerfusion(medId: string): PumpCfg | undefined {
-  const matches = PERFUSIONS.filter((x) => x.drugId === medId);
-  // Un même médicament peut avoir plusieurs préparations/indications (p. ex. héparine SCA/EP).
-  // Choisir la première par ordre du tableau masquerait ce contexte et pourrait afficher une dose
-  // inadaptée. Dans ce cas, seule une configuration explicitement sélectionnée ailleurs est sûre.
-  if (matches.length !== 1) return undefined;
-  const [p] = matches;
+/** Build a pump only from a structured, arithmetically concordant preparation. */
+export function pumpCfgFromPreset(p: PerfusionPreset): PumpCfg | undefined {
+  const prep = p.pumpPreparation;
+  if (!prep || prep.convention !== "total") return undefined;
+
   const isUI = p.unit.startsWith("UI");
-  const mm = p.prep.fr.match(/([\d\s.,]+)\s*(mg|UI|g)\b/i);
-  const mv = p.prep.fr.match(/(\d+)\s*mL/i);
-  const vol = mv ? Number(mv[1]) : 50;
-  let amount = 0;
-  if (mm) amount = Number(mm[1].replace(/\s/g, "").replace(",", "."));
-  let amp = 0;
-  if (mm && mm[2] === "g") amp = amount * 1000;
-  else if (mm) amp = amount; // mg ou UI
-  else amp = isUI ? p.concUgPerMl * vol : (p.concUgPerMl * vol) / 1000;
+  if (isUI !== (prep.amountUnit === "UI")) return undefined;
+  const preparedVolume = prep.targetMl;
+  if (preparedVolume <= 0) return undefined;
+
+  const perContainer = prep.amountUnit === "g" ? prep.amount * 1000 : prep.amount;
+  const computedConc = isUI
+    ? (perContainer * prep.count) / preparedVolume
+    : (perContainer * prep.count * 1000) / preparedVolume;
+  if (!Number.isFinite(computedConc) || computedConc <= 0) return undefined;
+  // Concentration source must match the structured preparation and remain within a plausibility range.
+  if (Math.abs(computedConc - p.concUgPerMl) > Math.max(0.01, p.concUgPerMl * 0.01)) return undefined;
+  if (!isUI && (computedConc / 1000 < 0.01 || computedConc / 1000 > 100)) return undefined;
+
   return {
     unit: p.unit as PumpUnit,
     doseMin: p.doseMin,
     doseMax: p.doseMax,
     doseStep: p.doseStep,
     doseStart: p.doseStart ?? p.doseMin,
-    defAmpMg: amp,
-    defAmpVol: 0,
-    defCount: 1,
-    defTarget: vol,
+    defAmpMg: perContainer,
+    defAmpVol: prep.volumeMl,
+    defCount: prep.count,
+    defTarget: prep.targetMl,
   };
+}
+
+/** Generate only when exactly one preset exists and it carries a validated structured preparation. */
+export function pumpCfgFromPerfusion(medId: string): PumpCfg | undefined {
+  const matches = PERFUSIONS.filter((preset) => preset.drugId === medId);
+  if (matches.length !== 1) return undefined;
+  return pumpCfgFromPreset(matches[0]);
 }

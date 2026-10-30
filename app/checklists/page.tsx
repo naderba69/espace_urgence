@@ -4,32 +4,23 @@ import { useEffect, useState } from "react";
 import { useApp } from "@/components/Providers";
 import { useRegisterRecent } from "@/components/SearchBar";
 import { CHECKLISTS } from "@/data/checklists";
+import { loadChecks, type Checks } from "@/lib/checklists-storage";
 import { CheckCircle2, Circle, Printer, RotateCcw } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 
 const STORE_KEY = "eutn:checklists";
 
-type Checks = Record<string, Record<string, boolean>>;
-
-function loadChecks(): Checks {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(localStorage.getItem(STORE_KEY) || "{}") as Checks;
-  } catch {
-    return {};
-  }
-}
-
 export default function ChecklistsPage() {
   const { lang, t } = useApp();
   useRegisterRecent("outil:checklists");
   const [checks, setChecks] = useState<Checks>({});
+  const [loaded, setLoaded] = useState(false);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration localStorage après hydratation (serveur rendu par défaut, anti-mismatch)
-  useEffect(() => setChecks(loadChecks()), []);
+  useEffect(() => { setChecks(loadChecks()); setLoaded(true); }, []);
   useEffect(() => {
-    if (typeof window !== "undefined") localStorage.setItem(STORE_KEY, JSON.stringify(checks));
-  }, [checks]);
+    if (loaded && typeof window !== "undefined") localStorage.setItem(STORE_KEY, JSON.stringify(checks));
+  }, [checks, loaded]);
 
   const itemKey = (cid: string, gi: number, ii: number) => `${cid}:${gi}:${ii}`;
 

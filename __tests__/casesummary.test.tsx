@@ -23,12 +23,13 @@ vi.mock("@/components/Providers", () => ({
   usePrefillPatient: () => {},
 }));
 
-import { buildCaseSummary, pushVitals, getVitalsLog, clearVitalsLog, VITALS_LOG_KEY } from "@/lib/casesummary";
+import { buildCaseSummary, pushVitals, getVitalsLog, clearVitalsLog, VITALS_LOG_KEY, sanitizeTimelineArchive, sanitizeTimelineEvents, sanitizeVitalsLog } from "@/lib/casesummary";
 import ReevaluationPage from "@/app/reevaluation/page";
 import ResumePage from "@/app/resume/page";
 
 beforeEach(() => {
   localStorage.clear();
+  sessionStorage.clear();
 });
 
 const T945 = new Date(2026, 8, 20, 9, 45).getTime();
@@ -71,6 +72,27 @@ describe("v16.2 — بنّاء الملخص (نقي)", () => {
   });
 });
 
+describe("v16.2 — validation des données persistées", () => {
+  it("filtre les constantes, chronologies et archives invalides sans faire confiance au JSON", () => {
+    expect(sanitizeVitalsLog([
+      { at: T945, v: { fc: 90, pas: "mauvais", unknown: 1 } },
+      { at: T1030 + 1, v: { fc: 80 } },
+      { at: T1030, v: null },
+    ], T1030)).toEqual([{ at: T945, v: { fc: 90 } }]);
+    expect(sanitizeTimelineEvents([
+      { id: "x", f: "Médicament", a: "دواء", t: T945, m: 30 },
+      { id: {}, f: "x", a: "y", t: T945, m: 30 },
+      { f: "futur", a: "futur", t: T1030 + 1, m: 30 },
+      { f: "durée", a: "durée", t: T945, m: 99_999 },
+    ], T1030)).toEqual([{ id: "x", f: "Médicament", a: "دواء", t: T945, m: 30 }]);
+    expect(sanitizeTimelineArchive([
+      { at: T945, n: 2, text: "archive" },
+      { at: T1030 + 1, n: 1, text: "future" },
+      { at: T945, n: "2", text: "bad" },
+    ], T1030)).toEqual([{ at: T945, n: 2, text: "archive" }]);
+  });
+});
+
 describe("v16.2 — سجل الثوابت", () => {
   it("سقف 6 لقطات، الأحدث أولاً، والمسح ينظف", () => {
     for (let i = 0; i < 8; i++) pushVitals({ fc: 80 + i });
@@ -80,7 +102,7 @@ describe("v16.2 — سجل الثوابت", () => {
     expect(log[5].v.fc).toBe(82);
     clearVitalsLog();
     expect(getVitalsLog()).toEqual([]);
-    expect(localStorage.getItem(VITALS_LOG_KEY)).toBeNull();
+    expect(sessionStorage.getItem(VITALS_LOG_KEY)).toBeNull();
   });
 });
 
@@ -122,7 +144,7 @@ describe("v16.2 — حارس بنيوي", () => {
   it("الإصدار 16.2 متزامن", async () => {
     const fs = await import("node:fs");
     const { APP_VERSION } = await import("../lib/version");
-    expect(APP_VERSION).toBe("18.1");
-    expect(fs.readFileSync("public/sw.js", "utf8")).toContain('const VERSION = "eutn-v18.1";');
+    expect(APP_VERSION).toBe("18.7");
+    expect(fs.readFileSync("public/sw.js", "utf8")).toContain('const VERSION = "eutn-v18.7";');
   });
 });

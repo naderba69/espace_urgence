@@ -5,8 +5,9 @@ import { useApp } from "@/components/Providers";
 import { useRegisterRecent } from "@/components/SearchBar";
 import T from "@/components/T";
 import { trackEvent } from "@/lib/analytics";
-import { readJSON, writeJSON } from "@/lib/storage";
+import { readSessionJSON, writeSessionJSON } from "@/lib/storage";
 import { dripRate } from "@/lib/calc";
+import { sanitizeDripState } from "@/lib/calculator-storage";
 
 const STORE = "eutn:calc:debit";
 
@@ -19,12 +20,12 @@ export default function DebitPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    const s = readJSON<{ volume: string; hours: string; dropsPerMl: 20 | 60 }>(STORE, null as never);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration localStorage après hydratation (anti-mismatch)
+    const s = sanitizeDripState(readSessionJSON<unknown>(STORE, null));
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration sessionStorage après hydratation (anti-mismatch)
     if (s) { setVolume(s.volume); setHours(s.hours); setDropsPerMl(s.dropsPerMl); }
   }, [hydrated]);
   useEffect(() => {
-    if (hydrated) writeJSON(STORE, { volume, hours, dropsPerMl });
+    if (hydrated) writeSessionJSON(STORE, { volume, hours, dropsPerMl });
   }, [volume, hours, dropsPerMl, hydrated]);
 
   const v = Number(volume);

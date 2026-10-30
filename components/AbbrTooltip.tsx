@@ -1,15 +1,18 @@
 "use client";
 // v14.5 — اختصار قابل للنقر : Bottom Sheet مثبّتة أسفل الشاشة (لا فقاعة مطلقة تُقص).
 // Usage : <Abbr k="PAM" /> — أو كشف تلقائي عبر <AbbrText>نص</AbbrText>.
-import { useEffect, useState, isValidElement, cloneElement, type ReactNode, type ReactElement } from "react";
+import { useEffect, useRef, useState, isValidElement, cloneElement, type ReactNode, type ReactElement } from "react";
 import { useApp } from "@/components/Providers";
 import { ABBREVIATIONS, getAbbr } from "@/data/abbr";
 import { X } from "lucide-react";
+import { useModalFocusTrap } from "@/lib/modal-focus";
 
 export function Abbr({ k, children }: { k: string; children?: ReactNode }) {
   const [open, setOpen] = useState(false);
   const { lang } = useApp();
   const entry = getAbbr(k);
+  const dialogRef = useRef<HTMLSpanElement>(null);
+  useModalFocusTrap(dialogRef, open);
 
   // Esc يغلق + قفل تمرير الخلفية أثناء فتح الورقة
   useEffect(() => {
@@ -38,7 +41,7 @@ export function Abbr({ k, children }: { k: string; children?: ReactNode }) {
         {children ?? k}
       </button>
       {open && (
-        <span className="fixed inset-0 z-[60] block" role="dialog" aria-modal="true" aria-label={entry.abbr}>
+        <span ref={dialogRef} tabIndex={-1} className="fixed inset-0 z-[60] block" role="dialog" aria-modal="true" aria-label={entry.abbr}>
           <span className="absolute inset-0 block bg-black/50" onClick={() => setOpen(false)} aria-hidden />
           <span className="eutn-sheet absolute inset-x-0 bottom-0 block max-h-[72dvh] overflow-y-auto rounded-t-2xl border border-b-0 border-line bg-surface p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl">
             <span className="mx-auto mb-3 block h-1.5 w-10 rounded-full bg-line" aria-hidden />

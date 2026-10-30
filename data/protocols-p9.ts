@@ -91,7 +91,7 @@ export const protocolsPhase9: Protocol[] = [
     steps: [
       { title: { fr: "Triade évocatrice : douleur abdominale BRUTALE et INTENSE + abdomen SOUPLE (disproportion) + terrain (FA, cardiopathie, athérome, hypercoagulabilité)", ar: "ثلاثية موحية: ألم بطني مفاجئ شديد + بطن لين (عدم تناسب) + أرضية (رجفان، مرض قلب، تصلب شرايين، فرط تخثر)" } },
       { title: { fr: "À jeun, 2 voies veineuses, remplissage — l'intestin ischémique séquestre des litres", ar: "صيام، وريدان، تعبئة — الأمعاء المتقفرة تحبس لترات" } },
-      { title: { fr: "Anticoagulation : héparine non fractionnée IV (bolus 80 UI/kg puis PSE) dès la suspicion si pas de contre-indication — après prélèvements", ar: "مضاد تخثر: هيبارين غير مجزأ وريدي (دفعة 80 و/كغ ثم مضخة) منذ الاشتباه إن لم يوجد مانع — بعد السحب" } },
+      { title: { fr: "Anticoagulation thérapeutique précoce par HNF IV si l’étiologie occlusive est retenue et sans contre-indication; le WSES recommande l’anticoagulation, mais ne fixe pas ici de bolus 80 UI/kg ni de nomogramme universel : la dose et le moment préopératoire sont coordonnés sans délai avec chirurgie/vasculaire.", ar: "مضاد تخثر علاجي مبكر بـHNF وريدياً عند ثبوت السبب الانسدادي وغياب المانع؛ توصي WSES بمضاد التخثر لكنها لا تحدد هنا دفعة 80 وحدة/كغ أو مخططاً عالمياً؛ ينسق الفريق الجرعة والتوقيت قبل الجراحة فوراً." } },
       { title: { fr: "Angio-TDM artérioveineuse immédiate — ne PAS attendre le lactate ni « réévaluer dans 2 h »", ar: "تصوير وعائي شرياني وريدي فوري — لا تنتظر اللاكتات ولا «أعد التقييم بعد ساعتين»" } },
       { title: { fr: "Appel chirurgical/vasculaire dès la suspicion : embolectomie/revascularisation < 6 h, résection si nécrose", ar: "نداء جراح/أوعية منذ الاشتباه: استئصال خثرة/إعادة تروية < 6 س، استئصال عند النخر" } },
       { title: { fr: "Antibiothérapie large (céfotaxime + métronidazole) si signes de souffrance/translocation", ar: "مضادات واسعة (سيفوتاكسيم + مترونيدازول) عند علامات معاناة/انتقال جرثومي" } },
@@ -112,7 +112,7 @@ export const protocolsPhase9: Protocol[] = [
     ],
     medications: ["heparine", "cefotaxime", "morphine"],
     calculators: ["raaf", "has-bled"],
-    meta: { sources: ["WSES 2017", "ESVM mésentérique"], lastReviewed: "2026-09" },
+    meta: { sources: ["WSES acute mesenteric ischemia 2022", "ESVM mésentérique"], lastReviewed: "2026-10" },
   },
   {
     id: "ischemie-membre-aigu",
@@ -126,7 +126,7 @@ export const protocolsPhase9: Protocol[] = [
     },
     steps: [
       { title: { fr: "Diagnostic clinique : douleur brutale + pâleur + abolition des pouls distaux + froideur ; comparer TOUJOURS avec le côté controlatéral", ar: "تشخيص سريري: ألم مفاجئ + شحوب + غياب نبض قاصي + برودة؛ قارن دائماً مع الجهة الأخرى" } },
-      { title: { fr: "HÉPARINE non fractionnée IV immédiate (bolus 80 UI/kg puis PSE objectif TCA 2-3×) — empêche l'extension du thrombus", ar: "هيبارين غير مجزأ وريدي فوراً (دفعة 80 و/كغ ثم مضخة هدف TCA ‏2-3 أضعاف) — يمنع امتداد الخثرة" } },
+      { title: { fr: "HNF IV immédiate si absence de contre-indication et en coordination avec le chirurgien vasculaire : ESVS 2020 décrit un bolus de 5 000 UI ou 70–100 UI/kg, puis une perfusion ajustée à la réponse, surveillée par ACT ou TCA. Ne pas transposer automatiquement le débit 18 UI/kg/h ni un ratio TCA d’un protocole TVP/EP.", ar: "HNF وريدياً فوراً إن لم يوجد مانع وبالتنسيق مع جراح الأوعية: تذكر ESVS 2020 دفعة 5000 وحدة أو 70–100 وحدة/كغ، ثم تسريباً يُعاير حسب الاستجابة مع مراقبة ACT أو TCA. لا تنقل تلقائياً 18 وحدة/كغ/س أو نسبة TCA من بروتوكول الخثار الوريدي/الصمة." } },
       { title: { fr: "Membre à plat (pas surélevé), protégé, NON chauffé ; antalgie IV (morphine)", ar: "الطرف مستوٍ (لا مرفوع)، محمى، دون تدفئة؛ تسكين وريدي (مورفين)" } },
       { title: { fr: "Évaluation Rutherford : I (viable) — IIa (menacée marginale) — IIb (menacée immédiate : déficit sensitif ± moteur = urgence absolue) — III (irréversible)", ar: "تصنيف رذرفورد: ‏I (قابل للحياة) — IIa (مهدد هامشياً) — IIb (مهدد فوراً: نقص حس ± حركي = طوارئ مطلقة) — III (لا رجعة)" } },
       { title: { fr: "Appel chirurgical vasculaire IMMÉDIAT : embolectomie de Fogarty / thrombolyse in situ / pontage selon stade et étiologie", ar: "نداء جراح أوعية فوري: استئصال خثرة بفوغارتي / إذابة موضعية / تطعيم حسب المرحلة والسبب" } },
@@ -148,7 +148,7 @@ export const protocolsPhase9: Protocol[] = [
     ],
     medications: ["heparine", "morphine"],
     calculators: ["raaf", "transfusion"],
-    meta: { sources: ["ESVS périphérique 2017", "Rutherford classification"], lastReviewed: "2026-09" },
+    meta: { sources: ["ESVS acute limb ischaemia 2020", "Rutherford classification"], lastReviewed: "2026-10" },
   },
   {
     id: "meningite-bacterienne",

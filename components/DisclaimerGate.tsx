@@ -1,15 +1,18 @@
 "use client";
 // Avertissement médical obligatoire au 1er accès (bloquant jusqu'à acceptation).
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ShieldAlert } from "lucide-react";
 import { useApp } from "./Providers";
 import { KEYS, readJSON, writeJSON, removeKey } from "@/lib/storage";
+import { useModalFocusTrap } from "@/lib/modal-focus";
 
 export const DISCLAIMER_EVENT = "eutn:show-disclaimer"; // les paramètres peuvent le rouvrir
 
 export default function DisclaimerGate() {
   const { t, hydrated } = useApp();
   const [visible, setVisible] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocusTrap(dialogRef, visible);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -26,7 +29,7 @@ export default function DisclaimerGate() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4" role="alertdialog" aria-modal="true" aria-label={t("disclaimer.title")}>
+    <div ref={dialogRef} tabIndex={-1} className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4" role="alertdialog" aria-modal="true" aria-label={t("disclaimer.title")}>
       <div className="w-full max-w-lg rounded-2xl border border-amber-500/50 bg-surface p-6 shadow-2xl">
         <h2 className="mb-3 flex items-center gap-2 text-xl font-bold text-amber-500">
           <ShieldAlert className="h-6 w-6" aria-hidden />

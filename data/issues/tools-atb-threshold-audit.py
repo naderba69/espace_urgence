@@ -41,6 +41,7 @@ def axis_ticks(page: Any) -> dict[int, float]:
 
 
 def cell_boundaries(rows: list[dict[str, Any]]) -> dict[int, set[float]]:
+    """Unique x coordinates per page (for the printed-grid inventory)."""
     out: dict[int, set[float]] = defaultdict(set)
     for row in rows:
         page = int(row["page"])
@@ -49,6 +50,36 @@ def cell_boundaries(rows: list[dict[str, Any]]) -> dict[int, set[float]]:
                 out[page].add(round(float(cell["x0"]), 1))
                 out[page].add(round(float(cell["x1"]), 1))
     return out
+
+
+def cell_boundary_occurrences(rows: list[dict[str, Any]]) -> dict[int, list[tuple[float, str]]]:
+    """Internal cell boundaries per source line; shared x values remain separate observations."""
+    out: dict[int, list[tuple[float, str]]] = defaultdict(list)
+    for row in rows:
+        page = int(row["page"])
+        label = str(row.get("label", ""))
+        for line in row.get("lines", []):
+            cells = line.get("source_cells", [])
+            for cell in cells[:-1]:
+                x = round(float(cell["x1"]), 1)
+                if abs(x - 133.9) <= 0.2 or abs(x - 795.5) <= 0.2:
+                    continue
+                out[page].append((x, label))
+    return out
+
+
+def interpolate_dfg(x: float, ticks: dict[int, float], offset: float) -> float:
+    """Interpolate a boundary position against adjacent printed axis labels."""
+    axis = sorted((edge + offset, float(value)) for value, edge in ticks.items())
+    target = x
+    if target <= axis[0][0]:
+        return axis[0][1]
+    if target >= axis[-1][0]:
+        return axis[-1][1]
+    for (x0, dfg0), (x1, dfg1) in zip(axis, axis[1:]):
+        if x0 <= target <= x1:
+            return dfg0 + (target - x0) * (dfg1 - dfg0) / (x1 - x0)
+    raise ValueError(f"Boundary x={x:.1f} is outside the DFG axis")
 
 
 def main() -> int:
@@ -114,10 +145,37 @@ def main() -> int:
             f"unmatched={preview or 'none'}"
         )
 
+    occurrences_by_page = cell_boundary_occurrences(rows)
+    occurrence_count = sum(map(len, occurrences_by_page.values()))
+    occurrence_errors: list[float] = []
+    occurrence_misses: list[tuple[int, float, str, float]] = []
+    for page_no, occurrences in occurrences_by_page.items():
+        ticks = ticks_by_page[page_no]
+        for x, label in occurrences:
+            nearest_tick, residual = min(
+                ((tick, x - (right_edge + offset)) for tick, right_edge in ticks.items()),
+                key=lambda item: abs(item[1]),
+            )
+            if abs(residual) > 0.25:
+                occurrence_misses.append((page_no, x, label, residual))
+                continue
+            dfg_estimate = interpolate_dfg(x, ticks, offset)
+            occurrence_errors.append(abs(dfg_estimate - nearest_tick))
+    if occurrence_misses:
+        preview = ", ".join(
+            f"p.{p} x={x:.1f} residual={d:+.2f}pt ({label})"
+            for p, x, label, d in occurrence_misses[:8]
+        )
+        raise ValueError(f"Unmapped source-line boundaries: {preview}")
+
     unique_thresholds = sorted({tick for page in mapped.values() for tick in page}, reverse=True)
-    print(f"PDF pages: {len(pdf)}; JSON rows: {len(rows)}")
-    print(f"Inferred label-to-grid offset: {offset:.2f} pt")
-    print(f"Internal cell-boundary coordinates mapped: {total_mapped}/{total_internal}")
+    print(f"PDF pages: {len(pdf)}; JSON molecule rows: {len(rows)}")
+    print(f"Source lines / source cells: {sum(len(row.get('lines', [])) for row in rows)} / "
+          f"{sum(len(line.get('source_cells', [])) for row in rows for line in row.get('lines', []))}")
+    print(f"Inferred label-to-grid offset: {offset:.3f} pt")
+    print(f"Unique internal x coordinates mapped: {total_mapped}/{total_internal}")
+    print(f"Per-line internal boundary observations mapped: {occurrence_count}/{occurrence_count}")
+    print(f"Maximum deviation from nearest printed DFG graduation: {max(occurrence_errors, default=0):.5f} mL/min")
     print("Printed DFG ticks used by at least one cell boundary: " + ", ".join(map(str, unique_thresholds)))
     for page_no in sorted(mapped):
         page_count = sum(len(xs) for xs in mapped[page_no].values())

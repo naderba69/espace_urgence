@@ -41,27 +41,28 @@ const traitementsBox = () => screen.getByLabelText("العلاجات") as HTMLTe
 
 beforeEach(() => {
   localStorage.clear();
+  sessionStorage.clear();
   vi.spyOn(window, "alert").mockImplementation(() => {}).mockClear();
   vi.spyOn(window, "confirm").mockReturnValue(true).mockClear();
 });
 
 describe("فيشة SAMU — استيراد خط الزمن v14.6", () => {
   it("الاستيراد الآلي عند أول فتح بحالة فارغة: يملأ العلاجات بأسطر HH:MM — الاسم مرتبة زمنيًا", () => {
-    localStorage.setItem(TL, JSON.stringify(EVENTS));
+    sessionStorage.setItem(TL, JSON.stringify(EVENTS));
     render(<FicheSamuPage />);
     expect(traitementsBox().value).toBe(EXPECT);
   });
 
   it("الاستيراد الآلي لا يمسح حقل «العلاجات» محفوظًا غير فارغ", () => {
-    localStorage.setItem(TL, JSON.stringify(EVENTS));
-    localStorage.setItem(STORE, JSON.stringify({ traitements: "محفوظ يدويًا" }));
+    sessionStorage.setItem(TL, JSON.stringify(EVENTS));
+    sessionStorage.setItem(STORE, JSON.stringify({ traitements: "محفوظ يدويًا" }));
     render(<FicheSamuPage />);
     expect(traitementsBox().value).toBe("محفوظ يدويًا");
   });
 
   it("الزر مع حقل غير فارغ + تأكيد بالقبول: يستبدل وينبّه بعدد الإعطاءات", () => {
-    localStorage.setItem(TL, JSON.stringify(EVENTS));
-    localStorage.setItem(STORE, JSON.stringify({ traitements: "XXX" }));
+    sessionStorage.setItem(TL, JSON.stringify(EVENTS));
+    sessionStorage.setItem(STORE, JSON.stringify({ traitements: "XXX" }));
     const confirmSpy = window.confirm as ReturnType<typeof vi.spyOn>;
     confirmSpy.mockReturnValue(true);
     render(<FicheSamuPage />);
@@ -72,8 +73,8 @@ describe("فيشة SAMU — استيراد خط الزمن v14.6", () => {
   });
 
   it("الزر مع حقل غير فارغ + رفض التأكيد: لا يغيّر شيئًا ولا ينبّه نجاحًا", () => {
-    localStorage.setItem(TL, JSON.stringify(EVENTS));
-    localStorage.setItem(STORE, JSON.stringify({ traitements: "XXX" }));
+    sessionStorage.setItem(TL, JSON.stringify(EVENTS));
+    sessionStorage.setItem(STORE, JSON.stringify({ traitements: "XXX" }));
     const confirmSpy = window.confirm as ReturnType<typeof vi.spyOn>;
     confirmSpy.mockReturnValue(false);
     render(<FicheSamuPage />);
@@ -84,7 +85,7 @@ describe("فيشة SAMU — استيراد خط الزمن v14.6", () => {
   });
 
   it("بدون خط زمن: الزر ينبّه بعدم وجود إعطاءات ولا يفسد الحقل", () => {
-    localStorage.setItem(STORE, JSON.stringify({ traitements: "دواء موجود" }));
+    sessionStorage.setItem(STORE, JSON.stringify({ traitements: "دواء موجود" }));
     render(<FicheSamuPage />);
     fireEvent.click(screen.getByRole("button", { name: /استيراد الخط الزمني/ }));
     expect(traitementsBox().value).toBe("دواء موجود");

@@ -181,6 +181,8 @@ export default function AntibioRenalPage() {
   // ── البحث والفلترة / Recherche ──────────────────────────────────────────────────────
   const [q, setQ] = useState("");
   const [section, setSection] = useState<string | null>(null);
+  const [selectedMedicationIds, setSelectedMedicationIds] = useState<string[]>([]);
+  const [showOnlySelected, setShowOnlySelected] = useState(false);
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get("q");
     if (requested) {
@@ -196,6 +198,15 @@ export default function AntibioRenalPage() {
       return normalize(`${r.fr} ${r.ar} ${ATB_RENAL_SECTIONS.find((s) => s.id === r.section)?.fr ?? ""}`).includes(nq);
     });
   }, [q, section]);
+  const visibleRows = useMemo(
+    () => showOnlySelected ? rows.filter((row) => selectedMedicationIds.includes(row.id)) : rows,
+    [rows, showOnlySelected, selectedMedicationIds],
+  );
+  const toggleMedicationSelection = (id: string) => {
+    setSelectedMedicationIds((current) => current.includes(id)
+      ? current.filter((selectedId) => selectedId !== id)
+      : [...current, id]);
+  };
 
   // ── الخطّة (حلقة a → b) / Plan antibiotique ────────────────────────────────────────
   const [plan, setPlan] = useState(() => emptyPlan());
@@ -260,8 +271,8 @@ export default function AntibioRenalPage() {
         title={<T fr="Antibiotiques & fonction rénale" ar="المضادات الحيوية والوظيفة الكلوية" />}
         sub={
           <T
-            fr="93 lignes du tableau de référence × 5 stades — DFG, dose absolue au poids et plan par patient."
-            ar="٩٣ سطرًا من الجدول المرجعي × ٥ مراحل — التصفية، الجرعة المطلقة حسب الوزن، وخطّة لكل مريض."
+            fr="Choisissez un ou plusieurs antibiotiques, puis consultez leurs doses selon la fonction rénale du patient."
+            ar="اختر مضاداً حيوياً واحداً أو أكثر، ثم اعرض جرعاتها حسب وظيفة كلى المريض."
           />
         }
         count={ATB_RENAL_ROWS.length}
@@ -592,6 +603,26 @@ export default function AntibioRenalPage() {
           className="field"
           aria-label={ar ? "بحث" : "Recherche"}
         />
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label={ar ? "اختيار الأدوية" : "Sélection des antibiotiques"}>
+          <button
+            type="button"
+            onClick={() => setShowOnlySelected(false)}
+            aria-pressed={!showOnlySelected}
+            className={chip(!showOnlySelected)}
+            style={chipStyle(!showOnlySelected)}
+          >
+            <T fr={`Choisir parmi les antibiotiques (${rows.length})`} ar={`اختيار من المضادات (${rows.length})`} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowOnlySelected(true)}
+            aria-pressed={showOnlySelected}
+            className={chip(showOnlySelected)}
+            style={chipStyle(showOnlySelected)}
+          >
+            <T fr={`Mes antibiotiques choisis (${selectedMedicationIds.length})`} ar={`مضاداتي المختارة (${selectedMedicationIds.length})`} />
+          </button>
+        </div>
         <div className="flex flex-wrap items-center gap-2">
           <span className="flex items-center gap-1 text-xs font-black opacity-60"><Filter className="h-3.5 w-3.5" aria-hidden /><T fr="Classe" ar="الفئة" /></span>
           <button onClick={() => setSection(null)} aria-pressed={section === null} className={chip(section === null)} style={chipStyle(section === null)}>
@@ -609,17 +640,17 @@ export default function AntibioRenalPage() {
       <p className="text-xs font-black opacity-60">
         {stageMeta
           ? ar
-            ? `${rows.length} سطرًا · المرحلة العامة: ${stageMeta.ar}`
-            : `${rows.length} lignes · stade général : ${stageMeta.fr}`
+            ? `${visibleRows.length} سطرًا · المرحلة العامة: ${stageMeta.ar}`
+            : `${visibleRows.length} lignes · stade général : ${stageMeta.fr}`
           : ar
-            ? `${rows.length} سطرًا · لم تُحدَّد المرحلة`
-            : `${rows.length} lignes · stade non déterminé`}
+            ? `${visibleRows.length} سطرًا · لم تُحدَّد المرحلة`
+            : `${visibleRows.length} lignes · stade non déterminé`}
         {Number.isFinite(weight) && weight > 0 ? (ar ? ` · الوزن ${weight} كغ` : ` · poids ${weight} kg`) : ""}
       </p>
 
       {stage ? (
       <ul className="flex flex-col gap-2">
-        {rows.map((r) => {
+        {visibleRows.map((r) => {
           const secMeta = ATB_RENAL_SECTIONS.find((s) => s.id === r.section);
           const { stage: rowStage, label: rowStageLabel } = stageForMolecule();
           const rowStageIdx = rowStage ? STAGE_IDS.indexOf(rowStage) : -1;
@@ -643,9 +674,24 @@ export default function AntibioRenalPage() {
               key={r.id}
               className={`card rounded-2xl border border-line bg-surface p-3 ${bad ? "sev-strip sev-critical" : warn ? "sev-strip sev-urgent" : ""}`}
             >
-              <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm font-black">{ar ? r.ar : r.fr}</p>
-                <span className="text-[11px] font-bold opacity-50" dir="ltr">{r.fr} · p.{r.page}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[11px] font-bold opacity-50" dir="ltr">{r.fr} · p.{r.page}</span>
+                  <button
+                    type="button"
+                    onClick={() => toggleMedicationSelection(r.id)}
+                    aria-pressed={selectedMedicationIds.includes(r.id)}
+                    className="touch rounded-full border px-3 py-1.5 text-xs font-black"
+                    style={selectedMedicationIds.includes(r.id)
+                      ? { borderColor: "var(--accent)", color: "var(--accent)" }
+                      : { borderColor: "var(--line)", color: "var(--fg)" }}
+                  >
+                    {selectedMedicationIds.includes(r.id)
+                      ? <T fr="Retirer de ma sélection" ar="إزالة من اختياري" />
+                      : <T fr="Choisir ce médicament" ar="اختيار هذا الدواء" />}
+                  </button>
+                </div>
               </div>
               <p className="mt-0.5 text-[11px] font-bold opacity-60">{ar ? secMeta?.ar : secMeta?.fr}</p>
               <p className="mt-1 text-xs font-black" style={{ color: rowStageIdx === 4 ? "var(--sev-critical)" : rowStageIdx === 3 ? "var(--sev-urgent)" : "var(--accent)" }}>
@@ -903,9 +949,11 @@ export default function AntibioRenalPage() {
         </p>
       )}
 
-      {stage && !rows.length && (
+      {stage && !visibleRows.length && (
         <p className="rounded-xl border border-dashed border-line p-4 text-center text-sm opacity-70">
-          <T fr="Aucun antibiotique ne correspond à cette recherche." ar="لا يوجد مضاد حيوي يطابق هذا البحث." />
+          {showOnlySelected && selectedMedicationIds.length === 0
+            ? <T fr="Aucun antibiotique choisi pour ce patient. Revenez à la liste pour en ajouter." ar="لم تختر مضاداً لهذا المريض. عُد إلى القائمة لإضافة مضاد." />
+            : <T fr="Aucun antibiotique ne correspond à cette recherche ou à votre sélection." ar="لا يوجد مضاد يطابق البحث أو الاختيار." />}
         </p>
       )}
 
@@ -945,7 +993,7 @@ export default function AntibioRenalPage() {
           <T fr="Bridge rénal (16 classes)" ar="الجسر الكلوي (١٦ صنفًا)" />
         </Link>
         <Link href="/calculateurs/antibiotiques" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>
-          <T fr="Dose au poids (11 antibiotiques)" ar="الجرعة بالوزن (١١ مضادًا)" />
+          <T fr="Statut de l’ancien calculateur suspendu" ar="حالة الحاسبة القديمة المتوقفة" />
         </Link>
         <Link href="/calculateurs/aki" className="rounded-full border px-4 py-2 text-xs font-black" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>
           <T fr="AKI / KDIGO" ar="القصور الكلوي الحادّ KDIGO" />

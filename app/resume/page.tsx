@@ -6,8 +6,9 @@ import { useApp } from "@/components/Providers";
 import { useRegisterRecent } from "@/components/SearchBar";
 import { ClipboardList, Check, Printer, Share2, RefreshCcw } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
-import { buildCaseSummary, getVitalsLog, vitalsLine, type TimelineEvent, type VitalsSnapshot } from "@/lib/casesummary";
+import { buildCaseSummary, getVitalsLog, sanitizeTimelineEvents, vitalsLine, type TimelineEvent, type VitalsSnapshot } from "@/lib/casesummary";
 import { getProblems, type Problem } from "@/lib/deterioration";
+import { readSessionJSON } from "@/lib/storage";
 
 interface StoredData {
   problems: Problem[];
@@ -28,15 +29,13 @@ export default function ResumePage() {
   useEffect(() => {
     let next: StoredData = EMPTY_DATA;
     try {
-      const raw = localStorage.getItem("eutn:timeline");
-      const evs = raw ? (JSON.parse(raw) as TimelineEvent[]) : [];
       next = {
         problems: getProblems(),
         vitals: getVitalsLog(),
-        timeline: Array.isArray(evs) ? evs : [],
+        timeline: sanitizeTimelineEvents(readSessionJSON<unknown>("eutn:timeline", [])),
       };
     } catch { /* stockage indisponible : on garde l'état vide */ }
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydratation depuis localStorage
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydratation depuis sessionStorage
     setData(next);
   }, []);
 

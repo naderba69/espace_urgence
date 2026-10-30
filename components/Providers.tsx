@@ -1,5 +1,5 @@
 "use client";
-// Fournit : langue (FR/AR + RTL), thème, taille de police, muet, favoris, récents,
+// Fournit : interface française, thème, taille de police, muet, favoris, récents,
 // mode urgence, GA, enregistrement du service worker. Une seule source de vérité.
 import {
   createContext,
@@ -12,7 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { dictionaries, type Lang } from "@/lib/i18n";
-import { KEYS, readJSON, writeJSON } from "@/lib/storage";
+import { KEYS, purgeLegacyPersistentPatientData, readJSON, readSessionJSON, sanitizePatient, sanitizePrefs, sanitizeRecentKeys, sanitizeStringArray, writeJSON, writeSessionJSON } from "@/lib/storage";
 import { setAudioMuted } from "@/lib/audio";
 import { initAnalytics, trackPageView } from "@/lib/analytics";
 import { usePathname } from "next/navigation";
@@ -32,11 +32,6 @@ export function isEffectiveDark(theme: Theme): boolean {
   if (theme === "dark" || theme === "amoled") return true;
   if (theme === "light") return false;
   return typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)")?.matches === true;
-}
-
-interface RecentItem {
-  key: string;
-  at: number;
 }
 
 /** v13.3 — المريض النشط : بيانات تُدخل مرة واحدة وتتعبّأ بها المحركات (كتابة فوقية حرة). */
@@ -96,15 +91,19 @@ export default function Providers({ children }: { children: ReactNode }) {
     }).catch(() => undefined);
     import("@capacitor/splash-screen").then((m) => m.SplashScreen.hide().catch(() => undefined)).catch(() => undefined);
   }, []);
-  // Chargement initial depuis localStorage (préférences, favoris, récents, patient actif)
+  // Préférences/favoris/récents persistent; les données patient restent limitées à l’onglet.
   useEffect(() => {
-    const p = { ...DEFAULT_PREFS, ...readJSON<Partial<Prefs>>(KEYS.prefs, {}) };
+    // Purge les anciennes données patient persistantes, y compris l’archive locale historique.
+    purgeLegacyPersistentPatientData(window.localStorage);
+    const p = sanitizePrefs(readJSON<unknown>(KEYS.prefs, {}));
+    // Migre aussi les anciens réglages AR persistés vers l'interface française.
+    writeJSON(KEYS.prefs, p);
     // eslint-disable-next-line react-hooks/set-state-in-effect -- préférences lues après hydratation (le serveur rend les défauts ; INIT_SCRIPT évite le FOUC)
     setPrefs(p);
     applyPrefs(p);
-    setFavorites(readJSON<string[]>(KEYS.favorites, []));
-    setRecent(readJSON<RecentItem[]>(KEYS.recent, []).map((r) => r.key));
-    setPatientState(readJSON<ActivePatient>(KEYS.patient, EMPTY_PATIENT));
+    setFavorites(sanitizeStringArray(readJSON<unknown>(KEYS.favorites, [])));
+    setRecent(sanitizeRecentKeys(readJSON<unknown>(KEYS.recent, [])));
+    setPatientState(sanitizePatient(readSessionJSON<unknown>("eutn:patient-session", EMPTY_PATIENT)));
     setHydrated(true);
 
     // Service worker (production uniquement) — chemin préfixé par le basePath de déploiement.
@@ -158,7 +157,7 @@ export default function Providers({ children }: { children: ReactNode }) {
 
   const setPref = useCallback(<K extends keyof Prefs>(k: K, v: Prefs[K]) => {
     setPrefs((prev) => {
-      const next = { ...prev, [k]: v };
+      const next = { ...prev, [k]: v, lang: "fr" as const };
       applyPrefs(next);
       writeJSON(KEYS.prefs, next);
       return next;
@@ -191,7 +190,7 @@ export default function Providers({ children }: { children: ReactNode }) {
 
   const setPatient = useCallback((np: ActivePatient) => {
     setPatientState(np);
-    writeJSON(KEYS.patient, np);
+    writeSessionJSON("eutn:patient-session", np);
   }, []);
 
   const value = useMemo<AppCtx>(

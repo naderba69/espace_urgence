@@ -6,35 +6,14 @@ import { useApp } from "@/components/Providers";
 import { useRegisterRecent } from "@/components/SearchBar";
 import { Check, Copy, Eraser, Printer, FileText, Download } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
+import { readSessionJSON, writeSessionJSON } from "@/lib/storage";
+import { sanitizeSamuFiche, type SamuFicheState } from "@/lib/samu-storage";
+import { sanitizeTimelineEvents } from "@/lib/casesummary";
 
 const STORE_KEY = "eutn:fiche-samu";
 
-interface FicheState {
-  missionType: string;
-  vehicule: string;
-  equipe: string;
-  hAppel: string;
-  hDepart: string;
-  hSurLieux: string;
-  hDepartLieux: string;
-  hHopital: string;
-  age: string;
-  sexe: string;
-  atcd: string;
-  motif: string;
-  fc: string;
-  ta: string;
-  fr: string;
-  spo2: string;
-  gcs: string;
-  glycemie: string;
-  temp: string;
-  gestes: string[];
-  traitements: string;
-  evolution: string;
-  destination: string;
-  transmissions: string;
-}
+type FicheState = SamuFicheState;
+
 
 const EMPTY: FicheState = {
   missionType: "", vehicule: "", equipe: "",
@@ -65,22 +44,19 @@ export default function FicheSamuPage() {
   useRegisterRecent("outil:fiche-samu");
   const [s, setS] = useState<FicheState>(EMPTY);
   const [copied, setCopied] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration localStorage après hydratation (anti-mismatch)
-      if (raw) setS({ ...EMPTY, ...(JSON.parse(raw) as Partial<FicheState>) });
-    } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration privée après hydratation SSR
+    setS(sanitizeSamuFiche(readSessionJSON<unknown>(STORE_KEY, EMPTY), EMPTY));
+    setLoaded(true);
   }, []);
 
   // v14.6 — استيراد خط الزمن الدوائي (توثيق ذاتي): أول فتح بحالة فارغة فقط.
   const importTimeline = (force = false) => {
     try {
-      const raw = localStorage.getItem("eutn:timeline");
-      if (!raw) return 0;
-      const evs = JSON.parse(raw) as { f: string; a: string; t: number; m: number }[];
-      if (!Array.isArray(evs) || evs.length === 0) return 0;
+      const evs = sanitizeTimelineEvents(readSessionJSON<unknown>("eutn:timeline", []));
+      if (evs.length === 0) return 0;
       const hhmm = (t: number) => {
         const d = new Date(t);
         return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
@@ -95,15 +71,15 @@ export default function FicheSamuPage() {
   };
 
   useEffect(() => {
-    if (!hydrated) return; // بعد ترطيب التفضيلات: أسماء بلغة المستخدم لا الافتراضية
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- تعبئة أولية من التخزين المحلي بعد الترطيب (نمط الاستعادة)
+    if (!hydrated || !loaded) return; // بعد استعادة الحقول وترطيب اللغة
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- تعبئة أولية من chronologie de session
     importTimeline();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- الاستيراد الأولي فقط
-  }, [hydrated]);
+  }, [hydrated, loaded]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") localStorage.setItem(STORE_KEY, JSON.stringify(s));
-  }, [s]);
+    if (loaded) writeSessionJSON(STORE_KEY, sanitizeSamuFiche(s, EMPTY));
+  }, [s, loaded]);
 
   const L = (fr: string, ar: string) => (lang === "ar" ? ar : fr);
   const set = (k: keyof FicheState) => (v: string) => setS((p) => ({ ...p, [k]: v }));
@@ -175,7 +151,7 @@ export default function FicheSamuPage() {
   const clear = () => {
     if (window.confirm(L("Effacer toute la fiche ?", "حذف الفيشة كاملة؟"))) {
       setS(EMPTY);
-      try { localStorage.removeItem(STORE_KEY); } catch { /* ignore */ }
+      try { window.sessionStorage.removeItem(STORE_KEY); } catch { /* ignore */ }
     }
   };
 

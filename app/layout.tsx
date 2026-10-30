@@ -20,22 +20,10 @@ const inter = localFont({
   weight: "100 900",
   display: "swap",
 });
-// v9.0 — IBM Plex Sans Arabic local ; Inter sert de fallback pour les glyphes latins non inclus.
-const plex = localFont({
-  src: [
-    { path: "../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2", weight: "400" },
-    { path: "../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2", weight: "500" },
-    { path: "../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-600-normal.woff2", weight: "600" },
-    { path: "../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2", weight: "700" },
-  ],
-  variable: "--font-arabic",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: "Espace Urgence TN — Protocoles, médicaments & outils SMU",
   description:
-    "Références et outils pour les urgences et le SAMU en Tunisie : protocoles, médicaments, calculateurs, bilingue FR/AR, hors-ligne.",
+    "Références et outils en français pour les urgences et le SAMU en Tunisie : protocoles, médicaments, calculateurs et accès hors ligne.",
   manifest: `${BASEPATH}/manifest.webmanifest`,
   icons: { icon: `${BASEPATH}/icons/icon-192.png`, apple: `${BASEPATH}/icons/apple-touch-icon.png` },
 };
@@ -44,18 +32,15 @@ export const viewport: Viewport = {
   themeColor: "#0f172a",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover",       // edge-to-edge : l'app dessine sous la barre d'état
 };
 
-/* Anti-FOUC : applique langue/direction/thème/taille AVANT le premier rendu,
-   à partir des préférences localStorage. v9.0 : thème « auto » par défaut = suit le système. */
-const INIT_SCRIPT = `(function(){try{var p=JSON.parse(localStorage.getItem("eutn:prefs")||"{}");var el=document.documentElement;var th=p.theme||"auto";var dark=th==="auto"?!!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches):th!=="light";el.classList.toggle("dark",dark);el.classList.toggle("amoled",th==="amoled");var l=p.lang==="ar"?"ar":"fr";el.lang=l;el.dir=l==="ar"?"rtl":"ltr";el.style.fontSize=(p.fontSize||16)+"px";}catch(e){document.documentElement.classList.add("dark");}})();`;
+/* Anti-FOUC : applique thème et taille AVANT le premier rendu. La langue de l'interface est le français. */
+const INIT_SCRIPT = `(function(){try{var p=JSON.parse(localStorage.getItem("eutn:prefs")||"{}");var el=document.documentElement;var th=["auto","dark","light","amoled"].indexOf(p.theme)>=0?p.theme:"auto";var dark=th==="auto"?!!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches):th!=="light";el.classList.toggle("dark",dark);el.classList.toggle("amoled",th==="amoled");el.lang="fr";el.dir="ltr";var fs=[16,18,20].indexOf(p.fontSize)>=0?p.fontSize:16;el.style.fontSize=fs+"px";}catch(e){document.documentElement.classList.add("dark");document.documentElement.lang="fr";document.documentElement.dir="ltr";}})();`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" dir="ltr" className={`dark ${inter.variable} ${plex.variable}`} suppressHydrationWarning>
+    <html lang="fr" dir="ltr" className={`dark ${inter.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: INIT_SCRIPT }} />
         <meta name="deploy-base" content={BASEPATH} />
@@ -70,7 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           href="#contenu"
           className="sr-only focus:not-sr-only focus:fixed focus:start-2 focus:top-2 focus:z-[70] focus:rounded-lg focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
         >
-          Aller au contenu — إلى المحتوى
+          Aller au contenu
         </a>
         <Providers>
           <Header />

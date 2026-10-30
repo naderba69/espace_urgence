@@ -1,5 +1,8 @@
-# PROMPT V2 (revu & corrigé) — "Espace Urgence TN"
+# PROMPT V2 (revu & corrigé) — « Espace Urgence TN »
 
+> **Archive du cahier des charges initial — ne décrit pas nécessairement l’application actuelle.**
+> Certaines exigences, notamment l’IA générative, les clés et les fonctions cliniques, ont depuis été suspendues, limitées ou corrigées. Pour l’état courant, consulter le README, le CHANGELOG et les rapports datés d’audit; ne pas traiter ce prompt historique comme une spécification de mise en service.
+>
 > Version consolidée de la demande initiale, après analyse critique.
 > Changements clés vs V1 : **sécurité médicale renforcée** (sources + revue + avertissement bloquant),
 > **RTL arabe explicite**, **modèles IA à jour et champ libre**, **IndexedDB pour les images ECG**,

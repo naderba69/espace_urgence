@@ -2,6 +2,7 @@
 // في نص تسليم واحد منسق. نقية وقابلة للاختبار — لا DOM ولا تخزين.
 // التخزين: eutn:vitals-log (آخر 6 قياسات) — تديره دوال هذا الملف.
 import type { Vitals, Problem } from "@/lib/deterioration";
+import { readSessionJSON, writeSessionJSON, removeSessionKey } from "@/lib/storage";
 
 export const VITALS_LOG_KEY = "eutn:vitals-log";
 export const MAX_VITALS_LOG = 6;
@@ -11,23 +12,52 @@ export interface VitalsSnapshot {
   v: Vitals;
 }
 
-export function getVitalsLog(): VitalsSnapshot[] {
-  try {
-    const arr = JSON.parse(localStorage.getItem(VITALS_LOG_KEY) || "[]") as VitalsSnapshot[];
-    return Array.isArray(arr) ? arr.filter((x) => x && typeof x.at === "number" && x.v) : [];
-  } catch {
-    return [];
+const VITAL_KEYS: (keyof Vitals)[] = ["age", "fc", "pas", "fr", "spo2", "gcs", "gly", "k"];
+
+export function sanitizeVitalsLog(value: unknown, now = Date.now()): VitalsSnapshot[] {
+  if (!Array.isArray(value)) return [];
+  const safe: VitalsSnapshot[] = [];
+  for (const candidate of value) {
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) continue;
+    const x = candidate as Record<string, unknown>;
+    if (typeof x.at !== "number" || !Number.isFinite(x.at) || x.at <= 0 || x.at > now ||
+        !x.v || typeof x.v !== "object" || Array.isArray(x.v)) continue;
+    const source = x.v as Record<string, unknown>;
+    const v: Vitals = {};
+    for (const field of VITAL_KEYS) if (typeof source[field] === "number" && Number.isFinite(source[field])) v[field] = source[field] as number;
+    if (Object.keys(v).length) safe.push({ at: x.at, v });
   }
+  return safe.sort((a, b) => b.at - a.at).slice(0, MAX_VITALS_LOG);
+}
+
+export function sanitizeTimelineEvents(value: unknown, now = Date.now()): TimelineEvent[] {
+  if (!Array.isArray(value)) return [];
+  const safe: TimelineEvent[] = [];
+  for (const candidate of value) {
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) continue;
+    const x = candidate as Record<string, unknown>;
+    if (typeof x.f !== "string" || typeof x.a !== "string" || typeof x.t !== "number" || !Number.isFinite(x.t) ||
+        x.t <= 0 || x.t > now || typeof x.m !== "number" || !Number.isFinite(x.m) || x.m < 1 || x.m > 1440 ||
+        (x.id !== undefined && (typeof x.id !== "string" || x.id.length > 100))) continue;
+    safe.push({ ...(typeof x.id === "string" ? { id: x.id } : {}), f: x.f.slice(0, 160), a: x.a.slice(0, 160), t: x.t, m: x.m });
+  }
+  return safe.slice(-500);
+}
+
+export function getVitalsLog(): VitalsSnapshot[] {
+  return sanitizeVitalsLog(readSessionJSON<unknown>(VITALS_LOG_KEY, []));
 }
 
 export function pushVitals(v: Vitals): VitalsSnapshot[] {
-  const next = [{ at: Date.now(), v }, ...getVitalsLog()].slice(0, MAX_VITALS_LOG);
-  try { localStorage.setItem(VITALS_LOG_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+  const [snapshot] = sanitizeVitalsLog([{ at: Date.now(), v }]);
+  if (!snapshot) return getVitalsLog();
+  const next = [snapshot, ...getVitalsLog()].slice(0, MAX_VITALS_LOG);
+  writeSessionJSON(VITALS_LOG_KEY, next);
   return next;
 }
 
 export function clearVitalsLog(): void {
-  try { localStorage.removeItem(VITALS_LOG_KEY); } catch { /* ignore */ }
+  removeSessionKey(VITALS_LOG_KEY);
 }
 
 export interface PatientMini {
@@ -35,7 +65,20 @@ export interface PatientMini {
 }
 
 export interface TimelineEvent {
-  f: string; a: string; t: number; m: number;
+  id?: string; f: string; a: string; t: number; m: number;
+}
+
+export interface TimelineArchive { at: number; n: number; text: string }
+
+export function sanitizeTimelineArchive(value: unknown, now = Date.now()): TimelineArchive[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((candidate) => {
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) return [];
+    const x = candidate as Record<string, unknown>;
+    if (typeof x.at !== "number" || !Number.isFinite(x.at) || x.at <= 0 || x.at > now ||
+        typeof x.n !== "number" || !Number.isInteger(x.n) || x.n < 1 || x.n > 500 || typeof x.text !== "string") return [];
+    return [{ at: x.at, n: x.n, text: x.text.slice(0, 20_000) }];
+  }).sort((a, b) => b.at - a.at).slice(0, 5);
 }
 
 export interface CaseInput {

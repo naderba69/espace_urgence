@@ -1,4 +1,4 @@
-// Configuration IA — stockée dans localStorage (appareil personnel de l'utilisateur).
+// Configuration IA : préférences persistées, clé API conservée uniquement en mémoire (jamais dans localStorage).
 import { readJSON, writeJSON } from "./storage";
 
 export type AiProvider = "gemini" | "openrouter";
@@ -6,7 +6,7 @@ export type AiProvider = "gemini" | "openrouter";
 export interface AiConfig {
   enabled: boolean;          // interrupteur général
   provider: AiProvider;
-  apiKey: string;            // masquée dans l'UI ; stockée localement
+  apiKey: string;            // masquée dans l'UI ; mémoire vive seulement, perdue au rechargement
   textModel: string;         // champ libre (Google renomme souvent !)
   visionModel: string;
 }
@@ -50,14 +50,33 @@ export function subscribeAiConfig(cb: () => void): () => void {
   };
 }
 
+function sanitizeAiConfig(value: unknown, keepKey: boolean): AiConfig {
+  const x = value && typeof value === "object" ? value as Record<string, unknown> : {};
+  const safeModel = (v: unknown, fallback: string) =>
+    typeof v === "string" && v.trim().length > 0 ? v.trim().slice(0, 160) : fallback;
+  return {
+    enabled: x.enabled === true,
+    provider: x.provider === "openrouter" ? "openrouter" : "gemini",
+    apiKey: keepKey && typeof x.apiKey === "string" ? x.apiKey.trim().slice(0, 500) : "",
+    textModel: safeModel(x.textModel, DEFAULT_AI.textModel),
+    visionModel: safeModel(x.visionModel, DEFAULT_AI.visionModel),
+  };
+}
+
 export function readAiConfig(): AiConfig {
-  cache ??= { ...DEFAULT_AI, ...readJSON<Partial<AiConfig>>(AI_KEY, {}) };
+  if (!cache) {
+    const stored = readJSON<unknown>(AI_KEY, {});
+    // Les anciennes versions stockaient la clé en clair : l'effacer de localStorage
+    // et ne conserver les nouvelles saisies qu'en mémoire jusqu'au rechargement.
+    cache = sanitizeAiConfig(stored, false);
+    writeJSON(AI_KEY, cache);
+  }
   return cache;
 }
 
 export function writeAiConfig(cfg: AiConfig): void {
-  cache = cfg;
-  writeJSON(AI_KEY, cfg);
+  cache = sanitizeAiConfig(cfg, true);
+  writeJSON(AI_KEY, { ...cache, apiKey: "" });
   emit();
 }
 

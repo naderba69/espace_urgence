@@ -121,7 +121,7 @@ export default function MedicationDetail({ medication: m, alternatives, psePreps
         {(Object.keys(CTX_META) as (keyof typeof CTX_META)[]).map((k) => (
           <button key={k} onClick={() => { setCtx(ctx === k ? null : k); trackEvent("med_context", { id: m.id, ctx: k }); }}
             aria-pressed={ctx === k}
-            className={`touch rounded-full border px-3 py-1.5 text-xs font-black ${ctx === k ? "border-amber-500 bg-amber-500 text-white" : "border-line bg-surface"}`}>
+            className={`touch rounded-full border px-3 py-1.5 text-xs font-black ${ctx === k ? "border-amber-500 bg-amber-500 text-slate-950" : "border-line bg-surface"}`}>
             {lang === "ar" ? CTX_META[k].ar : CTX_META[k].fr}
           </button>
         ))}
@@ -149,6 +149,12 @@ export default function MedicationDetail({ medication: m, alternatives, psePreps
       </Section>
 
       <div id="doses" className="grid scroll-mt-14 gap-4 md:grid-cols-2">
+        {m.brandCaution && (
+          <div className="md:col-span-2 rounded-xl border-2 border-amber-500/70 bg-amber-500/10 p-3 text-sm font-semibold" role="alert">
+            <p className="mb-1 font-black text-amber-600">{lang === "ar" ? "تنبيه خاص بالعلامة التجارية" : "Prudence — marque locale"}</p>
+            <T fr={m.brandCaution.fr} ar={m.brandCaution.ar} />
+          </div>
+        )}
         <Section title={`${t("common.adult")} — ${lang === "ar" ? "الجرعة" : "dose"}`}>
           <AbbrText>{lang === "ar" ? m.doseAdult.ar : m.doseAdult.fr}</AbbrText>
         </Section>

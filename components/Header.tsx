@@ -6,11 +6,13 @@ import { Activity, Menu, Moon, Sun, MonitorSmartphone, Volume2, VolumeX, Siren, 
 import { useApp } from "./Providers";
 import Nav from "./Nav";
 import InstallPwa from "./InstallPwa";
+import { useModalFocusTrap } from "@/lib/modal-focus";
 
 export default function Header() {
   const { t, prefs, setPref, setEmergencyOpen } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  useModalFocusTrap(panelRef, menuOpen);
 
   // Échap ferme le tiroir + verrouille le scroll de l'app-shell pendant l'ouverture
   useEffect(() => {
@@ -38,7 +40,9 @@ export default function Header() {
           <button
             className="touch rounded-xl hover:bg-surface2"
             aria-label={t("nav.navigation")}
+            aria-haspopup="dialog"
             aria-expanded={menuOpen}
+            aria-controls={menuOpen ? "navigation-drawer-panel" : undefined}
             onClick={() => setMenuOpen((o) => !o)}
           >
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -55,13 +59,6 @@ export default function Header() {
           <div className="mx-auto" />
 
           <div className="flex shrink-0 items-center gap-1">
-            <button
-              onClick={() => setPref("lang", prefs.lang === "fr" ? "ar" : "fr")}
-              className="touch rounded-xl px-3 font-bold text-blue-500 hover:bg-surface2"
-              aria-label={t("settings.language")}
-            >
-              {prefs.lang === "fr" ? "ع" : "FR"}
-            </button>
             {/* v9.0 — cycle déterministe : auto → clair → sombre → auto (pas de lecture système au rendu = zéro mismatch) */}
             <button
               onClick={() => setPref("theme", prefs.theme === "auto" ? "light" : prefs.theme === "light" ? "dark" : "auto")}
@@ -95,7 +92,7 @@ export default function Header() {
 
       {/* ── Tiroir latéral natif : panneau fixe au-dessus de tout + backdrop ── */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={t("nav.navigation")}>
+        <div id="navigation-drawer-panel" className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={t("nav.navigation")}>
           {/* backdrop — touche pour fermer */}
           <button
             aria-label={prefs.lang === "ar" ? "إغلاق القائمة" : "Fermer le menu"}
@@ -116,7 +113,7 @@ export default function Header() {
                 </span>
                 <span className="bg-gradient-to-r from-blue-500 to-sky-400 bg-clip-text text-transparent">{t("app.name")}</span>
               </span>
-              <button onClick={() => setMenuOpen(false)} aria-label="×" className="touch rounded-xl hover:bg-surface2">
+              <button onClick={() => setMenuOpen(false)} aria-label={prefs.lang === "ar" ? "إغلاق القائمة" : "Fermer le menu"} className="touch rounded-xl hover:bg-surface2">
                 <X className="h-6 w-6" aria-hidden />
               </button>
             </div>

@@ -131,7 +131,7 @@ export default function NihssPage() {
               {it.options.map((o) => {
                 const on = vals[it.id] === o.v;
                 return (
-                  <button key={o.v} role="radio" aria-checked={on}
+                  <button key={o.v} aria-pressed={on}
                     onClick={() => { setVals((p) => ({ ...p, [it.id]: o.v })); trackEvent("calculator_use", { id: "nihss" }); }}
                     className={`touch justify-between rounded-lg border px-2.5 py-2 text-start text-sm ${on ? "border-blue-600 bg-blue-600/15 text-blue-400 font-bold" : "border-line hover:bg-surface2"}`}>
                     <span><T fr={o.label.fr} ar={o.label.ar} /></span>

@@ -43,12 +43,12 @@ export default function DoseAnaphylaxiePage() {
         <div className="grid grid-cols-2 gap-2">
           {BANDS.map((b) => (
             <button key={b.id} onClick={() => { setBand(b.id); trackEvent("calculator_use", { id: "dose-anaphylaxie" }); }} aria-pressed={band === b.id}
-              className={`touch rounded-xl border px-3 py-4 font-bold ${band === b.id ? "border-orange-500 bg-orange-600 text-white" : "border-line hover:bg-surface2"}`}>
+              className={`touch rounded-xl border px-3 py-4 font-bold ${band === b.id ? "border-orange-500 bg-orange-600 text-slate-950" : "border-line hover:bg-surface2"}`}>
               {lang === "ar" ? b.ar : b.fr}
             </button>
           ))}
         </div>
-        <div className="mt-4 rounded-2xl bg-orange-600 p-5 text-center text-white">
+        <div className="mt-4 rounded-2xl bg-orange-600 p-5 text-center text-slate-950">
           <p className="text-3xl font-black tabular-nums">{lang === "ar" ? sel.note.ar : sel.note.fr}</p>
           <p className="mt-1 text-sm opacity-90">
             <T fr="solution 1 mg/mL (1/1 000) — face antéro-latérale de la cuisse" ar="محلول 1 ملغ/مل — الوجه الأمامي الوحشي للفخذ" />

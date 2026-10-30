@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 // v2.2 — اختبارات واجهات للمكونات الحرجة (تعمل داخل مشغّل vitest المشروع).
-import { render, screen, fireEvent, cleanup, waitFor, within } from "@testing-library/react";
+import { act, render, screen, fireEvent, cleanup, waitFor, within } from "@testing-library/react";
 import { protocolDetailProps } from "@/lib/protocol-props";
 import { medicationDetailProps } from "@/lib/medication-props";
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
@@ -38,20 +38,32 @@ import UpdateBanner from "@/components/UpdateBanner";
 import { MED_TOOLS } from "@/data/med-tools";
 
 describe("PumpTool", () => {
+  it("assainit la préparation restaurée et ne la persiste que dans la session d’onglet", async () => {
+    const key = "eutn:test:pump-storage";
+    sessionStorage.setItem(key, JSON.stringify({ ampMg: -4, ampVol: 4, count: 1.2, target: 50, convention: "invalid" }));
+    render(<PumpTool cfg={MED_TOOLS.noradrenaline.pump!} storageKey={key} />);
+    await waitFor(() => {
+      const stored = JSON.parse(sessionStorage.getItem(key) ?? "{}");
+      expect(stored.ampMg).toBe(MED_TOOLS.noradrenaline.pump!.defAmpMg);
+      expect(stored.count).toBe(MED_TOOLS.noradrenaline.pump!.defCount);
+    });
+    expect(localStorage.getItem(key)).toBeNull();
+  });
+
   it("يحسب السرعة ويعرضها ثم يحدّثها مع الجرعة", () => {
     render(<PumpTool cfg={MED_TOOLS.noradrenaline.pump!} storageKey="eutn:test:pump" />);
-    expect(screen.getAllByText(/0\.66/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/1\.31/).length).toBeGreaterThan(0);
     const dose = screen.getAllByRole("spinbutton").find((i) => (i as HTMLInputElement).value === "0.05");
     fireEvent.change(dose!, { target: { value: "0.1" } });
-    expect(screen.getAllByText(/1\.31/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/2\.63/).length).toBeGreaterThan(0);
   });
 });
 
 describe("PerfusionsPage", () => {
   it("affiche et calcule la même dose effective, bornée au preset", async () => {
-    window.localStorage.removeItem("eutn:calc:perfusions");
+    window.sessionStorage.removeItem("eutn:calc:perfusions");
     const index = PERFUSIONS.findIndex((preset) => preset.drugId === "dobutamine");
-    window.localStorage.setItem("eutn:calc:perfusions", JSON.stringify({ idx: index, weight: "70", dose: 0 }));
+    window.sessionStorage.setItem("eutn:calc:perfusions", JSON.stringify({ idx: index, weight: "70", dose: 0 }));
     render(<PerfusionsPage />);
 
     const dose = await screen.findByRole("spinbutton", { name: "dose" });
@@ -62,27 +74,25 @@ describe("PerfusionsPage", () => {
     await waitFor(() => expect((dose as HTMLInputElement).value).toBe("10"));
     expect(screen.getByText("42 mL/h")).toBeTruthy();
   });
+
+  it("respecte le plafond initial SCA de 1 000 UI/h dans le débit et l’équivalent total", async () => {
+    const index = PERFUSIONS.findIndex((preset) => preset.drugId === "heparine" && preset.label.fr.includes("SCA"));
+    window.sessionStorage.setItem("eutn:calc:perfusions", JSON.stringify({ idx: index, weight: "100", dose: 12 }));
+    const { container } = render(<PerfusionsPage />);
+    await screen.findByRole("spinbutton", { name: "dose" });
+    await waitFor(() => expect(container.textContent).toContain("2 mL/h"));
+    expect(container.textContent).toContain("1000 UI/h");
+    expect(container.textContent).not.toContain("1200 UI/h");
+  });
 });
 
 describe("AntibiotiquesPage", () => {
-  it("n'autorise le preset amikacine que dans son contexte adulte explicite et sous ClCr 60", () => {
+  it("n'expose aucune dose de l'ancien calculateur et renvoie vers le tableau sourcé", () => {
     const { container } = render(<AntibiotiquesPage />);
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "amik" } });
-    fireEvent.change(screen.getByRole("spinbutton", { name: "w" }), { target: { value: "70" } });
-    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "70" } });
-    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "80" } });
-    expect(container.textContent).toContain("أُوقف الحساب");
-
-    fireEvent.click(screen.getByRole("checkbox"));
-    expect(container.textContent).toContain("1750–2100 mg");
-
-    fireEvent.change(screen.getByRole("spinbutton", { name: "scr" }), { target: { value: "150" } });
-    expect(container.textContent).toContain("ClCr أقل من 60 مل/د");
-    expect(container.querySelector(".sev-strip > div > p")?.textContent).not.toContain("1750");
-
-    fireEvent.change(screen.getByRole("spinbutton", { name: "age" }), { target: { value: "17" } });
-    expect(container.textContent).toContain("هذا المجال للبالغين فقط");
-    expect(container.querySelector(".sev-strip > div > p")?.textContent).not.toContain("1750");
+    expect(screen.getByRole("heading", { name: /calculateur suspendu/i })).toBeTruthy();
+    expect(screen.getByRole("alert").textContent).toContain("référence spécifique vérifiée pour chaque ligne");
+    expect(container.querySelector("input, select, button")).toBeNull();
+    expect(screen.getByRole("link").getAttribute("href")).toBe("/calculateurs/antibio-renal");
   });
 });
 
@@ -145,16 +155,16 @@ async function stubStaticFiles() {
 describe("MedTools", () => {
   it("التبويب الافتراضي مضخة عند وجود جرعة وزنية أصلية", () => {
     render(<MedTools medId="noradrenaline" hasNativeDose />);
-    const tab = screen.getByRole("tab", { name: /المضخة/ });
-    expect(tab.getAttribute("aria-selected")).toBe("true");
+    const option = screen.getByRole("button", { name: /المضخة/ });
+    expect(option.getAttribute("aria-pressed")).toBe("true");
   });
 
   it("يوجّه الأميكاسين إلى حاسباته السياقية ولا يقدّم جرعة بالوزن وحده", () => {
     render(<MedTools medId="amikacine" hasNativeDose />);
     const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
-    expect(hrefs).toContain("/calculateurs/antibiotiques");
+    expect(hrefs).not.toContain("/calculateurs/antibiotiques");
     expect(hrefs).toContain("/calculateurs/antibio-renal?q=Amikacine");
-    expect(screen.getByText("جدول كلوي منفصل (DFG)")).toBeTruthy();
+    expect(screen.getByText("جدول OMEDIT للمضادات (DFG، مرجع منفصل)")).toBeTruthy();
   });
 });
 
@@ -181,18 +191,19 @@ describe("UpdateBanner", () => {
 describe("PumpTool mode entrante", () => {
   it("infère la concentration et propose le relais", () => {
     render(<PumpTool cfg={MED_TOOLS.noradrenaline.pump!} storageKey="eutn:test:inc" />);
-    fireEvent.click(screen.getByRole("tab", { name: /محقنة قادمة/ }));
+    fireEvent.click(screen.getByRole("button", { name: /محقنة قادمة/ }));
     const inputs = screen.getAllByRole("spinbutton");
     fireEvent.change(inputs[0], { target: { value: "2" } });
     expect(screen.getByText(/الترحيل الآمن/)).toBeTruthy();
-    expect(screen.getAllByText(/0\.66/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/1\.31/).length).toBeGreaterThan(0);
   });
 });
 
 describe("MedTools pompe auto", () => {
-  it("trinitrine hérite de la pompe RE.NAU", () => {
+  it("refuse une pompe issue d'une préparation libre non structurée et affiche un avertissement", () => {
     render(<MedTools medId="trinitrine" hasNativeDose={false} />);
-    expect(screen.getByRole("tab", { name: /تحضيري/ })).toBeTruthy();
+    expect(screen.getByText(/Préparation non structurée|التحضير غير مهيكل/)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /تحضيري/ })).toBeNull();
   });
 });
 
@@ -500,13 +511,58 @@ describe("Assistant éclampsie individuel", () => {
 });
 
 describe("Assistant crise d'asthme individuel", () => {
-  it("الرذّة تدخل السجل بجرعة الوزن", async () => {
+  it("calcule selon l'âge, impose l'intervalle et bloque après trois doses", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-28T12:00:00.000Z"));
+    try {
+      const AsthmePage = (await import("@/app/calculateurs/asthme/page")).default;
+      const { container } = render(<AsthmePage />);
+      const inputs = container.querySelectorAll("input");
+      fireEvent.change(inputs[0], { target: { value: "8" } });
+      fireEvent.change(inputs[1], { target: { value: "18" } });
+
+      expect(screen.getByText(/calcul pour 18 kg : 18–36 mg\/j/i)).toBeTruthy();
+      expect(screen.getByText(/5 mg nébulisés par dose/i)).toBeTruthy();
+      expect(screen.getByText(/500 µg nébulisés par dose/i)).toBeTruthy();
+      fireEvent.click(screen.getByRole("button", { name: /Démarrer|ابدأ/ }));
+
+      const salbutamolButton = screen.getByRole("button", { name: /Salbutamol nébulisé administré|أُعطي السالبوتامول بالرذاذ/ });
+      fireEvent.click(salbutamolButton);
+      expect((salbutamolButton as HTMLButtonElement).disabled).toBe(true);
+      await act(async () => { await vi.advanceTimersByTimeAsync(20 * 60 * 1000); });
+      expect((salbutamolButton as HTMLButtonElement).disabled).toBe(false);
+      fireEvent.click(salbutamolButton);
+      await act(async () => { await vi.advanceTimersByTimeAsync(20 * 60 * 1000); });
+      fireEvent.click(salbutamolButton);
+      expect((salbutamolButton as HTMLButtonElement).disabled).toBe(true);
+      expect(screen.getByText(/سُجلت ثلاث جرعات/)).toBeTruthy();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("respecte la frontière SCHN de l'ipratropium à 6 ans et conserve la dose réelle au journal", async () => {
     const AsthmePage = (await import("@/app/calculateurs/asthme/page")).default;
     const { container } = render(<AsthmePage />);
-    fireEvent.change(container.querySelector("input") as HTMLInputElement, { target: { value: "18" } });
-    fireEvent.click(screen.getByRole("button", { name: /رذّة|Nébulisation/ }));
-    expect(screen.getAllByText(/رذّة|Nébulisation/).length).toBeGreaterThanOrEqual(2);
-    expect(screen.getAllByText(/2\.5/).length).toBeGreaterThan(0);
+    const ageInput = container.querySelectorAll("input")[0];
+    fireEvent.change(ageInput, { target: { value: "6" } });
+    expect(screen.getByText(/250 µg nébulisés par dose/i)).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: /أُعطي الإبراتروبيوم بالرذاذ|Ipratropium nébulisé administré/ }));
+    expect(screen.getByText(/إبراتروبيوم بالرذاذ — 250 مكغ/)).toBeTruthy();
+
+    fireEvent.change(ageInput, { target: { value: "6.1" } });
+    expect(screen.getByText(/500 µg nébulisés par dose/i)).toBeTruthy();
+    expect(screen.getByText(/إبراتروبيوم بالرذاذ — 250 مكغ/)).toBeTruthy();
+  });
+
+  it("n'applique pas le schéma GINA ≥6 ans aux moins de 6 ans", async () => {
+    const AsthmePage = (await import("@/app/calculateurs/asthme/page")).default;
+    const { container } = render(<AsthmePage />);
+    const inputs = container.querySelectorAll("input");
+    fireEvent.change(inputs[0], { target: { value: "5" } });
+    expect(screen.getByText(/دون 6 سنوات: هذا المساعد غير مناسب/)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /Salbutamol nébulisé administré|أُعطي السالبوتامول بالرذاذ/ })).toBeNull();
   });
 });
 
@@ -1115,7 +1171,8 @@ describe("التدخل الموجّه", () => {
     expect(medication.weightDose).toMatchObject({ kind: "range", minMgPerKg: 25, maxMgPerKg: 30, requiresContext: true });
     expect(container.querySelector("#weight")).toBeNull();
     const hrefs = Array.from(container.querySelectorAll("a")).map((link) => link.getAttribute("href"));
-    expect(hrefs).toContain("/calculateurs/antibiotiques");
+    expect(hrefs).toContain("/calculateurs/antibio-renal?q=Amikacine");
+    expect(hrefs).not.toContain("/calculateurs/antibiotiques");
   });
   it("v17.4 : la réévaluation et le guidage arrivent par fichiers dédiés", async () => {
     await stubStaticFiles();
@@ -1184,7 +1241,8 @@ describe("التدخل الموجّه", () => {
     const spy = vi.spyOn(Element.prototype, "scrollIntoView").mockImplementation(() => {});
     const Page = (await import("@/app/ecg/page")).default;
     render(<Page />);
-    fireEvent.click(screen.getAllByRole("tab")[1]);
+    const rhythmGroup = screen.getByRole("group", { name: /إيقاعات ECG/ });
+    fireEvent.click(rhythmGroup.querySelectorAll("button")[1]);
     await waitFor(() => expect(spy).toHaveBeenCalled());
     spy.mockRestore();
   });
@@ -1266,7 +1324,7 @@ describe("v7.8 réévaluation complète", () => {
     fireEvent.click(screen.getByRole("button", { name: /تعكّر/ }));
     expect(await screen.findByRole("alert")).toBeTruthy();
     // السجل محفوظ فعلاً
-    expect(JSON.parse(window.localStorage.getItem("reval:log:oap") ?? "[]").length).toBe(2);
+    expect(JSON.parse(window.sessionStorage.getItem("reval:log:oap") ?? "[]").length).toBe(2);
   });
   it("SBAR يولَّد دون إنترنت ويحتوي الأقسام الأربعة", async () => {
     const Panel = (await import("@/components/details/RevalPanel")).default;
@@ -1668,10 +1726,10 @@ describe("v9.0 redesign — نظام التصميم", () => {
   it("v9.0 : thème auto par défaut + anti-FOUC système", async () => {
     const fs = await import("node:fs");
     const layout = fs.readFileSync("app/layout.tsx", "utf8");
-    expect(layout).toContain('p.theme||"auto"');
+    expect(layout).toContain('["auto","dark","light","amoled"].indexOf(p.theme)>=0?p.theme:"auto"');
     expect(layout).toContain("prefers-color-scheme: dark");
-    expect(layout).toContain("IBM Plex Sans Arabic local");
-    expect(layout).toContain("@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2");
+    expect(layout).toContain('el.lang="fr";el.dir="ltr";');
+    expect(layout).not.toContain("ibm-plex-sans-arabic");
   });
   it("v9.0 : Badge sémantique rend les tons de gravité", async () => {
     const Badge = (await import("@/components/ui/Badge")).default;
@@ -1801,10 +1859,10 @@ describe("v10.0 — fondations M3 (bleu médical, pilule, rail, FAB)", () => {
       expect(css).not.toContain(t);
     }
   });
-  it("v10.0 : sev-standard repasse teal (distinguable du primaire bleu)", async () => {
+  it("v10.0 : sev-standard reste teal et assure le contraste AA en clair", async () => {
     const fs = await import("node:fs");
     const css = fs.readFileSync("app/globals.css", "utf8");
-    expect(css).toContain("--sev-standard: #0f766e");
+    expect(css).toContain("--sev-standard: #0b6b63");
     expect(css).toContain("--sev-standard: #4db6ac");
   });
   it("v10.0 : plus aucune classe utilitaire teal-* dans app/ et components/", async () => {
@@ -2362,12 +2420,13 @@ describe("القسم ج ٤١–٤٥ — أمان الدواء", () => {
     expect(src).toContain("selA");
     expect(src).toContain("Filtrer la liste");
   });
-  it("٤٤ : المضادات الحيوية بجرعة الوزن وتواتر التصفية", async () => {
+  it("٤٤ : الحاسبة القديمة للمضادات متوقفة وتحيل إلى جدول المصادر", async () => {
     const fs = await import("node:fs");
     const src = fs.readFileSync("app/calculateurs/antibiotiques/page.tsx", "utf8");
-    expect(src).toContain("Ceftriaxone");
-    expect(src).toContain("Colistine");
-    expect(src).toContain("ab.bands[band]");
+    expect(src).toContain("calculateur suspendu");
+    expect(src).toContain("/calculateurs/antibio-renal");
+    expect(src).not.toContain("ab.bands[band]");
+    expect(src).not.toContain("perKg * W");
   });
   it("٤٥ : التخفيف بـ C1V1=C2V2 وسرعة التسريب والتعارضات", async () => {
     const fs = await import("node:fs");
@@ -2769,9 +2828,11 @@ describe("v13.2 — خط الزمن", () => {
 
 /* ───────────────────────── v13.3 — المريض النشط ───────────────────────── */
 describe("v13.3 — المريض النشط", () => {
-  it("التخزين: مفتاح eutn:patient في KEYS", async () => {
-    const { KEYS } = await import("../lib/storage");
-    expect(KEYS.patient).toBe("eutn:patient");
+  it("مفاتيح المريض القديمة محددة للحذف من التخزين الدائم", async () => {
+    const { LEGACY_PATIENT_KEYS } = await import("../lib/storage");
+    expect(LEGACY_PATIENT_KEYS).toEqual(["eutn:patient", "eutn:patient-log", "eutn:fiche-samu", "eutn:timeline", "eutn:timeline-log", "eutn:vitals-log", "eutn:problems"]);
+    const { LEGACY_SESSION_PREFIXES } = await import("../lib/storage");
+    expect(LEGACY_SESSION_PREFIXES).toEqual(["eutn:calc:", "eutn:pump:", "reval:log:"]);
   });
   it("الـProvider: الحالة والقيم وخطّاف التعبئة", async () => {
     const fs = await import("node:fs");
@@ -2779,12 +2840,15 @@ describe("v13.3 — المريض النشط", () => {
     expect(src).toContain("export interface ActivePatient");
     expect(src).toContain("export const EMPTY_PATIENT");
     expect(src).toContain("export function usePrefillPatient");
-    expect(src).toContain("writeJSON(KEYS.patient, np)");
+    expect(src).toContain('writeSessionJSON("eutn:patient-session", np)');
+    expect(src).toContain("purgeLegacyPersistentPatientData(window.localStorage)");
+    expect(src).toContain('readSessionJSON<unknown>("eutn:patient-session", EMPTY_PATIENT)');
   });
   it("الشريط: لوحة التعديل + إغلاق بتأكيد + أرشيف ٥ مع الاسترجاع", async () => {
     const fs = await import("node:fs");
     const src = fs.readFileSync("components/ActivePatient.tsx", "utf8");
-    expect(src).toContain('"eutn:patient-log"');
+    expect(src).toContain('"eutn:patient-log-session"');
+    expect(src).toContain("writeSessionJSON(LOG_KEY, next)");
     expect(src).toContain("MAX_LOG = 5");
     expect(src).toContain("تأكيد الإغلاق");
     expect(src).toContain("restore");
@@ -2794,9 +2858,9 @@ describe("v13.3 — المريض النشط", () => {
     const src = fs.readFileSync("app/calculateurs/layout.tsx", "utf8");
     expect(src).toContain("<ActivePatient />");
   });
-  it("الـ12 محركاً الهدف تتعبّأ (وزن/عمر/كرياتينين/جنس)", async () => {
+  it("الـ11 محركاً التفاعلياً تتعبّأ بياناتها من المريض النشط", async () => {
     const fs = await import("node:fs");
-    const ids = ["safe-dose", "renal-dose", "antibiotiques", "noac", "antiviraux", "antiepileptiques", "rsi", "fluides-sodium", "dose-check", "doses-ped", "brulures", "perfusions"];
+    const ids = ["safe-dose", "renal-dose", "noac", "antiviraux", "antiepileptiques", "rsi", "fluides-sodium", "dose-check", "doses-ped", "brulures", "perfusions"];
     for (const id of ids) {
       const src = fs.readFileSync(`app/calculateurs/${id}/page.tsx`, "utf8");
       expect(src.includes("usePrefillPatient((p)"), id).toBe(true);
@@ -2824,12 +2888,12 @@ describe("v14 — نقاء اللغات وأدوات الإدخال", () => {
     const s = fs.readFileSync("data/guidage.ts", "utf8");
     for (const m of s.matchAll(/\bar:\s*"([^"]+)"/g)) expect(m[1]).not.toContain("diurèse");
   });
-  it("NumStepper: المكوّن موجود ومستبدل في المحركات الـ12", async () => {
+  it("NumStepper: المكوّن مستخدم في المحركات التفاعلية الـ11", async () => {
     const fs = await import("node:fs");
     const comp = fs.readFileSync("components/ui/NumStepper.tsx", "utf8");
     expect(comp).toContain('type="number"');
     expect(comp).toContain("bump(-1)");
-    for (const id of ["safe-dose", "renal-dose", "antibiotiques", "noac", "antiviraux", "antiepileptiques", "rsi", "fluides-sodium", "dose-check", "doses-ped", "brulures", "perfusions"]) {
+    for (const id of ["safe-dose", "renal-dose", "noac", "antiviraux", "antiepileptiques", "rsi", "fluides-sodium", "dose-check", "doses-ped", "brulures", "perfusions"]) {
       const src = fs.readFileSync(`app/calculateurs/${id}/page.tsx`, "utf8");
       expect(src.includes("<NumStepper"), id).toBe(true);
     }
@@ -3053,6 +3117,27 @@ describe("atb-renal — حاجز حدّ DFG الملتبس", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
     expect((screen.getByRole("button", { name: /وظيفة كلوية طبيعية/ }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it("يسمح باختيار أكثر من مضاد ثم عرض الأدوية المختارة وحدها", async () => {
+    const AtbRenalPage = (await import("@/app/calculateurs/antibio-renal/page")).default;
+    render(<AtbRenalPage />);
+    fireEvent.change(screen.getByRole("spinbutton", { name: "العمر" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الوزن" }), { target: { value: "70" } });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "الكرياتينين" }), { target: { value: "1.0" } });
+    fireEvent.click(screen.getByRole("button", { name: /مستقرة \/ مزمنة معروفة/ }));
+
+    const ivCard = screen.getByText("أموكسيسيلين وريدي").closest("li");
+    const poCard = screen.getByText("أموكسيسيلين فموي").closest("li");
+    expect(ivCard).not.toBeNull();
+    expect(poCard).not.toBeNull();
+    fireEvent.click(within(ivCard as HTMLElement).getByRole("button", { name: "اختيار هذا الدواء" }));
+    fireEvent.click(within(poCard as HTMLElement).getByRole("button", { name: "اختيار هذا الدواء" }));
+    fireEvent.click(screen.getByRole("button", { name: "مضاداتي المختارة (2)" }));
+
+    expect(screen.getByText("أموكسيسيلين وريدي")).toBeTruthy();
+    expect(screen.getByText("أموكسيسيلين فموي")).toBeTruthy();
+    expect(screen.getAllByRole("button", { name: "إزالة من اختياري" })).toHaveLength(2);
   });
 
   it("يمسح الاختيار اليدوي عند تغيير بيانات المريض حتى لا تبقى مرحلة قديمة", async () => {

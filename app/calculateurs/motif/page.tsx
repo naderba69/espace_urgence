@@ -61,7 +61,7 @@ export default function MotifPage() {
               return (
                 <div key={q.id} className="flex items-center justify-between gap-2 rounded-xl border border-line p-3">
                   <p className="text-sm font-bold">{lang === "ar" ? q.ar : q.fr}</p>
-                  <div className="flex gap-1" role="radiogroup" aria-label={q.fr}>
+                  <div className="flex gap-1" role="group" aria-label={lang === "ar" ? q.ar : q.fr}>
                     <button
                       onClick={() => setAns((p) => ({ ...p, [q.id]: true }))}
                       aria-pressed={v === true}

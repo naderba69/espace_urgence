@@ -6,7 +6,8 @@ import { useApp } from "@/components/Providers";
 import { useRegisterRecent } from "@/components/SearchBar";
 import T from "@/components/T";
 import { trackEvent } from "@/lib/analytics";
-import { readJSON, writeJSON } from "@/lib/storage";
+import { readSessionJSON, writeSessionJSON } from "@/lib/storage";
+import { sanitizeGcsState } from "@/lib/calculator-storage";
 import { Baby, User } from "lucide-react";
 
 const STORE = "eutn:calc:gcs";
@@ -20,13 +21,13 @@ export default function GcsPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    const saved = readJSON<{ peds: boolean; sel: Sel }>(STORE, null as never);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration localStorage après hydratation (anti-mismatch)
-    if (saved?.sel) { setSel(saved.sel); setPeds(!!saved.peds); }
+    const saved = sanitizeGcsState(readSessionJSON<unknown>(STORE, null));
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration sessionStorage après hydratation (anti-mismatch)
+    if (saved) { setSel(saved.sel); setPeds(saved.peds); }
   }, [hydrated]);
 
   useEffect(() => {
-    if (hydrated) writeJSON(STORE, { peds, sel });
+    if (hydrated) writeSessionJSON(STORE, { peds, sel });
   }, [peds, sel, hydrated]);
 
   const sections = peds ? gcsPediatric : gcsAdult;
@@ -71,8 +72,7 @@ export default function GcsPage() {
               return (
                 <button
                   key={o.value}
-                  role="radio"
-                  aria-checked={checked}
+                  aria-pressed={checked}
                   onClick={() => { setSel((s) => ({ ...s, [k]: o.value })); trackEvent("calculator_use", { id: "gcs" }); }}
                   className={`touch justify-between rounded-xl border px-4 py-3 text-start font-medium ${
                     checked ? "border-blue-600 bg-blue-600/15 text-blue-400" : "border-line hover:bg-surface2"

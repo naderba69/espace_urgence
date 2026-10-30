@@ -1,7 +1,7 @@
 import { fmtJournal } from "../lib/journal";
 import { describe, it, expect } from "vitest";
 import {
-  clampDose, dripRate, parseDecimalInput, parkland, parklandRates, concUgPerMl, amineFlow,
+  clampDose, dripRate, parseDecimalInput, parkland, parklandRates, burnResuscitationRates, concUgPerMl, amineFlow,
   pediatricWeight, pediatricTubeSize, pediatricDefibJ, ibwKg, tidalVolumeRange,
   curb65Outcome, wellsEpLikely, prepVolume, shockIndex, shockIndexBand, meanArterialPressure, pulsePressure, qtc, qtcBand, enoxaparin, tenecteplaseMg, alteplaseStroke, calciumCorrected, potassiumDeficit, hollidaySegar, dehydrationDeficit, nacProtocol, nivStart, abcd2, abcd2Band, alvarado, alvaradoBand, massiveTransfusion, flowForUnit, startTriage, startTriageStep, weaningReady, qsofa, spesi, heartBand, mgso4DrawMl, mgso4RateMlH, dkaBolusMl, dkaInsulinUh, dkaKDecision, dkaNeedsDextrose, broselowZone, broselowDoses, type BroselowZone, monthsSince, fmtMMSS, reviewDueCount, daysSince, doseFromFlow, inferConcUgMl, interpretAbg, peepForFio2, ventSuggest, hasBledHighRisk, nihssBand,
   adrogueMadias, totalBodyWater, maxCorrectionRate, heparin, insulinDka, dkaPotassiumAction, weightResusPanel,
@@ -9,7 +9,7 @@ import {
 } from "../lib/calc";
 import { searchItems, loadSearchIndex } from "../lib/search";
 import { getMedication } from "../data/medications";
-import { MED_TOOLS, pumpCfgFromPerfusion } from "../data/med-tools";
+import { MED_TOOLS, pumpCfgFromPerfusion, pumpCfgFromPreset } from "../data/med-tools";
 
 describe("saisie décimale des poids", () => {
   it("accepte virgule ou point comme séparateur décimal", () => {
@@ -77,12 +77,32 @@ describe("Parkland", () => {
   });
 });
 
-describe("amines (PSE)", () => {
-  it("noradrénaline 4 mg/50 mL → 80 µg/mL", () => {
-    expect(concUgPerMl(4, 50)).toBe(80);
+describe("réanimation initiale des brûlures", () => {
+  it("calcule le débit restant jusqu'à la 8e heure après déduction des fluides reçus", () => {
+    const r = burnResuscitationRates(70, 20, 2, 2, 200)!;
+    expect(r.total24).toBe(2800);
+    expect(r.remainingFirstVolume).toBe(1200);
+    expect(r.remainingFirstHours).toBe(6);
+    expect(r.firstRate).toBe(200);
+    expect(r.secondRate).toBe(87.5);
   });
-  it("0,1 µg/kg/min à 70 kg = 5,25 mL/h", () => {
-    expect(amineFlow(0.1, 70, 4, 50)).toBeCloseTo(5.25);
+  it("ne propose pas de rattrapage si moins d'une heure reste ou si la fenêtre est passée", () => {
+    expect(burnResuscitationRates(70, 20, 2, 7.5, 0)?.firstRate).toBeNull();
+    expect(burnResuscitationRates(70, 20, 2, 8, 0)?.firstRate).toBe(0);
+  });
+  it("rejette les données hors limites et ne dépasse pas 24 heures", () => {
+    expect(burnResuscitationRates(70, 101, 2, 0)).toBeNull();
+    expect(burnResuscitationRates(70, 20, 2, 24)).toBeNull();
+    expect(burnResuscitationRates(70, 20, 2, 2, -1)).toBeNull();
+  });
+});
+
+describe("amines (PSE)", () => {
+  it("noradrénaline-base 8 mg/50 mL → 160 µg/mL", () => {
+    expect(concUgPerMl(8, 50)).toBe(160);
+  });
+  it("0,1 µg/kg/min à 70 kg = 2,625 mL/h à 160 µg/mL", () => {
+    expect(amineFlow(0.1, 70, 8, 50)).toBeCloseTo(2.625);
   });
 });
 
@@ -142,15 +162,25 @@ describe("natrémie (Adrogué-Madias)", () => {
   it("jamais négatif", () => expect(maxCorrectionRate(-1, 0.5)).toBe(0));
 });
 
-describe("héparine", () => {
-  it("80 U/kg bolus plafonné 8000 ; 18 U/kg/h à 100 U/mL", () => {
-    const h = heparin(80, 80, 8000, 18, 100);
+describe("héparine HNF par indication", () => {
+  it("SCA : 60 U/kg plafonné à 4 000, 12 U/kg/h plafonné à 1 000", () => {
+    const h = heparin(80, 60, 4000, 12, 1000, 100);
+    expect(h.bolusU).toBe(4000);
+    expect(h.rateUh).toBe(960);
+    expect(h.rateMlH).toBeCloseTo(9.6);
+    expect(heparin(120, 60, 4000, 12, 1000, 100).rateUh).toBe(1000);
+  });
+  it("TVP/EP : exemple UW 80/18 avec plafond de bolus 10 000 et concentration réelle", () => {
+    const h = heparin(80, 80, 10000, 18, null, 500);
     expect(h.bolusU).toBe(6400);
     expect(h.rateUh).toBe(1440);
-    expect(h.rateMlH).toBeCloseTo(14.4);
+    expect(h.rateMlH).toBeCloseTo(2.88);
+    expect(heparin(150, 80, 10000, 18, null, 100).bolusU).toBe(10000);
   });
-  it("bolus plafonné", () => {
-    expect(heparin(120).bolusU).toBe(8000);
+  it("rejette les poids, plafonds et concentrations invalides", () => {
+    expect(heparin(0, 80, 10000, 18, null, 100)).toEqual({ bolusU: 0, rateUh: 0, rateMlH: 0 });
+    expect(heparin(70, 80, 10000, 18, null, 0).rateMlH).toBe(0);
+    expect(heparin(70, 80, -1, 18, null, 100).bolusU).toBe(0);
   });
 });
 
@@ -201,17 +231,22 @@ describe("abaques de perfusion", () => {
   it("dobutamine 5 µg/kg/min à 100 kg → 30 mL/h", () => {
     expect(perfusionFlow(preset("dobutamine", "µg/kg/min"), 5, 100)).toBeCloseTo(30, 1);
   });
-  it("noradrénaline RE.NAU 1 mg/h (8 mg/40 mL) → 5 mL/h", () => {
-    expect(perfusionFlow(preset("noradrenaline", "mg/h"), 1, 1)).toBeCloseTo(5, 1);
+  it("noradrénaline-base RE.NAU 1 mg/h (8 mg/50 mL, 160 µg/mL) → 6,25 mL/h", () => {
+    expect(perfusionFlow(preset("noradrenaline", "mg/h"), 1, 1)).toBeCloseTo(6.25, 2);
   });
   it("adrénaline anaphylaxie 0,1 mg/h = vitesse 2 (50 µg/mL)", () => {
     expect(perfusionFlow(preset("adrenaline", "mg/h"), 0.1, 1)).toBeCloseTo(2, 1);
   });
-  it("héparine SCA 12 UI/kg/h à 70 kg (500 UI/mL) → 1,7 mL/h (abaque)", () => {
-    expect(perfusionFlow(preset("heparine", "UI/kg/h"), 12, 70)).toBeCloseTo(1.68, 2);
+  it("héparine SCA : 12 UI/kg/h à 70 kg, débit plafonné à 1 000 UI/h", () => {
+    const p = PERFUSIONS.filter((x) => x.drugId === "heparine")[0];
+    expect(p.bolus?.fr).toContain("60 UI/kg");
+    expect(perfusionFlow(p, 12, 70)).toBeCloseTo(1.68, 2);
+    expect(perfusionFlow(p, 12, 100)).toBe(2); // 1 000 UI/h à 500 UI/mL, non 2,4 mL/h
   });
-  it("héparine EP 18 UI/kg/h à 70 kg → 2,5 mL/h (abaque)", () => {
+  it("héparine TVP/EP 18 UI/kg/h à 70 kg → 2,5 mL/h, sans cible TCA universelle", () => {
     const p = PERFUSIONS.filter((x) => x.drugId === "heparine")[1];
+    expect(p.warnings?.fr).toContain("AHA/ACC 2026");
+    expect(p.note?.fr).toContain("0,3–0,7 UI/mL");
     expect(perfusionFlow(p, 18, 70)).toBeCloseTo(2.52, 2);
   });
   it("amiodarone charge 5 mg/kg/h à 70 kg → ~31 mL/h", () => {
@@ -238,8 +273,8 @@ describe("abaques de perfusion", () => {
   it("exacyl entretien 125 mg/h (25 mg/mL) → 5 mL/h", () => {
     expect(perfusionFlow(preset("acide-tranexamique", "mg/h"), 125, 1)).toBeCloseTo(5, 2);
   });
-  it("labétalol 0,1 mg/kg/h à 70 kg (2 mg/mL) → 3,5 mL/h (abaque)", () => {
-    expect(perfusionFlow(preset("labetalol", "mg/kg/h"), 0.1, 70)).toBeCloseTo(3.5, 2);
+  it("labétalol 1 mg/min (2 mg/mL) → 30 mL/h (abaque)", () => {
+    expect(perfusionFlow(preset("labetalol", "mg/min"), 1, 1)).toBeCloseTo(30, 2);
   });
   it("toutes les préparations ont une concentration > 0 et une fourchette cohérente", () => {
     for (const p of PERFUSIONS) {
@@ -380,12 +415,14 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     expect(flowForUnit("UI/kg/h", 0.1, 70, 1)).toBeCloseTo(7);
     expect(flowForUnit("µg/min", 100, 70, 200)).toBeCloseTo(30);
   });
-  it("pompe dérivée seulement si une préparation unique est définie", () => {
-    // Noradrénaline a deux protocoles RE.NAU : l'écran médicament emploie son réglage explicite.
+  it("pompe dérivée uniquement depuis les préparations structurées", () => {
+    // Noradrénaline a deux presets et conserve son réglage explicite.
     expect(pumpCfgFromPerfusion("noradrenaline")).toBeUndefined();
     expect(MED_TOOLS.noradrenaline?.pump?.unit).toBe("µg/kg/min");
-    const t = pumpCfgFromPerfusion("trinitrine")!;
-    expect(t.defAmpMg).toBeGreaterThan(0);
+    const dobu = pumpCfgFromPerfusion("dobutamine")!;
+    expect(dobu.defAmpMg * dobu.defCount / dobu.defTarget).toBe(1);
+    expect(pumpCfgFromPerfusion("propofol")?.defAmpMg).toBe(500);
+    expect(pumpCfgFromPerfusion("trinitrine")).toBeUndefined();
   });
   it("recherche par nom commercial tunisien", async () => {
     await loadSearchIndex(); // v17.0 — index chargé à la demande
@@ -403,7 +440,12 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
 
     const atroventKeys = searchItems("atrovent", 10).map((i) => i.key);
     expect(atroventKeys).not.toContain("medicament:ipratropium");
-    for (const brand of ["atropine saiph", "atropine sulfate aguettant", "atropinum sulfuricum"]) {
+    // La photo officielle de la boîte SAIPH établit SC, IV lente ou IM,
+    // sans valider les doses génériques ni le stock.
+    expect(searchItems("atropine saiph", 10).map((i) => i.key)).toContain("medicament:atropine");
+    expect(getMedication("atropine")?.brandCaution?.fr).toContain("photo officielle");
+    expect(getMedication("atropine")?.brandCaution?.fr).toContain("doses génériques");
+    for (const brand of ["atropine sulfate aguettant", "atropinum sulfuricum"]) {
       expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:atropine");
     }
     expect(searchItems("atropine unimed collyre", 10).map((i) => i.key)).not.toContain("medicament:atropine");
@@ -422,11 +464,35 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     for (const brand of ["gentalline", "gentadar", "unigenta collyre", "unigenta 0.3%", "unigenta 0,3% collyre"]) {
       expect(searchItems(brand, 10).map((i) => i.key), brand).not.toContain("medicament:gentamicine");
     }
-    for (const brand of ["genta 80", "gentainject 80", "unigenta 10", "unigenta 160", "cidomycine 20"]) {
+    // Les notices MEDIS GENTA établissent IV/IM pour les présentations 10, 20,
+    // 40, 80 et 160 mg, concordantes avec les AMM du registre DPM.
+    for (const brand of ["genta 10", "genta 20", "genta 40", "genta 80", "genta 160"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:gentamicine");
+    }
+    // Les produits encore sous réserve sont recherchables mais portent un
+    // avertissement visible au-dessus des doses; leur statut ne devient pas confirmé.
+    for (const brand of ["gentainject 40", "gentainject 80", "gentainject 160", "cidomycine 20"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:gentamicine");
+    }
+    for (const amm of ["9443052", "9443054H", "9443053", "9443051", "9163491"]) {
+      expect(searchItems(amm, 10).map((i) => i.key), amm).toContain("medicament:gentamicine");
+    }
+    expect(getMedication("gentamicine")?.brandCaution?.fr).toContain("AMM tunisienne");
+    expect(getMedication("gentamicine")?.brandCaution?.fr).toContain("ne précisent pas la voie IV/IM/SC");
+    expect(getMedication("gentamicine")?.brands).toContain("17041");
+    expect(getMedication("gentamicine")?.brands).toContain("14900");
+    expect(getMedication("gentamicine")?.brands).toContain("médicaments dermatologiques");
+    for (const brand of ["unigenta 10", "unigenta 160"]) {
       expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:gentamicine");
     }
     expect(searchItems("gentamicine", 10).map((i) => i.key)).toContain("medicament:gentamicine");
     expect(getMedication("gentamicine")?.brands).toContain("9093536");
+    // Le snapshot DPM 2024 distingue les comprimés adultes TERIAK
+    // (sulfaméthopyrazine + triméthoprime) de la suspension pédiatrique
+    // cotrimoxazole : aucune spécialité BACTRIM ne doit être aliasée ici.
+    for (const term of ["bactrim", "bactrim forte", "bactrim nourrissons"]) {
+      expect(searchItems(term, 10).map((i) => i.key).filter((key) => key.startsWith("medicament:")), term).toEqual([]);
+    }
     expect(searchItems("vaamox", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
     expect(searchItems("amoclan", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
     expect(searchItems("amoxi plus", 10).map((i) => i.key)).not.toContain("medicament:amoxicilline");
@@ -535,10 +601,13 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     expect(searchItems("ster-dex", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
     expect(searchItems("dexamethasone collyre", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
     expect(searchItems("medaxon dexamethasone", 10).map((i) => i.key)).not.toContain("medicament:dexamethasone");
-    for (const brand of ["dectancyl", "soludecadron", "dexamethasone medis", "dexamedis fort", "dexone 4", "dexone 8", "unidex", "unidex fort"]) {
+    for (const brand of ["dexamethasone medis", "dexamedis fort", "unidex", "unidex fort", "dexone 4"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:dexamethasone");
+    }
+    for (const brand of ["dectancyl", "soludecadron", "medaxon", "dexone 8"]) {
       expect(searchItems(brand, 10).map((i) => i.key), brand).not.toContain("medicament:dexamethasone");
     }
-    expect(getMedication("dexamethasone")?.brands).toBeFalsy();
+    expect(getMedication("dexamethasone")?.brands).toContain("9093193");
     expect(searchItems("natispray", 10).map((i) => i.key)).not.toContain("medicament:trinitrine");
     expect(searchItems("ناتيسبراي", 10).map((i) => i.key)).not.toContain("medicament:trinitrine");
     expect(searchItems("nakion g5", 10).map((i) => i.key)).not.toContain("medicament:glucose30");
@@ -596,7 +665,13 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     expect(searchItems("morphine aguettant", 10).map((i) => i.key)).not.toContain("medicament:morphine");
     expect(searchItems("morphine", 10).map((i) => i.key)).toContain("medicament:morphine");
     expect(searchItems("insuline levemir flexpen", 10).map((i) => i.key)).not.toContain("medicament:insuline-rapide");
-    expect(searchItems("hydrocortisone biocodex", 10).map((i) => i.key)).not.toContain("medicament:hydrocortisone");
+    // Les notices propres aux produits établissent IV/IM pour BIOCODEX,
+    // MEDIS 100 mg (deux présentations), MEDO/Medochemie 100 mg et UPJOHN/SERB.
+    // Elles ne valident ni les doses génériques de la fiche ni le stock local.
+    for (const brand of ["hydrocortisone biocodex", "hydrocortisone medis", "hydrocortisone medo", "hydrocortisone upjohn"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:hydrocortisone");
+    }
+    expect(searchItems("hydrocortisone medis 500", 10).map((i) => i.key)).not.toContain("medicament:hydrocortisone");
     expect(searchItems("suranil", 10).map((i) => i.key)).not.toContain("medicament:hydrocortisone");
     expect(searchItems("hydrocortisone leurquin", 10).map((i) => i.key)).not.toContain("medicament:hydrocortisone");
     expect(searchItems("heparine unimed", 10).map((i) => i.key)).not.toContain("medicament:heparine");
@@ -665,10 +740,12 @@ describe("v2.3 unités RE.NAU + pompe auto", () => {
     expect(searchItems("somatuline lp", 10).map((i) => i.key)).not.toContain("medicament:octreotide");
     expect(searchItems("lidocaine orex spray", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
     expect(searchItems("lidocaine otipax", 10).map((i) => i.key)).not.toContain("medicament:lidocaine");
-    expect(searchItems("ondofren 8", 10).map((i) => i.key)).not.toContain("medicament:ondansetron");
-    expect(searchItems("ondansetron unimed 8 mg/4 ml", 10).map((i) => i.key)).not.toContain("medicament:ondansetron");
-    expect(searchItems("ondansetron saiph 4 mg/2 ml", 10).map((i) => i.key)).not.toContain("medicament:ondansetron");
-    expect(searchItems("ondansetron medis 8 mg/4 ml", 10).map((i) => i.key)).not.toContain("medicament:ondansetron");
+    for (const brand of ["ondofren 8", "ondansetron saiph 4 mg/2 ml", "ondansetron steripharm 8 mg/4 ml"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).not.toContain("medicament:ondansetron");
+    }
+    for (const brand of ["ondansetron unimed 8 mg/4 ml", "ondansetron unimed 4 mg/2 ml", "ondansetron medis 8 mg/4 ml", "ondansetron medis 4 mg/2 ml", "ondansetron renaudin 8 mg/4 ml", "ondansetron renaudin 4 mg/2 ml"]) {
+      expect(searchItems(brand, 10).map((i) => i.key), brand).toContain("medicament:ondansetron");
+    }
 
     const brandMatches: Array<[string, string]> = [
       ["ipnodis", "medicament:midazolam"],
@@ -836,17 +913,34 @@ describe("v2.8 Broselow", () => {
 });
 
 describe("v2.8 cohérence perfusions (garde-fou données)", () => {
-  it("chaque médicament avec une seule préparation produit une pompe ; les ambiguïtés sont refusées", () => {
+  it("génère une pompe seulement si la préparation structurée concorde avec concUgPerMl", () => {
     for (const drugId of new Set(PERFUSIONS.map((p) => p.drugId))) {
       const matches = PERFUSIONS.filter((p) => p.drugId === drugId);
       const cfg = pumpCfgFromPerfusion(drugId);
-      if (matches.length === 1) {
+      if (matches.length === 1 && matches[0].pumpPreparation) {
         expect(cfg, drugId).toBeTruthy();
         expect(cfg!.defTarget, drugId).toBeGreaterThan(0);
+        const preparedMl = matches[0].pumpPreparation!.convention === "total"
+          ? cfg!.defTarget
+          : cfg!.defTarget + cfg!.defCount * cfg!.defAmpVol;
+        const factor = matches[0].pumpPreparation!.amountUnit === "UI" ? 1 : 1000;
+        expect((cfg!.defAmpMg * cfg!.defCount * factor) / preparedMl).toBeCloseTo(matches[0].concUgPerMl, 4);
       } else {
-        expect(cfg, `${drugId}: plusieurs indications ne doivent pas sélectionner la première`).toBeUndefined();
+        expect(cfg, `${drugId}: pas de préparation structurée unique, pas de pompe automatique`).toBeUndefined();
       }
     }
+  });
+  it("Dobutamine et propofol ne récupèrent plus les premiers nombres de leur texte libre", () => {
+    const dobutamine = PERFUSIONS.find((p) => p.drugId === "dobutamine")!;
+    const propofol = PERFUSIONS.find((p) => p.drugId === "propofol")!;
+    expect(dobutamine.concUgPerMl).toBe(1000);
+    expect(pumpCfgFromPerfusion("dobutamine")?.defTarget).toBe(250);
+    expect(propofol.prep.fr).toContain("10 mg/mL");
+    expect(propofol.concUgPerMl).toBe(10000);
+    expect(pumpCfgFromPerfusion("propofol")?.defTarget).toBe(50);
+    expect(pumpCfgFromPerfusion("propofol")?.defAmpMg).toBe(500);
+    expect(pumpCfgFromPreset({ ...dobutamine, concUgPerMl: 2000 })).toBeUndefined();
+    expect(pumpCfgFromPreset({ ...propofol, concUgPerMl: 100001 })).toBeUndefined();
   });
 });
 

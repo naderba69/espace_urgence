@@ -67,13 +67,13 @@ export function WarnNote({ tone, children }: { tone: "red" | "amber"; children: 
   return <p className={`rounded-xl border px-3 py-2 text-sm font-bold ${cls}`}>{children}</p>;
 }
 
-export function TabBar<T extends string>({ tabs, active, onChange }: {
-  tabs: { id: T; label: ReactNode }[]; active: T; onChange: (t: T) => void;
+export function TabBar<T extends string>({ tabs, active, onChange, ariaLabel }: {
+  tabs: { id: T; label: ReactNode }[]; active: T; onChange: (t: T) => void; ariaLabel: string;
 }) {
   return (
-    <div className="flex gap-1 rounded-2xl border border-line bg-[color:var(--surface-2)] p-1" role="tablist">
+    <div className="flex gap-1 rounded-2xl border border-line bg-[color:var(--surface-2)] p-1" role="group" aria-label={ariaLabel}>
       {tabs.map((t) => (
-        <button key={t.id} role="tab" aria-selected={active === t.id} onClick={() => onChange(t.id)}
+        <button key={t.id} aria-pressed={active === t.id} onClick={() => onChange(t.id)}
           className={`flex-1 rounded-xl px-2 py-2 text-sm font-black transition ${active === t.id ? "bg-blue-600 text-white shadow" : "opacity-70 hover:opacity-100"}`}>
           {t.label}
         </button>

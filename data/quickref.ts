@@ -48,6 +48,6 @@ export const emergencyNumbers: { service: Localized; number: string; note?: Loca
   {
     service: { fr: "Centre antipoison (Tunis)", ar: "مركز السموم (تونس)" },
     number: "71 335 500",
-    note: { fr: "À vérifier localement", ar: "يُتحقق منه محلياً" },
+    note: { fr: "Numéro cité par l'ambassade des États-Unis en Tunisie (2025) ; à confirmer localement, non vérifié sur une source officielle tunisienne.", ar: "رقم أوردته سفارة الولايات المتحدة في تونس (2025)؛ يجب تأكيده محلياً، ولم يُتحقق منه عبر مصدر تونسي رسمي." },
   },
 ];

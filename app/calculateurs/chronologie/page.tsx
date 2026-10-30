@@ -4,14 +4,16 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useApp } from "@/components/Providers";
+import { sanitizeTimelineArchive, sanitizeTimelineEvents, type TimelineArchive, type TimelineEvent } from "@/lib/casesummary";
+import { readSessionJSON, writeSessionJSON } from "@/lib/storage";
 import { useRegisterRecent } from "@/components/SearchBar";
 import PageHeader from "@/components/ui/PageHeader";
 import Badge from "@/components/ui/Badge";
 import T from "@/components/T";
 import { Timer, Copy, X } from "lucide-react";
 
-type Ev = { id: string; f: string; a: string; t: number; m: number }; // f/a = étiquette FR/AR, m = intervalle min
-type Closed = { at: number; n: number; text: string };
+type Ev = TimelineEvent & { id: string }; // f/a = étiquette FR/AR, m = intervalle min
+type Closed = TimelineArchive;
 
 const KEY = "eutn:timeline";
 const LOGKEY = "eutn:timeline-log";
@@ -59,18 +61,22 @@ export default function ChronologiePage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setNow(Date.now());
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) setEvs(JSON.parse(raw));
-      const rawLog = localStorage.getItem(LOGKEY);
-      if (rawLog) setLog(JSON.parse(rawLog));
-    } catch { /* ignore */ }
+    setEvs(sanitizeTimelineEvents(readSessionJSON<unknown>(KEY, [])).filter((event): event is Ev => typeof event.id === "string"));
+    setLog(sanitizeTimelineArchive(readSessionJSON<unknown>(LOGKEY, [])));
     const i = setInterval(() => setNow(Date.now()), 10000);
     return () => clearInterval(i);
   }, []);
 
-  const persist = (next: Ev[]) => { setEvs(next); try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* ignore */ } };
-  const persistLog = (next: Closed[]) => { setLog(next); try { localStorage.setItem(LOGKEY, JSON.stringify(next)); } catch { /* ignore */ } };
+  const persist = (next: Ev[]) => {
+    const safe = sanitizeTimelineEvents(next).filter((event): event is Ev => typeof event.id === "string");
+    setEvs(safe);
+    writeSessionJSON(KEY, safe);
+  };
+  const persistLog = (next: Closed[]) => {
+    const safe = sanitizeTimelineArchive(next);
+    setLog(safe);
+    writeSessionJSON(LOGKEY, safe);
+  };
 
   const addEvent = (p: { fr: string; ar: string; m: number }) => {
     // eslint-disable-next-line react-hooks/purity -- معالج نقرة فقط، يُستدعى خارج الـrender
@@ -139,7 +145,7 @@ export default function ChronologiePage() {
       />
 
       <p className="card rounded-2xl border border-line bg-surface p-3 text-xs font-bold opacity-80">
-        <T fr="Usage strictement personnel: aucune donnée ne sort de l'appareil; le résumé est pour VOS notes, pas une transmission d'équipe." ar="استعمال شخصي صرف: لا شيء يخرج من الجهاز؛ الملخص لسجلك أنت، وليس تسليماً لفريق." />
+        <T fr="Données gardées dans la session de cet onglet (restauration possible par le navigateur). Évitez les identifiants directs; le résumé est une note personnelle, pas une transmission d'équipe." ar="تُحفظ البيانات في جلسة هذا التبويب (وقد يستعيدها المتصفح). تجنّب المعرّفات المباشرة؛ الملخص ملاحظة شخصية وليس تسليماً للفريق." />
       </p>
 
       {now !== null && (

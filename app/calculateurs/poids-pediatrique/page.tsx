@@ -48,7 +48,7 @@ export default function PoidsPediaPage() {
               <p className="text-xs font-semibold opacity-90"><T fr="Défibrillation 4 J/kg" ar="صدمة 4 جول/كغ" /></p>
               <p className="text-3xl font-black tabular-nums">{Math.round(defib)} J</p>
             </div>
-            <div className="rounded-2xl bg-orange-600 p-4 text-center text-white">
+            <div className="rounded-2xl bg-orange-600 p-4 text-center text-slate-950">
               <p className="text-xs font-semibold opacity-90"><T fr="Adrénaline ACR 0,01 mg/kg" ar="أدرنالين الإنعاش 0.01 ملغ/كغ" /></p>
               <p className="text-3xl font-black tabular-nums">{Math.round(adr * 100) / 100} mg</p>
             </div>

@@ -228,7 +228,7 @@ export const protocolsPhase7: Protocol[] = [
     keyPoints: [
       { fr: "Odeur d'ail/poisson pourrie à l'haleine = signature de la phosphine.", ar: "رائحة ثوم/سمك متعفن بالنفس = بصمة الفوسفين." },
       { fr: "Aucun antidote prouvé : la survie dépend de la précocité de la réanimation et du soutien circulatoire.", ar: "لا ترياق مثبت: النجاة رهينة التبكير بالإنعاش ودعم الدوران." },
-      { fr: "Prévenir le centre antipoison (CNPP Tunis : 80 102 550) — déclaration obligatoire.", ar: "أبلغ مركز مكافحة التسمم (تونس: 80 102 550) — التبليغ إجباري." },
+      { fr: "Contacter le Centre antipoison : 71 335 500 (numéro cité par l'ambassade des États-Unis en Tunisie en 2025, à confirmer localement).", ar: "اتصل بمركز السموم: 71 335 500 (رقم أوردته سفارة الولايات المتحدة في تونس سنة 2025، ويجب تأكيده محلياً)." },
     ],
     trajectory: [
       { when: { fr: "Arrêt cardiaque réfractaire", ar: "توقف قلبي مستعصٍ" }, do: [
@@ -240,7 +240,7 @@ export const protocolsPhase7: Protocol[] = [
     ],
     medications: ["noradrenaline", "amiodarone", "bicarbonate", "sulfate-magnesium", "midazolam", "rocuronium"],
     calculators: [],
-    meta: { sources: ["Proudfoot 2019 review", "CNPP Tunisie"], lastReviewed: "2026-09" },
+    meta: { sources: ["Proudfoot 2019 review", "71 335 500 cité par l'ambassade des États-Unis en Tunisie (2025), à confirmer localement"], lastReviewed: "2026-10" },
   },
   {
     id: "sca-nstem",
@@ -256,7 +256,7 @@ export const protocolsPhase7: Protocol[] = [
       { title: { fr: "Score HEART + ECG + troponine : stratifier d'emblée", ar: "HEART + تخطيط + تروبونين: صنّف منذ البداية" } },
       { title: { fr: "Aspirine 250 mg IV (ou 150-300 mg per os à croquer)", ar: "أسبرين 250 ملغ وريدي (أو 150-300 ملغ مضغاً)" } },
       { title: { fr: "Ticagrélor 180 mg (ou clopidogrel 300-600 mg si CI/âge > 75/fibrinolyse possible)", ar: "تيكاغريلور 180 ملغ (أو كلوبيدوغريل 300-600 عند الموانع/فوق 75)" } },
-      { title: { fr: "Anticoagulation : énoxaparine 1 mg/kg/12 h SC (ou HNF si coronarographie < 2 h)", ar: "تمييع: إينوكسابارين 1 ملغ/كغ/12 س تحت الجلد (أو هيبارين للقسطرة < 2 س)" } },
+      { title: { fr: "Anticoagulation : énoxaparine 1 mg/kg/12 h SC si retenue; si PCI immédiate, bolus HNF 70–100 UI/kg selon l’anticoagulation préalable, ajusté en salle à l’ACT cible (250–300 s) — ne pas utiliser le calculateur de perfusion pour le bolus de PCI.", ar: "مضاد التخثر: إينوكسابارين 1 ملغ/كغ كل 12 س تحت الجلد عند اختياره؛ مع PCI فورية تُعطى HNF وتُعاير في القاعة وفق العلاج السابق وACT — لا تستخدم حاسبة التسريب لدفعة PCI." } },
       { title: { fr: "Trinitrine SL si douleur et PAS > 100 ; morphine 2-4 mg si réfractaire", ar: "نترات تحت اللسان مع الألم وانقباضي > 100؛ مورفين 2-4 ملغ للمقاوم" } },
       { title: { fr: "Délais de coronarographie : < 2 h si très haut risque (choc, arythmies malignes, douleur réfractaire) ; < 24 h si haut risque (troponine ↑, sous-ST dynamique, GRACE > 140) ; < 72 h sinon", ar: "أجل القسطرة: < 2 س لعالٍ جداً (صدمة، اضطرابات خبيثة، ألم مقاوم)؛ < 24 س للعالٍ؛ < 72 س لما دونها" } },
       { title: { fr: "Bêtabloquant per os à distance si pas d'insuffisance cardiaque/de choc ; statine forte dose", ar: "حاصر بيتا فموياً لاحقاً إن لا قصور/صدمة؛ ستاتين بجرعة عالية" } },
@@ -275,7 +275,7 @@ export const protocolsPhase7: Protocol[] = [
     ],
     medications: ["aspirine", "enoxaparine", "heparine", "trinitrine", "morphine", "amiodarone"],
     calculators: ["heart", "enoxaparine"],
-    meta: { sources: ["ESC NSTE-ACS 2023"], lastReviewed: "2026-09" },
+    meta: { sources: ["AHA/ACC ACS 2025, Table 10", "ESC NSTE-ACS 2023"], lastReviewed: "2026-10" },
   },
   {
     id: "fa-nouvelle",

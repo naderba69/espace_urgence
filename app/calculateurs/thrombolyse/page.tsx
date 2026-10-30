@@ -20,9 +20,9 @@ export default function ThrombolysePage() {
       <header className="flex items-center justify-between gap-2">
         <h1 className="text-2xl font-extrabold"><T fr="Thrombolyse par poids" ar="التحلل بالوزن" /></h1>
       </header>
-      <div className="flex flex-wrap gap-2" role="radiogroup">
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Indication / الاستطباب">
         {([["stemi", "STEMI — TNK"], ["avc", "AVC — Altéplase"], ["ep", "Embolie — Altéplase"]] as [Mode, string][]).map(([m, l]) => (
-          <button key={m} role="radio" aria-checked={mode === m} onClick={() => setMode(m)}
+          <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)}
             className={`touch rounded-full border px-4 py-2 text-sm font-black ${mode === m ? "border-blue-600 bg-blue-600 text-white" : "border-line opacity-70"}`}>
             <span dir="ltr">{l}</span>
           </button>

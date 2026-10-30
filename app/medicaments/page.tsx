@@ -44,7 +44,7 @@ export default function MedicationsPage() {
             className="w-full bg-transparent py-3 outline-none"
           />
         </div>
-        <div className="eutn-secnav sticky top-1 z-30 flex gap-1.5 overflow-x-auto py-1" role="listbox" aria-label="classes">
+        <div className="eutn-secnav sticky top-1 z-30 flex gap-1.5 overflow-x-auto py-1" role="group" aria-label={lang === "ar" ? "فئات الأدوية" : "Classes de médicaments"}>
           <button
             onClick={() => setKlass(null)}
             aria-pressed={klass === null}

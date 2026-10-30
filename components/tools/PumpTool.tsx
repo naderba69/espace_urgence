@@ -4,29 +4,41 @@
 import { useEffect, useMemo, useState } from "react";
 import { Settings2, ArrowRightLeft, HelpCircle, FlaskConical } from "lucide-react";
 import type { PumpCfg } from "@/data/med-tools";
-import { readJSON, writeJSON } from "@/lib/storage";
+import { readSessionJSON, writeSessionJSON } from "@/lib/storage";
+import { sanitizePumpPreparation, type PumpPreparationState } from "@/lib/calculator-storage";
+import { useApp } from "@/components/Providers";
 import { concUgPerMl, prepVolume, flowForUnit, inferConcUgMl, doseLadder } from "@/lib/calc";
 import T from "@/components/T";
 import { NumField, Hero, Sheet, WarnNote, TabBar } from "./ui";
 
 const fmt = (x: number) => (x >= 10 ? x.toFixed(1) : x.toFixed(2));
 
-interface PrepState { ampMg: number; ampVol: number; count: number; target: number; convention: "total" | "added" }
+type PrepState = PumpPreparationState;
 
 export default function PumpTool({ cfg, storageKey }: { cfg: PumpCfg; storageKey: string }) {
-  const def: PrepState = useMemo(
-    () => ({ ampMg: cfg.defAmpMg, ampVol: cfg.defAmpVol, count: cfg.defCount, target: cfg.defTarget, convention: "total", ...readJSON<Partial<PrepState>>(storageKey, {}) }),
-    [storageKey, cfg]
+  const { hydrated } = useApp();
+  const defaults: PrepState = useMemo(
+    () => ({ ampMg: cfg.defAmpMg, ampVol: cfg.defAmpVol, count: cfg.defCount, target: cfg.defTarget, convention: "total" }),
+    [cfg]
   );
   const [mode, setMode] = useState<"prep" | "incoming" | "unknown">("prep");
   const [sheet, setSheet] = useState(false);
-  const [prep, setPrep] = useState<PrepState>(def);
+  const [prep, setPrep] = useState<PrepState>(defaults);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const [weight, setWeight] = useState("70");
   const [dose, setDose] = useState(String(cfg.doseStart));
   const [inFlow, setInFlow] = useState("");
   const [inDose, setInDose] = useState(String(cfg.doseStart));
 
-  useEffect(() => { writeJSON(storageKey, prep); }, [prep, storageKey]);
+  useEffect(() => {
+    if (!hydrated) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- restauration d'une préparation de session après hydratation, sans mismatch SSR
+    setPrep(sanitizePumpPreparation(readSessionJSON<unknown>(storageKey, null), defaults));
+    setLoadedKey(storageKey);
+  }, [hydrated, storageKey, defaults]);
+  useEffect(() => {
+    if (loadedKey === storageKey) writeSessionJSON(storageKey, prep);
+  }, [prep, storageKey, loadedKey]);
 
   const w = Number(weight);
   const vol = prepVolume(prep.count, prep.ampVol, prep.target, prep.convention);
@@ -50,9 +62,9 @@ export default function PumpTool({ cfg, storageKey }: { cfg: PumpCfg; storageKey
       <NumField label={<T fr="Volume ampoule (mL)" ar="حجم الأمبولة (مل)" />} value={String(prep.ampVol)} onChange={(v) => setPrep((p) => ({ ...p, ampVol: Number(v) }))} />
       <NumField label={<T fr="Nombre d'ampoules" ar="عدد الأمبولات" />} value={String(prep.count)} onChange={(v) => setPrep((p) => ({ ...p, count: Number(v) }))} />
       <NumField label={<T fr="Volume cible (mL)" ar="الحجم الهدف (مل)" />} value={String(prep.target)} onChange={(v) => setPrep((p) => ({ ...p, target: Number(v) }))} />
-      <div className="col-span-2 flex gap-2" role="radiogroup">
+      <div className="col-span-2 flex gap-2" role="group" aria-label="Convention de volume / طريقة الحجم">
         {(["total", "added"] as const).map((c) => (
-          <button key={c} role="radio" aria-checked={prep.convention === c}
+          <button key={c} aria-pressed={prep.convention === c}
             onClick={() => setPrep((p) => ({ ...p, convention: c }))}
             className={`flex-1 rounded-xl border px-2 py-2 text-xs font-bold ${prep.convention === c ? "border-blue-600 bg-blue-600 text-white" : "border-line opacity-70"}`}>
             {c === "total"
@@ -73,6 +85,7 @@ export default function PumpTool({ cfg, storageKey }: { cfg: PumpCfg; storageKey
           { id: "unknown" as const, label: <span className="inline-flex items-center gap-1"><HelpCircle className="h-4 w-4" aria-hidden /><T fr="Inconnue" ar="مجهولة" /></span> },
         ]}
         active={mode} onChange={setMode}
+        ariaLabel="Mode de l’outil / وضع الأداة"
       />
 
       {mode === "prep" && (

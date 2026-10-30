@@ -2,8 +2,9 @@
 // Pour chaque protocole : cadence de réévaluation, critères objectifs,
 // amélioration / stagnation / aggravation → conduite, et pivots diagnostiques
 // (signe nouveau ⇒ autre hypothèse ⇒ protocole cible).
-// Sources : ERC/AHA 2021-2025, GINA 2024, SSC 2026 (adult sepsis), directives OMS/FIGO,
-// recommandations SFMU — revues 2026-09.
+// Sources générales : ERC/AHA 2021-2025, GINA Strategy Report 2026 (asthme aigu),
+// SSC 2026 (sepsis adulte), directives OMS/FIGO et recommandations SFMU.
+// Sources détaillées et limites de la révision asthme : docs/ASTHME-AIGU-GINA-2026-REVIEW.md.
 import type { Localized } from "./types";
 
 export interface RevalAction {
@@ -355,33 +356,32 @@ export const revals: Record<string, Reval> = {
     ],
   },
   "asthme-aigu-grave": {
-    intervalMin: 15,
+    intervalMin: 20,
     criteria: [
-      { fr: "DEP (% de la théorique/du meilleur)", ar: "قمة الجريان (DEP)" },
-      { fr: "Parole : phrases complètes ?", ar: "الكلام: جمل كاملة؟" },
-      { fr: "FR, SpO₂, tirage, silence auscultatoire", ar: "تنفس، SpO₂، جهد، صمت سمعي" },
+      { fr: "DEP/PEF (% du meilleur ou du prédit), si mesurable", ar: "ذروة الجريان DEP/PEF (٪ من الأفضل أو المتوقع) إن أمكن" },
+      { fr: "Parole, capacité à boire/s'allonger, état de conscience", ar: "الكلام والقدرة على الشرب أو الاستلقاء والوعي" },
+      { fr: "FR, SpO₂ en air ambiant, tirage, auscultation et réponse au traitement", ar: "معدل التنفس والتشبع في هواء الغرفة والجهد والإصغاء والاستجابة للعلاج" },
     ],
     improve: {
-      signs: [{ fr: "DEP ↑, phrases complètes, tirage disparu", ar: "DEP يرتفع، جمل كاملة، جهد زال" }],
+      signs: [{ fr: "Critères légers redevenus présents et stables", ar: "عودة معايير النوبة الخفيفة واستقرارها" }],
       actions: [
-        { txt: { fr: "Poursuivre β₂ + corticoïdes, espacer les nébulisations", ar: "واصل β₂ + كورتيزون، باعد بين البخاخات" } },
-        { txt: { fr: "Surveillance ≥ 4 h avant toute sortie", ar: "مراقبة ≥ 4 ساعات قبل الخروج" } },
+        { txt: { fr: "Sortie à envisager seulement après stabilité 1–2 h depuis la dernière dose de salbutamol, SpO₂ ≥92 % en air ambiant et PEF >70 % du meilleur/prédit", ar: "لا تُبحث المغادرة إلا بعد استقرار 1–2 ساعة منذ آخر جرعة سالبوتامول، وتشبع ≥92٪ في هواء الغرفة وPEF أكبر من 70٪ من الأفضل/المتوقع" } },
+        { txt: { fr: "Vérifier les ressources à domicile; optimiser le traitement contenant un CSI, remettre un plan d'action et organiser le suivi dans la semaine", ar: "تحقق من توفر الدعم المنزلي؛ حسّن العلاج المحتوي على CSI، وقدّم خطة عمل ونظّم المتابعة خلال أسبوع" } },
       ],
     },
     stall: {
-      signs: [{ fr: "DEP < 50 % après 1 h de traitement bien conduit", ar: "DEP < 50% بعد ساعة علاج جيد" }],
+      signs: [{ fr: "Réponse insuffisante ou aggravation après les premières mesures; réévaluer signes vitaux, PEF et diagnostic différentiel", ar: "استجابة غير كافية أو تدهور بعد الإجراءات الأولى؛ أعد تقييم العلامات الحيوية وPEF والتشخيص التفريقي" }],
       actions: [
-        { txt: { fr: "Sulfate de magnésium 2 g IVSE en 20 min", ar: "كبريتات مغنزيوم 2 غ وريدي ببطء 20 د" }, go: { href: "/medicaments/sulfate-magnesium", fr: "MgSO₄", ar: "MgSO₄" } },
+        { txt: { fr: "Transfert/avis urgent; MgSO₄ IV sélectif si forme sévère insuffisamment améliorée (adulte : 2 g sur 20 min); enfant : protocole pédiatrique dédié", ar: "نقل/استشارة عاجلة؛ يمكن التفكير انتقائياً في MgSO₄ الوريدي إذا كانت النوبة الشديدة غير مستجيبة بما يكفي (البالغ: 2 غ خلال 20 دقيقة)؛ الطفل: بروتوكول أطفال خاص" }, go: { href: "/medicaments/sulfate-magnesium", fr: "MgSO₄", ar: "MgSO₄" } },
         SAMU,
       ],
     },
     worsen: {
       signs: [
-        { fr: "Thorax silencieux, bradycardie, troubles de conscience", ar: "صدر صامت، بطء قلب، اضطراب وعي" },
-        { fr: "Épuisement respiratoire", ar: "إعياء تنفسي" },
+        { fr: "Somnolence, confusion, cyanose, thorax silencieux, bradycardie ou épuisement", ar: "نعاس أو ارتباك أو زرقة أو صدر صامت أو بطء قلب أو إنهاك" },
       ],
       actions: [
-        { txt: { fr: "Intubation immédiate par le plus expérimenté (cétones ? kétamine)", ar: "تنبيب فوري بأيدي الخبير (كيتامين مفضل)" } },
+        { txt: { fr: "Danger vital : transfert immédiat vers réanimation/équipe airway; préparer la prise en charge avancée et intuber seulement si indiqué par l'équipe expérimentée", ar: "خطر على الحياة: نقل فوري للإنعاش/فريق مجرى الهواء؛ حضّر التدبير المتقدم والتنبيب فقط عند استطبابه من الفريق الخبير" } },
         SAMU,
       ],
     },
@@ -2699,7 +2699,7 @@ export const revals: Record<string, Reval> = {
     stall: {
       signs: [{ fr: "Arythmies persistantes malgré correction du K⁺/Mg²⁺", ar: "اضطرابات نظم مستمرة رغم تصحيح البوتاسيوم/المغنزيوم" },],
       actions: [
-        { txt: { fr: "Antidote Fab si disponible (appel Centre Anti Poison 71 335 335), lidocaïne/phenytoine pour arythmies ventriculaires, pacing si bloc", ar: "ترياق Fab إن توفر (اتصل بمركز السموم 71335335)، ليدوكائين/فينيتوئين لاضطرابات بطينية، ناظمة عند الحصار" } },
+        { txt: { fr: "Antidote Fab si disponible (appel Centre antipoison : 71 335 500, numéro cité par l'ambassade des États-Unis en Tunisie en 2025, à confirmer localement), lidocaïne/phénytoïne pour arythmies ventriculaires, pacing si bloc", ar: "ترياق Fab إن توفر (اتصل بمركز السموم: 71 335 500، رقم أوردته سفارة الولايات المتحدة في تونس سنة 2025 ويجب تأكيده محلياً)، ليدوكائين/فينيتوئين لاضطرابات بطينية، ناظمة عند الحصار" } },
         SAMU,
       ],
     },

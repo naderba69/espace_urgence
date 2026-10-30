@@ -91,6 +91,14 @@ export type ErreurRegimeAtb =
   | "raison-bloquage-invalide"
   | "type-bloquage-incoherent";
 
+export interface LimiteExacteAtb {
+  seuil: number;
+  dfgBrut: number;
+  dfgAffiche: number;
+  /** Cellule sous le seuil arrondi, montrée à titre informatif par la limite exacte. */
+  segmentInferieur: AtbSegment | null;
+}
+
 export type ResultatSelectionAtb =
   | {
       status: "cellule-source";
@@ -100,6 +108,16 @@ export type ResultatSelectionAtb =
       source: SourceAtb;
       segment: AtbSegment;
       intervalle: IntervalleDfg;
+      limiteExacte: LimiteExacteAtb | null;
+    }
+  | {
+      status: "boundary-30";
+      regimeId: string;
+      indication: string;
+      voie: string;
+      source: SourceAtb;
+      seuil: 30;
+      dfgBrut: number;
     }
   | {
       status: "bloque";
@@ -109,14 +127,6 @@ export type ResultatSelectionAtb =
       source: SourceAtb;
       raison: "aucune-donnee" | "surveillance-requise" | "contexte-non-verifie";
       contenu: ContenuCelluleAtb;
-    }
-  | {
-      status: "egalite-non-verifiee";
-      regimeId: string;
-      indication: string;
-      voie: string;
-      source: SourceAtb;
-      seuil: number;
     }
   | { status: "invalide"; raison: "dfg" }
   | { status: "invalide"; raison: "regime"; erreurs: ErreurRegimeAtb[] };
@@ -321,8 +331,10 @@ export function intervallePourSegmentDFG(
 
 /**
  * Sélectionne une cellule source pour une seule indication/voie.
- * Les seuils à égalité non vérifiée bloquent explicitement ; une cellule note/absence/surveillance
- * reste typée et n'est jamais transformée en dose.
+ * E1 : un seuil est une borne haute exclusive; la cellule du seuil s'applique strictement en dessous.
+ * E2 : si la ligne possède un seuil 30 et que le DFG vaut 30 ± 1e-6, la sélection est refusée.
+ * E3 : signale une limite quand le DFG arrondi à l'entier rejoint un seuil de la ligne.
+ * Une cellule note/absence/surveillance reste typée et n'est jamais transformée en dose.
  */
 export function cellulePourDFG(regime: RegimeAtb, dfg: number): ResultatSelectionAtb {
   if (!Number.isFinite(dfg) || dfg < 0) return { status: "invalide", raison: "dfg" };
@@ -346,21 +358,17 @@ export function cellulePourDFG(regime: RegimeAtb, dfg: number): ResultatSelectio
   }
 
   const segments = regime.regleRenale.segments;
-  const seuilEgal = segments.find((segment) => segment.seuil === dfg);
-  if (seuilEgal?.egaliteAuSeuil === "non-verifiee") {
+  if (segments.some((segment) => segment.seuil === 30) && Math.abs(dfg - 30) <= 1e-6) {
     return {
-      status: "egalite-non-verifiee",
+      status: "boundary-30",
       ...base,
-      seuil: dfg,
+      seuil: 30,
+      dfgBrut: dfg,
     };
   }
 
-  const applicables = segments.filter(
-    (segment) =>
-      segment.seuil !== null &&
-      (dfg < segment.seuil ||
-        (dfg === segment.seuil && segment.egaliteAuSeuil === "ce-segment")),
-  );
+  // E1 : les seuils sont des bornes hautes exclusives; à S, le segment S ne s'applique pas.
+  const applicables = segments.filter((segment) => segment.seuil !== null && segment.seuil > dfg);
   const seuilSelectionne = applicables.length > 0
     ? Math.min(...applicables.map((segment) => segment.seuil!))
     : null;
@@ -376,10 +384,23 @@ export function cellulePourDFG(regime: RegimeAtb, dfg: number): ResultatSelectio
     return { status: "invalide", raison: "regime", erreurs: ["liste-vide"] };
   }
 
+  const segmentAffiche = segments.find(
+    (segment): segment is AtbSegment & { seuil: number } =>
+      segment.seuil !== null && Math.round(dfg) === segment.seuil,
+  );
+
   return {
     status: "cellule-source",
     ...base,
     segment: selection,
     intervalle,
+    limiteExacte: segmentAffiche
+      ? {
+          seuil: segmentAffiche.seuil,
+          dfgBrut: dfg,
+          dfgAffiche: Math.round(dfg),
+          segmentInferieur: segmentAffiche,
+        }
+      : null,
   };
 }

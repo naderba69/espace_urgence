@@ -196,11 +196,11 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     id: "antibiotiques",
-    title: { fr: "Antibiotiques : dose et rein", ar: "المضادات الحيوية: الجرعة والكلى" },
-    description: { fr: "Dose selon le poids et frequence selon la clairance.", ar: "الجرعة حسب الوزن والتواتر حسب التصفية." },
+    title: { fr: "Antibiotiques : calculateur suspendu", ar: "المضادات الحيوية: الحاسبة معلّقة" },
+    description: { fr: "Calcul désactivé dans l’attente d’une vérification des sources et indications par antibiotique.", ar: "الحساب متوقف إلى حين التحقق من المراجع والاستطباب لكل مضاد." },
     href: "/calculateurs/antibiotiques",
     icon: "ClipboardList",
-    meta: { sources: ["SPILF 2023"], lastReviewed: "2026-09" },
+    meta: { sources: ["Calculateur suspendu — aucune dose validée; cette mention est un statut, pas une référence clinique."], lastReviewed: "2026-10" },
   },
   {
     id: "antibio-renal",
@@ -541,10 +541,10 @@ export const calculators: CalculatorMeta[] = [
   {
     id: "heparine",
     title: { fr: "Héparine IV", ar: "هيبارين وريدي" },
-    description: { fr: "Bolus U/kg + débit initial en mL/h selon la concentration.", ar: "دفعة وحدة/كغ + تدفق ابتدائي مل/س حسب التركيز." },
+    description: { fr: "Dose initiale HNF conditionnée au choix explicite SCA ou TVP/EP; plafonds, surveillance et sources diffèrent.", ar: "جرعة HNF أولية بعد اختيار SCA أو الخثار/الصمة صراحةً؛ تختلف الحدود والمراقبة والمراجع." },
     href: "/calculateurs/heparine",
     icon: "Droplets",
-    meta: { sources: ["RE.NAU Livret du médicament 2018","CHEST Antithrombotic 2012"], lastReviewed: "2026-09" },
+    meta: { sources: ["AHA/ACC ACS 2025, Table 10 + corrections 2025", "AHA/ACC EP 2026", "UW Medicine Anticoagulation Services (schéma institutionnel TVP/EP)"], lastReviewed: "2026-10" },
   },
   {
     id: "sodium",
@@ -821,10 +821,10 @@ export const calculators: CalculatorMeta[] = [
   {
     id: "asthme",
     title: { fr: "Assistant crise d'asthme individuel", ar: "مساعد نوبة الربو الفردي" },
-    description: { fr: "Nébulisations au poids q20 min, corticoïde, Mg, journal.", ar: "رذّات بالوزن كل 20 د، كورتيكويد ومغنيزيوم، وسجل." },
+    description: { fr: "Suivi individualisé par âge, réévaluation des doses, escalade et journal.", ar: "متابعة فردية حسب العمر، إعادة تقييم الجرعات، التصعيد والسجل." },
     href: "/calculateurs/asthme",
     icon: "Wind",
-    meta: { sources: ["GINA 2023"], lastReviewed: "2026-09" },
+    meta: { sources: ["GINA Strategy Report 2026 (Summary Guide, Figure 9)", "GINA Difficult-to-Treat & Severe Asthma Guide 2026 (ipratropium courte durée)", "NHS Greater Glasgow and Clyde acute severe asthma in adults (ipratropium nébulisé, revue 2022)", "Sydney Children's Hospitals Network Asthma: Acute Management v10.2 (pédiatrie, publication 2026-02-06)"], lastReviewed: "2026-10" },
   },
   {
     id: "hpp",

@@ -2,6 +2,7 @@
 // الاشتباه ≠ تشخيص: كل قاعدة تعرض معايير تأكيد سريرية — والتأكيد قرار المهني وحده.
 // Références selon la règle : ESC 2021 (OAP) · SSC 2026 (sepsis adulte) · ERC 2021 (réanimation).
 // استعمال شخصي بحت — لا يُغني عن الحكم السريري.
+import { readSessionJSON, writeSessionJSON } from "@/lib/storage";
 
 export interface Vitals {
   age?: number;  // age in completed years; adult sepsis rules require >=18
@@ -127,7 +128,8 @@ export const DETER_RULES: DeterRule[] = [
     id: "hypoglycemie",
     sev: "urgent",
     title: { fr: "Hypoglycémie", ar: "نقص سكر الدم" },
-    when: (v) => num(v.gly) && v.gly! < 70,
+    // L'interface et Vitals utilisent g/L : ADA 2026, <70 mg/dL = <0,7 g/L.
+    when: (v) => num(v.gly) && v.gly! < 0.7,
     observed: (v) => `Glycémie ${v.gly} g/L`,
     criteria: [
       { fr: "Sueurs froides / tremblements", ar: "عرق بارد / رجفة" },
@@ -242,7 +244,8 @@ export const DETER_RULES: DeterRule[] = [
     id: "addison",
     sev: "critical",
     title: { fr: "Crise surrénalienne (Addison)", ar: "أزمة ربعية (قصور الكظر الحاد)" },
-    when: (v) => num(v.pas) && v.pas! < 90 && num(v.gly) && v.gly! < 80,
+    // Le seuil historique de 80 mg/dL est converti en 0,8 g/L ; heuristique non diagnostique à valider localement.
+    when: (v) => num(v.pas) && v.pas! < 90 && num(v.gly) && v.gly! < 0.8,
     observed: (v) => `PAS ${v.pas} mmHg · Glycémie ${v.gly} g/L`,
     criteria: [
       { fr: "Corticothérapie récente ou arrêtée brutalement", ar: "كورتيزون حديث أو إيقافه فجأة" },
@@ -288,17 +291,28 @@ export interface Problem {
   vitals: string;
 }
 
-export function getProblems(): Problem[] {
-  try {
-    const arr = JSON.parse(localStorage.getItem(PROBLEMS_KEY) || "[]") as Problem[];
-    return Array.isArray(arr) ? arr : [];
-  } catch {
-    return [];
+export function sanitizeProblems(value: unknown, now = Date.now()): Problem[] {
+  if (!Array.isArray(value)) return [];
+  const safe: Problem[] = [];
+  for (const candidate of value) {
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) continue;
+    const x = candidate as Record<string, unknown>;
+    if (typeof x.ruleId !== "string" || typeof x.id !== "string" || x.id.length > 120 ||
+        typeof x.at !== "number" || !Number.isFinite(x.at) || x.at <= 0 || x.at > now ||
+        typeof x.vitals !== "string") continue;
+    const rule = DETER_RULES.find((item) => item.id === x.ruleId);
+    if (!rule || !x.id.startsWith(`${rule.id}-`)) continue;
+    safe.push({ id: x.id, ruleId: rule.id, at: x.at, title: rule.title, vitals: x.vitals.slice(0, 300) });
   }
+  return safe.sort((a, b) => b.at - a.at).slice(0, 12);
+}
+
+export function getProblems(): Problem[] {
+  return sanitizeProblems(readSessionJSON<unknown>(PROBLEMS_KEY, []));
 }
 
 export function saveProblems(list: Problem[]): void {
-  try { localStorage.setItem(PROBLEMS_KEY, JSON.stringify(list)); } catch { /* ignore */ }
+  writeSessionJSON(PROBLEMS_KEY, sanitizeProblems(list));
 }
 
 export function addProblem(ruleId: string, vitals: string): Problem[] {

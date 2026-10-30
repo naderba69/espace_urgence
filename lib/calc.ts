@@ -78,6 +78,39 @@ export function parklandRates(weightKg: number, tbsaPct: number, elapsedHours: n
   };
 }
 
+/** Débits de départ d'une réanimation des brûlures, après déduction des liquides déjà reçus pendant les 8 premières heures. */
+export function burnResuscitationRates(
+  weightKg: number,
+  tbsaPct: number,
+  mlPerKgPct: number,
+  elapsedHours: number,
+  fluidsGivenFirst8hMl = 0,
+) {
+  if (
+    ![weightKg, tbsaPct, mlPerKgPct, elapsedHours, fluidsGivenFirst8hMl].every(Number.isFinite) ||
+    weightKg <= 0 || tbsaPct <= 0 || tbsaPct > 100 || mlPerKgPct <= 0 ||
+    elapsedHours < 0 || elapsedHours >= 24 || fluidsGivenFirst8hMl < 0
+  ) return null;
+
+  const total24 = mlPerKgPct * weightKg * tbsaPct;
+  const first8h = total24 / 2;
+  const next16h = total24 / 2;
+  const remainingFirstHours = Math.max(8 - elapsedHours, 0);
+  const remainingFirstVolume = Math.max(first8h - fluidsGivenFirst8hMl, 0);
+  // Ne pas extrapoler un très haut débit quand il reste moins d'une heure.
+  const firstRate = remainingFirstHours <= 0 ? 0 : remainingFirstHours >= 1 ? remainingFirstVolume / remainingFirstHours : null;
+
+  return {
+    total24,
+    first8h,
+    next16h,
+    remainingFirstHours,
+    remainingFirstVolume,
+    firstRate,
+    secondRate: next16h / 16,
+  };
+}
+
 /** Concentration d'une seringue (mg → µg/mL). */
 export function concUgPerMl(mg: number, volumeMl: number): number {
   return volumeMl > 0 ? (mg * 1000) / volumeMl : 0;
@@ -161,11 +194,30 @@ export function maxCorrectionRate(deltaNaPerLiter: number, targetPerHour = 0.5):
   return (targetPerHour / deltaNaPerLiter) * 1000;
 }
 
-/** Héparine : bolus U/kg (plafonné) + débit initial U/kg/h → mL/h selon concentration. */
-export function heparin(weightKg: number, bolusPerKg = 80, maxBolusU = 8000, infusionPerKgH = 18, unitsPerMl = 100) {
-  const bolusU = Math.min(weightKg * bolusPerKg, maxBolusU);
-  const rateUh = weightKg * infusionPerKgH;
-  return { bolusU, rateUh, rateMlH: unitsPerMl > 0 ? rateUh / unitsPerMl : 0 };
+/**
+ * HNF IV : applique un schéma explicitement choisi (aucune posologie par défaut).
+ * null signifie qu'aucun plafond n'est encodé par la source sélectionnée ; ce n'est pas
+ * une recommandation de dose illimitée ni un substitut au protocole de l'établissement.
+ */
+export function heparin(
+  weightKg: number,
+  bolusPerKg: number,
+  maxBolusU: number | null,
+  infusionPerKgH: number,
+  maxInfusionUh: number | null,
+  unitsPerMl: number,
+) {
+  if (![weightKg, bolusPerKg, infusionPerKgH, unitsPerMl].every(Number.isFinite)
+    || weightKg <= 0 || bolusPerKg < 0 || infusionPerKgH < 0 || unitsPerMl <= 0
+    || (maxBolusU !== null && (!Number.isFinite(maxBolusU) || maxBolusU < 0))
+    || (maxInfusionUh !== null && (!Number.isFinite(maxInfusionUh) || maxInfusionUh < 0))) {
+    return { bolusU: 0, rateUh: 0, rateMlH: 0 };
+  }
+  const calculatedBolusU = weightKg * bolusPerKg;
+  const calculatedRateUh = weightKg * infusionPerKgH;
+  const bolusU = maxBolusU === null ? calculatedBolusU : Math.min(calculatedBolusU, maxBolusU);
+  const rateUh = maxInfusionUh === null ? calculatedRateUh : Math.min(calculatedRateUh, maxInfusionUh);
+  return { bolusU, rateUh, rateMlH: rateUh / unitsPerMl };
 }
 
 /**
