@@ -22,6 +22,8 @@ import { calculateWeightDose, isAmbiguousSourceCells, isContraindicated, isDisco
 import { akiKdigo, chooseStage, scrToMgDl, type AkiResult, type RenalCourse, type StageInput } from "@/lib/renal-clearance";
 import { addDecision, emptyPlan, parsePlan, PLAN_KEY, PREVIOUS_PLAN_KEY, LEGACY_PLAN_KEY, planReasonLabel, removeMolecule, resetPlan, currentDecisions, type PlanReason } from "@/lib/atb-plan";
 import { ATB_RENAL_ROWS, ATB_RENAL_SECTIONS, ATB_RENAL_STAGES, ATB_RENAL_BY_ID, type AtbStageId } from "@/data/atb-renal";
+import { ATB_RENAL_V2_ENABLED } from "@/data/atb-renal-v2";
+import AtbRenalV2Panel from "@/components/atb/AtbRenalV2Panel";
 import { Pill, Filter, Info, AlertTriangle } from "lucide-react";
 
 const STAGE_IDS = ATB_RENAL_STAGES.map((s) => s.id);
@@ -162,6 +164,21 @@ export default function AntibioRenalPage() {
   const stageLabel = stageMeta
     ? `${ar ? stageMeta.ar : stageMeta.fr} · ${stageMeta.dgf}`
     : ar ? "مرحلة غير محددة" : "stade non déterminé";
+  // La V2 reçoit le DFG CKD-EPI brut déjà calculé ici ; elle ne recalcule pas la fonction rénale.
+  const v2Dfg = ren?.primary === "ckd-epi" && Number.isFinite(ren.egfrCkd) ? ren.egfrCkd : null;
+  const v2Eligible = Boolean(
+    v2Dfg !== null &&
+    renalInput !== null &&
+    num(age) >= 18 &&
+    renalCourse === "stable" &&
+    !akiBlocked &&
+    !pediatricAge &&
+    !pediatricRefusal &&
+    !onRenalReplacementTherapy &&
+    !dialysisRefusal &&
+    !creatinineInputIssue
+  );
+
   const stageForMolecule = () => {
     const result = renalInput ? chooseStage(renalInput) : null;
     const moleculeRequiresReview = result?.refusal === "boundary" && !akiBlocked;
@@ -594,6 +611,15 @@ export default function AntibioRenalPage() {
         </div>
       </section>
 
+      <AtbRenalV2Panel
+        dfg={v2Dfg}
+        clCrCg={ren?.crclCg ?? null}
+        eligible={v2Eligible}
+        reviewAvailable={process.env.NODE_ENV === "development"}
+      />
+
+      {!ATB_RENAL_V2_ENABLED && (
+        <>
       {/* البحث والفلترة / Recherche & sections */}
       <div className="flex flex-col gap-2">
         <input
@@ -986,6 +1012,9 @@ export default function AntibioRenalPage() {
             ar="تلميح: «اعتماد» / «تخلّي» على كل تركيبة يبني خطّتك (مع إعادة تقييم a → b) ثم يُصدِّرها نصًّا لملف المريض."
           />
         </p>
+      )}
+
+        </>
       )}
 
       <div className="flex flex-wrap gap-2">

@@ -50,7 +50,7 @@ describe("base continue OMEDIT v2.3 — transcription à vérifier cliniquement"
     }
   });
 
-  it("applique E1, E2 et E3 à l'ensemble des 199 seuils", () => {
+  it("applique E1, E2 et E3 aux 200 seuils de la base", () => {
     let count = 0;
     const regimes = ATB_RENAL_V2_ROWS.flatMap((row) => row.regimes);
 
