@@ -9,10 +9,10 @@ import { useApp } from "./Providers";
 const TABS = [
   { href: "/", key: "tab.home", Icon: Home },
   { href: "/rea", key: "tab.rea", Icon: HeartPulse },
-  { href: "/medicaments", key: "tab.meds", Icon: Pill },
-  { href: "/protocoles", key: "tab.protocols", Icon: ScrollText },
+  { href: "/medicaments", key: "tab.meds", shortKey: "tab.meds.short", Icon: Pill },
+  { href: "/protocoles", key: "tab.protocols", shortKey: "tab.protocols.short", Icon: ScrollText },
   { href: "/memo", key: "tab.memo", Icon: BookOpen },
-  { href: "/checklists", key: "tab.checklists", Icon: ListChecks },
+  { href: "/checklists", key: "tab.checklists", shortKey: "tab.checklists.short", Icon: ListChecks },
 ];
 
 export default function BottomTabs() {
@@ -26,16 +26,16 @@ export default function BottomTabs() {
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="mx-auto grid max-w-xl grid-cols-6">
-        {TABS.map(({ href, key, Icon }) => {
+        {TABS.map(({ href, key, shortKey, Icon }) => {
           const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
             <Link
               key={href}
               href={href}
               aria-current={active ? "page" : undefined}
-              // v17.0 — aucune marge horizontale sur l'onglet : le libellé dispose de toute la colonne.
-              // Police 9 px sous 380 px de large : « Protocoles » (57 px) tient alors dans 53 px.
-              className="eutn-tab touch min-w-0 flex-col gap-0.5 rounded-none py-1.5 text-[10px] font-bold leading-none max-[380px]:text-[9px]"
+              aria-label={t(key)}
+              title={t(key)}
+              className="eutn-tab touch min-w-0 flex-col gap-0.5 rounded-none py-1.5 text-[11px] font-bold leading-tight"
             >
               <span style={active ? { background: "var(--accent-soft)", color: "var(--accent)" } : undefined}
               className={`tab-ico flex items-center justify-center rounded-full px-2.5 py-1 transition-all duration-200 sm:px-3.5 ${active ? "" : "opacity-70"}`}>
@@ -43,7 +43,7 @@ export default function BottomTabs() {
               </span>
               {/* w-full + truncate : aucun libellé ne peut déborder la barre (garanti 320 px) */}
               <span style={active ? { color: "var(--accent)" } : undefined}
-                className={`w-full max-w-full truncate text-center ${active ? "" : "opacity-70"}`}>{t(key)}</span>
+                className={`w-full max-w-full truncate text-center ${active ? "" : "opacity-70"}`}>{t(shortKey ?? key)}</span>
             </Link>
           );
         })}

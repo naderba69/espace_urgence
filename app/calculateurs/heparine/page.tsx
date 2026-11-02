@@ -21,7 +21,7 @@ const REGIMENS = {
 } as const;
 
 export default function HeparinePage() {
-  const { t } = useApp();
+  const { t, lang } = useApp();
   const [weight, setWeight] = useState("70");
   const [perMl, setPerMl] = useState(100);
   const [indication, setIndication] = useState<Indication>("");
@@ -43,7 +43,7 @@ export default function HeparinePage() {
       <div className="card flex flex-col gap-4 rounded-2xl border border-line bg-surface p-4">
         <label className="flex flex-col gap-1 font-semibold">
           <T fr="Indication / protocole de départ" ar="الاستطباب / بروتوكول البداية" />
-          <select aria-label="Indication de l’héparine" value={indication} onChange={(e) => {
+          <select aria-label={lang === "ar" ? "استطباب الهيبارين" : "Indication de l’héparine"} value={indication} onChange={(e) => {
             setIndication(e.target.value as Indication);
             trackEvent("calculator_use", { id: "heparine" });
           }} className="rounded-xl border border-line bg-surface2 px-3 py-3">
@@ -59,7 +59,7 @@ export default function HeparinePage() {
             onChange={(e) => { setWeight(e.target.value); trackEvent("calculator_use", { id: "heparine" }); }}
             className="rounded-xl border border-line bg-surface2 px-3 py-3 text-center text-2xl tabular-nums outline-none focus:ring-2 focus:ring-blue-600" />
         </label>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Concentration de la seringue">
+        <div className="flex flex-wrap gap-2" role="group" aria-label={lang === "ar" ? "تركيز المحقنة" : "Concentration de la seringue"}>
           {PRESETS.map((p) => (
             <button key={p.perMl} onClick={() => setPerMl(p.perMl)} aria-pressed={perMl === p.perMl}
               className={`touch flex-1 rounded-xl border px-4 py-3 font-bold ${perMl === p.perMl ? "border-blue-600 bg-blue-600 text-white" : "border-line hover:bg-surface2"}`}>

@@ -16,7 +16,7 @@ export default function FluidsEnfantPage() {
   const deficit = dehydrationDeficit(Number(pct), Number(weight));
   return (
     <div className="flex max-w-2xl flex-col gap-5">
-      <header className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
         <PageHeader
         icon={<Droplets className="h-6 w-6" />}
         title={<T fr="Hydratation de l'enfant" ar="سوائل الطفل" />}
@@ -28,7 +28,7 @@ export default function FluidsEnfantPage() {
         <p><T fr="Adulte : si hypoperfusion induite par le sepsis ou choc septique, au moins 30 mL/kg de cristalloïdes IV dans les 3 premières heures ; poids réel, ou ajusté/idéal si IMC >30, avec réévaluation fréquente (SSC 2026)." ar="البالغ: عند نقص تروية ناجم عن الإنتان أو صدمة إنتانية، ما لا يقل عن 30 مل/كغ من البلّوريات وريدياً خلال أول 3 ساعات؛ الوزن الفعلي أو المعدل/المثالي إذا IMC >30، مع إعادة تقييم متكررة (SSC 2026)." /></p>
         <p><T fr="TRAUMA crânien: éviter surcharge; choc hémorragique = sang tôt." ar="رض رأس: تجنّب فرط الحمولة؛ صدمة نزفية = دم مبكراً." /></p>
       </div>
-      </header>
+      </div>
       <div className="card grid grid-cols-2 gap-3 rounded-2xl border border-line bg-surface p-4">
         <NumField label={<T fr="Poids (kg)" ar="الوزن (كغ)" />} value={weight} onChange={setWeight} />
         <NumField label={<T fr="Déshydratation (%)" ar="التجفاف (%)" />} value={pct} onChange={setPct} />

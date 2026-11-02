@@ -437,6 +437,7 @@ input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
   --sev-standard-line: #b2dfdb;
   /* v10.0 — M3 : accent = BLEU MÉDICAL (rouge réservé à la gravité) */
   --accent: #1565c0;
+  --on-accent: #ffffff;
   --accent-strong: #0d47a1;
   --accent-soft: rgba(21, 101, 192, 0.10);
   /* Rayons et ombres unifiés — v10.0 M3 : carte 20px, boutons pilule */
@@ -457,6 +458,7 @@ input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
   --sev-standard-bg: rgba(15, 118, 110, .18);
   --sev-standard-line: rgba(77, 182, 172, .35);
   --accent: #8ab4f8;
+  --on-accent: #0b1220;
   --accent-strong: #aecbfa;
   --accent-soft: rgba(138, 180, 248, .14);
 }
@@ -549,3 +551,121 @@ input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 .eutn-sheet{animation:eutn-sheet-up .22s cubic-bezier(.2,.8,.3,1) both}
 @keyframes eutn-sheet-up{from{transform:translateY(14%);opacity:.4}to{transform:translateY(0);opacity:1}}
 @media (prefers-reduced-motion:reduce){.eutn-sheet{animation:none}}
+
+
+/* ATB-DFG V2 review preview: local identity tokens; production remains on the legacy page until clinical review. */
+.atb-renal-review {
+  --atb-primary: #0d9488;
+  --atb-primary-strong: #0f766e;
+  --atb-on-primary: #ffffff;
+  --atb-ink: #134e4a;
+  --atb-soft: #f0fdfa;
+  --atb-line: #99f6e4;
+  --atb-s1-bg: #ecfdf5; --atb-s1-t: #047857; --atb-s1-l: #a7f3d0; --atb-s1-dot: #10b981;
+  --atb-s2-bg: #f7fee7; --atb-s2-t: #4d7c0f; --atb-s2-l: #bef264; --atb-s2-dot: #84cc16;
+  --atb-s3-bg: #fffbeb; --atb-s3-t: #b45309; --atb-s3-l: #fde68a; --atb-s3-dot: #f59e0b;
+  --atb-s4-bg: #fff7ed; --atb-s4-t: #c2410c; --atb-s4-l: #fed7aa; --atb-s4-dot: #f97316;
+  --atb-s5-bg: #fef2f2; --atb-s5-t: #b91c1c; --atb-s5-l: #fecaca; --atb-s5-dot: #ef4444;
+  --atb-dose-std-bg: #ecfdf5; --atb-dose-std-t: #047857; --atb-dose-std-l: #d1fae5;
+  --atb-dose-ad-bg: #f0fdfa; --atb-dose-ad-t: #115e59; --atb-dose-ad-l: #ccfbf1;
+  --atb-dose-nd-bg: var(--surface-2); --atb-dose-nd-t: var(--fg); --atb-dose-nd-l: var(--line);
+  --atb-dose-dc-bg: #fff7ed; --atb-dose-dc-t: #c2410c; --atb-dose-dc-l: #fed7aa;
+  --atb-dose-ci-bg: #fef2f2; --atb-dose-ci-t: #b91c1c; --atb-dose-ci-l: #fecaca;
+  --atb-dose-note-bg: #fffbeb; --atb-dose-note-t: #78350f;
+  --atb-e3-bg: #fffbeb; --atb-e3-t: #92400e; --atb-e3-l: #fde68a;
+}
+.dark .atb-renal-review {
+  --atb-primary: #2dd4bf; --atb-primary-strong: #14b8a6; --atb-on-primary: #042f2e;
+  --atb-ink: #ccfbf1; --atb-soft: rgba(13,148,136,.12); --atb-line: rgba(45,212,191,.35);
+  --atb-s1-bg: rgba(16,185,129,.14); --atb-s1-t: #6ee7b7; --atb-s1-l: rgba(16,185,129,.35);
+  --atb-s2-bg: rgba(132,204,22,.14); --atb-s2-t: #bef264; --atb-s2-l: rgba(132,204,22,.35);
+  --atb-s3-bg: rgba(245,158,11,.16); --atb-s3-t: #fcd34d; --atb-s3-l: rgba(245,158,11,.40);
+  --atb-s4-bg: rgba(249,115,22,.16); --atb-s4-t: #fdba74; --atb-s4-l: rgba(249,115,22,.40);
+  --atb-s5-bg: rgba(239,68,68,.16); --atb-s5-t: #fca5a5; --atb-s5-l: rgba(239,68,68,.40);
+  --atb-dose-std-bg: rgba(16,185,129,.10); --atb-dose-std-t: #6ee7b7; --atb-dose-std-l: rgba(16,185,129,.30);
+  --atb-dose-ad-bg: rgba(45,212,191,.10); --atb-dose-ad-t: #99f6e4; --atb-dose-ad-l: rgba(45,212,191,.30);
+  --atb-dose-nd-bg: var(--surface-2); --atb-dose-nd-t: var(--fg); --atb-dose-nd-l: var(--line);
+  --atb-dose-dc-bg: rgba(249,115,22,.14); --atb-dose-dc-t: #fdba74; --atb-dose-dc-l: rgba(249,115,22,.35);
+  --atb-dose-ci-bg: rgba(239,68,68,.14); --atb-dose-ci-t: #fca5a5; --atb-dose-ci-l: rgba(239,68,68,.35);
+  --atb-dose-note-bg: rgba(245,158,11,.12); --atb-dose-note-t: #fde68a;
+  --atb-e3-bg: rgba(245,158,11,.18); --atb-e3-t: #fcd34d; --atb-e3-l: rgba(245,158,11,.45);
+}
+.amoled .atb-renal-review {
+  --atb-soft: rgba(13,148,136,.08);
+  --atb-dose-ad-bg: rgba(45,212,191,.07);
+  --atb-dose-std-bg: rgba(16,185,129,.07);
+  --atb-e3-bg: rgba(245,158,11,.12);
+}
+
+/* ATB-DFG: contraste des commandes actives, lisibilité et impression du plan. */
+.atb-renal-page :is([class*="text-xs"], [class*="text-[10px]"], [class*="text-[11px]"]) {
+  font-size: max(15px, 1em) !important;
+  line-height: 1.35;
+}
+
+@page atb-renal-a4 {
+  size: A4;
+  margin: 12mm;
+}
+
+@media print {
+  .atb-renal-page {
+    page: atb-renal-a4;
+  }
+
+  body:has(.atb-renal-page) {
+    background: #fff !important;
+    color: #111 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body:has(.atb-renal-page) * {
+    visibility: hidden !important;
+  }
+
+  body:has(.atb-renal-page) .atb-renal-page,
+  body:has(.atb-renal-page) .atb-renal-page * {
+    visibility: visible !important;
+  }
+
+  body:has(.atb-renal-page) .atb-renal-page {
+    position: absolute !important;
+    inset-block-start: 0 !important;
+    inset-inline-start: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 8px !important;
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  .atb-renal-page :is(button, input, select, textarea, summary, .print\:hidden) {
+    display: none !important;
+  }
+
+  .atb-renal-page .sticky {
+    position: static !important;
+    inset: auto !important;
+    backdrop-filter: none !important;
+  }
+
+  .atb-renal-page .card,
+  .atb-renal-page article,
+  .atb-renal-page section {
+    break-inside: avoid;
+    box-shadow: none !important;
+  }
+
+  .atb-renal-page :is(p, span, td, th, h1, h2, h3) {
+    color: #111 !important;
+  }
+
+  .atb-renal-page table {
+    min-width: 0 !important;
+    width: 100% !important;
+    font-size: 10pt !important;
+  }
+}

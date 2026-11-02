@@ -228,29 +228,29 @@ export default function RenalDosePage() {
 
       <section className="grid grid-cols-2 gap-2">
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Âge (ans)" ar="العمر (سنة)" /></span>
-          <NumStepper value={ age } onValue={ setAge } className="field" label="age" /></label>
+          <NumStepper value={ age } onValue={ setAge } className="field" label="Âge" /></label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Poids (kg)" ar="الوزن (كغ)" /></span>
-          <NumStepper value={ wt } onValue={ setWt } className="field" label="wt" /></label>
+          <NumStepper value={ wt } onValue={ setWt } className="field" label="Poids (kg)" /></label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Taille (cm, option)" ar="الطول (سم، اختياري)" /></span>
-          <NumStepper value={ ht } onValue={ setHt } className="field" label="ht" /></label>
+          <NumStepper value={ ht } onValue={ setHt } className="field" label="Taille (cm)" /></label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créatinine actuelle" ar="الكرياتينين الحالي" /></span>
           <div className="flex items-center gap-2">
-            <NumStepper value={scr} onValue={(value) => { setScr(value); setConfirmedSuspiciousUnit(null); }} className="field" label="scr" />
+            <NumStepper value={scr} onValue={(value) => { setScr(value); setConfirmedSuspiciousUnit(null); }} className="field" label="Créatinine" />
             <button onClick={() => { setUnit((u) => (u === "mg" ? "umol" : "mg")); setConfirmedSuspiciousUnit(null); }}
               className="shrink-0 rounded-lg border border-line px-2 py-1 text-xs font-black" dir="ltr">{unit === "mg" ? "mg/dL" : "µmol/L"}</button>
           </div>
         </label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créatinine il y a 48 h (option)" ar="كرياتينين قبل ٤٨ سا (اختياري)" /></span>
-          <NumStepper value={scr48h} onValue={(value) => { setScr48h(value); setConfirmedSuspiciousUnit(null); }} className="field" label="scr48" />
+          <NumStepper value={scr48h} onValue={(value) => { setScr48h(value); setConfirmedSuspiciousUnit(null); }} className="field" label="Créatinine il y a 48 heures" />
         </label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créatinine il y a 7 j (option)" ar="كرياتينين قبل ٧ أيام (اختياري)" /></span>
-          <NumStepper value={scr7d} onValue={(value) => { setScr7d(value); setConfirmedSuspiciousUnit(null); }} className="field" label="scr7d" />
+          <NumStepper value={scr7d} onValue={(value) => { setScr7d(value); setConfirmedSuspiciousUnit(null); }} className="field" label="Créatinine il y a 7 jours" />
         </label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Diurèse (mL/kg/h, option)" ar="إدرار البول (مل/كغ/سا، اختياري)" /></span>
-          <NumStepper value={urineRate} onValue={setUrineRate} step={0.1} className="field" label="urine" />
+          <NumStepper value={urineRate} onValue={setUrineRate} step={0.1} className="field" label="Diurèse (mL/kg/h)" />
         </label>
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Durée observée (h)" ar="مدة المراقبة (سا)" /></span>
-          <NumStepper value={urineHours} onValue={setUrineHours} className="field" label="urineH" />
+          <NumStepper value={urineHours} onValue={setUrineHours} className="field" label="Durée d’observation (heures)" />
         </label>
       </section>
       <p className="px-1 text-[11px] font-bold opacity-60">

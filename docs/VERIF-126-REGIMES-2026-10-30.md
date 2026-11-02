@@ -15,6 +15,10 @@
 
 La comparaison automatisée n’établit pas l’efficacité, la pertinence clinique, ni la validité tunisienne des posologies. Elle ne remplace pas la validation humaine ni le RCP propre au médicament.
 
+### Complément du 31/10/2026 — contrôle visuel ciblé des reconstructions signalées
+
+Les pages 4 et 5 du PDF ont été rendues en image et inspectées pour les lignes Céfidérocol (N°24) et Ceftobiprole (N°32), correspondant aux cellules que l’extraction géométrique signalait comme reconstruites manuellement. Sur la page 4, le texte visible confirme les segments de dose du céfidérocol et la note distincte « Si fonction rénale ≥ 120 mL/min : 2 g/6h ». Sur la page 5, la cellule large du ceftobiprole contient bien les deux contextes à DFG élevé (« 500 mg/8h en perfusion de 2h » et « Si infection sévère : 1 g/8h en perfusion de 4h ») ; les cellules rénales suivantes affichent 500 mg/12h, 250 mg/12h et 250 mg/24h sans répéter le contexte d’infection sévère. Cette inspection appuie la transcription et la prudence de la représentation, mais ne résout pas l’attribution clinique de ces cellules aux contextes : le cas Ceftobiprole reste à valider par un médecin/pharmacien, et V2 reste non clinique. Ce contrôle ciblé ne vaut pas revue visuelle des 126 régimes ni revue humaine indépendante.
+
 ## Comparaison avec l’ancien modèle à 5 stades
 
 Un test différentiel dédié parcourt les DFG de 5 à 130 par pas de 5 et les seuils de la base à ±0,001. Il vérifie plus de 3 000 points comparables et empêche l’apparition silencieuse d’un écart pour un médicament hors de la liste des résolutions connues. Il passe, mais **ne signifie pas que les deux modèles affichent la même chose** : l’ancien tableau refuse certaines cellules fusionnées et regroupe des contextes que V2 sépare.

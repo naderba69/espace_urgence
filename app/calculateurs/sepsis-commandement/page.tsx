@@ -99,7 +99,7 @@ export default function SepsisCmdPage() {
       <section className="card rounded-2xl border border-line bg-surface p-4">
         <label className="flex flex-col gap-2">
           <span className="text-sm font-black"><T fr="Contexte antibiotique (adulte)" ar="سياق توقيت المضاد (للبالغ)" /></span>
-          <select aria-label="Contexte antibiotique" value={abxContext} onChange={(e) => setAbxContext(e.target.value as AntibioticContext)}
+          <select aria-label={lang === "ar" ? "سياق المضاد الحيوي" : "Contexte antibiotique"} value={abxContext} onChange={(e) => setAbxContext(e.target.value as AntibioticContext)}
             className="rounded-xl border border-line bg-[color:var(--surface-2)] px-3 py-3 text-sm font-bold">
             <option value="unassessed">{lang === "ar" ? "يحتاج إلى تقييم" : "À évaluer"}</option>
             <option value="shock-or-high">{lang === "ar" ? "صدمة محتملة أو إنتان مرجح/مؤكد" : "Choc possible ou sepsis probable/confirmé"}</option>

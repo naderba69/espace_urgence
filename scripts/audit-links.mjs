@@ -4,7 +4,7 @@ import { join } from "node:path";
 const files = [];
 (function walk(d) { for (const f of readdirSync(d, { withFileTypes: true })) {
   const p = join(d, f.name);
-  if (f.isDirectory()) { if (!/node_modules|\.next|out|shots/.test(p)) walk(p); }
+  if (f.isDirectory()) { if (!/node_modules|\.next|out|shots|__tests__|docs/.test(p)) walk(p); }
   else if (/\.tsx?$/.test(f.name)) files.push(p);
 } })(".");
 const known = new Set(["/"]);

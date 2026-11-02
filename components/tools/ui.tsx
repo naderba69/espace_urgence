@@ -42,7 +42,7 @@ export function Sheet({ open, onClose, title, children }: {
   const { lang } = useApp();
   return (
     <>
-      {open && <button aria-label="fermer" className="fixed inset-0 z-[70] bg-black/60 sm:hidden" onClick={onClose} />}
+      {open && <button aria-label={lang === "ar" ? "إغلاق" : "Fermer"} className="fixed inset-0 z-[70] bg-black/60 sm:hidden" onClick={onClose} />}
       <div
         className={`fixed inset-x-0 bottom-0 z-[80] max-h-[75vh] overflow-auto rounded-t-3xl border-t border-line bg-[color:var(--surface)] p-4 pb-10 shadow-2xl transition-transform duration-300 sm:hidden ${open ? "translate-y-0" : "pointer-events-none translate-y-full"}`}
       >

@@ -14,8 +14,10 @@ export default function AtbPlanPanel({
   onReevaluate,
   onRemove,
   onReset,
+  langOverride,
 }: {
   plan: PlanState;
+  langOverride?: "fr" | "ar";
   /** اسم التركيبة بلغة الواجهة. */
   name: (id: string) => string;
   stageLabel: string;
@@ -23,7 +25,8 @@ export default function AtbPlanPanel({
   onRemove: (id: string) => void;
   onReset: () => void;
 }) {
-  const { lang } = useApp();
+  const { lang: appLang } = useApp();
+  const lang = langOverride ?? appLang;
   const ar = lang === "ar";
   const [copied, setCopied] = useState(false);
   const current = useMemo(() => [...currentDecisions(plan).values()], [plan]);
@@ -53,10 +56,10 @@ export default function AtbPlanPanel({
         onClick={() => onReevaluate(e.id, ok ? "abandonnee" : "retenue")}
         className="rounded-full border border-line px-2.5 py-1 text-[11px] font-black hover:bg-surface"
       >
-        {ok ? <T fr="Réévaluer → abandon" ar="إعادة تقييم ← تخلّي" /> : <T fr="Réévaluer → retenir" ar="إعادة تقييم ← اعتماد" />}
+        {ok ? <T langOverride={lang} fr="Réévaluer → abandon" ar="إعادة تقييم ← تخلّي" /> : <T langOverride={lang} fr="Réévaluer → retenir" ar="إعادة تقييم ← اعتماد" />}
       </button>
       <button onClick={() => onRemove(e.id)} className="rounded-full border border-line px-2.5 py-1 text-[11px] font-black opacity-70 hover:bg-surface">
-        <T fr="Retirer" ar="إزالة" />
+        <T langOverride={lang} fr="Retirer" ar="إزالة" />
       </button>
     </li>
   );
@@ -65,7 +68,7 @@ export default function AtbPlanPanel({
     <section className="rounded-2xl border border-line bg-surface p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-black">
-          <T fr="Plan antibiotique (boucle a → b)" ar="خطّة العلاج المضادّ (حلقة a → b)" />{" "}
+          <T langOverride={lang} fr="Plan antibiotique (boucle a → b)" ar="خطّة العلاج المضادّ (حلقة a → b)" />{" "}
           <span className="tabular-nums opacity-60" dir="ltr">
             {kept.length}✓ / {dropped.length}✗
           </span>
@@ -73,28 +76,28 @@ export default function AtbPlanPanel({
         <div className="flex flex-wrap gap-2">
           <button onClick={copy} className="flex items-center gap-1 rounded-full border border-line px-3 py-1.5 text-[11px] font-black hover:bg-surface2">
             <Copy className="h-3.5 w-3.5" aria-hidden />
-            {copied ? <T fr="Copié ✓" ar="تم النسخ ✓" /> : <T fr="Copier" ar="نسخ" />}
+            {copied ? <T langOverride={lang} fr="Copié ✓" ar="تم النسخ ✓" /> : <T langOverride={lang} fr="Copier" ar="نسخ" />}
           </button>
           <button onClick={() => window.print()} className="flex items-center gap-1 rounded-full border border-line px-3 py-1.5 text-[11px] font-black hover:bg-surface2">
             <Printer className="h-3.5 w-3.5" aria-hidden />
-            <T fr="Imprimer" ar="طباعة" />
+            <T langOverride={lang} fr="Imprimer" ar="طباعة" />
           </button>
           <button onClick={onReset} className="flex items-center gap-1 rounded-full border border-line px-3 py-1.5 text-[11px] font-black opacity-70 hover:bg-surface2">
             <RotateCcw className="h-3.5 w-3.5" aria-hidden />
-            <T fr="Vider" ar="تفريغ" />
+            <T langOverride={lang} fr="Vider" ar="تفريغ" />
           </button>
         </div>
       </div>
 
       {kept.length > 0 && (
         <>
-          <p className="mt-3 text-xs font-black opacity-70"><T fr="Retenues" ar="مُعتمدة" /></p>
+          <p className="mt-3 text-xs font-black opacity-70"><T langOverride={lang} fr="Retenues" ar="مُعتمدة" /></p>
           <ul className="mt-1 flex flex-col gap-1.5">{kept.map((e) => line(e, true))}</ul>
         </>
       )}
       {dropped.length > 0 && (
         <>
-          <p className="mt-3 text-xs font-black opacity-70"><T fr="Abandonnées" ar="متخلّى عنها" /></p>
+          <p className="mt-3 text-xs font-black opacity-70"><T langOverride={lang} fr="Abandonnées" ar="متخلّى عنها" /></p>
           <ul className="mt-1 flex flex-col gap-1.5">{dropped.map((e) => line(e, false))}</ul>
         </>
       )}
@@ -102,7 +105,7 @@ export default function AtbPlanPanel({
       {/* النصّ الجاهز للنسخ/الطباعة — يظهر دائمًا حتى لو تعذّر الوصول إلى الحافظة */}
       <details className="mt-3">
         <summary className="cursor-pointer text-xs font-black opacity-70">
-          <T fr="Texte à copier / imprimer" ar="النصّ الجاهز للنسخ/الطباعة" />
+          <T langOverride={lang} fr="Texte à copier / imprimer" ar="النصّ الجاهز للنسخ/الطباعة" />
         </summary>
         <pre dir={ar ? "rtl" : "ltr"} className="mt-2 max-h-64 overflow-auto rounded-xl border border-line bg-surface2 p-2 text-[11px] leading-relaxed whitespace-pre-wrap">
           {text}

@@ -9,6 +9,38 @@ export interface Release { v: string; date: string; notes: Localized[] }
 
 export const CHANGELOG: Release[] = [
   {
+    v: "18.9",
+    date: "2026-11-02",
+    notes: [
+      {
+        fr: "Accessibilité : les favoris peuvent maintenant être réordonnés par boutons « déplacer vers le haut / vers le bas », en plus du glisser-déposer. Les commandes ont des noms explicites et sont désactivées aux limites de la liste.",
+        ar: "إتاحة الاستخدام: يمكن الآن إعادة ترتيب المفضلة بأزرار «نقل إلى الأعلى/الأسفل» إضافة إلى السحب والإفلات. للأزرار أسماء واضحة وتُعطّل عند حدود القائمة.",
+      },
+      {
+        fr: "Le titre des favoris ne présente plus le glisser-déposer comme méthode unique. Aucun contenu ni calcul clinique n’a été modifié.",
+        ar: "لم يعد عنوان المفضلة يوحي بأن السحب هو الطريقة الوحيدة. لم يتغير أي محتوى أو حساب سريري.",
+      },
+    ],
+  },
+  {
+    v: "18.8",
+    date: "2026-10-30",
+    notes: [
+      {
+        fr: "ATB-DFG : le formulaire patient est prioritaire, la source et la méthodologie sont repliables, et un résumé rénal compact reste visible au défilement. Le contraste des commandes actives est testé dans les thèmes clair et sombre.",
+        ar: "حاسبة ATB-DFG: تظهر بيانات المريض أولاً، ويمكن طيّ المصدر والمنهجية، ويبقى ملخص كلوي موجز ظاهراً أثناء التمرير. جرى اختبار تباين عناصر التحكم النشطة في المظهرين الفاتح والداكن.",
+      },
+      {
+        fr: "Impression A4 ciblée avec les commandes masquées et le panneau V2 de revue exclu du document. Le détail des intervalles gère le focus clavier, la touche Échap et le retour au bouton d’ouverture. La V2 reste désactivée en production et non validée médicalement.",
+        ar: "طباعة A4 مخصصة مع إخفاء عناصر التحكم واستبعاد لوحة مراجعة V2 من المستند. يدعم تفصيل الفواصل التنقل بلوحة المفاتيح وزر Escape وإعادة التركيز إلى زر الفتح. تظل V2 معطلة في الإنتاج وغير معتمدة طبياً.",
+      },
+      {
+        fr: "Aperçu V2 : l’interface ATB-DFG reste exclusivement en français/LTR, y compris si l’application générale est réglée en arabe. À une limite E3, l’intervalle appliqué est écrit min ≤ DFG < seuil et le calcul utilise toujours la valeur brute. Le badge de surveillance de la colistine est retiré faute de note source justificative; les doses V2 demeurent masquées en production.",
+        ar: "معاينة V2: تظل واجهة ATB-DFG بالفرنسية واتجاه LTR حصراً، حتى عند ضبط التطبيق العام على العربية. عند حد E3 يُعرض المجال المطبق بصيغة min ≤ DFG < seuil، ويظل الحساب معتمداً على القيمة الخام. أزيلت شارة مراقبة الكوليستين لغياب ملاحظة مصدرية تبررها؛ وتبقى جرعات V2 مخفية في الإنتاج.",
+      },
+    ],
+  },
+  {
     v: "18.7",
     date: "2026-10-28",
     notes: [

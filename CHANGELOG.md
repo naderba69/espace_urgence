@@ -10,6 +10,28 @@ Toutes les dates sont au format `AAAA-MM-JJ`.
 
 ---
 
+## [18.9] — 2026-11-02
+
+### Accessibilité et navigation
+- Réorganisation des favoris possible par glisser-déposer ou par commandes accessibles « déplacer vers le haut / vers le bas » (clavier et pointeur), avec désactivation aux limites de la liste.
+- Le titre de la section ne laisse plus croire que le glisser-déposer est l’unique méthode.
+
+### Limites
+- Correction d’interface sans modification des données ou calculs médicaux. La vérification DOM ciblée ne remplace pas un contrôle visuel ni un essai avec lecteur d’écran.
+
+## [18.8] — 2026-10-30
+
+### ATB-DFG — ergonomie et garde-fous d’affichage
+- Le formulaire patient et le résumé rénal restent prioritaires ; la source et la méthodologie sont repliables, avec un résumé DFG CKD-EPI / ClCr informative / stade qui reste visible au défilement.
+- Les états actifs utilisent un premier plan adapté au thème. Un test calcule le contraste des quatre couleurs actives en clair et en sombre (toutes ≥ 4,5:1).
+- Ajout d’une impression A4 ciblée du calculateur ; les commandes et le panneau V2 de revue non validé sont exclus du document imprimé. Les petits libellés ATB sont agrandis à au moins 15 px.
+- Le détail des intervalles piège maintenant le focus clavier, se ferme avec Échap et rend le focus à son bouton d’ouverture.
+
+### Limites
+- Les posologies V2 restent un brouillon de revue, disponible explicitement en développement seulement. Le drapeau de production reste fermé ; aucun contenu thérapeutique n’est nouvellement validé ni activé.
+- La migration en source unique, l’intégration IA et l’enrichissement de marques tunisiennes restent en attente des étapes préalables de revue humaine et de vérification documentaire indépendante.
+- Vérifications automatisées du code ne constituent pas une validation clinique ni un test manuel d’impression sur appareils réels.
+
 ## [18.7] — 2026-10-28
 
 ### Contenu clinique (révision documentaire, non validée indépendamment)
@@ -35,8 +57,9 @@ Toutes les dates sont au format `AAAA-MM-JJ`.
 ## [Unreleased] — 2026-10-28
 
 ### ATB-DFG V2 — préparation non clinique (2026-10-30)
-- Préparation de l’interface française à seuils continus : recherche multi-mots, filtres par familles, cartes, détail des intervalles, transparence E1–E4 et états de traduction/surveillance.
-- Le panneau est raccordé au DFG CKD-EPI brut déjà calculé (Cockcroft–Gault reste informatif). Le drapeau reste désactivé en production; le mode de revue est accessible uniquement en développement après un clic explicite et porte l’avertissement « ne pas prescrire ».
+- Préparation d’une interface française de revue à seuils continus : recherche multi-mots, filtres par familles, cartes, détail des intervalles, transparence E1–E4 et états de traduction/surveillance. Conformément au choix confirmé, le calculateur reste français/LTR même lorsque l’application globale est en arabe; aucune traduction arabe non relue n’est affichée.
+- Le panneau est raccordé au DFG CKD-EPI brut déjà calculé (Cockcroft–Gault reste informatif). À E3, l’intervalle s’affiche `min ≤ DFG < S` avec la valeur brute et l’avertissement de convention; le même encadré est visible sur la carte et dans le détail. Le drapeau reste désactivé en production; le mode de revue est accessible uniquement en développement après un clic explicite et porte l’avertissement « ne pas prescrire ».
+- Le badge de surveillance de la colistine a été retiré, faute de note source qui le justifie; aucun critère de surveillance supplémentaire n’a été ajouté.
 - Vérification humaine des écarts, validation tunisienne et revue des traductions arabes restent à faire. Cette entrée décrit une préparation logicielle et n’autorise pas un usage clinique.
 
 ### Interface du calculateur ATB-DFG

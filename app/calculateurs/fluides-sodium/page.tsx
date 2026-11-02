@@ -67,7 +67,7 @@ export default function FluidesSodiumPage() {
 
       <section className="grid grid-cols-2 gap-2">
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Poids (kg) — entretien" ar="الوزن — الصيانة" /></span>
-          <NumStepper value={ w } onValue={ setW } className="w-full" label="w" /></label>
+          <NumStepper value={ w } onValue={ setW } className="w-full" label="Poids (kg)" /></label>
         <div className="rounded-xl border border-line bg-surface p-3 text-sm font-bold">
           {hasW ? (
             <ul className="flex flex-col gap-1" dir="ltr" style={{ textAlign: "start" }}>
@@ -89,7 +89,7 @@ export default function FluidesSodiumPage() {
             </select>
           </label>
           <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Volume (L)" ar="الحجم (ل)" /></span>
-            <NumStepper value={ vol } onValue={ setVol } className="w-full" label="vol" /></label>
+            <NumStepper value={ vol } onValue={ setVol } className="w-full" label="Volume (mL)" /></label>
         </div>
         {naTotal !== null && (
           <div className="card sev-strip rounded-2xl border border-line bg-surface p-4 sev-standard">

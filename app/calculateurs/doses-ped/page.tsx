@@ -59,7 +59,7 @@ export default function DosesPedPage() {
 
       <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3">
         <span className="text-xs font-black opacity-70"><T fr="Poids (kg)" ar="الوزن (كغ)" /></span>
-        <NumStepper value={ w } onValue={ setW } step={ 0.1 } className="w-full bg-transparent text-2xl font-black tabular-nums outline-none" label="w" />
+        <NumStepper value={ w } onValue={ setW } step={ 0.1 } className="w-full bg-transparent text-2xl font-black tabular-nums outline-none" label="Poids (kg)" />
       </label>
 
       {ok ? (

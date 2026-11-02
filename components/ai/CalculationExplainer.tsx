@@ -36,8 +36,9 @@ function ContextRow({ label, value }: { label: string; value: string }) {
 }
 
 /** Explication optionnelle d’un résultat déjà calculé ; n’altère jamais le résultat affiché. */
-export default function CalculationExplainer({ context }: { context: CalculationExplanationContext }) {
-  const { lang, t } = useApp();
+export default function CalculationExplainer({ context, langOverride }: { context: CalculationExplanationContext; langOverride?: "fr" | "ar" }) {
+  const { lang: appLang, t } = useApp();
+  const lang = langOverride ?? appLang;
   const consentHeadingId = useId();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [destination, setDestination] = useState<TransferDestination | null>(null);
@@ -105,15 +106,15 @@ export default function CalculationExplainer({ context }: { context: Calculation
         className="touch inline-flex min-h-11 items-center gap-2 rounded-xl border border-blue-600/50 px-3 py-2 text-xs font-black text-blue-600 hover:bg-blue-600/10 disabled:opacity-50"
       >
         {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <BrainCircuit className="h-4 w-4" aria-hidden />}
-        <T fr="Expliquer ce résultat avec l’IA" ar="اشرح هذه النتيجة بالذكاء الاصطناعي" />
+        <T langOverride={lang} fr="Expliquer ce résultat avec l’IA" ar="اشرح هذه النتيجة بالذكاء الاصطناعي" />
       </button>
 
       {configOpen && (
         <div className="mt-2 rounded-xl border border-blue-600/30 bg-blue-600/5 p-3" role="status">
-          <p className="text-sm font-bold"><T fr="L’IA n’est pas configurée ou activée." ar="الذكاء الاصطناعي غير مُعدّ أو غير مفعّل." /></p>
+          <p className="text-sm font-bold"><T langOverride={lang} fr="L’IA n’est pas configurée ou activée." ar="الذكاء الاصطناعي غير مُعدّ أو غير مفعّل." /></p>
           <Link href="/parametres" className="touch mt-2 inline-flex min-h-10 items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white">
             <Settings2 className="h-4 w-4" aria-hidden />
-            <T fr="Ouvrir les paramètres IA" ar="افتح إعدادات الذكاء الاصطناعي" />
+            <T langOverride={lang} fr="Ouvrir les paramètres IA" ar="افتح إعدادات الذكاء الاصطناعي" />
           </Link>
         </div>
       )}
@@ -121,11 +122,11 @@ export default function CalculationExplainer({ context }: { context: Calculation
       {confirmOpen && (
         <section className="mt-2 rounded-xl border border-amber-600/40 bg-amber-500/5 p-3" aria-labelledby={consentHeadingId}>
           <h3 id={consentHeadingId} className="text-sm font-black">
-            <T fr="Confirmer avant l’envoi" ar="تأكيد الإرسال أولاً" />
+            <T langOverride={lang} fr="Confirmer avant l’envoi" ar="تأكيد الإرسال أولاً" />
           </h3>
           {destinationChanged && (
             <p className="mt-1 rounded-lg bg-amber-500/10 p-2 text-xs font-bold" role="status">
-              <T fr="La configuration IA a changé depuis l’ouverture. Vérifiez le fournisseur et le modèle ci-dessous avant tout envoi." ar="تغيّر إعداد الذكاء الاصطناعي منذ فتح هذه النافذة. تحقّق من المزوّد والنموذج أدناه قبل الإرسال." />
+              <T langOverride={lang} fr="La configuration IA a changé depuis l’ouverture. Vérifiez le fournisseur et le modèle ci-dessous avant tout envoi." ar="تغيّر إعداد الذكاء الاصطناعي منذ فتح هذه النافذة. تحقّق من المزوّد والنموذج أدناه قبل الإرسال." />
             </p>
           )}
           <p className="mt-1 text-xs leading-relaxed">
@@ -148,10 +149,10 @@ export default function CalculationExplainer({ context }: { context: Calculation
 
           <div className="mt-3 flex flex-wrap gap-2">
             <button type="button" onClick={() => void sendForExplanation()} className="touch min-h-10 rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white">
-              <T fr="Envoyer et expliquer" ar="أرسل واشرح" />
+              <T langOverride={lang} fr="Envoyer et expliquer" ar="أرسل واشرح" />
             </button>
             <button type="button" onClick={() => { setConfirmOpen(false); setDestinationChanged(false); }} className="touch min-h-10 rounded-lg border border-line px-3 py-2 text-xs font-bold">
-              <T fr="Annuler" ar="إلغاء" />
+              <T langOverride={lang} fr="Annuler" ar="إلغاء" />
             </button>
           </div>
         </section>
@@ -160,7 +161,7 @@ export default function CalculationExplainer({ context }: { context: Calculation
       {loading && (
         <p className="mt-2 flex items-center gap-2 text-xs font-bold" role="status" aria-live="polite">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-          <T fr="L’IA prépare une explication du résultat affiché…" ar="يُعدّ الذكاء الاصطناعي شرحاً للنتيجة المعروضة…" />
+          <T langOverride={lang} fr="L’IA prépare une explication du résultat affiché…" ar="يُعدّ الذكاء الاصطناعي شرحاً للنتيجة المعروضة…" />
         </p>
       )}
 
@@ -168,7 +169,7 @@ export default function CalculationExplainer({ context }: { context: Calculation
 
       {visibleAnswer && (
         <div className="mt-2 rounded-xl border border-blue-600/30 bg-blue-600/5 p-3" aria-live="polite">
-          <p className="text-xs font-black text-blue-600"><T fr="Explication IA (non vérifiée)" ar="شرح الذكاء الاصطناعي (غير مُدقّق)" /></p>
+          <p className="text-xs font-black text-blue-600"><T langOverride={lang} fr="Explication IA (non vérifiée)" ar="شرح الذكاء الاصطناعي (غير مُدقّق)" /></p>
           <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed" dir="auto">{visibleAnswer}</p>
           <p className="mt-2 border-t border-blue-600/20 pt-2 text-[11px] leading-relaxed opacity-75">
             <T

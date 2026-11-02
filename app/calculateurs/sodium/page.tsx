@@ -34,13 +34,13 @@ export default function SodiumPage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-5">
-      <header className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
       <PageHeader
         icon={<Gauge className="h-6 w-6" />}
         title={<T fr="Correction du sodium (Adrogué-Madias)" ar="تصحيح الصوديوم (أدروغيه-مادياس)" />}
         sub={<T fr="Effet d'un litre + plafond de correction sûr /24 h." ar="تأثير اللتر + سقف تصحيح آمن خلال ٢٤ ساعة." />}
       />
-      </header>
+      </div>
 
       <div className="card flex flex-col gap-4 rounded-2xl border border-line bg-surface p-4">
         <div className="grid grid-cols-2 gap-3">
@@ -55,7 +55,7 @@ export default function SodiumPage() {
               className="rounded-xl border border-line bg-surface2 px-3 py-3 text-center text-xl tabular-nums outline-none focus:ring-2 focus:ring-blue-600" />
           </label>
         </div>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="facteur TBW">
+        <div className="flex flex-wrap gap-2" role="group" aria-label={lang === "ar" ? "عامل الماء الكلي في الجسم" : "Facteur d’eau corporelle totale (TBW)"}>
           {[
             { v: 0.6, fr: "Homme", ar: "ذكر" },
             { v: 0.5, fr: "Femme", ar: "أنثى" },
@@ -68,7 +68,7 @@ export default function SodiumPage() {
             </button>
           ))}
         </div>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="solute">
+        <div className="flex flex-wrap gap-2" role="group" aria-label={lang === "ar" ? "المحلول المختار" : "Soluté choisi"}>
           {FLUIDS.map((fl) => (
             <button key={fl.id} onClick={() => setFluid(fl.id)} aria-pressed={fluid === fl.id}
               className={`touch rounded-xl border px-3 py-2 text-sm font-bold ${fluid === fl.id ? "border-blue-600 bg-blue-600 text-white" : "border-line hover:bg-surface2"}`}>

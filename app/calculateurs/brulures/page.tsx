@@ -118,20 +118,20 @@ export default function BruluresPage() {
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="mb-1 block text-xs font-bold opacity-70"><T fr="Poids (kg)" ar="الوزن (كغ)" /></label>
-            <NumStepper value={ w } onValue={ setW } placeholder="70" className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="w" />
+            <NumStepper value={ w } onValue={ setW } placeholder="70" className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="Poids (kg)" />
           </div>
           <div>
             <label className="mb-1 block text-xs font-bold opacity-70"><T fr="SC brûlée % (2ᵉ-3 degré)" ar="المساحة ٪ (درجة 2-3)" /></label>
-            <NumStepper value={ pct } onValue={ setPct } placeholder="20" max={100} step={1} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="pct" />
+            <NumStepper value={ pct } onValue={ setPct } placeholder="20" max={100} step={1} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="Surface corporelle brûlée (%)" />
           </div>
           <div>
             <label className="mb-1 block text-xs font-bold opacity-70"><T fr="Heures depuis la brûlure" ar="الساعات منذ الحرق" /></label>
-            <NumStepper value={hoursSinceBurn} onValue={setHoursSinceBurn} max={24} step={0.5} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="hours-since-burn" />
+            <NumStepper value={hoursSinceBurn} onValue={setHoursSinceBurn} max={24} step={0.5} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="Heures depuis la brûlure" />
           </div>
           {Number.isFinite(elapsed) && elapsed < 8 && (
             <div>
               <label className="mb-1 block text-xs font-bold opacity-70"><T fr="Liquides reçus en phase 0–8 h (mL)" ar="السوائل المتلقاة خلال ٠–٨ س (مل)" /></label>
-              <NumStepper value={fluidsGivenFirst8h} onValue={setFluidsGivenFirst8h} step={50} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="fluids-first-8h" />
+              <NumStepper value={fluidsGivenFirst8h} onValue={setFluidsGivenFirst8h} step={50} className="w-full rounded-xl border border-line bg-surface2 px-2 py-2 font-black tabular-nums" label="Liquides reçus pendant les 8 premières heures (mL)" />
             </div>
           )}
         </div>

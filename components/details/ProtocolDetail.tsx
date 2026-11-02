@@ -138,7 +138,7 @@ export default function ProtocolDetail({ protocol, meds, calcs, categoryLabel }:
       </header>
 
       {/* Barre de sections collante : navigation interne sans scroll manuel */}
-      <nav aria-label={lang === "ar" ? "أقسام" : "sections"} className="eutn-secnav sticky top-1 z-30 -mx-1 flex gap-1.5 overflow-x-auto px-1 py-1">
+      <nav aria-label={lang === "ar" ? "الأقسام" : "Sections"} className="eutn-secnav sticky top-1 z-30 -mx-1 flex gap-1.5 overflow-x-auto px-1 py-1">
         {nav.map((s) => (
           <button
             key={s.id}
@@ -151,7 +151,7 @@ export default function ProtocolDetail({ protocol, meds, calcs, categoryLabel }:
       </nav>
 
       {/* Étapes */}
-      <section id="steps" aria-label="steps" className="flex scroll-mt-14 flex-col gap-2.5">
+      <section id="steps" aria-label={lang === "ar" ? "الخطوات" : "Étapes"} className="flex scroll-mt-14 flex-col gap-2.5">
         {protocol.steps.map((s, i) => (
           <div key={i} className="card flex gap-3 rounded-2xl border border-line bg-surface p-3">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-sm font-black text-white tabular-nums">
@@ -167,7 +167,7 @@ export default function ProtocolDetail({ protocol, meds, calcs, categoryLabel }:
 
       {/* Examens complémentaires */}
       {protocol.exams && (
-        <section id="exams" aria-label="exams" className="scroll-mt-14 rounded-2xl border-2 border-sky-500/40 bg-sky-500/5 p-3">
+        <section id="exams" aria-label={lang === "ar" ? "الفحوص التكميلية" : "Examens complémentaires"} className="scroll-mt-14 rounded-2xl border-2 border-sky-500/40 bg-sky-500/5 p-3">
           <h2 className="mb-2 font-bold text-sky-500"><T fr="Examens complémentaires" ar="فحوص تكميلية" /></h2>
           <div className="grid gap-3 sm:grid-cols-3">
             {(["bio", "img", "ecg"] as const).map((k) =>
@@ -190,7 +190,7 @@ export default function ProtocolDetail({ protocol, meds, calcs, categoryLabel }:
 
       {/* Évolution & complications */}
       {protocol.trajectory && protocol.trajectory.length > 0 && (
-        <section id="traj" aria-label="trajectory" className="scroll-mt-14 rounded-2xl border-2 border-amber-500/50 bg-amber-500/5 p-3">
+        <section id="traj" aria-label={lang === "ar" ? "تطور الحالة وتعقيداتها" : "Évolution et complications"} className="scroll-mt-14 rounded-2xl border-2 border-amber-500/50 bg-amber-500/5 p-3">
           <h2 className="mb-2 flex items-center gap-2 font-bold text-amber-500">
             <Info className="h-5 w-5" aria-hidden />
             {lang === "ar" ? "تطور الحالة وتعقيداتها — ماذا لو..؟" : "Évolution & complications — et si… ?"}
@@ -214,7 +214,7 @@ export default function ProtocolDetail({ protocol, meds, calcs, categoryLabel }:
       {reval && <RevalPanel reval={reval} protocolId={protocol.id} protocolTitle={protocol.title} />}
 
       {/* Points-clés */}
-      <section id="key" aria-label="key" className="card scroll-mt-14 rounded-2xl border border-blue-600/40 bg-blue-600/10 p-3">
+      <section id="key" aria-label={lang === "ar" ? "نقاط أساسية" : "Points-clés"} className="card scroll-mt-14 rounded-2xl border border-blue-600/40 bg-blue-600/10 p-3">
         <h2 className="mb-2 flex items-center gap-2 font-bold text-blue-500">
           <CheckSquare className="h-5 w-5" aria-hidden />
           {lang === "ar" ? "نقاط أساسية" : "Points-clés"}
@@ -228,7 +228,7 @@ export default function ProtocolDetail({ protocol, meds, calcs, categoryLabel }:
 
       {/* Médicaments liés */}
       {meds.length > 0 && (
-        <section id="meds" aria-label="meds" className="scroll-mt-14">
+        <section id="meds" aria-label={lang === "ar" ? "الأدوية المرتبطة" : "Médicaments associés"} className="scroll-mt-14">
           <h2 className="mb-2 flex items-center gap-2 font-bold">
             <Pill className="h-5 w-5 text-blue-500" aria-hidden />
             {t("nav.medications")}
@@ -263,7 +263,7 @@ export default function ProtocolDetail({ protocol, meds, calcs, categoryLabel }:
 
       {/* Calculateurs liés */}
       {calcs.length > 0 && (
-        <section id="calcs" aria-label="calcs" className="scroll-mt-14">
+        <section id="calcs" aria-label={lang === "ar" ? "الحاسبات المرتبطة" : "Calculateurs associés"} className="scroll-mt-14">
           <h2 className="mb-2 flex items-center gap-2 font-bold">
             <Calculator className="h-5 w-5 text-blue-500" aria-hidden />
             {t("nav.calculators")}

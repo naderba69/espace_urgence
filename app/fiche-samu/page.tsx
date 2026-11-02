@@ -188,9 +188,9 @@ export default function FicheSamuPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-5">
-      <header className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <PageHeader icon={<FileText className="h-6 w-6" />} title={t("fiche.title")} sub={t("fiche.intro")} />
-      </header>
+      </div>
 
       {/* Confidentialité */}
       <div className="rounded-2xl border border-blue-600/30 bg-blue-600/10 p-4 text-sm font-semibold">

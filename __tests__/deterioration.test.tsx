@@ -161,8 +161,8 @@ describe("v16.0 — حارس بنيوي", () => {
   it("الإصدار 16.2 متزامن (lib ↔ sw)", async () => {
     const fs = await import("node:fs");
     const { APP_VERSION } = await import("../lib/version");
-    expect(APP_VERSION).toBe("18.7");
-    expect(fs.readFileSync("public/sw.js", "utf8")).toContain('const VERSION = "eutn-v18.7";');
+    expect(APP_VERSION).toBe("18.9");
+    expect(fs.readFileSync("public/sw.js", "utf8")).toContain('const VERSION = "eutn-v18.9";');
   });
 });
 

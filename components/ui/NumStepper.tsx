@@ -23,13 +23,13 @@ export default function NumStepper({ value, onValue, step = 1, min = 0, max, cla
   };
   return (
     <div className={`flex items-center gap-1 ${className}`} dir="ltr">
-      <button type="button" onClick={() => bump(-1)} aria-label={label ? `minus ${label}` : "minus"}
+      <button type="button" onClick={() => bump(-1)} aria-label={label ? `Diminuer ${label}` : "Diminuer la valeur"}
         className="touch grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-line bg-surface2 font-black">
         <Minus className="h-4 w-4" aria-hidden />
       </button>
       <input type="number" inputMode="decimal" value={value} onChange={(e) => onValue(e.target.value)}
         aria-label={label} placeholder={placeholder} className="min-w-0 flex-1 bg-transparent text-center text-lg font-black tabular-nums outline-none" />
-      <button type="button" onClick={() => bump(1)} aria-label={label ? `plus ${label}` : "plus"}
+      <button type="button" onClick={() => bump(1)} aria-label={label ? `Augmenter ${label}` : "Augmenter la valeur"}
         className="touch grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-line bg-surface2 font-black">
         <Plus className="h-4 w-4" aria-hidden />
       </button>

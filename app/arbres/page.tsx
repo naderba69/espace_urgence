@@ -14,13 +14,13 @@ export default function TreesHub() {
   const pick = (l: { fr: string; ar: string }) => (lang === "ar" ? l.ar : l.fr);
   return (
     <div className="flex flex-col gap-5">
-      <header>
+      <div>
         <PageHeader icon={<GitBranch className="h-6 w-6" />} title={<T fr="Arbres décisionnels" ar="أشجار القرار" />} count={decisionTrees.length} />
         <p className="mt-1 text-sm opacity-70">
           <T fr="Protocoles vitaux guidés étape par étape — minuteries, doses en direct, journal horodaté imprimable."
              ar="بروتوكولات حيوية موجهة خطوة بخطوة — مؤقتات، جرعات مباشرة، سجل موقوت قابل للطباعة." />
         </p>
-      </header>
+      </div>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {decisionTrees.map((t) => {
           const Icon = ICONS[t.icon] ?? GitBranch;

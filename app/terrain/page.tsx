@@ -163,10 +163,10 @@ export default function TerrainPage() {
           </button>
         </div>
         <div className="flex items-center gap-2" dir="ltr">
-          <button onClick={() => change(-step)} aria-label="moins"
+          <button onClick={() => change(-step)} aria-label={lang === "ar" ? "إنقاص وزن المريض" : "Diminuer le poids du patient"}
             className="touch h-12 w-12 rounded-xl border border-line bg-surface2 text-2xl font-black">−</button>
           <p className="w-20 text-center text-3xl font-black tabular-nums text-blue-500">{w}<span className="text-sm opacity-60"> kg</span></p>
-          <button onClick={() => change(step)} aria-label="plus"
+          <button onClick={() => change(step)} aria-label={lang === "ar" ? "زيادة وزن المريض" : "Augmenter le poids du patient"}
             className="touch h-12 w-12 rounded-xl border border-line bg-surface2 text-2xl font-black">+</button>
         </div>
         <button onClick={() => setWake((x) => !x)} aria-pressed={wake}

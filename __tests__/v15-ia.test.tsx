@@ -154,9 +154,9 @@ describe("v15.0 — تزامن الإصدار", () => {
   it("lib/version = 15.0 و sw.js متزامن", async () => {
     const fs = await import("node:fs");
     const { APP_VERSION } = await import("../lib/version");
-    expect(APP_VERSION).toBe("18.7");
+    expect(APP_VERSION).toBe("18.9");
     const sw = fs.readFileSync("public/sw.js", "utf8");
-    expect(sw).toContain('const VERSION = "eutn-v18.7";');
+    expect(sw).toContain('const VERSION = "eutn-v18.9";');
   });
 });
 

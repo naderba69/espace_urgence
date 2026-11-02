@@ -1,7 +1,7 @@
 /* Service worker maison (compatible output:'export', déployable en sous-chemin GitHub Pages).
    Stratégie : précache du shell + réseau-abord pour la navigation, repli hors-ligne.
    BASE est calculé depuis la portée d'enregistrement (robuste quel que soit le sous-chemin). */
-const VERSION = "eutn-v18.7"; // مُزامن مع lib/version.ts — حارس الاختبار يفشل عند الانفراق
+const VERSION = "eutn-v18.9"; // مُزامن مع lib/version.ts — حارس الاختبار يفشل عند الانفراق
 const BASE = new URL(self.registration.scope).pathname.replace(/\/$/, ""); // "" ou "/espace_urgence"
 const CORE = [`${BASE}/`, `${BASE}/manifest.webmanifest`, `${BASE}/offline.html`];
 const PRECACHE = /*__PRECACHE__*/[]; // يُحقن بعد البناء بواسطة scripts/gen-precache.mjs (v15.3)

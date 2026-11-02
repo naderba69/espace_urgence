@@ -51,7 +51,7 @@ export default function DebitPage() {
             className="rounded-xl border border-line bg-surface2 px-3 py-3 text-2xl text-center tabular-nums outline-none focus:ring-2 focus:ring-blue-600" />
         </label>
 
-        <div className="flex gap-2" role="group" aria-label="kit">
+        <div className="flex gap-2" role="group" aria-label={lang === "ar" ? "نوع مجموعة التسريب" : "Type de perfuseur"}>
           {([20, 60] as const).map((d) => (
             <button key={d} onClick={() => setDropsPerMl(d)} aria-pressed={dropsPerMl === d}
               className={`touch flex-1 rounded-xl border px-4 py-3 font-bold ${dropsPerMl === d ? "border-blue-600 bg-blue-600 text-white" : "border-line bg-surface hover:bg-surface2"}`}>

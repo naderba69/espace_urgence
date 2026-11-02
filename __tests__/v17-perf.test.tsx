@@ -288,25 +288,25 @@ describe("v17.0 — garde-fous de bundle", () => {
 // 4. Barre d'onglets : lisibilité garantie sur écran étroit
 // ─────────────────────────────────────────────────────────────────────────────
 describe("v17.0 — barre d'onglets inférieure", () => {
-  it("les libellés d'onglets tiennent dans une colonne de 53 px (320 px de large)", async () => {
+  it("utilise des libellés visuels courts et conserve le nom complet accessible", async () => {
     const { dictionaries } = await import("../lib/i18n");
-    // 6 onglets, largeur minimale visée 320 px → 53 px par colonne ;
-    // à 10 px en Inter Bold, ~5,3 px par caractère ⇒ 9 caractères maximum.
+    const shortKeys = ["tab.meds.short", "tab.protocols.short", "tab.checklists.short"];
     for (const lang of ["fr", "ar"] as const) {
-      for (const k of ["tab.home", "tab.rea", "tab.meds", "tab.protocols", "tab.memo", "tab.checklists"]) {
+      for (const k of shortKeys) {
         const label = dictionaries[lang][k];
         expect(label, `${lang}/${k} manquant`).toBeTruthy();
-        // Heuristique : 10 caractères à 9 px de police ≈ 53 px (colonne d'un écran de
-        // 320 px). Le contrôle au pixel près est fait par scripts/audit-clips.mjs.
-        expect(label.length, `${lang}/${k} = « ${label} » (${label.length} car.) trop long pour un onglet`)
-          .toBeLessThanOrEqual(10);
+        expect(label.length, `${lang}/${k} = « ${label} » trop long pour un onglet étroit`).toBeLessThanOrEqual(7);
       }
     }
+    const s = fs.readFileSync("components/BottomTabs.tsx", "utf8");
+    expect(s).toContain("aria-label={t(key)}");
+    expect(s).toContain("t(shortKey ?? key)");
   });
 
-  it("la barre réduit la police sous 380 px et neutralise tout débordement", () => {
+  it("ne réduit pas le libellé sous 11px et évite les débordements", () => {
     const s = fs.readFileSync("components/BottomTabs.tsx", "utf8");
-    expect(s).toContain("max-[380px]:text-[9px]");
+    expect(s).toContain("text-[11px]");
+    expect(s).not.toContain("text-[9px]");
     expect(s).toContain("truncate");
     expect(s).toContain("min-w-0");
   });

@@ -77,11 +77,11 @@ export default function AntivirauxPage() {
 
       <section className="grid grid-cols-3 gap-2">
         <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3"><span className="text-xs font-black opacity-70"><T fr="Poids (kg)" ar="الوزن" /></span>
-          <NumStepper value={ w } onValue={ setW } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="w" /></label>
+          <NumStepper value={ w } onValue={ setW } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Poids (kg)" /></label>
         <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3"><span className="text-xs font-black opacity-70"><T fr="Âge" ar="العمر" /></span>
-          <NumStepper value={ age } onValue={ setAge } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="age" /></label>
+          <NumStepper value={ age } onValue={ setAge } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Âge" /></label>
         <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3"><span className="text-xs font-black opacity-70"><T fr="Créat. µmol/L" ar="كرياتينين" /></span>
-          <NumStepper value={ scr } onValue={ setScr } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="scr" /></label>
+          <NumStepper value={ scr } onValue={ setScr } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Créatinine" /></label>
       </section>
 
       <div className="flex gap-2">

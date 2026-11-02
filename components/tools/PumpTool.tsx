@@ -16,7 +16,7 @@ const fmt = (x: number) => (x >= 10 ? x.toFixed(1) : x.toFixed(2));
 type PrepState = PumpPreparationState;
 
 export default function PumpTool({ cfg, storageKey }: { cfg: PumpCfg; storageKey: string }) {
-  const { hydrated } = useApp();
+  const { hydrated, lang } = useApp();
   const defaults: PrepState = useMemo(
     () => ({ ampMg: cfg.defAmpMg, ampVol: cfg.defAmpVol, count: cfg.defCount, target: cfg.defTarget, convention: "total" }),
     [cfg]
@@ -62,7 +62,7 @@ export default function PumpTool({ cfg, storageKey }: { cfg: PumpCfg; storageKey
       <NumField label={<T fr="Volume ampoule (mL)" ar="حجم الأمبولة (مل)" />} value={String(prep.ampVol)} onChange={(v) => setPrep((p) => ({ ...p, ampVol: Number(v) }))} />
       <NumField label={<T fr="Nombre d'ampoules" ar="عدد الأمبولات" />} value={String(prep.count)} onChange={(v) => setPrep((p) => ({ ...p, count: Number(v) }))} />
       <NumField label={<T fr="Volume cible (mL)" ar="الحجم الهدف (مل)" />} value={String(prep.target)} onChange={(v) => setPrep((p) => ({ ...p, target: Number(v) }))} />
-      <div className="col-span-2 flex gap-2" role="group" aria-label="Convention de volume / طريقة الحجم">
+      <div className="col-span-2 flex gap-2" role="group" aria-label={lang === "ar" ? "طريقة تحديد الحجم" : "Convention de volume"}>
         {(["total", "added"] as const).map((c) => (
           <button key={c} aria-pressed={prep.convention === c}
             onClick={() => setPrep((p) => ({ ...p, convention: c }))}
@@ -85,7 +85,7 @@ export default function PumpTool({ cfg, storageKey }: { cfg: PumpCfg; storageKey
           { id: "unknown" as const, label: <span className="inline-flex items-center gap-1"><HelpCircle className="h-4 w-4" aria-hidden /><T fr="Inconnue" ar="مجهولة" /></span> },
         ]}
         active={mode} onChange={setMode}
-        ariaLabel="Mode de l’outil / وضع الأداة"
+        ariaLabel={lang === "ar" ? "وضع الأداة" : "Mode de l’outil"}
       />
 
       {mode === "prep" && (

@@ -9,10 +9,10 @@ import { useApp } from "./Providers";
 const ITEMS = [
   { href: "/", key: "tab.home", Icon: Home },
   { href: "/rea", key: "tab.rea", Icon: HeartPulse },
-  { href: "/medicaments", key: "tab.meds", Icon: Pill },
-  { href: "/protocoles", key: "tab.protocols", Icon: ScrollText },
+  { href: "/medicaments", key: "tab.meds", shortKey: "tab.meds.short", Icon: Pill },
+  { href: "/protocoles", key: "tab.protocols", shortKey: "tab.protocols.short", Icon: ScrollText },
   { href: "/memo", key: "tab.memo", Icon: BookOpen },
-  { href: "/checklists", key: "tab.checklists", Icon: ListChecks },
+  { href: "/checklists", key: "tab.checklists", shortKey: "tab.checklists.short", Icon: ListChecks },
 ];
 
 export default function NavRail() {
@@ -32,17 +32,19 @@ export default function NavRail() {
       >
         <span className="m3-rail-ico"><Search className="h-5 w-5" aria-hidden /></span>
       </button>
-      {ITEMS.map(({ href, key, Icon }) => {
+      {ITEMS.map(({ href, key, shortKey, Icon }) => {
         const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
         return (
           <Link
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
+            aria-label={t(key)}
+            title={t(key)}
             className="m3-rail-item touch w-[72px]"
           >
             <span className="m3-rail-ico"><Icon className="h-5 w-5" aria-hidden /></span>
-            <span>{t(key)}</span>
+            <span>{t(shortKey ?? key)}</span>
           </Link>
         );
       })}

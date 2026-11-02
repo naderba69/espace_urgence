@@ -14,7 +14,7 @@ function Field({ label, value, onChange, unit }: { label: string; value: string;
   return (
     <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3">
       <span className="text-xs font-black opacity-70">{label}{unit ? ` (${unit})` : ""}</span>
-      <NumStepper value={ value } onValue={ onChange } step={ 0.01 } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="value" />
+      <NumStepper value={ value } onValue={ onChange } step={ 0.01 } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label={unit ? `${label} (${unit})` : label} />
     </label>
   );
 }

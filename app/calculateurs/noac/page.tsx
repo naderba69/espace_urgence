@@ -91,9 +91,9 @@ export default function NoacPage() {
       </label>
 
       <section className="grid grid-cols-3 gap-2">
-        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Âge" ar="العمر" /></span><NumStepper value={ age } onValue={ setAge } className="w-full" label="age" /></label>
-        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Poids (kg)" ar="الوزن" /></span><NumStepper value={ w } onValue={ setW } className="w-full" label="w" /></label>
-        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créat. µmol/L" ar="كرياتينين" /></span><NumStepper value={ scr } onValue={ setScr } className="w-full" label="scr" /></label>
+        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Âge" ar="العمر" /></span><NumStepper value={ age } onValue={ setAge } className="w-full" label="Âge" /></label>
+        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Poids (kg)" ar="الوزن" /></span><NumStepper value={ w } onValue={ setW } className="w-full" label="Poids (kg)" /></label>
+        <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Créat. µmol/L" ar="كرياتينين" /></span><NumStepper value={ scr } onValue={ setScr } className="w-full" label="Créatinine" /></label>
       </section>
 
       {suspectMg && (

@@ -117,14 +117,12 @@ export default function TreeRunner({ tree }: { tree: DecisionTree }) {
           <p className="mt-1 text-sm opacity-70">{q(tree.description)}</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <button onClick={reset} aria-label="reset" title={lang === "ar" ? "إعادة البدء" : "Recommencer"}
+          <button onClick={reset} aria-label={lang === "ar" ? "إعادة البدء" : "Recommencer"} title={lang === "ar" ? "إعادة البدء" : "Recommencer"}
             className="rounded-xl border border-line p-3 hover:bg-surface2">
             <RotateCcw className="h-5 w-5" />
           </button>
         </div>
       </header>
-
-      <h1 className="text-xl font-bold">{q(tree.title)}</h1>
 
       {/* Nœud courant */}
       <div className={`rounded-2xl border-2 p-4 ${node.kind === "end" ? toneStyle[node.tone ?? "info"] : "border-blue-600 bg-surface"}`}>

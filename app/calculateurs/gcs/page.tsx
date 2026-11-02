@@ -43,7 +43,7 @@ export default function GcsPage() {
         <h1 className="text-2xl font-extrabold">{t("gcs.title")}</h1>
       </header>
 
-      <div className="flex gap-2" role="group" aria-label="adulte/pédiatrie">
+      <div className="flex gap-2" role="group" aria-label={lang === "ar" ? "الفئة العمرية" : "Population cible"}>
         <button
           onClick={() => setPeds(false)}
           aria-pressed={!peds}

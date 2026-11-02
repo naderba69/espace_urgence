@@ -6,8 +6,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   Siren, HeartPulse, ScrollText, Pill, BookOpen, ListChecks,
-  Calculator, Syringe, Timer, FileText, HeartCrack, Search, Settings, TentTree, Star, GripVertical, Phone, RefreshCcw, ClipboardList, FileOutput,
+  Calculator, Syringe, Timer, FileText, HeartCrack, Search, Settings, TentTree, Star, GripVertical, Phone, RefreshCcw, ClipboardList, FileOutput, ArrowUp, ArrowDown,
 } from "lucide-react";
+import { moveFavoriteKey } from "@/lib/favorites";
 import { useApp } from "@/components/Providers";
 import SearchBar from "@/components/SearchBar";
 import InstallPwa from "@/components/InstallPwa";
@@ -45,7 +46,7 @@ const TOOLS = [
 
 export default function HomePage() {
   const { t, lang, favorites, recent, reorderFavs, setEmergencyOpen } = useApp();
-  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [dragKey, setDragKey] = useState<string | null>(null);
 
   // Raccourci PWA "?urgence=1" (icône d'écran d'accueil "Mode urgence")
   useEffect(() => {
@@ -80,13 +81,21 @@ export default function HomePage() {
     "/checklists": COUNTS.checklists,
   };
 
-  const onDrop = (targetIdx: number) => {
-    if (dragIdx === null || dragIdx === targetIdx) return;
+  const moveFavorite = (key: string, offset: -1 | 1) => {
+    const next = moveFavoriteKey(favorites, key, offset);
+    if (next !== favorites) reorderFavs(next);
+  };
+
+  const onDrop = (targetKey: string) => {
+    if (!dragKey || dragKey === targetKey) return;
+    const from = favorites.indexOf(dragKey);
+    const to = favorites.indexOf(targetKey);
+    if (from < 0 || to < 0) return;
     const next = [...favorites];
-    const [moved] = next.splice(dragIdx, 1);
-    next.splice(targetIdx, 0, moved);
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
     reorderFavs(next);
-    setDragIdx(null);
+    setDragKey(null);
   };
 
   return (
@@ -98,8 +107,10 @@ export default function HomePage() {
         <span
           className="rounded-full px-3 py-1 text-[11px] font-black tracking-wide"
           style={{ color: "var(--accent)", background: "var(--accent-soft)" }}
+          title={t("home.offlineDescription")}
         >
-          v{APP_VERSION} · {lang === "ar" ? "يعمل دون إنترنت" : "100 % hors-ligne"}
+          v{APP_VERSION} · {t("home.offlineBadge")}
+          <span className="sr-only">. {t("home.offlineDescription")}</span>
         </span>
         <h1 className="text-center text-3xl font-black tracking-tight sm:text-4xl">{t("app.name")}</h1>
         <p className="max-w-md text-center text-sm opacity-70 sm:text-base">{t("home.tag")}</p>
@@ -133,7 +144,7 @@ export default function HomePage() {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-[15px] leading-tight">{t(key)}</span>
-                  <span className="mt-0.5 block text-xs opacity-60" dir={lang === "ar" ? "ltr" : "rtl"}>{lang === "ar" ? sub.ar : sub.fr}</span>
+                  <span className="mt-0.5 block text-xs opacity-60" dir={lang === "ar" ? "rtl" : "ltr"}>{lang === "ar" ? sub.ar : sub.fr}</span>
                 </span>
                 <span className="shrink-0 rounded-full px-2.5 py-1 text-xs font-black tabular-nums" style={{ background: "var(--accent-soft)", color: "var(--accent)" }} dir="ltr">
                   {counts[href] || count}
@@ -174,14 +185,14 @@ export default function HomePage() {
           <p className="rounded-xl border border-dashed border-line p-4 text-sm opacity-70">{t("home.emptyFav")}</p>
         ) : (
           <ul className="flex gap-2 overflow-x-auto pb-1">
-            {favItems.map((item, i) =>
+            {favItems.map((item) =>
               item ? (
                 <li
                   key={item.key}
                   draggable
-                  onDragStart={() => setDragIdx(i)}
+                  onDragStart={() => setDragKey(item.key)}
                   onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => onDrop(i)}
+                  onDrop={() => onDrop(item.key)}
                   className="flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface"
                 >
                   <span className="touch cursor-grab px-1 opacity-50" aria-hidden>
@@ -190,6 +201,26 @@ export default function HomePage() {
                   <Link href={item.href} className="flex-1 py-3 font-medium hover:text-blue-500">
                     {lang === "ar" ? item.title.ar : item.title.fr}
                   </Link>
+                  <span className="flex items-center">
+                    <button
+                      type="button"
+                      disabled={favorites.indexOf(item.key) <= 0}
+                      aria-label={lang === "ar" ? `نقل ${item.title.ar} إلى الأعلى` : `Déplacer ${item.title.fr} vers le haut`}
+                      onClick={() => moveFavorite(item.key, -1)}
+                      className="touch rounded-lg px-1 disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                      <ArrowUp className="h-4 w-4" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      disabled={favorites.indexOf(item.key) < 0 || favorites.indexOf(item.key) === favorites.length - 1}
+                      aria-label={lang === "ar" ? `نقل ${item.title.ar} إلى الأسفل` : `Déplacer ${item.title.fr} vers le bas`}
+                      onClick={() => moveFavorite(item.key, 1)}
+                      className="touch rounded-lg px-1 disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                      <ArrowDown className="h-4 w-4" aria-hidden />
+                    </button>
+                  </span>
                 </li>
               ) : null
             )}

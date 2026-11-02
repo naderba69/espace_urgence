@@ -109,15 +109,15 @@ export default function SafeDosePage() {
       <section className="grid grid-cols-3 gap-2">
         <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3">
           <span className="text-xs font-black opacity-70"><T fr="Poids (kg)" ar="الوزن (كغ)" /></span>
-          <NumStepper value={ w } onValue={ setW } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="w" />
+          <NumStepper value={ w } onValue={ setW } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Poids (kg)" />
         </label>
         <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3">
           <span className="text-xs font-black opacity-70"><T fr="Prescrit (mg)" ar="الموصوف (مغ)" /></span>
-          <NumStepper value={ presc } onValue={ setPresc } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="presc" />
+          <NumStepper value={ presc } onValue={ setPresc } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Dose prescrite (mg)" />
         </label>
         <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3">
           <span className="text-xs font-black opacity-70"><T fr="Prises / jour" ar="جرعات/يوم" /></span>
-          <NumStepper value={ perDay } onValue={ setPerDay } placeholder={String(d.freq)} className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="perDay" />
+          <NumStepper value={ perDay } onValue={ setPerDay } placeholder={String(d.freq)} className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Prises par jour" />
         </label>
       </section>
 
@@ -132,15 +132,15 @@ export default function SafeDosePage() {
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3">
               <span className="text-xs font-black opacity-70"><T fr="Âge (ans)" ar="العمر (سنة)" /></span>
-              <NumStepper value={amikAge} onValue={setAmikAge} className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="age" />
+              <NumStepper value={amikAge} onValue={setAmikAge} className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Âge" />
             </label>
             <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3">
               <span className="text-xs font-black opacity-70"><T fr="ClCr Cockcroft–Gault (mL/min)" ar="تصفية Cockcroft–Gault (مل/د)" /></span>
-              <NumStepper value={amikCrCl} onValue={setAmikCrCl} className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="clcr" />
+              <NumStepper value={amikCrCl} onValue={setAmikCrCl} className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Clairance de la créatinine Cockcroft–Gault (mL/min)" />
             </label>
             <label className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3">
               <span className="text-xs font-black opacity-70"><T fr="Taille (cm)" ar="الطول (سم)" /></span>
-              <NumStepper value={amikHeight} onValue={setAmikHeight} className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="height" />
+              <NumStepper value={amikHeight} onValue={setAmikHeight} className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Taille (cm)" />
             </label>
           </div>
           <p className="text-xs font-bold opacity-70">

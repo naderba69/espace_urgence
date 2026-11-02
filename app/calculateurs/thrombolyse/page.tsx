@@ -1,6 +1,7 @@
 "use client";
 // v2.0 — التحلل بالوزن : TNK احتشاء، ألتيبلاز سكتة وصمة.
 import { useState } from "react";
+import { useApp } from "@/components/Providers";
 import { tenecteplaseMg, alteplaseStroke } from "@/lib/calc";
 import { useRegisterRecent } from "@/components/SearchBar";
 import T from "@/components/T";
@@ -9,6 +10,7 @@ import { NumField, Hero, WarnNote } from "@/components/tools/ui";
 type Mode = "stemi" | "avc" | "ep";
 
 export default function ThrombolysePage() {
+  const { lang } = useApp();
   const [mode, setMode] = useState<Mode>("stemi");
   const [weight, setWeight] = useState("70");
   useRegisterRecent("calculateur:thrombolyse");
@@ -20,7 +22,7 @@ export default function ThrombolysePage() {
       <header className="flex items-center justify-between gap-2">
         <h1 className="text-2xl font-extrabold"><T fr="Thrombolyse par poids" ar="التحلل بالوزن" /></h1>
       </header>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Indication / الاستطباب">
+      <div className="flex flex-wrap gap-2" role="group" aria-label={lang === "ar" ? "الاستطباب" : "Indication"}>
         {([["stemi", "STEMI — TNK"], ["avc", "AVC — Altéplase"], ["ep", "Embolie — Altéplase"]] as [Mode, string][]).map(([m, l]) => (
           <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)}
             className={`touch rounded-full border px-4 py-2 text-sm font-black ${mode === m ? "border-blue-600 bg-blue-600 text-white" : "border-line opacity-70"}`}>
