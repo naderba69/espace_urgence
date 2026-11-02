@@ -114,10 +114,12 @@ function GuidageInner() {
                       className="rounded-xl border border-line bg-[color:var(--surface-2)] px-3 py-2 text-center text-lg font-black tabular-nums outline-none focus:ring-2 focus:ring-blue-600" />
                   ) : (
                     <div className="flex items-center gap-1" dir="ltr">
-                      <button onClick={() => set(f.id, Math.max(f.min ?? 0, Number(vals[f.id]) - (f.step ?? 1)))} aria-label="moins"
+                      <button onClick={() => set(f.id, Math.max(f.min ?? 0, Number(vals[f.id]) - (f.step ?? 1)))}
+                        aria-label={lang === "ar" ? `إنقاص ${f.ar}` : `Diminuer ${f.fr}`}
                         className="touch h-10 w-10 rounded-lg border border-line bg-surface2 text-lg font-black">−</button>
                       <p className="min-w-12 text-center text-lg font-black tabular-nums text-blue-500">{String(vals[f.id])}</p>
-                      <button onClick={() => set(f.id, Math.min(f.max ?? 999, Number(vals[f.id]) + (f.step ?? 1)))} aria-label="plus"
+                      <button onClick={() => set(f.id, Math.min(f.max ?? 999, Number(vals[f.id]) + (f.step ?? 1)))}
+                        aria-label={lang === "ar" ? `زيادة ${f.ar}` : `Augmenter ${f.fr}`}
                         className="touch h-10 w-10 rounded-lg border border-line bg-surface2 text-lg font-black">+</button>
                     </div>
                   ) : f.kind === "bool" ? (

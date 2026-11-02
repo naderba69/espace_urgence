@@ -160,7 +160,7 @@ describe("base continue OMEDIT v2.3 — transcription à vérifier cliniquement"
     expect(texte("sulfadiazine-po-l1", 25)).toBe("Aucune donnée");
   });
 
-  it("garde la ceftriaxone inchangée et les aminosides sous surveillance", () => {
+  it("garde les notes TDM documentées et n’ajoute pas de badge TDM à la colistine sans note source", () => {
     expect(texte("ceftriaxone-im-iv-l1", 10)).toBe("1 à 2 g/24h");
     expect(ATB_RENAL_V2_BY_ID["amikacine-iv"].surveillance).toBe(true);
     expect(ATB_RENAL_V2_BY_ID["amikacine-iv"].sourceNotes).toHaveLength(2);
@@ -168,7 +168,8 @@ describe("base continue OMEDIT v2.3 — transcription à vérifier cliniquement"
     expect(ATB_RENAL_V2_BY_ID["tobramycine-im-iv"].surveillance).toBe(true);
     expect(ATB_RENAL_V2_BY_ID["vancomycine-iv"].surveillance).toBe(true);
     expect(ATB_RENAL_V2_BY_ID["teicoplanine-im-iv"].surveillance).toBe(true);
-    expect(ATB_RENAL_V2_BY_ID["colistine-iv-colistimethate-sodique"].surveillance).toBe(true);
+    expect(ATB_RENAL_V2_BY_ID["colistine-iv-colistimethate-sodique"].sourceNotes).toHaveLength(0);
+    expect(ATB_RENAL_V2_BY_ID["colistine-iv-colistimethate-sodique"].surveillance).toBe(false);
   });
 
   it("cas 1 — céfidérocol : une seule ligne, note ≥120 conservée", () => {
@@ -259,6 +260,36 @@ describe("base continue OMEDIT v2.3 — transcription à vérifier cliniquement"
   it("cas 18 — sulfadiazine : réduction non chiffrée puis aucune donnée", () => {
     expect(texte("sulfadiazine-po-l1", 85)).toBe("Réduction de la posologie");
     expect(texte("sulfadiazine-po-l1", 29.9)).toBe("Aucune donnée");
+  });
+
+  it("verrouille les lignes visuellement contrôlées sur PDF p.10 et p.12 sans interpréter leurs doses", () => {
+    const sulfadiazine = regimeParId("sulfadiazine-po-l1");
+    const bedaquiline = regimeParId("bedaquiline-po-l1");
+    const rifabutineCurative = regimeParId("rifabutine-po-l1");
+    const rifabutinePreventive = regimeParId("rifabutine-po-l2");
+
+    expect(sulfadiazine.source).toMatchObject({ page: 10, ligneSource: "L1" });
+    expect(bedaquiline.source).toMatchObject({ page: 12, ligneSource: "L1" });
+    expect(rifabutineCurative.source).toMatchObject({ page: 12, ligneSource: "L1" });
+    expect(rifabutinePreventive.source).toMatchObject({ page: 12, ligneSource: "L2" });
+
+    for (const regime of [sulfadiazine, bedaquiline, rifabutineCurative, rifabutinePreventive]) {
+      expect(regime.regleRenale.type).toBe("segments");
+      if (regime.regleRenale.type === "segments") {
+        expect(regime.regleRenale.segments.map(({ seuil }) => seuil)).toContain(30);
+      }
+      expect(contenu(regime.id, 30).status).toBe("boundary-30");
+    }
+
+    expect(texte("sulfadiazine-po-l1", 29.9)).toBe("Aucune donnée");
+    expect(texte("bedaquiline-po-l1", 29.9)).toBe("Aucune donnée");
+    expect(texte("rifabutine-po-l1", 29.9)).toContain("300 mg/24h");
+    expect(texte("rifabutine-po-l2", 29.9)).toContain("150 mg/24h");
+    expect(texte("sulfadiazine-po-l1", 90)).toContain("Préventif : 2 g/j");
+    expect(texte("sulfadiazine-po-l1", 89.9)).toBe("Réduction de la posologie");
+    expect(texte("bedaquiline-po-l1", 30.1)).toContain("400 mg");
+    expect(texte("rifabutine-po-l1", 30.1)).toContain("600 mg/j");
+    expect(texte("rifabutine-po-l2", 30.1)).toContain("300 mg/j en une prise");
   });
 
   it("consigne dans PATCH les corrections éditoriales des cas 14, 15 et 18", () => {

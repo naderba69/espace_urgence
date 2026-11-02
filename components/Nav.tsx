@@ -11,7 +11,7 @@ import InstallPwa from "./InstallPwa";
 
 export const NAV_GROUPS: {
   key: string;
-  items: { href: string; key: string; Icon: typeof Home; badge?: boolean }[];
+  items: { href: string; key: string; Icon: typeof Home }[];
 }[] = [
   {
     key: "nav.group.main",
@@ -27,7 +27,7 @@ export const NAV_GROUPS: {
       { href: "/protocoles", key: "nav.protocols", Icon: ScrollText },
       { href: "/medicaments", key: "nav.medications", Icon: Pill },
       { href: "/memo", key: "nav.memo", Icon: BookOpen },
-      { href: "/checklists", key: "nav.checklists", Icon: ListChecks, badge: true },
+      { href: "/checklists", key: "nav.checklists", Icon: ListChecks },
     ],
   },
   {
@@ -44,7 +44,7 @@ export const NAV_GROUPS: {
     key: "nav.group.tools",
     items: [
       { href: "/calculateurs", key: "nav.calculators", Icon: Calculator },
-      { href: "/fiche-samu", key: "nav.fiche", Icon: FileText, badge: true },
+      { href: "/fiche-samu", key: "nav.fiche", Icon: FileText },
       { href: "/reevaluation", key: "nav.reevaluation", Icon: RefreshCcw },
       { href: "/resume", key: "nav.resume", Icon: ClipboardList },
       { href: "/guidage", key: "nav.guidage", Icon: Zap },
@@ -70,7 +70,7 @@ export default function Nav({ onNavigate }: { onNavigate?: () => void }) {
             {t(group.key)}
           </p>
           <ul className="flex flex-col gap-0.5">
-            {group.items.map(({ href, key, Icon, badge }) => {
+            {group.items.map(({ href, key, Icon }) => {
               const activeItem = href === "/" ? pathname === "/" : pathname.startsWith(href);
               return (
                 <li key={href}>
@@ -94,11 +94,6 @@ export default function Nav({ onNavigate }: { onNavigate?: () => void }) {
                       <Icon className="h-[18px] w-[18px]" aria-hidden />
                     </span>
                     <span className="min-w-0 flex-1 break-words text-[11px] leading-tight">{t(key)}</span>
-                    {badge && (
-                      <span className="rounded-full bg-gradient-to-r from-blue-500 to-sky-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-white shadow-sm">
-                        new
-                      </span>
-                    )}
                   </Link>
                 </li>
               );

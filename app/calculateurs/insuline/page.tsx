@@ -13,7 +13,7 @@ const PRESETS = [
 ];
 
 export default function InsulinePage() {
-  const { t } = useApp();
+  const { t, lang } = useApp();
   const [weight, setWeight] = useState("70");
   const [k, setK] = useState("4.5");
   const [perMl, setPerMl] = useState(1);
@@ -58,7 +58,7 @@ export default function InsulinePage() {
           </p>
         )}
 
-        <div className="flex flex-wrap gap-2" role="group" aria-label="concentration">
+        <div className="flex flex-wrap gap-2" role="group" aria-label={lang === "ar" ? "تركيز الإنسولين" : "Concentration de l’insuline"}>
           {PRESETS.map((p) => (
             <button key={p.label} onClick={() => setPerMl(p.perMl)} aria-pressed={perMl === p.perMl}
               className={`touch flex-1 rounded-xl border px-4 py-3 font-bold ${perMl === p.perMl ? "border-blue-600 bg-blue-600 text-white" : "border-line hover:bg-surface2"}`}>

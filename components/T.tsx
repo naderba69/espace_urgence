@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { useApp } from "./Providers";
 import type { Localized } from "@/data/types";
 
-export default function T({ fr, ar }: Localized & { children?: ReactNode }): ReactNode {
+export default function T({ fr, ar, langOverride }: Localized & { children?: ReactNode; langOverride?: "fr" | "ar" }): ReactNode {
   const { lang } = useApp();
-  return <>{lang === "ar" ? ar : fr}</>;
+  const activeLang = langOverride ?? lang;
+  return <>{activeLang === "ar" ? ar : fr}</>;
 }

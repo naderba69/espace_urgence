@@ -6,7 +6,7 @@ import { useApp } from "./Providers";
 import T from "./T";
 
 export default function UpdateBanner() {
-  const { updateReady, dismissUpdate } = useApp();
+  const { updateReady, dismissUpdate, lang } = useApp();
   if (!updateReady) return null;
   return (
     <div className="fixed inset-x-3 bottom-20 z-[90] sm:inset-x-auto sm:end-4 sm:bottom-4 sm:w-96" role="status">
@@ -16,14 +16,14 @@ export default function UpdateBanner() {
           <p className="text-sm font-black"><T fr="Mise à jour installée" ar="نُصّب تحديث جديد" /></p>
           <p className="break-words text-xs opacity-70"><T fr="Rechargez pour les derniers protocoles." ar="أعد التحميل للحصول على أحدث البروتوكولات." /></p>
         </div>
-        <Link href="/changelog" className="rounded-xl border border-line p-2 hover:bg-[color:var(--surface-2)]" aria-label="changelog">
+        <Link href="/changelog" className="rounded-xl border border-line p-2 hover:bg-[color:var(--surface-2)]" aria-label={lang === "ar" ? "سجل التغييرات" : "Notes de version"}>
           <Sparkles className="h-4 w-4" aria-hidden />
         </Link>
         <button onClick={() => window.location.reload()}
           className="rounded-xl bg-blue-600 px-3 py-2 text-sm font-black text-white active:scale-[.97]">
           <T fr="Recharger" ar="تحديث" />
         </button>
-        <button onClick={dismissUpdate} className="rounded-xl border border-line p-2 hover:bg-[color:var(--surface-2)]" aria-label="fermer">
+        <button onClick={dismissUpdate} className="rounded-xl border border-line p-2 hover:bg-[color:var(--surface-2)]" aria-label={lang === "ar" ? "إغلاق" : "Fermer"}>
           <X className="h-4 w-4" aria-hidden />
         </button>
       </div>

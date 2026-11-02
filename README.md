@@ -6,7 +6,7 @@ Références et outils en français pour les urgences et le SAMU en Tunisie. Int
 
 ---
 
-## Chiffres clés (v18.7)
+## Chiffres clés (v18.9)
 
 | Contenu | Nombre | Source |
 |---|---|---|
@@ -19,7 +19,7 @@ Références et outils en français pour les urgences et le SAMU en Tunisie. Int
 | Guidage téléphonique | **41** | `data/guidage.ts` |
 | Situations de triage | **22** | `data/triage.ts` |
 | Quiz de révision | **42** | `data/quiz.ts` |
-| Tests | **711** | `npm test` |
+| Tests | **887** (au 2026-11-02) | `npm test` |
 
 > Les compteurs affichés sur l'accueil proviennent de `data/counts.ts`. Un test garde-fou
 > (`__tests__/v17-perf.test.tsx`) échoue si ces valeurs divergent des bases réelles —
@@ -41,7 +41,7 @@ npm install
 npm run dev      # développement (le service worker est inactif en dev)
 npm run build    # export statique + précache -> dossier out/
 npx serve out    # tester la version exportée (ou déployer telle quelle)
-npm test         # 659 tests (vitest)
+npm test         # 887 tests (vitest, décompte au 2026-11-02)
 npm run lint     # eslint (0 erreur, 0 avertissement)
 ```
 

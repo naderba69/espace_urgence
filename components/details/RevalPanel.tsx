@@ -143,7 +143,7 @@ R — Recommendation : ${verdict ? reval[verdict].actions.map((a) => a.txt.fr).j
         : { cls: "border-amber-500 bg-amber-500/10", txt: "text-amber-500" };
 
   return (
-    <section id="reval" aria-label="revaluation" className="scroll-mt-14 rounded-2xl border-2 border-purple-500/40 bg-purple-500/5 p-3">
+    <section id="reval" aria-label={lang === "ar" ? "إعادة التقييم" : "Réévaluation"} className="scroll-mt-14 rounded-2xl border-2 border-purple-500/40 bg-purple-500/5 p-3">
       <h2 className="mb-1 flex items-center gap-2 font-bold text-purple-500">
         <RefreshCw className="h-5 w-5" aria-hidden />
         <T fr="Réévaluation — chef de terrain" ar="إعادة التقييم — قائد الميدان" />

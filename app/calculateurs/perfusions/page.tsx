@@ -84,7 +84,7 @@ export default function PerfusionsPage() {
         {p.weightBased && (
           <label className="flex flex-col gap-1 font-semibold">
             <T fr="Poids (kg)" ar="الوزن (كغ)" />
-            <NumStepper value={ weight } onValue={ setWeight } className="rounded-xl border border-line bg-surface2 px-3 py-3 text-center text-2xl tabular-nums outline-none focus:ring-2 focus:ring-blue-600" label="weight" />
+            <NumStepper value={ weight } onValue={ setWeight } className="rounded-xl border border-line bg-surface2 px-3 py-3 text-center text-2xl tabular-nums outline-none focus:ring-2 focus:ring-blue-600" label="Poids (kg)" />
           </label>
         )}
 
@@ -135,7 +135,7 @@ export default function PerfusionsPage() {
             <NumStepper value={String(doseClamped)} onValue={(v) => {
               const value = Number(v);
               setDose(Number.isFinite(value) && value > 0 ? Math.min(Math.max(value, p.doseMin), p.doseMax) : 0);
-            }} step={p.doseStep} min={p.doseMin} max={p.doseMax} className="rounded-xl border border-line bg-surface2 px-3 py-3 text-center text-xl tabular-nums outline-none focus:ring-2 focus:ring-blue-600" label="dose" />
+            }} step={p.doseStep} min={p.doseMin} max={p.doseMax} className="rounded-xl border border-line bg-surface2 px-3 py-3 text-center text-xl tabular-nums outline-none focus:ring-2 focus:ring-blue-600" label="Dose précise" />
           </label>
           <div className="rounded-xl bg-blue-600 px-5 py-3 text-center text-white">
             <p className="text-xs opacity-90">{lang === "ar" ? "تدفق" : "débit"}</p>

@@ -1410,7 +1410,7 @@ const SOURCE_NOTES: Record<string, string[]> = {
 export const ATB_RENAL_V2_ROWS: AtbRenalDoseRow[] = ATB_RENAL_ROWS.map((row) => ({
   ...row,
   alias: ALIASES[row.id] ?? [],
-  surveillance: ["amikacine-iv", "gentamicine-im-iv", "tobramycine-im-iv", "vancomycine-iv", "teicoplanine-im-iv", "colistine-iv-colistimethate-sodique"].includes(row.id),
+  surveillance: ["amikacine-iv", "gentamicine-im-iv", "tobramycine-im-iv", "vancomycine-iv", "teicoplanine-im-iv"].includes(row.id),
   regimes: REGIMES[row.id] ?? [],
   sourceNotes: (SOURCE_NOTES[row.id] ?? []).map((fr) => ({ fr, ar: fr })),
   traductionStatut: "ar-provisoire",

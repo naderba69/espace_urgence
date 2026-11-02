@@ -19,9 +19,9 @@ export default function EcgPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <PageHeader icon={<HeartPulse className="h-6 w-6" />} title={<T fr="ECG — rythmes essentiels" ar="تخطيط القلب — الإيقاعات الأساسية" />} />
-      </header>
+      </div>
 
       {/* Simulateur */}
       <section className="card rounded-2xl border border-line bg-surface p-4">

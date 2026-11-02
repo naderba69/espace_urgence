@@ -99,7 +99,7 @@ export default function MedicationDetail({ medication: m, alternatives, psePreps
         </div>
       </header>
 
-      <nav aria-label="sections" className="eutn-secnav sticky top-1 z-30 -mx-1 flex gap-1.5 overflow-x-auto px-1 py-1">
+      <nav aria-label={lang === "ar" ? "الأقسام" : "Sections"} className="eutn-secnav sticky top-1 z-30 -mx-1 flex gap-1.5 overflow-x-auto px-1 py-1">
         {[
           { id: "ind", fr: "Indications", ar: "استطبابات" },
           { id: "doses", fr: "Doses", ar: "جرعات" },

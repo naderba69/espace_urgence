@@ -21,7 +21,7 @@ export default function StatsPage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <header className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
         <PageHeader icon={<BarChart3 className="h-6 w-6" />} title={<T fr="Statistiques locales" ar="إحصاءات محلية" />} />
         {rows.length > 0 && (
           <button onClick={() => { resetLocalStats(); reload(); }}
@@ -29,7 +29,7 @@ export default function StatsPage() {
             <T fr="Effacer" ar="امسح" />
           </button>
         )}
-      </header>
+      </div>
 
       <p className="rounded-xl bg-blue-600/10 p-3 text-sm font-bold text-blue-500">
         <T fr="Compteurs stockés uniquement sur cet appareil — aucun envoi réseau."

@@ -140,7 +140,7 @@ export default function CommandPaletteBody({ open, onClose }: { open: boolean; o
   return (
     <div ref={dialogRef} tabIndex={-1} className="fixed inset-0 z-[65] lg:flex lg:items-start lg:justify-center lg:pt-[12vh]" role="dialog" aria-modal="true" aria-label={t("palette.open")}>
       {/* backdrop */}
-      <button aria-label="fermer" onClick={onClose} className="eutn-backdrop absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+      <button aria-label={lang === "ar" ? "إغلاق" : "Fermer"} onClick={onClose} className="eutn-backdrop absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
       {/* panneau */}
       <div className="eutn-drawer relative m-auto flex max-h-[80vh] w-[min(92vw,42rem)] flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl">
         <div className="flex items-center gap-2 border-b border-line px-4">

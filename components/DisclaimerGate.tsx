@@ -9,10 +9,11 @@ import { useModalFocusTrap } from "@/lib/modal-focus";
 export const DISCLAIMER_EVENT = "eutn:show-disclaimer"; // les paramètres peuvent le rouvrir
 
 export default function DisclaimerGate() {
-  const { t, hydrated } = useApp();
+  const { t, hydrated, emergencyOpen } = useApp();
   const [visible, setVisible] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-  useModalFocusTrap(dialogRef, visible);
+  // لا تحجب بوابة التنبيه دخول وضع الاستعجال؛ تظهر بعد الخروج إذا لم تُقبل بعد.
+  useModalFocusTrap(dialogRef, visible && !emergencyOpen);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -26,7 +27,7 @@ export default function DisclaimerGate() {
     return () => window.removeEventListener(DISCLAIMER_EVENT, reopen);
   }, [hydrated]);
 
-  if (!visible) return null;
+  if (!visible || emergencyOpen) return null;
 
   return (
     <div ref={dialogRef} tabIndex={-1} className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4" role="alertdialog" aria-modal="true" aria-label={t("disclaimer.title")}>

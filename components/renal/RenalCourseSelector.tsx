@@ -6,6 +6,7 @@ import T from "@/components/T";
 interface RenalCourseSelectorProps {
   value: RenalCourse;
   onChange: (value: RenalCourse) => void;
+  langOverride?: "fr" | "ar";
 }
 
 const OPTIONS: {
@@ -42,15 +43,15 @@ const OPTIONS: {
   },
 ];
 
-export default function RenalCourseSelector({ value, onChange }: RenalCourseSelectorProps) {
+export default function RenalCourseSelector({ value, onChange, langOverride }: RenalCourseSelectorProps) {
   const selected = OPTIONS.find((option) => option.id === value) ?? OPTIONS[0];
 
   return (
     <fieldset className="rounded-2xl border border-line bg-surface p-3">
       <legend className="px-1 text-xs font-black opacity-75">
-        <T fr="Évolution de la fonction rénale" ar="مسار وظيفة الكلى" />
+        <T langOverride={langOverride} fr="Évolution de la fonction rénale" ar="مسار وظيفة الكلى" />
       </legend>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Évolution de la fonction rénale / مسار وظيفة الكلى">
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Évolution de la fonction rénale">
         {OPTIONS.map((option) => {
           const active = value === option.id;
           return (
@@ -62,13 +63,13 @@ export default function RenalCourseSelector({ value, onChange }: RenalCourseSele
               className={`touch rounded-full border px-3 py-2 text-xs font-black ${active ? "border-transparent text-white" : "border-line hover:bg-surface2"}`}
               style={active ? { background: option.color } : undefined}
             >
-              <T fr={option.fr} ar={option.ar} />
+              <T langOverride={langOverride} fr={option.fr} ar={option.ar} />
             </button>
           );
         })}
       </div>
       <p className="mt-2 text-xs leading-relaxed font-bold opacity-80">
-        <T fr={selected.detailFr} ar={selected.detailAr} />
+        <T langOverride={langOverride} fr={selected.detailFr} ar={selected.detailAr} />
       </p>
     </fieldset>
   );

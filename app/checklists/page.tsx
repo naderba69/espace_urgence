@@ -41,9 +41,9 @@ export default function ChecklistsPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <PageHeader icon={<CheckCircle2 className="h-6 w-6" />} title={t("checklists.title")} sub={t("checklists.intro")} count={CHECKLISTS.length} />
-      </header>
+      </div>
 
       <div className="rounded-2xl border border-amber-600/30 bg-amber-500/10 p-4 text-sm font-semibold text-amber-600 dark:text-amber-300">
         {t("checklists.warning")}

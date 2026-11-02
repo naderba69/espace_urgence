@@ -61,7 +61,7 @@ export default function AiSection() {
       {cfg.enabled && (
         <>
           {/* fournisseur */}
-          <div className="grid gap-2 sm:grid-cols-2" role="group" aria-label="provider">
+          <div className="grid gap-2 sm:grid-cols-2" role="group" aria-label={lang === "ar" ? "المزوّد" : "Fournisseur"}>
             {(Object.keys(PROVIDER_PRESETS) as AiProvider[]).map((p) => (
               <button key={p} onClick={() => {
                 const pr = PROVIDER_PRESETS[p];

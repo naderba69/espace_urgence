@@ -6,7 +6,7 @@ const require = createRequire(import.meta.url);
 const ts = require("typescript");
 const ROOT = process.cwd();
 const DATA = join(ROOT, "data");
-const TODAY = "2026-10-28";
+const TODAY = process.env.AUDIT_DATE ?? "2026-10-28";
 
 function propName(prop) {
   if (!prop?.name) return null;
@@ -302,7 +302,7 @@ if (process.argv.includes("--check")) {
     `- **${referenceRecords.filter((r) => r.sources.length && r.lastReviewed).length}** سجلًا فيها حقلا مصدر وتاريخ مراجعة معلنَان في metadata؛ هذا لا يثبت الاطلاع على الوثيقة أو مقابلة كل ادعاء.`,
     `- **${partialCitation.length}** سجل فرز/تسريب فيه اسم مصدر مختصر فقط، بلا تاريخ أو صفحة على مستوى السجل.`,
     `- **${referenceRecords.filter((r) => r.group === "atb-renal" && r.page !== null).length}** صفًا للمضادات يشير إلى صفحة في PDF مشترك؛ RCP/GPR/ePOPI ليس مربوطًا بكل جرعة/خلية.`,
-    `- لفحص الأعداد: \`npm run audit:reference-inventory:check\`; لإعادة توليد هذا التقرير: \`node scripts/audit-source-inventory.mjs > docs/REFERENCE-INVENTORY-2026-10-28.md\`.`,
+    `- لفحص الأعداد: \`npm run audit:reference-inventory:check\`; لإعادة توليد هذا التقرير: \`AUDIT_DATE=${TODAY} node scripts/audit-source-inventory.mjs > docs/REFERENCE-INVENTORY-${TODAY}.md\`.`,
     "- التوليد الآلي لا يقرأ أو يثبت النص السريري ولا يراجع الترجمات؛ وظيفة الأداة جرد المصادر والمواضع فقط.",
     `- **${noRecordCitation.length}** مدخلًا بلا إحالة أولية على مستوى السجل.`,
     `- **${citationRegistry.reduce((sum, source) => sum + source.usageCount, 0)}** ذكرًا خامًا للمصادر و**${citationRegistry.length}** تسمية مصدر فريدة؛ منها **${citationRegistry.filter((source) => source.urls.length).length}** فقط لها URL في metadata (بعضها رابط موقع عام لا للوثيقة).`,

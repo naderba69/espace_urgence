@@ -42,7 +42,7 @@ export default function RsiPage() {
 
       <div className="grid grid-cols-2 gap-2">
         <label className={cell}><span className="text-xs font-black opacity-70"><T fr="Poids (kg)" ar="الوزن (كغ)" /></span>
-          <NumStepper value={ weight } onValue={ setWeight } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="weight" /></label>
+          <NumStepper value={ weight } onValue={ setWeight } className="w-full bg-transparent text-lg font-black tabular-nums outline-none" label="Poids (kg)" /></label>
         <button onClick={() => setUnstable(!unstable)} aria-pressed={unstable}
           className={`touch rounded-xl border p-3 text-sm font-black text-start ${unstable ? "border-transparent text-white" : "border-line hover:bg-surface2"}`}
           style={unstable ? { background: "var(--sev-urgent)" } : undefined}>

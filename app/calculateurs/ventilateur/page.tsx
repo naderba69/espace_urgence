@@ -28,7 +28,7 @@ export default function VentilateurPage() {
       </header>
 
       <div className="card flex flex-col gap-4 rounded-2xl border border-line bg-surface p-4">
-        <div className="flex gap-2" role="group" aria-label="sexe">
+        <div className="flex gap-2" role="group" aria-label={lang === "ar" ? "الجنس" : "Sexe"}>
           {(["m", "f"] as const).map((s) => (
             <button key={s} onClick={() => setSex(s)} aria-pressed={sex === s}
               className={`touch flex-1 rounded-xl border px-4 py-3 font-bold ${sex === s ? "border-blue-600 bg-blue-600 text-white" : "border-line hover:bg-surface2"}`}>
